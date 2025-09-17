@@ -66,3 +66,7 @@
 /genericboson/ProudNet/src/EmergencyC2S_stub.cpp
 /genericboson/ProudNet/src/EmergencyC2S_stub.h
 /genericboson/ProudNet/src/EmergencyS2C_common.cpp
+*.cmake
+/out/build/x64-debug/CMakeFiles/CMakeConfigureLog.yaml
+*.check_cache
+/out/build/x64-debug
