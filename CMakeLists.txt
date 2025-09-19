@@ -6,9 +6,11 @@ enable_testing()
 
 project (ZozoTown)
 
-add_subdirectory ("engine")
-add_subdirectory ("game")
-add_subdirectory ("test")
+add_subdirectory ("Engine")
+add_subdirectory ("GameServer")
+add_subdirectory ("DbCacheServer")
+add_subdirectory ("Test")
+add_subdirectory ("Bot")
 
 #add_subdirectory ("flatbuffers")
 
