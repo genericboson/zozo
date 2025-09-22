@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
-
 namespace GenericBoson
 {
 	class Message
