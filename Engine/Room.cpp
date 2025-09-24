@@ -9,14 +9,14 @@ namespace GenericBoson
 	{
 		NULL_RETURN(pCharacter, false);
 
-		m_characters[pCharacter->GetId()] = pCharacter->Id();
+		m_characters[pCharacter->Id()] = pCharacter;
 
 		return true;
 	}
 
-	void Room::Leave(const int64_t id)
+	bool Room::Leave(const int64_t id)
 	{
-		NULL_RETURN(pCharacter, false);
+		NULL_RETURN(id, false);
 
 		m_characters.erase(id);
 

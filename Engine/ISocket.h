@@ -2,10 +2,14 @@
 
 namesapce GenericBoson
 {
+	class Message;
+
 	class ISocket
 	{
 	public:
 		virtual ~ISocket() = default;
-		virtual int64_t Id() const = 0;
+
+		virtual void Start() = 0;
+		virtual void Write(const Message& msg) = 0;
 	};
 }

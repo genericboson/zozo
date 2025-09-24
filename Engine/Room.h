@@ -9,9 +9,9 @@ namespace GenericBoson
 	public:
 		virtual ~Room() { }
 
-		void Enter(const std::shared_ptr< Character >& pCharacter);
+		bool Enter(const std::shared_ptr< Character >& pCharacter);
 
-		void Leave(const int64_t id);
+		bool Leave(const int64_t id);
 
 	private:
 		int64_t m_id;

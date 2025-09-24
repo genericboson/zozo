@@ -6,7 +6,11 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <functional>
+#include <string_view>
+#include <list>
 #include <memory>
+#include <mutex>
 #include <unordered_map>
 
 #include "Macros.h"
