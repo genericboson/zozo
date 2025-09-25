@@ -6,8 +6,8 @@ namespace GenericBoson
 {
     Character::Character(
         std::shared_ptr<ISocket> pSocket, 
-        std::weak_ptr<Room>      wpRoom)
-		: m_pSocket(pSocket), m_wpRoom(wpRoom)
+        std::weak_ptr<Zone>      wpZone)
+		: m_pSocket(pSocket), m_wpZone(wpZone)
     {
     }
 

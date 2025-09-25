@@ -1,6 +1,7 @@
 #include "PCH.h"
 
-#include "Singleton.h"
+#include <Engine/Singleton.h>
+
 #include "CharacterManager.h"
 
 namespace GenericBoson

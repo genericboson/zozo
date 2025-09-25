@@ -2,10 +2,10 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
-#include "BoostTcpSocket.h"
 #include "ISocket.h"
+#include "BoostTcpSocket.h"
 
-name GenericBoson
+namespace GenericBoson
 {
 	BoostTcpSocket::BoostTcpSocket(
 		std::shared_ptr< boost::asio::ip::tcp::socket > pSocket)

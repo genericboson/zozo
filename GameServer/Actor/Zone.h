@@ -4,10 +4,10 @@ namespace GenericBoson
 {
 	class Character;
 
-	class Room
+	class Zone
 	{
 	public:
-		virtual ~Room() { }
+		virtual ~Zone() { }
 
 		bool Enter(const std::shared_ptr< Character >& pCharacter);
 

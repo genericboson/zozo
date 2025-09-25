@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include "Types.h"
+#include "Engine/Types.h"
 
 namespace GenericBoson
 {

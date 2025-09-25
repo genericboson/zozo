@@ -1,6 +1,6 @@
 #pragma once
 
-namesapce GenericBoson
+namespace GenericBoson
 {
 	class Message;
 

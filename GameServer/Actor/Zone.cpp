@@ -1,11 +1,13 @@
 #include "PCH.h"
 
-#include "Character.h"
-#include "Room.h"
+#include <Engine/Macros.h>
+
+#include "Character/Character.h"
+#include "Zone.h"
 
 namespace GenericBoson
 {
-	bool Room::Enter(const std::shared_ptr<Character>& pCharacter)
+	bool Zone::Enter(const std::shared_ptr<Character>& pCharacter)
 	{
 		NULL_RETURN(pCharacter, false);
 
@@ -14,7 +16,7 @@ namespace GenericBoson
 		return true;
 	}
 
-	bool Room::Leave(const int64_t id)
+	bool Zone::Leave(const int64_t id)
 	{
 		NULL_RETURN(id, false);
 

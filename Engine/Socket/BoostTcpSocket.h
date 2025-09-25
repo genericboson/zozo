@@ -17,5 +17,5 @@ namespace GenericBoson
 
 	private:
 		std::shared_ptr< boost::asio::ip::tcp::socket > m_pSocket;
-	}
+	};
 }
