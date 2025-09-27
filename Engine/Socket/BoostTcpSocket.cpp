@@ -2,33 +2,29 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
-#include "ISocket.h"
 #include "BoostTcpSocket.h"
 
 namespace GenericBoson
 {
 	BoostTcpSocket::BoostTcpSocket(
-		std::shared_ptr< boost::asio::ip::tcp::socket > pSocket)
-		: m_pSocket(pSocket)
+		boost::asio::ip::tcp::socket pSocket)
+		: m_socket(std::move(pSocket))
 	{
 	}
 
 	void BoostTcpSocket::Close()
 	{
-		if (!m_pSocket)
-			return;
-			
-		if (m_pSocket->is_open())
+		if (!IsOpen())
 			return;
 
 		boost::system::error_code ec;
-		m_pSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-		m_pSocket->close(ec);
+		m_socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+		m_socket.close(ec);
 	}
 
 	bool BoostTcpSocket::IsOpen() const
 	{
-		return m_pSocket && m_pSocket->is_open();
+		return m_socket.is_open();
 	}
 
 	void BoostTcpSocket::Start()

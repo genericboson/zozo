@@ -12,3 +12,5 @@
 #include <memory>
 #include <mutex>
 #include <unordered_map>
+
+#include <Engine/Macros.h>

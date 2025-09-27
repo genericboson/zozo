@@ -12,13 +12,13 @@ namespace GenericBoson
 	class Character : public IActor, public TxExecutor
 	{
 	public:
-		Character(
-			std::shared_ptr< ISocket > pSocket,
-			std::weak_ptr< Zone >      wpZone);
+		Character(std::shared_ptr< ISocket > pSocket );
 
 		virtual ~Character() = default;
 
 		int64_t Id() const override;
+
+		void Initiailize();
 	private:
 		int64_t                    m_id;
 		std::shared_ptr< ISocket > m_pSocket;

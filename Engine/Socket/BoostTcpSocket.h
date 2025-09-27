@@ -1,13 +1,18 @@
 #pragma once
 
+#include <boost/asio.hpp>
+
+#include "ISocket.h"
+
 namespace GenericBoson
 {
 	class ISocket;
 
 	class BoostTcpSocket : public ISocket
 	{
+	public:
 		BoostTcpSocket(
-			std::shared_ptr< boost::asio::ip::tcp::socket > pSocket);
+			boost::asio::ip::tcp::socket pSocket);
 
 		void Start() override;
 		void Write(const Message& msg) override;
@@ -16,6 +21,6 @@ namespace GenericBoson
 		bool IsOpen() const;
 
 	private:
-		std::shared_ptr< boost::asio::ip::tcp::socket > m_pSocket;
+		boost::asio::ip::tcp::socket m_socket;
 	};
 }

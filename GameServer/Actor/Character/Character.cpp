@@ -4,10 +4,8 @@
 
 namespace GenericBoson
 {
-    Character::Character(
-        std::shared_ptr<ISocket> pSocket, 
-        std::weak_ptr<Zone>      wpZone)
-		: m_pSocket(pSocket), m_wpZone(wpZone)
+    Character::Character(std::shared_ptr<ISocket> pSocket)
+		: m_id(0), m_pSocket(pSocket)
     {
     }
 
