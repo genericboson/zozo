@@ -36,7 +36,7 @@ namespace GenericBoson
 				if (!error)
 				{
 					auto pCharacter = std::make_shared<Character>(
-						std::make_shared<BoostTcpSocket>(socket));
+						std::make_shared<BoostTcpSocket>(std::move(socket)));
 					INFO_LOG( "Clientd accepted ( ClientId - %lld", pCharacter->Id() );
 
 					CharacterManager::GetInstance()->AddCharacter(std::move(pCharacter));
