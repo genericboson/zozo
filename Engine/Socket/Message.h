@@ -27,11 +27,14 @@ namespace GenericBoson
 
 		void EncodeHeader();
 
+		uint16_t Id() const;
+
 	public:
-		enum {HEADER_SIZE   = 4  };
+		enum {HEADER_SIZE   = 8  };
 		enum {MAX_BODY_SIZE = 512};
 	private:
-		uint8_t m_pData[HEADER_SIZE + MAX_BODY_SIZE] = { 0, };
+		uint32_t    m_id = 0;
+		uint8_t     m_pData[HEADER_SIZE + MAX_BODY_SIZE] = { 0, };
 		std::size_t m_bodySize;
 	};
 }

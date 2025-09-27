@@ -1,0 +1,8 @@
+namespace GenericBoson.Zozo;
+
+table Connection
+{
+    name: string;
+}
+
+root_type Connection;

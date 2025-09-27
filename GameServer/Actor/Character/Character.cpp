@@ -4,9 +4,15 @@
 
 #include <boost/asio.hpp>
 
-#include "Character.h"
+#include <flatbuffers/flatbuffers.h>
+
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
+
+#include <MessageSchema/Connection_generated.h>
+#include <MessageSchema/MessageId_generated.h>
+
+#include "Character.h"
 
 namespace GenericBoson
 {
@@ -32,7 +38,7 @@ namespace GenericBoson
     {
 		auto self{ shared_from_this() };
 
-        m_pSocket->Read();
+        m_pSocket->ReadHeader();
     }
 
     void Character::HandleWrite()
@@ -41,5 +47,30 @@ namespace GenericBoson
 
     void Character::OnDisconnected()
     {
+    }
+
+    void Character::ReadMessage(const uint32_t id, const uint8_t* pData, std::size_t dataSize)
+    {
+        using namespace Zozo;
+
+        if (id > MessageId_MAX)
+        {
+			WARN_LOG("Invalid message id ( Id - %d )", id);
+            return;
+        }
+
+        auto verifier = flatbuffers::Verifier(pData, dataSize);
+        
+        switch (static_cast<MessageId>(id))
+        {
+        case MessageId::MessageId_Connection:
+            {
+                
+            }
+            break;
+        default:
+            WARN_LOG("Unhandled message id ( Id - %d )", id);
+			break;
+        }
     }
 }

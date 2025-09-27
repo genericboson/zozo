@@ -18,7 +18,8 @@ namespace GenericBoson
 
 		virtual void Start() = 0;
 		virtual void Write(const Message& msg) = 0;
-		virtual void Read() = 0;
+		virtual void ReadHeader() = 0;
+		virtual void ReadBody() = 0;
 
 		virtual ESocketType GetType() = 0;
 		virtual bool IsValid() const = 0;

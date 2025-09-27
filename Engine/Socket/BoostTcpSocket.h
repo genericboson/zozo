@@ -20,16 +20,14 @@ namespace GenericBoson
 
 		void Start() override;
 		void Write(const Message& msg) override;
-		void Read() override;
+		void ReadHeader() override;
+		void ReadBody() override;
 
 		ESocketType GetType() override;
 		bool IsValid() const override;
 
 		void Close();
 		bool IsOpen() const;
-
-	private:
-		void ReadMessage();
 
 	private:
 		boost::asio::ip::tcp::socket m_socket;

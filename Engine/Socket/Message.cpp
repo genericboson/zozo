@@ -48,20 +48,26 @@ namespace GenericBoson
 
 	bool Message::DecodeHeader()
 	{
-		char header[HEADER_SIZE + 1] = { 0, };
-		strncat_s(header, (char*)m_pData, HEADER_SIZE);
-		m_bodySize = std::atoi(header);
-		if (m_bodySize <= MAX_BODY_SIZE)
+		auto intArray = static_cast<int32_t*>(m_pData);
+		if (intArray[0] <= MAX_BODY_SIZE)
+		{
+			m_bodySize = intArray[0];
+			m_id       = intArray[1];
 			return true;
+		}
 
-		m_bodySize = 0;
 		return false;
 	}
 
 	void Message::EncodeHeader()
 	{
-		char header[HEADER_SIZE + 1] = { 0, };
-		sprintf_s(header, "%4d", static_cast<int32_t>(m_bodySize));
-		memcpy_s(m_pData, HEADER_SIZE + MAX_BODY_SIZE, header, HEADER_SIZE);
+		auto intArray = static_cast<int32_t*>(m_pData);
+		intArray[0] = m_bodySize;
+		intArray[1] = m_id;
+	}
+
+	uint32_t Message::Id() const
+	{
+		return m_id;
 	}
 }

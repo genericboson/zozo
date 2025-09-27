@@ -32,10 +32,6 @@ namespace GenericBoson
 		return m_socket.is_open();
 	}
 
-	void BoostTcpSocket::ReadMessage()
-	{
-	}
-
 	void BoostTcpSocket::Start()
 	{
 	}
@@ -44,7 +40,7 @@ namespace GenericBoson
 	{
 	}
 
-	void BoostTcpSocket::Read()
+	void BoostTcpSocket::ReadHeader()
 	{
 		boost::asio::async_read(m_socket,
 			boost::asio::buffer(m_readMsg.Data(), Message::HEADER_SIZE),
@@ -60,18 +56,54 @@ namespace GenericBoson
 					{
 						WARN_LOG("Socket error ( error - %d )", error.value());
 					}
+				}
+				else if (m_readMsg.DecodeHeader())
+				{
+					ReadBody();
+					return; // success
+				}
+				else
+				{
+					WARN_LOG("Invalid header found");
+				}
 
-					if ( const auto pOwner = m_wpOwner.lock() )
+				if (const auto pOwner = m_wpOwner.lock())
+				{
+					pOwner->OnDisconnected();
+				}
+		});
+	}
+
+	void BoostTcpSocket::ReadBody()
+	{
+		boost::asio::async_read(m_socket,
+			boost::asio::buffer(m_readMsg.Body(), m_readMsg.BodySize()),
+			[this](boost::system::error_code error, std::size_t /*readSize*/)
+			{
+				if (error)
+				{
+					if (error == boost::asio::error::eof)
+					{
+						INFO_LOG("Socket disconnected ( ClientId - %d )", 0);
+					}
+					else
+					{
+						WARN_LOG("Socket error ( error - %d )", error.value());
+					}
+
+					if (const auto pOwner = m_wpOwner.lock())
 					{
 						pOwner->OnDisconnected();
 					}
 				}
 				else
 				{
-					ReadMessage();
-					Read();
+					if (const auto pOwner = m_wpOwner.lock())
+					{
+						ReadMessage(m_readMsg.Body(), m_readMsg.BodySize());
+					}
 				}
-		});
+			});
 	}
 
 	ESocketType BoostTcpSocket::GetType()
