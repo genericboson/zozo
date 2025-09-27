@@ -33,14 +33,28 @@ namespace GenericBoson
 			[this](const boost::system::error_code& error,
 				boost::asio::ip::tcp::socket socket)
 			{
-				if (!error)
+				if (error)
 				{
-					auto pCharacter = std::make_shared<Character>(
-						std::make_shared<BoostTcpSocket>(std::move(socket)));
-					INFO_LOG( "Clientd accepted ( ClientId - %lld", pCharacter->Id() );
-
-					CharacterManager::GetInstance()->AddCharacter(std::move(pCharacter));
+					WARN_LOG("error ( error value - %d )", error.value());
 				}
+				else
+				{
+					auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
+					auto pCharacter = std::make_shared<Character>(pSocket);
+					INFO_LOG("Client accepted ( ClientId - %lld )", pCharacter->Id());
+
+					pSocket->Initialize(pCharacter);
+					if (pCharacter->Initiailize())
+					{
+						CharacterManager::GetInstance()->AddCharacter(std::move(pCharacter));
+					}
+					else
+					{
+						WARN_LOG("character initialize failed ( CharacterId - %d )", pCharacter->Id());
+					}
+				}
+
+				HandleAccept();
 			});
 	}
 }
