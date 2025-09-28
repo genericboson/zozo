@@ -36,8 +36,6 @@ namespace GenericBoson
 
     void Character::HandleRead()
     {
-		auto self{ shared_from_this() };
-
         m_pSocket->ReadHeader();
     }
 

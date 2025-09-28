@@ -48,7 +48,7 @@ namespace GenericBoson
 
 	bool Message::DecodeHeader()
 	{
-		auto intArray = static_cast<int32_t*>(m_pData);
+		auto intArray = (int32_t*)(m_pData);
 		if (intArray[0] <= MAX_BODY_SIZE)
 		{
 			m_bodySize = intArray[0];
@@ -61,7 +61,7 @@ namespace GenericBoson
 
 	void Message::EncodeHeader()
 	{
-		auto intArray = static_cast<int32_t*>(m_pData);
+		auto intArray = (int32_t*)(m_pData);
 		intArray[0] = m_bodySize;
 		intArray[1] = m_id;
 	}

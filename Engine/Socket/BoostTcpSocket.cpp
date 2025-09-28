@@ -50,11 +50,11 @@ namespace GenericBoson
 				{
 					if (error == boost::asio::error::eof)
 					{
-						INFO_LOG("Socket disconnected ( ClientId - %d )", 0);
+						INFO_LOG("Socket disconnected ( ClientId - {} )", 0);
 					}
 					else
 					{
-						WARN_LOG("Socket error ( error - %d )", error.value());
+						ERROR_LOG("Socket error ( error - {} )", error.value());
 					}
 				}
 				else if (m_readMsg.DecodeHeader())
@@ -84,11 +84,11 @@ namespace GenericBoson
 				{
 					if (error == boost::asio::error::eof)
 					{
-						INFO_LOG("Socket disconnected ( ClientId - %d )", 0);
+						INFO_LOG("Socket disconnected ( ClientId - {} )", 0);
 					}
 					else
 					{
-						WARN_LOG("Socket error ( error - %d )", error.value());
+						ERROR_LOG("Socket error ( error - {} )", error.value());
 					}
 
 					if (const auto pOwner = m_wpOwner.lock())
@@ -100,7 +100,7 @@ namespace GenericBoson
 				{
 					if (const auto pOwner = m_wpOwner.lock())
 					{
-						ReadMessage(m_readMsg.Body(), m_readMsg.BodySize());
+						pOwner->ReadMessage(m_readMsg.Id(), m_readMsg.Body(), m_readMsg.BodySize());
 					}
 				}
 			});

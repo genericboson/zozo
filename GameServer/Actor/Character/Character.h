@@ -21,7 +21,7 @@ namespace GenericBoson
 		int64_t Id() const override;
 
 		bool Initiailize();
-		void ReadMessage( const uint32_t id, const uint8_t* pData, std::size_t dataSize) override;
+		void ReadMessage(const uint32_t id, const uint8_t* pData, std::size_t dataSize) override;
 	private:
 		void HandleRead();
 		void HandleWrite();

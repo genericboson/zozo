@@ -27,7 +27,7 @@ namespace GenericBoson
 
 		void EncodeHeader();
 
-		uint16_t Id() const;
+		uint32_t Id() const;
 
 	public:
 		enum {HEADER_SIZE   = 8  };

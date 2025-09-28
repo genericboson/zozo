@@ -11,6 +11,7 @@ add_subdirectory ("GameServer")
 add_subdirectory ("DbCacheServer")
 add_subdirectory ("Test")
 add_subdirectory ("Bot")
+add_subdirectory ("TestConsole")
 
 #add_subdirectory ("flatbuffers")
 
