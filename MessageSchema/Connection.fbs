@@ -5,4 +5,14 @@ table Connection
     name: string;
 }
 
+table Pint
+{
+    name: int;
+}
+
+table Pong
+{
+    name: int;
+}
+
 root_type Connection;
