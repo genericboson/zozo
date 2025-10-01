@@ -19,6 +19,12 @@ namespace Zozo {
 struct Connection;
 struct ConnectionBuilder;
 
+struct Ping;
+struct PingBuilder;
+
+struct Pong;
+struct PongBuilder;
+
 struct Connection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ConnectionBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -68,6 +74,88 @@ inline ::flatbuffers::Offset<Connection> CreateConnectionDirect(
   return GenericBoson::Zozo::CreateConnection(
       _fbb,
       name__);
+}
+
+struct Ping FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PingBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIMESTAMP = 4
+  };
+  int32_t timestamp() const {
+    return GetField<int32_t>(VT_TIMESTAMP, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TIMESTAMP, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct PingBuilder {
+  typedef Ping Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_timestamp(int32_t timestamp) {
+    fbb_.AddElement<int32_t>(Ping::VT_TIMESTAMP, timestamp, 0);
+  }
+  explicit PingBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Ping> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Ping>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Ping> CreatePing(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t timestamp = 0) {
+  PingBuilder builder_(_fbb);
+  builder_.add_timestamp(timestamp);
+  return builder_.Finish();
+}
+
+struct Pong FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PongBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TIMESTAMP = 4
+  };
+  int32_t timestamp() const {
+    return GetField<int32_t>(VT_TIMESTAMP, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TIMESTAMP, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct PongBuilder {
+  typedef Pong Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_timestamp(int32_t timestamp) {
+    fbb_.AddElement<int32_t>(Pong::VT_TIMESTAMP, timestamp, 0);
+  }
+  explicit PongBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Pong> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Pong>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Pong> CreatePong(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t timestamp = 0) {
+  PongBuilder builder_(_fbb);
+  builder_.add_timestamp(timestamp);
+  return builder_.Finish();
 }
 
 inline const GenericBoson::Zozo::Connection *GetConnection(const void *buf) {

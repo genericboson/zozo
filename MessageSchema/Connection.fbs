@@ -5,14 +5,14 @@ table Connection
     name: string;
 }
 
-table Pint
+table Ping
 {
-    name: int;
+    timestamp: int;
 }
 
 table Pong
 {
-    name: int;
+    timestamp: int;
 }
 
 root_type Connection;
