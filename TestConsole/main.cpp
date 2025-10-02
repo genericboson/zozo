@@ -25,7 +25,15 @@ int main()
 
 	std::thread t([&ioContext] { ioContext.run(); });
 
-	static_cast<void>(getchar());
+	while (1)
+	{
+		std::string input;
+		std::cin >> input;
+		if (input == "exit")
+			break;
+
+		
+	}
 
 	ioContext.stop();
 
