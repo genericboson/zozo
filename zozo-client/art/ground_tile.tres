@@ -1,0 +1,37 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://xpt2r37kjiqn"]
+
+[ext_resource type="Texture2D" uid="uid://d0uqkoi4b4vj5" path="res://art/plains.png" id="1_18kb3"]
+[ext_resource type="Texture2D" uid="uid://bc2q8cmjdxy6t" path="res://art/grass.png" id="2_corae"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_corae"]
+texture = ExtResource("1_18kb3")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5wysk"]
+texture = ExtResource("2_corae")
+0:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_corae")
+sources/1 = SubResource("TileSetAtlasSource_5wysk")
