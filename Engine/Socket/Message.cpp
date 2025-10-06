@@ -52,7 +52,6 @@ namespace GenericBoson
 		if (intArray[0] <= MAX_BODY_SIZE)
 		{
 			m_bodySize = intArray[0];
-			m_id       = intArray[1];
 			return true;
 		}
 
@@ -63,11 +62,5 @@ namespace GenericBoson
 	{
 		auto intArray = (int32_t*)(m_pData);
 		intArray[0] = m_bodySize;
-		intArray[1] = m_id;
-	}
-
-	uint32_t Message::Id() const
-	{
-		return m_id;
 	}
 }

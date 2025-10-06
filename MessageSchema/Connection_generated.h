@@ -13,11 +13,16 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 10,
              "Non-compatible flatbuffers version included");
 
+#include "Constant_generated.h"
+
 namespace GenericBoson {
 namespace Zozo {
 
-struct Connection;
-struct ConnectionBuilder;
+struct ConnectionReq;
+struct ConnectionReqBuilder;
+
+struct ConnectionAck;
+struct ConnectionAckBuilder;
 
 struct Ping;
 struct PingBuilder;
@@ -25,8 +30,8 @@ struct PingBuilder;
 struct Pong;
 struct PongBuilder;
 
-struct Connection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef ConnectionBuilder Builder;
+struct ConnectionReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ConnectionReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4
   };
@@ -41,39 +46,80 @@ struct Connection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct ConnectionBuilder {
-  typedef Connection Table;
+struct ConnectionReqBuilder {
+  typedef ConnectionReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(Connection::VT_NAME, name);
+    fbb_.AddOffset(ConnectionReq::VT_NAME, name);
   }
-  explicit ConnectionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit ConnectionReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Connection> Finish() {
+  ::flatbuffers::Offset<ConnectionReq> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Connection>(end);
+    auto o = ::flatbuffers::Offset<ConnectionReq>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Connection> CreateConnection(
+inline ::flatbuffers::Offset<ConnectionReq> CreateConnectionReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0) {
-  ConnectionBuilder builder_(_fbb);
+  ConnectionReqBuilder builder_(_fbb);
   builder_.add_name(name);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<Connection> CreateConnectionDirect(
+inline ::flatbuffers::Offset<ConnectionReq> CreateConnectionReqDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *name = nullptr) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
-  return GenericBoson::Zozo::CreateConnection(
+  return GenericBoson::Zozo::CreateConnectionReq(
       _fbb,
       name__);
+}
+
+struct ConnectionAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ConnectionAckBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT_CODE = 4
+  };
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct ConnectionAckBuilder {
+  typedef ConnectionAck Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(ConnectionAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  explicit ConnectionAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ConnectionAck> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ConnectionAck>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ConnectionAck> CreateConnectionAck(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+  ConnectionAckBuilder builder_(_fbb);
+  builder_.add_result_code(result_code);
+  return builder_.Finish();
 }
 
 struct Ping FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -120,14 +166,14 @@ inline ::flatbuffers::Offset<Ping> CreatePing(
 struct Pong FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PongBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TIMESTAMP = 4
+    VT_RESULT_CODE = 4
   };
-  int32_t timestamp() const {
-    return GetField<int32_t>(VT_TIMESTAMP, 0);
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_TIMESTAMP, 4) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            verifier.EndTable();
   }
 };
@@ -136,8 +182,8 @@ struct PongBuilder {
   typedef Pong Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_timestamp(int32_t timestamp) {
-    fbb_.AddElement<int32_t>(Pong::VT_TIMESTAMP, timestamp, 0);
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(Pong::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
   }
   explicit PongBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -152,39 +198,39 @@ struct PongBuilder {
 
 inline ::flatbuffers::Offset<Pong> CreatePong(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t timestamp = 0) {
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
   PongBuilder builder_(_fbb);
-  builder_.add_timestamp(timestamp);
+  builder_.add_result_code(result_code);
   return builder_.Finish();
 }
 
-inline const GenericBoson::Zozo::Connection *GetConnection(const void *buf) {
-  return ::flatbuffers::GetRoot<GenericBoson::Zozo::Connection>(buf);
+inline const GenericBoson::Zozo::Pong *GetPong(const void *buf) {
+  return ::flatbuffers::GetRoot<GenericBoson::Zozo::Pong>(buf);
 }
 
-inline const GenericBoson::Zozo::Connection *GetSizePrefixedConnection(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<GenericBoson::Zozo::Connection>(buf);
+inline const GenericBoson::Zozo::Pong *GetSizePrefixedPong(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<GenericBoson::Zozo::Pong>(buf);
 }
 
-inline bool VerifyConnectionBuffer(
+inline bool VerifyPongBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<GenericBoson::Zozo::Connection>(nullptr);
+  return verifier.VerifyBuffer<GenericBoson::Zozo::Pong>(nullptr);
 }
 
-inline bool VerifySizePrefixedConnectionBuffer(
+inline bool VerifySizePrefixedPongBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<GenericBoson::Zozo::Connection>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<GenericBoson::Zozo::Pong>(nullptr);
 }
 
-inline void FinishConnectionBuffer(
+inline void FinishPongBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<GenericBoson::Zozo::Connection> root) {
+    ::flatbuffers::Offset<GenericBoson::Zozo::Pong> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedConnectionBuffer(
+inline void FinishSizePrefixedPongBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<GenericBoson::Zozo::Connection> root) {
+    ::flatbuffers::Offset<GenericBoson::Zozo::Pong> root) {
   fbb.FinishSizePrefixed(root);
 }
 

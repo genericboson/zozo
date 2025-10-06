@@ -5,10 +5,13 @@
 namespace GenericBoson.Zozo
 {
 
-public enum MessageId : uint
+public enum ResultCode : uint
 {
-  None = 0,
-  Connection = 1,
+  Success = 0,
+  InvalidPacket = 1,
+  NotAuthenticated = 2,
+  ServerFull = 3,
+  Banned = 4,
 };
 
 

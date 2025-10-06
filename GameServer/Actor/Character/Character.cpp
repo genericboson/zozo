@@ -9,8 +9,7 @@
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
-#include <MessageSchema/Connection_generated.h>
-#include <MessageSchema/MessageId_generated.h>
+#include <MessageSchema/Message_generated.h>
 
 #include "Character.h"
 
@@ -47,27 +46,53 @@ namespace GenericBoson
     {
     }
 
-    void Character::ReadMessage(const uint32_t id, const uint8_t* pData, std::size_t dataSize)
+    void Character::ReadMessage(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 
-        if (id > MessageId_MAX)
-        {
-			WARN_LOG("Invalid message id ( Id - %d )", id);
-            return;
-        }
-
         auto verifier = flatbuffers::Verifier(pData, dataSize);
+        if (!VerifyMessageBuffer(verifier))
+            return;
+
+        auto message = Zozo::GetMessage(pData);
+        NULL_RETURN(message)
         
-        switch (static_cast<MessageId>(id))
+        switch (message->payload_type())
         {
-        case MessageId::MessageId_Connection:
+        case Payload::Payload_ConnectionReq:
             {
                 
             }
             break;
+        case Payload::Payload_ConnectionAck:
+            {
+                
+            }
+            break;
+        case Payload::Payload_Ping:
+            {
+
+            }
+            break;
+        case Payload::Payload_Pong:
+            {
+
+            }
+            break;
+        case Payload::Payload_CharacterMoveReq:
+            {
+			    auto moveReq = message->payload_as_CharacterMoveReq();
+                INFO_LOG("CharacterPos:{},{}", moveReq->x(), moveReq->y());
+            }
+            break;
+        case Payload::Payload_CharacterMoveAck:
+            {
+
+            }
+            break;
         default:
-            WARN_LOG("Unhandled message id ( Id - %d )", id);
+            WARN_LOG("Unhandled message ( payload_type - %s )", 
+                EnumNamePayload(message->payload_type()));
 			break;
         }
     }

@@ -1,0 +1,22 @@
+include "Constant.fbs";
+include "CharacterMove.fbs";
+include "Connection.fbs";
+
+namespace GenericBoson.Zozo;
+
+union Payload
+{
+    ConnectionReq,
+    ConnectionAck,
+    Ping,
+    Pong,
+    CharacterMoveReq,
+    CharacterMoveAck,
+}
+
+table Message
+{
+    payload:Payload;
+}
+
+root_type Message;

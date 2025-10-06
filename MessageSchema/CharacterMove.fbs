@@ -1,0 +1,17 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+table CharacterMoveReq
+{
+    x: float;
+    y: float;
+}
+
+table CharacterMoveAck
+{
+    result_code: ResultCode;
+}
+
+root_type CharacterMoveReq;
+root_type CharacterMoveAck;

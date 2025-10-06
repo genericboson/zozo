@@ -12,6 +12,16 @@ public class ZZTcpSocket
         m_stream.SetNoDelay(true);
     }
 
+    public void _Ready()
+    {
+        if (m_stream.GetStatus() == StreamPeerTcp.Status.Connected)
+            return;
+
+        var err = m_stream.ConnectToHost("127.0.0.1", 8001);
+        if (err != Error.Ok)
+            GD.PrintErr($"ConnectToHost error: {err}");
+    }
+
     public void EnqueueSend(byte[] data)
     {
         m_sendQueue.Enqueue(data);
@@ -36,7 +46,11 @@ public class ZZTcpSocket
 
         // send
         while (m_sendQueue.TryDequeue(out var data))
-            m_stream.PutData(data);
+        {
+            var err = m_stream.PutData(data);
+            if (err != Error.Ok)
+                GD.PrintErr($"PutData error: {err}");
+        }
 
         // receive
         if (m_stream.GetAvailableBytes() > 0)

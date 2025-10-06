@@ -8,6 +8,14 @@
       "contextType": "custom",
       "command": "flatc.exe",
       "args": [ "--cpp", "-o ${fileDirname}", "${file}" ]
+    },
+	{
+      "taskLabel": "execute-batch",
+      "appliesTo": "*.bat",
+      "type": "launch",
+      "contextType": "custom",
+      "command": "cmd.exe",
+      "args": [ "${file}" ]
     }
   ]
 }

@@ -9,6 +9,6 @@ namespace GenericBoson
 		virtual int64_t Id() const = 0;
 
 		virtual void OnDisconnected() = 0;
-		virtual void ReadMessage(const uint32_t id, const uint8_t* pData, std::size_t dataSize) = 0;
+		virtual void ReadMessage(const uint8_t* pData, std::size_t dataSize) = 0;
 	};
 }

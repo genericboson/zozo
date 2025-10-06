@@ -1,8 +1,15 @@
+include "Constant.fbs";
+
 namespace GenericBoson.Zozo;
 
-table Connection
+table ConnectionReq
 {
     name: string;
+}
+
+table ConnectionAck
+{
+    result_code: ResultCode;
 }
 
 table Ping
@@ -12,7 +19,10 @@ table Ping
 
 table Pong
 {
-    timestamp: int;
+    result_code: ResultCode;
 }
 
-root_type Connection;
+root_type ConnectionReq;
+root_type ConnectionAck;
+root_type Ping;
+root_type Pong;

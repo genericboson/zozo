@@ -100,7 +100,8 @@ namespace GenericBoson
 				{
 					if (const auto pOwner = m_wpOwner.lock())
 					{
-						pOwner->ReadMessage(m_readMsg.Id(), m_readMsg.Body(), m_readMsg.BodySize());
+						pOwner->ReadMessage(m_readMsg.Body(), m_readMsg.BodySize());
+						ReadHeader();
 					}
 				}
 			});

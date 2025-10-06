@@ -9,38 +9,35 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-public struct Pong : IFlatbufferObject
+public struct ConnectionAck : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_2_10(); }
-  public static Pong GetRootAsPong(ByteBuffer _bb) { return GetRootAsPong(_bb, new Pong()); }
-  public static Pong GetRootAsPong(ByteBuffer _bb, Pong obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool VerifyPong(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("", false, PongVerify.Verify); }
+  public static ConnectionAck GetRootAsConnectionAck(ByteBuffer _bb) { return GetRootAsConnectionAck(_bb, new ConnectionAck()); }
+  public static ConnectionAck GetRootAsConnectionAck(ByteBuffer _bb, ConnectionAck obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
-  public Pong __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public ConnectionAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
 
-  public static Offset<GenericBoson.Zozo.Pong> CreatePong(FlatBufferBuilder builder,
+  public static Offset<GenericBoson.Zozo.ConnectionAck> CreateConnectionAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success) {
     builder.StartTable(1);
-    Pong.AddResultCode(builder, result_code);
-    return Pong.EndPong(builder);
+    ConnectionAck.AddResultCode(builder, result_code);
+    return ConnectionAck.EndConnectionAck(builder);
   }
 
-  public static void StartPong(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void StartConnectionAck(FlatBufferBuilder builder) { builder.StartTable(1); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
-  public static Offset<GenericBoson.Zozo.Pong> EndPong(FlatBufferBuilder builder) {
+  public static Offset<GenericBoson.Zozo.ConnectionAck> EndConnectionAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    return new Offset<GenericBoson.Zozo.Pong>(o);
+    return new Offset<GenericBoson.Zozo.ConnectionAck>(o);
   }
-  public static void FinishPongBuffer(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Pong> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedPongBuffer(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Pong> offset) { builder.FinishSizePrefixed(offset.Value); }
 }
 
 
-static public class PongVerify
+static public class ConnectionAckVerify
 {
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {

@@ -1,6 +1,0 @@
-namespace GenericBoson.Zozo;
-
-enum MessageId : uint {
-  None       = 0,
-  Connection = 1,
-}
