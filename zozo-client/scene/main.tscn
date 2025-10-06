@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=4 uid="uid://doli6v5epvvht"]
+[gd_scene load_steps=8 format=4 uid="uid://doli6v5epvvht"]
 
 [ext_resource type="Script" uid="uid://lli6kg40t7ib" path="res://script/player.gd" id="1_v0l8b"]
 [ext_resource type="SpriteFrames" uid="uid://dxxgfkc1owmy6" path="res://art/player_animation.tres" id="2_v0l8b"]
 [ext_resource type="TileSet" uid="uid://xpt2r37kjiqn" path="res://art/ground_tile.tres" id="3_brvut"]
 [ext_resource type="TileSet" uid="uid://b87bbrgxr0tu4" path="res://art/cliff_tile.tres" id="4_0ha60"]
 [ext_resource type="TileSet" uid="uid://dj7qpu6ltwu8l" path="res://art/object_tile.tres" id="5_0ha60"]
+[ext_resource type="Script" uid="uid://ck61pnj6g8b32" path="res://script/CharacterGenerator.cs" id="6_4j5ol"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_brvut"]
 radius = 4.0
@@ -49,3 +50,6 @@ position = Vector2(0, -15)
 sprite_frames = ExtResource("2_v0l8b")
 animation = &"idle_front"
 autoplay = "idle_front"
+
+[node name="character_generator" type="Node" parent="."]
+script = ExtResource("6_4j5ol")
