@@ -4,4 +4,9 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Google.FlatBuffers">
+      <HintPath>C:\flatbuffers\net\FlatBuffers\bin\Debug\net8.0\Google.FlatBuffers.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
