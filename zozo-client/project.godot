@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="ZozoClient"
-run/main_scene="uid://doli6v5epvvht"
+run/main_scene="uid://ijdh8our3m0s"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-SocketManager="*res://script/SocketManager.cs"
+Global="*res://script/Global.gd"
 
 [dotnet]
 

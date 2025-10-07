@@ -1,0 +1,17 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+table LoginReq
+{
+    account: string;
+    password: string;
+}
+
+table LoginAck
+{
+    result_code: ResultCode;
+}
+
+root_type LoginReq;
+root_type LoginAck;

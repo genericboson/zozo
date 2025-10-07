@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpeovetxqtdgh"]
+
+[ext_resource type="Texture2D" uid="uid://dk6k8d5k51kea" path="res://art/character_select.png" id="1_lhj2g"]
+
+[node name="CharacterSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1168.0
+offset_bottom = 664.0
+texture = ExtResource("1_lhj2g")
+stretch_mode = 1

@@ -1,15 +1,13 @@
 include "Constant.fbs";
 include "CharacterMove.fbs";
-include "Connection.fbs";
+include "Lobby.fbs";
 
 namespace GenericBoson.Zozo;
 
 union Payload
 {
-    ConnectionReq,
-    ConnectionAck,
-    Ping,
-    Pong,
+    LoginReq,
+    LoginAck,
     CharacterMoveReq,
     CharacterMoveAck,
 }

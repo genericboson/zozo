@@ -1,0 +1,127 @@
+[gd_scene load_steps=5 format=3 uid="uid://ijdh8our3m0s"]
+
+[ext_resource type="Texture2D" uid="uid://diusotvjg160h" path="res://art/lobby.bmp" id="1_ix0g6"]
+[ext_resource type="Script" uid="uid://cxcj24bm2rprq" path="res://script/Lobby.gd" id="1_qng6a"]
+
+[sub_resource type="SystemFont" id="SystemFont_ix0g6"]
+font_names = PackedStringArray("Comic Sans MS")
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_qng6a"]
+font = SubResource("SystemFont_ix0g6")
+font_size = 100
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qng6a")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -71.0
+offset_right = 1156.0
+offset_bottom = 782.0
+texture = ExtResource("1_ix0g6")
+metadata/_edit_lock_ = true
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 326.0
+offset_top = 148.0
+offset_right = 880.0
+offset_bottom = 418.0
+text = "Zozo Town"
+label_settings = SubResource("LabelSettings_qng6a")
+metadata/_edit_lock_ = true
+
+[node name="Start" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.425
+anchor_top = 0.528
+anchor_right = 0.6
+anchor_bottom = 0.638
+offset_left = 55.399994
+offset_top = 73.85599
+offset_right = -27.069519
+offset_bottom = 41.011383
+text = "Start
+"
+
+[node name="Setting" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.425
+anchor_top = 0.528
+anchor_right = 0.6
+anchor_bottom = 0.638
+offset_left = 54.399994
+offset_top = 126.85599
+offset_right = -28.069519
+offset_bottom = 94.01141
+text = "Setting
+"
+
+[node name="Exit" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.425
+anchor_top = 0.528
+anchor_right = 0.6
+anchor_bottom = 0.638
+offset_left = 54.399994
+offset_top = 182.85599
+offset_right = -28.069519
+offset_bottom = 150.01141
+text = "Exit"
+
+[node name="AccountInput" type="TextEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.347
+anchor_top = 0.48100004
+anchor_right = 0.49300003
+anchor_bottom = 0.59300005
+offset_left = -15.744019
+offset_top = 16.311981
+offset_right = -15.936035
+offset_bottom = -16.264038
+
+[node name="PasswordInput" type="TextEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.56200004
+anchor_top = 0.48100004
+anchor_right = 0.71500003
+anchor_bottom = 0.59300005
+offset_left = 40.575928
+offset_top = 16.311981
+offset_right = 32.319946
+offset_bottom = -16.264038
+
+[node name="Account" type="Label" parent="."]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 336.0
+offset_right = 368.0
+offset_bottom = 359.0
+text = "Account :"
+
+[node name="Account2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 592.0
+offset_top = 336.0
+offset_right = 676.0
+offset_bottom = 385.0
+text = "Password :
+"
+
+[connection signal="pressed" from="Start" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Setting" to="." method="_on_setting_pressed"]

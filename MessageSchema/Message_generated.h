@@ -14,8 +14,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "CharacterMove_generated.h"
-#include "Connection_generated.h"
 #include "Constant_generated.h"
+#include "Lobby_generated.h"
 
 namespace GenericBoson {
 namespace Zozo {
@@ -25,23 +25,19 @@ struct MessageBuilder;
 
 enum Payload : uint8_t {
   Payload_NONE = 0,
-  Payload_ConnectionReq = 1,
-  Payload_ConnectionAck = 2,
-  Payload_Ping = 3,
-  Payload_Pong = 4,
-  Payload_CharacterMoveReq = 5,
-  Payload_CharacterMoveAck = 6,
+  Payload_LoginReq = 1,
+  Payload_LoginAck = 2,
+  Payload_CharacterMoveReq = 3,
+  Payload_CharacterMoveAck = 4,
   Payload_MIN = Payload_NONE,
   Payload_MAX = Payload_CharacterMoveAck
 };
 
-inline const Payload (&EnumValuesPayload())[7] {
+inline const Payload (&EnumValuesPayload())[5] {
   static const Payload values[] = {
     Payload_NONE,
-    Payload_ConnectionReq,
-    Payload_ConnectionAck,
-    Payload_Ping,
-    Payload_Pong,
+    Payload_LoginReq,
+    Payload_LoginAck,
     Payload_CharacterMoveReq,
     Payload_CharacterMoveAck
   };
@@ -49,12 +45,10 @@ inline const Payload (&EnumValuesPayload())[7] {
 }
 
 inline const char * const *EnumNamesPayload() {
-  static const char * const names[8] = {
+  static const char * const names[6] = {
     "NONE",
-    "ConnectionReq",
-    "ConnectionAck",
-    "Ping",
-    "Pong",
+    "LoginReq",
+    "LoginAck",
     "CharacterMoveReq",
     "CharacterMoveAck",
     nullptr
@@ -72,20 +66,12 @@ template<typename T> struct PayloadTraits {
   static const Payload enum_value = Payload_NONE;
 };
 
-template<> struct PayloadTraits<GenericBoson::Zozo::ConnectionReq> {
-  static const Payload enum_value = Payload_ConnectionReq;
+template<> struct PayloadTraits<GenericBoson::Zozo::LoginReq> {
+  static const Payload enum_value = Payload_LoginReq;
 };
 
-template<> struct PayloadTraits<GenericBoson::Zozo::ConnectionAck> {
-  static const Payload enum_value = Payload_ConnectionAck;
-};
-
-template<> struct PayloadTraits<GenericBoson::Zozo::Ping> {
-  static const Payload enum_value = Payload_Ping;
-};
-
-template<> struct PayloadTraits<GenericBoson::Zozo::Pong> {
-  static const Payload enum_value = Payload_Pong;
+template<> struct PayloadTraits<GenericBoson::Zozo::LoginAck> {
+  static const Payload enum_value = Payload_LoginAck;
 };
 
 template<> struct PayloadTraits<GenericBoson::Zozo::CharacterMoveReq> {
@@ -112,17 +98,11 @@ struct Message FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_PAYLOAD);
   }
   template<typename T> const T *payload_as() const;
-  const GenericBoson::Zozo::ConnectionReq *payload_as_ConnectionReq() const {
-    return payload_type() == GenericBoson::Zozo::Payload_ConnectionReq ? static_cast<const GenericBoson::Zozo::ConnectionReq *>(payload()) : nullptr;
+  const GenericBoson::Zozo::LoginReq *payload_as_LoginReq() const {
+    return payload_type() == GenericBoson::Zozo::Payload_LoginReq ? static_cast<const GenericBoson::Zozo::LoginReq *>(payload()) : nullptr;
   }
-  const GenericBoson::Zozo::ConnectionAck *payload_as_ConnectionAck() const {
-    return payload_type() == GenericBoson::Zozo::Payload_ConnectionAck ? static_cast<const GenericBoson::Zozo::ConnectionAck *>(payload()) : nullptr;
-  }
-  const GenericBoson::Zozo::Ping *payload_as_Ping() const {
-    return payload_type() == GenericBoson::Zozo::Payload_Ping ? static_cast<const GenericBoson::Zozo::Ping *>(payload()) : nullptr;
-  }
-  const GenericBoson::Zozo::Pong *payload_as_Pong() const {
-    return payload_type() == GenericBoson::Zozo::Payload_Pong ? static_cast<const GenericBoson::Zozo::Pong *>(payload()) : nullptr;
+  const GenericBoson::Zozo::LoginAck *payload_as_LoginAck() const {
+    return payload_type() == GenericBoson::Zozo::Payload_LoginAck ? static_cast<const GenericBoson::Zozo::LoginAck *>(payload()) : nullptr;
   }
   const GenericBoson::Zozo::CharacterMoveReq *payload_as_CharacterMoveReq() const {
     return payload_type() == GenericBoson::Zozo::Payload_CharacterMoveReq ? static_cast<const GenericBoson::Zozo::CharacterMoveReq *>(payload()) : nullptr;
@@ -139,20 +119,12 @@ struct Message FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-template<> inline const GenericBoson::Zozo::ConnectionReq *Message::payload_as<GenericBoson::Zozo::ConnectionReq>() const {
-  return payload_as_ConnectionReq();
+template<> inline const GenericBoson::Zozo::LoginReq *Message::payload_as<GenericBoson::Zozo::LoginReq>() const {
+  return payload_as_LoginReq();
 }
 
-template<> inline const GenericBoson::Zozo::ConnectionAck *Message::payload_as<GenericBoson::Zozo::ConnectionAck>() const {
-  return payload_as_ConnectionAck();
-}
-
-template<> inline const GenericBoson::Zozo::Ping *Message::payload_as<GenericBoson::Zozo::Ping>() const {
-  return payload_as_Ping();
-}
-
-template<> inline const GenericBoson::Zozo::Pong *Message::payload_as<GenericBoson::Zozo::Pong>() const {
-  return payload_as_Pong();
+template<> inline const GenericBoson::Zozo::LoginAck *Message::payload_as<GenericBoson::Zozo::LoginAck>() const {
+  return payload_as_LoginAck();
 }
 
 template<> inline const GenericBoson::Zozo::CharacterMoveReq *Message::payload_as<GenericBoson::Zozo::CharacterMoveReq>() const {
@@ -199,20 +171,12 @@ inline bool VerifyPayload(::flatbuffers::Verifier &verifier, const void *obj, Pa
     case Payload_NONE: {
       return true;
     }
-    case Payload_ConnectionReq: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ConnectionReq *>(obj);
+    case Payload_LoginReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case Payload_ConnectionAck: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ConnectionAck *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case Payload_Ping: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::Ping *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case Payload_Pong: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::Pong *>(obj);
+    case Payload_LoginAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case Payload_CharacterMoveReq: {

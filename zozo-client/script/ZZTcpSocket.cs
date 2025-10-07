@@ -55,7 +55,8 @@ public class ZZTcpSocket
         // receive
         if (m_stream.GetAvailableBytes() > 0)
         {
-            // Do Godot.StreamPeerTcp scatter and gather automatically?
+            // Godot.StreamPeerTcp scatter and gather automatically
+            // Checked from StreamPeerSocket::read in godot/core/io/stream__peer_socket.cpp
             var received = m_stream.GetData(m_stream.GetAvailableBytes());
             GD.Print(received.ToString());
         }

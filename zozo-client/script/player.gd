@@ -44,6 +44,9 @@ func _physics_process(delta: float) -> void:
 
 func _AfterMove(x:float, y:float) ->void:
 	my_csharp_node.SendCharacterMove(position.x, position.y)
-	var formatStr = "pos:[%f,%f]"
-	var actualStr = formatStr % [position.x,position.y]
-	print(actualStr)
+	
+	#region for debug position
+	#var formatStr = "pos:[%f,%f]"
+	#var actualStr = formatStr % [position.x,position.y]
+	#print(actualStr)
+	#endregion

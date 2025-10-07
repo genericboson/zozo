@@ -8,12 +8,10 @@ namespace GenericBoson.Zozo
 public enum Payload : byte
 {
   NONE = 0,
-  ConnectionReq = 1,
-  ConnectionAck = 2,
-  Ping = 3,
-  Pong = 4,
-  CharacterMoveReq = 5,
-  CharacterMoveAck = 6,
+  LoginReq = 1,
+  LoginAck = 2,
+  CharacterMoveReq = 3,
+  CharacterMoveAck = 4,
 };
 
 
@@ -25,17 +23,11 @@ static public class PayloadVerify
     bool result = true;
     switch((Payload)typeId)
     {
-      case Payload.ConnectionReq:
-        result = GenericBoson.Zozo.ConnectionReqVerify.Verify(verifier, tablePos);
+      case Payload.LoginReq:
+        result = GenericBoson.Zozo.LoginReqVerify.Verify(verifier, tablePos);
         break;
-      case Payload.ConnectionAck:
-        result = GenericBoson.Zozo.ConnectionAckVerify.Verify(verifier, tablePos);
-        break;
-      case Payload.Ping:
-        result = GenericBoson.Zozo.PingVerify.Verify(verifier, tablePos);
-        break;
-      case Payload.Pong:
-        result = GenericBoson.Zozo.PongVerify.Verify(verifier, tablePos);
+      case Payload.LoginAck:
+        result = GenericBoson.Zozo.LoginAckVerify.Verify(verifier, tablePos);
         break;
       case Payload.CharacterMoveReq:
         result = GenericBoson.Zozo.CharacterMoveReqVerify.Verify(verifier, tablePos);

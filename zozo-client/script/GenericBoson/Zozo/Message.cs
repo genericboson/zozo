@@ -22,10 +22,8 @@ public struct Message : IFlatbufferObject
 
   public GenericBoson.Zozo.Payload PayloadType { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.Payload)__p.bb.Get(o + __p.bb_pos) : GenericBoson.Zozo.Payload.NONE; } }
   public TTable? Payload<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
-  public GenericBoson.Zozo.ConnectionReq PayloadAsConnectionReq() { return Payload<GenericBoson.Zozo.ConnectionReq>().Value; }
-  public GenericBoson.Zozo.ConnectionAck PayloadAsConnectionAck() { return Payload<GenericBoson.Zozo.ConnectionAck>().Value; }
-  public GenericBoson.Zozo.Ping PayloadAsPing() { return Payload<GenericBoson.Zozo.Ping>().Value; }
-  public GenericBoson.Zozo.Pong PayloadAsPong() { return Payload<GenericBoson.Zozo.Pong>().Value; }
+  public GenericBoson.Zozo.LoginReq PayloadAsLoginReq() { return Payload<GenericBoson.Zozo.LoginReq>().Value; }
+  public GenericBoson.Zozo.LoginAck PayloadAsLoginAck() { return Payload<GenericBoson.Zozo.LoginAck>().Value; }
   public GenericBoson.Zozo.CharacterMoveReq PayloadAsCharacterMoveReq() { return Payload<GenericBoson.Zozo.CharacterMoveReq>().Value; }
   public GenericBoson.Zozo.CharacterMoveAck PayloadAsCharacterMoveAck() { return Payload<GenericBoson.Zozo.CharacterMoveAck>().Value; }
 
