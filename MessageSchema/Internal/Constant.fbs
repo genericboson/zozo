@@ -1,0 +1,6 @@
+namespace GenericBoson.Zozo;
+
+enum InternalResultCode : uint
+{
+  Success          = 0,
+}

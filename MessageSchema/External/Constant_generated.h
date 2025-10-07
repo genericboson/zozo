@@ -16,51 +16,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 namespace GenericBoson {
 namespace Zozo {
 
-enum MessageId : uint32_t {
-  MessageId_None = 0,
-  MessageId_ConnectionReq = 1,
-  MessageId_ConnectionAck = 2,
-  MessageId_Ping = 3,
-  MessageId_Pong = 4,
-  MessageId_CharacterMoveReq = 5,
-  MessageId_CharacterMoveAck = 6,
-  MessageId_MIN = MessageId_None,
-  MessageId_MAX = MessageId_CharacterMoveAck
-};
-
-inline const MessageId (&EnumValuesMessageId())[7] {
-  static const MessageId values[] = {
-    MessageId_None,
-    MessageId_ConnectionReq,
-    MessageId_ConnectionAck,
-    MessageId_Ping,
-    MessageId_Pong,
-    MessageId_CharacterMoveReq,
-    MessageId_CharacterMoveAck
-  };
-  return values;
-}
-
-inline const char * const *EnumNamesMessageId() {
-  static const char * const names[8] = {
-    "None",
-    "ConnectionReq",
-    "ConnectionAck",
-    "Ping",
-    "Pong",
-    "CharacterMoveReq",
-    "CharacterMoveAck",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNameMessageId(MessageId e) {
-  if (::flatbuffers::IsOutRange(e, MessageId_None, MessageId_CharacterMoveAck)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesMessageId()[index];
-}
-
 enum ResultCode : uint32_t {
   ResultCode_Success = 0,
   ResultCode_InvalidPacket = 1,

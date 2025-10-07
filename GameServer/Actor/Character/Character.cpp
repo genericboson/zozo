@@ -9,7 +9,7 @@
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
-#include <MessageSchema/GameServer_generated.h>
+#include <MessageSchema/External/GameServer_generated.h>
 
 #include "Character.h"
 

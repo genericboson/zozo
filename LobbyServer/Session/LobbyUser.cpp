@@ -9,7 +9,7 @@
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
-#include <MessageSchema/LobbyServer_generated.h>
+#include <MessageSchema/External/LobbyServer_generated.h>
 
 #include "LobbyUser.h"
 
