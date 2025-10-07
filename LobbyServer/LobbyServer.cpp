@@ -43,18 +43,18 @@ namespace GenericBoson
 				else
 				{
 					auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
-					//auto pCharacter = std::make_shared<Character>(pSocket);
+					auto pLobbyUser = std::make_shared<LobbyUser>(pSocket);
 					INFO_LOG("Client accepted ( ClientId - {} )", pCharacter->Id());
 
-					/*pSocket->Initialize(pCharacter);
-					if (pCharacter->Initiailize())
+					pSocket->Initialize(pLobbyUser);
+					if (pLobbyUser->Initiailize())
 					{
-						CharacterManager::GetInstance()->AddCharacter(std::move(pCharacter));
+						LobbyUserManager::GetInstance()->AddLobbyUser(std::move(pLobbyUser));
 					}
 					else
 					{
-						WARN_LOG("character initialize failed ( CharacterId - {} )", pCharacter->Id());
-					}*/
+						WARN_LOG("lobby user initialize failed ( LobbyUserId - {} )", pLobbyUser->Id());
+					}
 				}
 
 				HandleAccept();

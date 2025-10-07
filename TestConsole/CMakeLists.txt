@@ -1,16 +1,16 @@
 file(GLOB_RECURSE CONSOLE_SOURCE *.cpp)
 file(GLOB_RECURSE CONSOLE_HEADER *.h)
 
-#set_source_files_properties(${CONSOLE_SOURCE} PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
-
 add_executable(CONSOLE_CLIENT 
 	${CONSOLE_SOURCE} ${CONSOLE_HEADER}
 )
 
-#target_link_libraries(CONSOLE_CLIENT PRIVATE Engine)
+#target_link_libraries(CONSOLE_CLIENT PRIVATE ENGINE)
 
 set_property(TARGET CONSOLE_CLIENT PROPERTY CXX_STANDARD 20)
 set_property(TARGET CONSOLE_CLIENT PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
+
+target_precompile_headers(CONSOLE_CLIENT PUBLIC PCH.h)
 
 target_compile_definitions(CONSOLE_CLIENT PRIVATE _UNICODE UNICODE)
 target_include_directories(CONSOLE_CLIENT PUBLIC 

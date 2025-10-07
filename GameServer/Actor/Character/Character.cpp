@@ -9,7 +9,7 @@
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
-#include <MessageSchema/Message_generated.h>
+#include <MessageSchema/GameServer_generated.h>
 
 #include "Character.h"
 
@@ -51,48 +51,28 @@ namespace GenericBoson
         using namespace Zozo;
 
         auto verifier = flatbuffers::Verifier(pData, dataSize);
-        if (!VerifyMessageBuffer(verifier))
+        if (!VerifyGameMessageBuffer(verifier))
             return;
 
-        auto message = Zozo::GetMessage(pData);
+        auto message = Zozo::GetGameMessage(pData);
         NULL_RETURN(message)
         
         switch (message->payload_type())
         {
-        case Payload::Payload_ConnectionReq:
-            {
-                
-            }
-            break;
-        case Payload::Payload_ConnectionAck:
-            {
-                
-            }
-            break;
-        case Payload::Payload_Ping:
-            {
-
-            }
-            break;
-        case Payload::Payload_Pong:
-            {
-
-            }
-            break;
-        case Payload::Payload_CharacterMoveReq:
+        case GamePayload::GamePayload_CharacterMoveReq:
             {
 			    auto moveReq = message->payload_as_CharacterMoveReq();
                 INFO_LOG("CharacterPos:{},{}", moveReq->x(), moveReq->y());
             }
             break;
-        case Payload::Payload_CharacterMoveAck:
+        case GamePayload::GamePayload_CharacterMoveAck:
             {
-
+			    ERROR_LOG("Logic error");
             }
             break;
         default:
             WARN_LOG("Unhandled message ( payload_type - %s )", 
-                EnumNamePayload(message->payload_type()));
+                EnumNameGamePayload(message->payload_type()));
 			break;
         }
     }

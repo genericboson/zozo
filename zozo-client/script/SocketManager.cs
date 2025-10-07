@@ -3,7 +3,6 @@ using Godot;
 using Google.FlatBuffers;
 using System;
 using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public partial class SocketManager : Node
 {
@@ -23,12 +22,12 @@ public partial class SocketManager : Node
     {
         var fbb = new FlatBufferBuilder(1);
         var characterMoveReq = CharacterMoveReq.CreateCharacterMoveReq(fbb, x, y);
-        var message = Message.CreateMessage(fbb, Payload.CharacterMoveReq, characterMoveReq.Value);
+        var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterMoveReq, characterMoveReq.Value);
         fbb.Finish(message.Value);
 
         var msg = fbb.SizedByteArray();
 
-        //// for debug
+        #region for_debugging
         //{
         //    var byteStr = "";
         //    foreach (var b in msg)
@@ -38,6 +37,7 @@ public partial class SocketManager : Node
 
         //    GD.Print($"SendCharacterMove: {byteStr}");
         //}
+        #endregion
 
         var sizeBytes = BitConverter.GetBytes(msg.Length);
         Debug.Assert(sizeBytes.Length == 4);

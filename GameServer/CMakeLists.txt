@@ -1,16 +1,16 @@
 file(GLOB_RECURSE GAME_SOURCE *.cpp)
 file(GLOB_RECURSE GAME_HEADER *.h)
 
-#set_source_files_properties(${GAME_SOURCE} PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
-
 add_executable(GAME_SERVER 
 	${GAME_SOURCE} ${GAME_HEADER}
 )
 
-target_link_libraries(GAME_SERVER PRIVATE Engine)
+target_link_libraries(GAME_SERVER PRIVATE DBCACHE_CLIENT ENGINE)
 
 set_property(TARGET GAME_SERVER PROPERTY CXX_STANDARD 20)
 set_property(TARGET GAME_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
+
+target_precompile_headers(GAME_SERVER PUBLIC PCH.h)
 
 target_compile_definitions(GAME_SERVER PRIVATE _UNICODE UNICODE)
 target_include_directories(GAME_SERVER PUBLIC 

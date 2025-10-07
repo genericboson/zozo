@@ -13,5 +13,17 @@ table LoginAck
     result_code: ResultCode;
 }
 
+union LobbyPayload
+{
+    LoginReq,
+    LoginAck,
+}
+
+table LobbyMessage
+{
+    payload:LobbyPayload;
+}
+
 root_type LoginReq;
 root_type LoginAck;
+root_type LobbyMessage;

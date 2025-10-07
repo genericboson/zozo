@@ -5,35 +5,27 @@
 namespace GenericBoson.Zozo
 {
 
-public enum Payload : byte
+public enum LobbyPayload : byte
 {
   NONE = 0,
   LoginReq = 1,
   LoginAck = 2,
-  CharacterMoveReq = 3,
-  CharacterMoveAck = 4,
 };
 
 
 
-static public class PayloadVerify
+static public class LobbyPayloadVerify
 {
   static public bool Verify(Google.FlatBuffers.Verifier verifier, byte typeId, uint tablePos)
   {
     bool result = true;
-    switch((Payload)typeId)
+    switch((LobbyPayload)typeId)
     {
-      case Payload.LoginReq:
+      case LobbyPayload.LoginReq:
         result = GenericBoson.Zozo.LoginReqVerify.Verify(verifier, tablePos);
         break;
-      case Payload.LoginAck:
+      case LobbyPayload.LoginAck:
         result = GenericBoson.Zozo.LoginAckVerify.Verify(verifier, tablePos);
-        break;
-      case Payload.CharacterMoveReq:
-        result = GenericBoson.Zozo.CharacterMoveReqVerify.Verify(verifier, tablePos);
-        break;
-      case Payload.CharacterMoveAck:
-        result = GenericBoson.Zozo.CharacterMoveAckVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

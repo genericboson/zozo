@@ -1,20 +1,17 @@
 include "Constant.fbs";
 include "CharacterMove.fbs";
-include "Lobby.fbs";
 
 namespace GenericBoson.Zozo;
 
-union Payload
+union GamePayload
 {
-    LoginReq,
-    LoginAck,
     CharacterMoveReq,
     CharacterMoveAck,
 }
 
-table Message
+table GameMessage
 {
-    payload:Payload;
+    payload:GamePayload;
 }
 
-root_type Message;
+root_type GameMessage;

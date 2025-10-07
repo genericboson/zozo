@@ -1,16 +1,16 @@
 file(GLOB_RECURSE LOBBY_SOURCE *.cpp)
 file(GLOB_RECURSE LOBBY_HEADER *.h)
 
-#set_source_files_properties(${LOBBY_SOURCE} PROPERTIES COMPILE_FLAGS "/YPCH.h")
-
 add_executable(LOBBY_SERVER 
 	${LOBBY_SOURCE} ${LOBBY_HEADER}
 )
 
-target_link_libraries(LOBBY_SERVER PRIVATE Engine)
+target_link_libraries(LOBBY_SERVER PRIVATE ENGINE)
 
 set_property(TARGET LOBBY_SERVER PROPERTY CXX_STANDARD 20)
 set_property(TARGET LOBBY_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
+
+target_precompile_headers(LOBBY_SERVER PUBLIC PCH.h)
 
 target_compile_definitions(LOBBY_SERVER PRIVATE _UNICODE UNICODE)
 target_include_directories(LOBBY_SERVER PUBLIC 
