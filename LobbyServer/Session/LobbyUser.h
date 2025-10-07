@@ -10,7 +10,7 @@ namespace GenericBoson
 	class LobbyUser :
 		public IActor,
 		public TxExecutor,
-		public std::enable_shared_from_this<Character>
+		public std::enable_shared_from_this<LobbyUser>
 	{
 	public:
 		LobbyUser(const std::shared_ptr<ISocket>& pSocket);

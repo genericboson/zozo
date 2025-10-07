@@ -1,12 +1,12 @@
 #include "PCH.h"
 
-#include "GameServer.h"
+#include "LobbyServer.h"
 
 int main()
 {
 	using namespace GenericBoson;
 
-	GameServer server;
+	LobbyServer server;
 
 	if (!server.Start())
 		return -1;

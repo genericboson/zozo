@@ -13,7 +13,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 10,
              "Non-compatible flatbuffers version included");
 
-#include "Constant_generated.h"
+#include "InternalConstant_generated.h"
 
 namespace GenericBoson {
 namespace Zozo {

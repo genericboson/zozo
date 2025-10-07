@@ -10,6 +10,9 @@
 #include <Engine/Socket/BoostTcpSocket.h>
 
 #include <MessageSchema/External/LobbyServer_generated.h>
+#include <MessageSchema/Internal/DBCacheLobby_generated.h>
+
+#include <DBCacheClient/DBCacheClient.h>
 
 #include "LobbyUser.h"
 
@@ -62,7 +65,13 @@ namespace GenericBoson
         case LobbyPayload::LobbyPayload_LoginReq:
             {
 			    auto loginReq = message->payload_as_LoginReq();
-                NULL_RETURN(loginReq)
+                NULL_RETURN(loginReq);
+
+                /*DBCacheClient::GetInstance()->Upsert(loginReq) |
+                    [](const DBCacheLobbyMessage& ack)
+                    {
+
+                    };*/
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:

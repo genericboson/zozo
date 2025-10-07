@@ -1,4 +1,4 @@
-include "Constant.fbs";
+include "InternalConstant.fbs";
 
 namespace GenericBoson.Zozo;
 

@@ -4,6 +4,9 @@
 
 #include "LobbyServer.h"
 
+#include "Session/LobbyUser.h"
+#include "Session/LobbyUserManager.h"
+
 namespace GenericBoson
 {
 	LobbyServer::LobbyServer(int32_t port /*= 8002*/)
@@ -44,7 +47,7 @@ namespace GenericBoson
 				{
 					auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
 					auto pLobbyUser = std::make_shared<LobbyUser>(pSocket);
-					INFO_LOG("Client accepted ( ClientId - {} )", pCharacter->Id());
+					INFO_LOG("Client accepted ( ClientId - {} )", pLobbyUser->Id());
 
 					pSocket->Initialize(pLobbyUser);
 					if (pLobbyUser->Initiailize())

@@ -6,14 +6,14 @@ enable_testing()
 
 project (ZozoTown)
 
+#add_subdirectory ("Bot")
 add_subdirectory ("Engine")
-add_subdirectory ("GameServer")
-add_subdirectory ("DbCacheServer")
+#add_subdirectory ("DbCacheServer")
+add_subdirectory ("DummyDbCacheServer")
 add_subdirectory ("DbCacheClient")
-add_subdirectory ("Test")
-add_subdirectory ("Bot")
+add_subdirectory ("GameServer")
+add_subdirectory ("LobbyServer")
+#add_subdirectory ("Test")
 add_subdirectory ("TestConsole")
-
-#add_subdirectory ("flatbuffers")
 
 set_property(GLOBAL PROPERTY VS_STARTUP_PROJECT Sample)
