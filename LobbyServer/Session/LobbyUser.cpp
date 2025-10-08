@@ -35,6 +35,7 @@ namespace GenericBoson
             return false;
 
         HandleRead();
+        return true;
     }
 
     void LobbyUser::HandleRead()
@@ -48,6 +49,11 @@ namespace GenericBoson
 
     void LobbyUser::OnDisconnected()
     {
+    }
+
+    void LobbyUser::OnAccepted()
+    {
+        INFO_LOG("LobbyUser accepted ( LobbyUserId - {} )", m_id);
     }
 
     void LobbyUser::ReadMessage(const uint8_t* pData, std::size_t dataSize)

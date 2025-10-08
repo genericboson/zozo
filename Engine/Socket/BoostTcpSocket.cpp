@@ -32,10 +32,6 @@ namespace GenericBoson
 		return m_socket.is_open();
 	}
 
-	void BoostTcpSocket::Start()
-	{
-	}
-
 	void BoostTcpSocket::Write(const Message& msg)
 	{
 	}

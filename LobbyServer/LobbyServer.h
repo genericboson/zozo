@@ -2,26 +2,17 @@
 
 #include <boost/asio.hpp>
 
+#include <Engine/Socket/ServerBase.h>
+
 namespace GenericBoson
 {
-	class LobbyServer
+	class LobbyServer : public ServerBase
 	{
 	public:
 		LobbyServer(int32_t port = 8002);
 		virtual ~LobbyServer() = default;
 
-		bool Start();
-		void Stop();
-
-	private:
-		void HandleAccept();
-
-	private:
-		boost::asio::io_context             m_ioContext;
-		boost::asio::ip::tcp::acceptor      m_acceptor;
-
-		boost::asio::executor_work_guard<
-			boost::asio::io_context::executor_type>
-				                            m_workGuard;
+		auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
+			-> std::shared_ptr<IActor> override;
 	};
 }

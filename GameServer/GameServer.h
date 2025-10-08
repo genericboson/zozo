@@ -2,30 +2,21 @@
 
 #include <boost/asio.hpp>
 
+#include <Engine/Socket/ServerBase.h>
+
 #include "Actor/Zone.h"
 
 namespace GenericBoson
 {
-	class GameServer
+	class GameServer : public ServerBase
 	{
 	public:
 		GameServer(int32_t port = 8001);
 		virtual ~GameServer() = default;
 
-		bool Start();
-		void Stop();
-
+		auto CreateActor(const std::shared_ptr<ISocket>& pSocket) 
+			-> std::shared_ptr<IActor> override;
 	private:
-		void HandleAccept();
-
-	private:
-		boost::asio::io_context             m_ioContext;
-		boost::asio::ip::tcp::acceptor      m_acceptor;
-
-		boost::asio::executor_work_guard<
-			boost::asio::io_context::executor_type>
-				                            m_workGuard;
-
 		std::unordered_map< int64_t, Zone > m_zones;
 	};
 }

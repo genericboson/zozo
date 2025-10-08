@@ -27,8 +27,9 @@ namespace GenericBoson
 		void HandleWrite();
 
 		void OnDisconnected() override;
+		void OnAccepted() override;
 	private:
-		int64_t                    m_id;
+		int64_t                  m_id;
 		std::shared_ptr<ISocket> m_pSocket;
 		std::weak_ptr<Zone>      m_wpZone;
 	};

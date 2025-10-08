@@ -31,6 +31,7 @@ namespace GenericBoson
             return false;
 
         HandleRead();
+        return true;
     }
 
     void Character::HandleRead()
@@ -44,6 +45,11 @@ namespace GenericBoson
 
     void Character::OnDisconnected()
     {
+    }
+
+    void Character::OnAccepted()
+    {
+        INFO_LOG("Client accepted ( ClientId - {} )", m_id);
     }
 
     void Character::ReadMessage(const uint8_t* pData, std::size_t dataSize)

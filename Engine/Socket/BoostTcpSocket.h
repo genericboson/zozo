@@ -18,7 +18,6 @@ namespace GenericBoson
 
 		void Initialize(const std::shared_ptr<IActor>& pOwner);
 
-		void Start() override;
 		void Write(const Message& msg) override;
 		void ReadHeader() override;
 		void ReadBody() override;
