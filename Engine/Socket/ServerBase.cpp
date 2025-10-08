@@ -19,37 +19,59 @@ namespace GenericBoson
 		INFO_LOG("LobbyServer started ( port - {} )",
 			m_acceptor.local_endpoint().port());
 
-		HandleAccept();
+		Accept();
 
 		m_ioContext.run();
+
 		return true;
 	}
 
 	void ServerBase::Stop()
 	{
+		m_isRunning = false;
 		m_ioContext.stop();
 	}
 
-	void ServerBase::HandleAccept()
+	awaitable<void> ServerBase::Read(ip::tcp::socket&& socket)
 	{
-		m_acceptor.async_accept(
-			[this](const boost::system::error_code& error,
-				boost::asio::ip::tcp::socket socket)
+		auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
+		auto pActor = CreateActor(pSocket);
+		pSocket->Initialize(pActor);
+
+		if (!pActor->Initialize())
+		{
+			co_return;
+		}
+
+		pActor->OnAccepted();
+
+		while (m_isRunning)
+		{
+			co_await pSocket->Read();
+		}
+	}
+
+	awaitable<void> ServerBase::Listen()
+	{
+		auto CallRead = [this](ip::tcp::socket&& socket) -> awaitable<void>
 			{
-				if (error)
-				{
-					WARN_LOG("error ( error value - {} )", error.value());
-				}
-				else
-				{
-					auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
-					auto pActor = CreateActor(pSocket);
-					pSocket->Initialize(pActor);
+				return Read(std::move(socket));
+			};
 
-					pActor->OnAccepted();
-				}
+		while (m_isRunning)
+		{
+			auto socket = co_await m_acceptor.async_accept(use_awaitable);
+			co_spawn(m_acceptor.get_executor(), CallRead(std::move(socket)), detached);
+		}
+	}
 
-				HandleAccept();
-			});
+	void ServerBase::Accept()
+	{
+		auto CallListen = [this]() -> awaitable<void>
+			{
+				return Listen();
+			};
+
+		co_spawn(m_ioContext, CallListen, detached);
 	}
 }

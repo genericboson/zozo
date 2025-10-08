@@ -16,17 +16,6 @@ namespace GenericBoson
 	auto GameServer::CreateActor(const std::shared_ptr<ISocket>& pSocket) 
 		-> std::shared_ptr<IActor>
 	{
-		if (auto pCharacter = std::make_shared<Character>(pSocket); 
-			pCharacter->Initiailize())
-		{
-			CharacterManager::GetInstance()->AddCharacter(std::move(pCharacter));
-			return pCharacter;
-		}
-		else
-		{
-			WARN_LOG("character initialize failed ( CharacterId - {} )", pCharacter->Id());
-		}
-
-		return nullptr;
+		return std::make_shared<Character>(pSocket);
 	}
 }

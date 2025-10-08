@@ -17,17 +17,6 @@ namespace GenericBoson
 	auto LobbyServer::CreateActor(const std::shared_ptr<ISocket>& pSocket)
 		-> std::shared_ptr<IActor>
 	{
-		if (auto pLobbyUser = std::make_shared<LobbyUser>(pSocket);
-			pLobbyUser->Initiailize())
-		{
-			LobbyUserManager::GetInstance()->AddLobbyUser(std::move(pLobbyUser));
-			return pLobbyUser;
-		}
-		else
-		{
-			WARN_LOG("lobby user initialize failed ( LobbyUserId - {} )", pLobbyUser->Id());
-		}
-
-		return nullptr;
+		return std::make_shared<LobbyUser>(pSocket);
 	}
 }

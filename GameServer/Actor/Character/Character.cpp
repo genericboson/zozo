@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <boost/asio.hpp>
+#include <boost/asio/use_awaitable.hpp>
 
 #include <flatbuffers/flatbuffers.h>
 
@@ -12,6 +13,7 @@
 #include <MessageSchema/External/GameServer_generated.h>
 
 #include "Character.h"
+#include "CharacterManager.h"
 
 namespace GenericBoson
 {
@@ -25,21 +27,16 @@ namespace GenericBoson
         return m_id;
     }
 
-    bool Character::Initiailize()
+    bool Character::Initialize()
     {
         if (!m_pSocket->IsValid())
             return false;
 
-        HandleRead();
+        CharacterManager::GetInstance()->AddCharacter(shared_from_this());
         return true;
     }
 
-    void Character::HandleRead()
-    {
-        m_pSocket->ReadHeader();
-    }
-
-    void Character::HandleWrite()
+    void Character::Write()
     {
     }
 
@@ -52,7 +49,7 @@ namespace GenericBoson
         INFO_LOG("Client accepted ( ClientId - {} )", m_id);
     }
 
-    void Character::ReadMessage(const uint8_t* pData, std::size_t dataSize)
+    void Character::Read(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 

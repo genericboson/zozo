@@ -1,7 +1,5 @@
 #include "PCH.h"
 
-#include <boost/asio/ip/tcp.hpp>
-
 #include "BoostTcpSocket.h"
 
 namespace GenericBoson
@@ -32,75 +30,52 @@ namespace GenericBoson
 		return m_socket.is_open();
 	}
 
-	void BoostTcpSocket::Write(const Message& msg)
+	awaitable<void> BoostTcpSocket::Write(const Message& msg)
 	{
+		co_return;
 	}
 
-	void BoostTcpSocket::ReadHeader()
+	awaitable<void> BoostTcpSocket::Read()
 	{
-		boost::asio::async_read(m_socket,
-			boost::asio::buffer(m_readMsg.Data(), Message::HEADER_SIZE),
-			[this](boost::system::error_code error, std::size_t /*readSize*/)
+		try
 		{
-				if (error)
-				{
-					if (error == boost::asio::error::eof)
-					{
-						INFO_LOG("Socket disconnected ( ClientId - {} )", 0);
-					}
-					else
-					{
-						ERROR_LOG("Socket error ( error - {} )", error.value());
-					}
-				}
-				else if (m_readMsg.DecodeHeader())
-				{
-					ReadBody();
-					return; // success
-				}
-				else
-				{
-					WARN_LOG("Invalid header found");
-				}
+			auto readHeaderSize = co_await async_read(m_socket,
+				boost::asio::buffer(m_readMsg.Data(), Message::HEADER_SIZE),
+				boost::asio::use_awaitable);
 
-				if (const auto pOwner = m_wpOwner.lock())
-				{
-					pOwner->OnDisconnected();
-				}
-		});
-	}
-
-	void BoostTcpSocket::ReadBody()
-	{
-		boost::asio::async_read(m_socket,
-			boost::asio::buffer(m_readMsg.Body(), m_readMsg.BodySize()),
-			[this](boost::system::error_code error, std::size_t /*readSize*/)
+			if (readHeaderSize && m_readMsg.DecodeHeader())
 			{
-				if (error)
-				{
-					if (error == boost::asio::error::eof)
-					{
-						INFO_LOG("Socket disconnected ( ClientId - {} )", 0);
-					}
-					else
-					{
-						ERROR_LOG("Socket error ( error - {} )", error.value());
-					}
+				auto readBodySize = co_await async_read(m_socket,
+					boost::asio::buffer(m_readMsg.Body(), m_readMsg.BodySize()),
+					boost::asio::use_awaitable);
 
-					if (const auto pOwner = m_wpOwner.lock())
-					{
-						pOwner->OnDisconnected();
-					}
+				if (const auto pOwner = m_wpOwner.lock();
+					readBodySize && pOwner)
+				{
+					pOwner->Read(m_readMsg.Body(), m_readMsg.BodySize());
 				}
 				else
 				{
-					if (const auto pOwner = m_wpOwner.lock())
-					{
-						pOwner->ReadMessage(m_readMsg.Body(), m_readMsg.BodySize());
-						ReadHeader();
-					}
+					ERROR_LOG("Invalid Socket State or pOwner is nullptr. readBodySize - {}", readBodySize);
 				}
-			});
+			}
+		}
+		catch (const boost::system::system_error& e)
+		{
+			if (e.code() == error::eof)
+			{
+				INFO_LOG("Socket disconnected");
+			}
+			else
+			{
+				ERROR_LOG("Socket error ( error - {} )", e.code().message());
+			}
+
+			if (const auto pOwner = m_wpOwner.lock())
+			{
+				pOwner->OnDisconnected();
+			}
+		}
 	}
 
 	ESocketType BoostTcpSocket::GetType()

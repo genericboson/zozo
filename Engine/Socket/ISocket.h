@@ -4,6 +4,8 @@ namespace GenericBoson
 {
 	class Message;
 
+	using namespace boost::asio;
+
 	enum class ESocketType
 	{
 		NONE = 0,
@@ -16,9 +18,8 @@ namespace GenericBoson
 	public:
 		virtual ~ISocket() = default;
 
-		virtual void Write(const Message& msg) = 0;
-		virtual void ReadHeader() = 0;
-		virtual void ReadBody() = 0;
+		virtual awaitable<void> Write(const Message& msg) = 0;
+		virtual awaitable<void> Read() = 0;
 
 		virtual ESocketType GetType() = 0;
 		virtual bool IsValid() const = 0;

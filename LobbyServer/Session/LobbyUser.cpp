@@ -16,6 +16,7 @@
 #include <DBCacheClient/DBCacheClient.h>
 
 #include "LobbyUser.h"
+#include "LobbyUserManager.h"
 
 namespace GenericBoson
 {
@@ -29,21 +30,16 @@ namespace GenericBoson
         return m_id;
     }
 
-    bool LobbyUser::Initiailize()
+    bool LobbyUser::Initialize()
     {
         if (!m_pSocket->IsValid())
             return false;
 
-        HandleRead();
+        LobbyUserManager::GetInstance()->AddLobbyUser(shared_from_this());
         return true;
     }
 
-    void LobbyUser::HandleRead()
-    {
-        m_pSocket->ReadHeader();
-    }
-
-    void LobbyUser::HandleWrite()
+    void LobbyUser::Write()
     {
     }
 
@@ -56,7 +52,7 @@ namespace GenericBoson
         INFO_LOG("LobbyUser accepted ( LobbyUserId - {} )", m_id);
     }
 
-    void LobbyUser::ReadMessage(const uint8_t* pData, std::size_t dataSize)
+    void LobbyUser::Read(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 
