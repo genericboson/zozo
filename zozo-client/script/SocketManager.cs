@@ -57,15 +57,15 @@ public partial class SocketManager : Node
         var msg = fbb.SizedByteArray();
 
         #region for_debugging
-        {
-            var byteStr = "";
-            foreach (var b in msg)
-            {
-                byteStr += b.ToString() + " ";
-            }
+        //{
+        //    var byteStr = "";
+        //    foreach (var b in msg)
+        //    {
+        //        byteStr += b.ToString() + " ";
+        //    }
 
-            GD.Print($"SendLogin: {byteStr}");
-        }
+        //    GD.Print($"SendLogin: {byteStr}");
+        //}
         #endregion
 
         var sizeBytes = BitConverter.GetBytes(msg.Length);

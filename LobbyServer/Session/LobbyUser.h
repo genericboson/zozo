@@ -26,6 +26,8 @@ namespace GenericBoson
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
+
+		void SendLoginAck();
 	private:
 		int64_t                  m_id;
 		std::shared_ptr<ISocket> m_pSocket;

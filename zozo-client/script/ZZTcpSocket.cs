@@ -1,11 +1,18 @@
 using Godot;
+using Google.FlatBuffers;
 using System.Collections.Generic;
+using GenericBoson.Zozo;
+using System.Linq;
+using System.Collections.Immutable;
 
 public class ZZTcpSocket
 {
-    private StreamPeerTcp         m_stream     = new();
-    private StreamPeerTcp.Status  m_lastStatus = StreamPeerTcp.Status.None;
-    private Queue<byte[]>         m_sendQueue  = new();
+    private StreamPeerTcp         m_stream          = new();
+    private StreamPeerTcp.Status  m_lastStatus      = StreamPeerTcp.Status.None;
+    private Queue<byte[]>         m_sendQueue       = new();
+
+    private int                   m_nextRecieveSize = 4;
+    private bool                  m_waitingHeader   = true;
 
     public ZZTcpSocket()
     {
@@ -49,7 +56,6 @@ public class ZZTcpSocket
         // send
         while (m_sendQueue.TryDequeue(out var data))
         {
-            GD.Print($"Dequeued");
             var err = m_stream.PutData(data);
             if (err != Error.Ok)
                 GD.PrintErr($"PutData error: {err}");
@@ -60,8 +66,40 @@ public class ZZTcpSocket
         {
             // Godot.StreamPeerTcp scatter and gather automatically
             // Checked from StreamPeerSocket::read in godot/core/io/stream__peer_socket.cpp
-            var received = m_stream.GetData(m_stream.GetAvailableBytes());
-            GD.Print(received.ToString());
+
+            var received = m_stream.GetData(m_nextRecieveSize);
+
+            var errorCode = (Godot.Error)received[0].AsInt32();
+            var buffer = received[1].AsByteArray();
+
+            if (m_waitingHeader)
+            {
+                m_nextRecieveSize = System.BitConverter.ToInt32(buffer, 0);
+                m_waitingHeader = false;
+            }
+            else
+            {
+                m_nextRecieveSize = 4;
+                m_waitingHeader = true;
+
+                var bb = new ByteBuffer(buffer);
+                var lobbyMessage = LobbyMessage.GetRootAsLobbyMessage(bb);
+
+                switch(lobbyMessage.PayloadType)
+                {
+                    case LobbyPayload.LoginAck:
+                        {
+                            var loginAck = lobbyMessage.PayloadAsLoginAck();
+                            GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
+                        }
+                        break;
+                    default:
+                        {
+                            GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
+                        }
+                        break;
+                }
+            }
         }
     }
 }

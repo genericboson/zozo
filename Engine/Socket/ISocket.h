@@ -18,10 +18,14 @@ namespace GenericBoson
 	public:
 		virtual ~ISocket() = default;
 
-		virtual awaitable<void> Write(const Message& msg) = 0;
+		virtual awaitable<void> Write() = 0;
 		virtual awaitable<void> Read() = 0;
 
 		virtual ESocketType GetType() = 0;
 		virtual bool IsValid() const = 0;
+
+		virtual void EnqueueMessage(
+			const uint8_t* pBuffer,
+			std::size_t bufferSize) = 0;
 	};
 }

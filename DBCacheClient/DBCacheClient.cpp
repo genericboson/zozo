@@ -26,19 +26,7 @@ namespace GenericBoson
 
 		boost::promise<std::shared_ptr<flatbuffers::FlatBufferBuilder>> promise;
 
-		// for debug
-		auto pFbb = std::make_shared<flatbuffers::FlatBufferBuilder>();
-		auto gameserverIp = pFbb->CreateString("127.0.0.1");
-		auto gameserverPort = pFbb->CreateString("8001");
-		auto token = pFbb->CreateString("TestTokenA");
-		auto loginDBAck = Zozo::CreateLoginDBAck(
-			*pFbb, Zozo::InternalResultCode_Success,
-			gameserverIp, gameserverPort, token);
-		auto msg = Zozo::CreateDBCacheLobbyMessage(*pFbb,
-			Zozo::DBCacheLobbyPayload_LoginDBAck, loginDBAck.Union());
-		pFbb->Finish(msg);
-		
-		promise.set_value(pFbb);
+		//promise.set_value(pFbb);
 
 		return promise.get_future();
 	}

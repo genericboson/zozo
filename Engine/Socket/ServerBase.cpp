@@ -32,36 +32,41 @@ namespace GenericBoson
 		m_ioContext.stop();
 	}
 
-	awaitable<void> ServerBase::Read(ip::tcp::socket&& socket)
-	{
-		auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
-		auto pActor = CreateActor(pSocket);
-		pSocket->Initialize(pActor);
-
-		if (!pActor->Initialize())
-		{
-			co_return;
-		}
-
-		pActor->OnAccepted();
-
-		while (m_isRunning)
-		{
-			co_await pSocket->Read();
-		}
-	}
-
 	awaitable<void> ServerBase::Listen()
 	{
-		auto CallRead = [this](ip::tcp::socket&& socket) -> awaitable<void>
+		auto ReadLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
 			{
-				return Read(std::move(socket));
+				while (m_isRunning)
+				{
+					co_await pSocket->Read();
+				}
+			};
+
+		auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
+			{
+				while (m_isRunning)
+				{
+					co_await pSocket->Write();
+				}
 			};
 
 		while (m_isRunning)
 		{
 			auto socket = co_await m_acceptor.async_accept(use_awaitable);
-			co_spawn(m_acceptor.get_executor(), CallRead(std::move(socket)), detached);
+
+			auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
+			auto pActor = CreateActor(pSocket);
+			pSocket->Initialize(pActor);
+
+			if (!pActor->Initialize())
+			{
+				co_return;
+			}
+
+			pActor->OnAccepted();
+
+			co_spawn(socket.get_executor(), ReadLoop(pSocket), detached);
+			co_spawn(socket.get_executor(), WriteLoop(pSocket), detached);
 		}
 	}
 
