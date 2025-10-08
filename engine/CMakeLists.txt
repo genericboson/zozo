@@ -9,5 +9,8 @@ set_property(TARGET ENGINE PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 target_precompile_headers(ENGINE PUBLIC PCH.h)
 
+target_link_directories(ENGINE PRIVATE $ENV{BOOST_ROOT}/stage/lib)
+target_link_libraries(ENGINE PRIVATE libboost_thread-vc143-mt-gd-x64-1_89)
+
 target_compile_definitions(ENGINE PRIVATE _UNICODE UNICODE)
 target_include_directories(ENGINE PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR} $ENV{FLAT_BUFFER_INCLUDE} $ENV{BOOST_ROOT})

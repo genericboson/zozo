@@ -5,7 +5,8 @@ add_executable(GAME_SERVER
 	${GAME_SOURCE} ${GAME_HEADER}
 )
 
-target_link_libraries(GAME_SERVER PRIVATE DBCACHE_CLIENT ENGINE)
+target_link_directories(GAME_SERVER PRIVATE $ENV{BOOST_ROOT}/stage/lib)
+target_link_libraries(GAME_SERVER PRIVATE DBCACHE_CLIENT ENGINE libboost_thread-vc143-mt-gd-x64-1_89)
 
 set_property(TARGET GAME_SERVER PROPERTY CXX_STANDARD 20)
 set_property(TARGET GAME_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)

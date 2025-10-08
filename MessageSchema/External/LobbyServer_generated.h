@@ -143,14 +143,32 @@ inline ::flatbuffers::Offset<LoginReq> CreateLoginReqDirect(
 struct LoginAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LoginAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT_CODE = 4
+    VT_RESULT_CODE = 4,
+    VT_GAMESERVERIP = 6,
+    VT_GAMESERVERPORT = 8,
+    VT_TOKEN = 10
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
   }
+  const ::flatbuffers::String *gameserverip() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GAMESERVERIP);
+  }
+  const ::flatbuffers::String *gameserverport() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GAMESERVERPORT);
+  }
+  const ::flatbuffers::String *token() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           VerifyOffset(verifier, VT_GAMESERVERIP) &&
+           verifier.VerifyString(gameserverip()) &&
+           VerifyOffset(verifier, VT_GAMESERVERPORT) &&
+           verifier.VerifyString(gameserverport()) &&
+           VerifyOffset(verifier, VT_TOKEN) &&
+           verifier.VerifyString(token()) &&
            verifier.EndTable();
   }
 };
@@ -161,6 +179,15 @@ struct LoginAckBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
     fbb_.AddElement<uint32_t>(LoginAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  void add_gameserverip(::flatbuffers::Offset<::flatbuffers::String> gameserverip) {
+    fbb_.AddOffset(LoginAck::VT_GAMESERVERIP, gameserverip);
+  }
+  void add_gameserverport(::flatbuffers::Offset<::flatbuffers::String> gameserverport) {
+    fbb_.AddOffset(LoginAck::VT_GAMESERVERPORT, gameserverport);
+  }
+  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
+    fbb_.AddOffset(LoginAck::VT_TOKEN, token);
   }
   explicit LoginAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -175,10 +202,33 @@ struct LoginAckBuilder {
 
 inline ::flatbuffers::Offset<LoginAck> CreateLoginAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    ::flatbuffers::Offset<::flatbuffers::String> gameserverip = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> gameserverport = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
   LoginAckBuilder builder_(_fbb);
+  builder_.add_token(token);
+  builder_.add_gameserverport(gameserverport);
+  builder_.add_gameserverip(gameserverip);
   builder_.add_result_code(result_code);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<LoginAck> CreateLoginAckDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    const char *gameserverip = nullptr,
+    const char *gameserverport = nullptr,
+    const char *token = nullptr) {
+  auto gameserverip__ = gameserverip ? _fbb.CreateString(gameserverip) : 0;
+  auto gameserverport__ = gameserverport ? _fbb.CreateString(gameserverport) : 0;
+  auto token__ = token ? _fbb.CreateString(token) : 0;
+  return GenericBoson::Zozo::CreateLoginAck(
+      _fbb,
+      result_code,
+      gameserverip__,
+      gameserverport__,
+      token__);
 }
 
 struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

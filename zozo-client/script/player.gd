@@ -3,7 +3,7 @@ extends CharacterBody2D
 const speed = 400
 
 @onready var stateAnim = $AnimatedSprite2D
-@onready var my_csharp_node = load("res://script/SocketManager.cs").new()
+@onready var socket_manager = load("res://script/SocketManager.cs").new()
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("left"):
@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _AfterMove(x:float, y:float) ->void:
-	my_csharp_node.SendCharacterMove(position.x, position.y)
+	socket_manager.SendCharacterMove(position.x, position.y)
 	
 	#region for debug position
 	#var formatStr = "pos:[%f,%f]"

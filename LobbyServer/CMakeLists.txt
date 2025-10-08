@@ -5,7 +5,8 @@ add_executable(LOBBY_SERVER
 	${LOBBY_SOURCE} ${LOBBY_HEADER}
 )
 
-target_link_libraries(LOBBY_SERVER PRIVATE ENGINE)
+target_link_directories(LOBBY_SERVER PRIVATE $ENV{BOOST_ROOT}/stage/lib)
+target_link_libraries(LOBBY_SERVER PRIVATE DBCACHE_CLIENT ENGINE libboost_thread-vc143-mt-gd-x64-1_89)
 
 set_property(TARGET LOBBY_SERVER PROPERTY CXX_STANDARD 20)
 set_property(TARGET LOBBY_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
