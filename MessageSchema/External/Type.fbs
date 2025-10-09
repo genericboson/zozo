@@ -1,0 +1,9 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+struct Vector2I
+{
+    x : int;
+    y : int;
+}

@@ -20,46 +20,36 @@ public struct LoginAck : IFlatbufferObject
   public LoginAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
-  public string Gameserverip { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public GenericBoson.Zozo.ServerInfo? ServerInfo(int j) { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.ServerInfo?)(new GenericBoson.Zozo.ServerInfo()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ServerInfoLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string Token { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetGameserveripBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetGameserveripBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetGameserveripArray() { return __p.__vector_as_array<byte>(6); }
-  public string Gameserverport { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetGameserverportBytes() { return __p.__vector_as_span<byte>(8, 1); }
-#else
-  public ArraySegment<byte>? GetGameserverportBytes() { return __p.__vector_as_arraysegment(8); }
-#endif
-  public byte[] GetGameserverportArray() { return __p.__vector_as_array<byte>(8); }
-  public string Token { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(8); }
 
   public static Offset<GenericBoson.Zozo.LoginAck> CreateLoginAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success,
-      StringOffset gameserveripOffset = default(StringOffset),
-      StringOffset gameserverportOffset = default(StringOffset),
+      VectorOffset server_infoOffset = default(VectorOffset),
       StringOffset tokenOffset = default(StringOffset)) {
-    builder.StartTable(4);
+    builder.StartTable(3);
     LoginAck.AddToken(builder, tokenOffset);
-    LoginAck.AddGameserverport(builder, gameserverportOffset);
-    LoginAck.AddGameserverip(builder, gameserveripOffset);
+    LoginAck.AddServerInfo(builder, server_infoOffset);
     LoginAck.AddResultCode(builder, result_code);
     return LoginAck.EndLoginAck(builder);
   }
 
-  public static void StartLoginAck(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartLoginAck(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
-  public static void AddGameserverip(FlatBufferBuilder builder, StringOffset gameserveripOffset) { builder.AddOffset(1, gameserveripOffset.Value, 0); }
-  public static void AddGameserverport(FlatBufferBuilder builder, StringOffset gameserverportOffset) { builder.AddOffset(2, gameserverportOffset.Value, 0); }
-  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(3, tokenOffset.Value, 0); }
+  public static void AddServerInfo(FlatBufferBuilder builder, VectorOffset serverInfoOffset) { builder.AddOffset(1, serverInfoOffset.Value, 0); }
+  public static VectorOffset CreateServerInfoVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.ServerInfo>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateServerInfoVectorBlock(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.ServerInfo>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateServerInfoVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.ServerInfo>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateServerInfoVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.ServerInfo>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartServerInfoVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(2, tokenOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.LoginAck> EndLoginAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.LoginAck>(o);
@@ -73,9 +63,8 @@ static public class LoginAckVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
-      && verifier.VerifyString(tablePos, 6 /*Gameserverip*/, false)
-      && verifier.VerifyString(tablePos, 8 /*Gameserverport*/, false)
-      && verifier.VerifyString(tablePos, 10 /*Token*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 6 /*ServerInfo*/, GenericBoson.Zozo.ServerInfoVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 8 /*Token*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

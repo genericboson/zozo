@@ -1,19 +1,29 @@
 include "Constant.fbs";
+include "CharacterInfo.fbs";
 
 namespace GenericBoson.Zozo;
 
 table LoginReq
 {
-    account: string;
+    account : string;
     password: string;
+}
+
+table ServerInfo
+{
+    name       : string;
+    ip         : string;
+    port       : string;
+    current_ccu: int;
+    max_ccu    : int;
 }
 
 table LoginAck
 {
-    result_code: ResultCode;
-    gameserverip: string;
-    gameserverport: string;
-    token: string;
+    result_code : ResultCode;
+    server_infos: [ServerInfo];
+    characters  : [CharacterInfo];
+    token       : string;
 }
 
 union LobbyPayload

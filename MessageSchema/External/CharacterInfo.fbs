@@ -1,0 +1,61 @@
+include "Constant.fbs";
+include "ItemInfo.fbs";
+include "Type.fbs";
+
+namespace GenericBoson.Zozo;
+
+enum Stat : int
+{
+    None = 0,
+    MeleeAttack,
+    MeleeDefence,
+    RangeAttack,
+    RangeDefence,
+    MagicAttack,
+    MagicDefence,
+    Agility,
+    Accuracy,
+    Speed,
+}
+
+enum Ticket : int
+{
+    None = 0,
+    CaveDungeon,
+    IslandDungeon,
+}
+
+struct StatPair
+{
+    key  : Stat;
+    value: long;
+}
+
+struct TicketPair
+{
+    key  : Ticket;
+    value: long;
+}
+
+table Character
+{
+    id      : long;
+    user_id : long;
+    password: string;
+
+    hp      : int;
+    hp_max  : int;
+    mp      : int;
+    mp_max  : int;
+
+    position : Vector2I;
+
+    name             : string;
+    stats            : [StatPair];
+    tickets          : [TicketPair];
+    appearance_id    : long;
+    current_quest_id : long;
+
+    inventory        : [ItemInfo];
+    inventory_size   : int;
+}
