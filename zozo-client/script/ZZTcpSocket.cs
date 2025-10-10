@@ -90,7 +90,7 @@ public class ZZTcpSocket
                     case LobbyPayload.LoginAck:
                         {
                             var loginAck = lobbyMessage.PayloadAsLoginAck();
-                            GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
+                            //GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
                         }
                         break;
                     default:

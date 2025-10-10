@@ -10,8 +10,9 @@
 #include <Engine/Socket/BoostTcpSocket.h>
 #include <Engine/Tx/Continuation.h>
 
+#include "CharacterInfo_generated.h"
 #include <MessageSchema/External/LobbyServer_generated.h>
-#include <MessageSchema/Internal/DBCacheLobby_generated.h>
+#include <MessageSchema/Internal/DBCache_generated.h>
 
 #include <DBCacheClient/DBCacheClient.h>
 
@@ -97,18 +98,18 @@ namespace GenericBoson
 
     void LobbyUser::SendLoginAck()
     {
-        // for debug
-        flatbuffers::FlatBufferBuilder fbb;
-        auto gameserverIp = fbb.CreateString("127.0.0.1");
-        auto gameserverPort = fbb.CreateString("8001");
-        auto token = fbb.CreateString("TestTokenA");
-        auto loginDBAck = Zozo::CreateLoginDBAck(
-            fbb, Zozo::InternalResultCode_Success,
-            gameserverIp, gameserverPort, token);
-        auto lobbyMsg = Zozo::CreateDBCacheLobbyMessage(fbb,
-            Zozo::DBCacheLobbyPayload_LoginDBAck, loginDBAck.Union());
-        fbb.Finish(lobbyMsg);
+        //// for debug
+        //flatbuffers::FlatBufferBuilder fbb;
+        //auto gameserverIp = fbb.CreateString("127.0.0.1");
+        //auto gameserverPort = fbb.CreateString("8001");
+        //auto token = fbb.CreateString("TestTokenA");
+        //auto loginDBAck = Zozo::CreateLoginDBAck(
+        //    fbb, Zozo::ResultCode_Success,
+        //    gameserverIp, gameserverPort, token);
+        //auto lobbyMsg = Zozo::CreateDBCacheLobbyMessage(fbb,
+        //    Zozo::DBCacheLobbyPayload_LoginDBAck, loginDBAck.Union());
+        //fbb.Finish(lobbyMsg);
 
-        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+        //m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 	}
 }

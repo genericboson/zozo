@@ -2,22 +2,20 @@
 
 #include "DBCacheClient.h"
 
-#include <MessageSchema/Internal/DBCacheLobby_generated.h>
+#include <MessageSchema/Internal/DBCache_generated.h>
 
 namespace GenericBoson
 {
 	auto DBCacheClient::Upsert(const flatbuffers::String& accountStr, const flatbuffers::String& passwordStr)
 		-> boost::future<std::shared_ptr<flatbuffers::FlatBufferBuilder>>
 	{
-		flatbuffers::FlatBufferBuilder fbb;
-		//auto account = fbb.CreateString(account);
-		//auto password = fbb.CreateString(password);
-		auto loginDBReq = Zozo::CreateLoginDBReq(fbb);// , account, password);
-		auto lobbyMsg = Zozo::CreateDBCacheLobbyMessage(fbb, 
-			Zozo::DBCacheLobbyPayload::DBCacheLobbyPayload_LoginDBReq, 
-			loginDBReq.Union());
+		//flatbuffers::FlatBufferBuilder fbb;
+		//auto loginDBReq = Zozo::CreateLoginDBReq(fbb);// , account, password);
+		//auto lobbyMsg = Zozo::CreateDBCacheLobbyMessage(fbb, 
+		//	Zozo::DBCacheLobbyPayload::DBCacheLobbyPayload_LoginDBReq, 
+		//	loginDBReq.Union());
 
-		fbb.Finish(lobbyMsg);
+		//fbb.Finish(lobbyMsg);
 
 		// db job...
 

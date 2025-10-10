@@ -1,0 +1,12 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+table ServerInfo
+{
+    name       : string;
+    ip         : string;
+    port       : string;
+    current_ccu: int;
+    max_ccu    : int;
+}

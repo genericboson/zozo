@@ -1,5 +1,6 @@
 include "Constant.fbs";
 include "CharacterInfo.fbs";
+include "ServerInfo.fbs";
 
 namespace GenericBoson.Zozo;
 
@@ -7,15 +8,6 @@ table LoginReq
 {
     account : string;
     password: string;
-}
-
-table ServerInfo
-{
-    name       : string;
-    ip         : string;
-    port       : string;
-    current_ccu: int;
-    max_ccu    : int;
 }
 
 table LoginAck

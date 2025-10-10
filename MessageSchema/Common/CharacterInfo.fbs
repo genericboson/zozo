@@ -37,7 +37,7 @@ struct TicketPair
     value: long;
 }
 
-table Character
+table CharacterInfo
 {
     id      : long;
     user_id : long;

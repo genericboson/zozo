@@ -9,15 +9,15 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-public struct Character : IFlatbufferObject
+public struct CharacterInfo : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_2_10(); }
-  public static Character GetRootAsCharacter(ByteBuffer _bb) { return GetRootAsCharacter(_bb, new Character()); }
-  public static Character GetRootAsCharacter(ByteBuffer _bb, Character obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static CharacterInfo GetRootAsCharacterInfo(ByteBuffer _bb) { return GetRootAsCharacterInfo(_bb, new CharacterInfo()); }
+  public static CharacterInfo GetRootAsCharacterInfo(ByteBuffer _bb, CharacterInfo obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
-  public Character __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public CharacterInfo __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public long Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public long UserId { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
@@ -50,7 +50,7 @@ public struct Character : IFlatbufferObject
   public int InventoryLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   public int InventorySize { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
-  public static void StartCharacter(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartCharacterInfo(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddId(FlatBufferBuilder builder, long id) { builder.AddLong(0, id, 0); }
   public static void AddUserId(FlatBufferBuilder builder, long userId) { builder.AddLong(1, userId, 0); }
   public static void AddPassword(FlatBufferBuilder builder, StringOffset passwordOffset) { builder.AddOffset(2, passwordOffset.Value, 0); }
@@ -73,14 +73,14 @@ public struct Character : IFlatbufferObject
   public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.ItemInfo>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartInventoryVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddInventorySize(FlatBufferBuilder builder, int inventorySize) { builder.AddInt(14, inventorySize, 0); }
-  public static Offset<GenericBoson.Zozo.Character> EndCharacter(FlatBufferBuilder builder) {
+  public static Offset<GenericBoson.Zozo.CharacterInfo> EndCharacterInfo(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    return new Offset<GenericBoson.Zozo.Character>(o);
+    return new Offset<GenericBoson.Zozo.CharacterInfo>(o);
   }
 }
 
 
-static public class CharacterVerify
+static public class CharacterInfoVerify
 {
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {

@@ -24,8 +24,8 @@ struct StatPair;
 
 struct TicketPair;
 
-struct Character;
-struct CharacterBuilder;
+struct CharacterInfo;
+struct CharacterInfoBuilder;
 
 enum Stat : int32_t {
   Stat_None = 0,
@@ -170,8 +170,8 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) TicketPair FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(TicketPair, 16);
 
-struct Character FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef CharacterBuilder Builder;
+struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_USER_ID = 6,
@@ -261,67 +261,67 @@ struct Character FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-struct CharacterBuilder {
-  typedef Character Table;
+struct CharacterInfoBuilder {
+  typedef CharacterInfo Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_id(int64_t id) {
-    fbb_.AddElement<int64_t>(Character::VT_ID, id, 0);
+    fbb_.AddElement<int64_t>(CharacterInfo::VT_ID, id, 0);
   }
   void add_user_id(int64_t user_id) {
-    fbb_.AddElement<int64_t>(Character::VT_USER_ID, user_id, 0);
+    fbb_.AddElement<int64_t>(CharacterInfo::VT_USER_ID, user_id, 0);
   }
   void add_password(::flatbuffers::Offset<::flatbuffers::String> password) {
-    fbb_.AddOffset(Character::VT_PASSWORD, password);
+    fbb_.AddOffset(CharacterInfo::VT_PASSWORD, password);
   }
   void add_hp(int32_t hp) {
-    fbb_.AddElement<int32_t>(Character::VT_HP, hp, 0);
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_HP, hp, 0);
   }
   void add_hp_max(int32_t hp_max) {
-    fbb_.AddElement<int32_t>(Character::VT_HP_MAX, hp_max, 0);
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_HP_MAX, hp_max, 0);
   }
   void add_mp(int32_t mp) {
-    fbb_.AddElement<int32_t>(Character::VT_MP, mp, 0);
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_MP, mp, 0);
   }
   void add_mp_max(int32_t mp_max) {
-    fbb_.AddElement<int32_t>(Character::VT_MP_MAX, mp_max, 0);
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_MP_MAX, mp_max, 0);
   }
   void add_position(const GenericBoson::Zozo::Vector2I *position) {
-    fbb_.AddStruct(Character::VT_POSITION, position);
+    fbb_.AddStruct(CharacterInfo::VT_POSITION, position);
   }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(Character::VT_NAME, name);
+    fbb_.AddOffset(CharacterInfo::VT_NAME, name);
   }
   void add_stats(::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *>> stats) {
-    fbb_.AddOffset(Character::VT_STATS, stats);
+    fbb_.AddOffset(CharacterInfo::VT_STATS, stats);
   }
   void add_tickets(::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::TicketPair *>> tickets) {
-    fbb_.AddOffset(Character::VT_TICKETS, tickets);
+    fbb_.AddOffset(CharacterInfo::VT_TICKETS, tickets);
   }
   void add_appearance_id(int64_t appearance_id) {
-    fbb_.AddElement<int64_t>(Character::VT_APPEARANCE_ID, appearance_id, 0);
+    fbb_.AddElement<int64_t>(CharacterInfo::VT_APPEARANCE_ID, appearance_id, 0);
   }
   void add_current_quest_id(int64_t current_quest_id) {
-    fbb_.AddElement<int64_t>(Character::VT_CURRENT_QUEST_ID, current_quest_id, 0);
+    fbb_.AddElement<int64_t>(CharacterInfo::VT_CURRENT_QUEST_ID, current_quest_id, 0);
   }
   void add_inventory(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>> inventory) {
-    fbb_.AddOffset(Character::VT_INVENTORY, inventory);
+    fbb_.AddOffset(CharacterInfo::VT_INVENTORY, inventory);
   }
   void add_inventory_size(int32_t inventory_size) {
-    fbb_.AddElement<int32_t>(Character::VT_INVENTORY_SIZE, inventory_size, 0);
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_INVENTORY_SIZE, inventory_size, 0);
   }
-  explicit CharacterBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CharacterInfoBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<Character> Finish() {
+  ::flatbuffers::Offset<CharacterInfo> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<Character>(end);
+    auto o = ::flatbuffers::Offset<CharacterInfo>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<Character> CreateCharacter(
+inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int64_t id = 0,
     int64_t user_id = 0,
@@ -338,7 +338,7 @@ inline ::flatbuffers::Offset<Character> CreateCharacter(
     int64_t current_quest_id = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>> inventory = 0,
     int32_t inventory_size = 0) {
-  CharacterBuilder builder_(_fbb);
+  CharacterInfoBuilder builder_(_fbb);
   builder_.add_current_quest_id(current_quest_id);
   builder_.add_appearance_id(appearance_id);
   builder_.add_user_id(user_id);
@@ -357,7 +357,7 @@ inline ::flatbuffers::Offset<Character> CreateCharacter(
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<Character> CreateCharacterDirect(
+inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int64_t id = 0,
     int64_t user_id = 0,
@@ -379,7 +379,7 @@ inline ::flatbuffers::Offset<Character> CreateCharacterDirect(
   auto stats__ = stats ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::StatPair>(*stats) : 0;
   auto tickets__ = tickets ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::TicketPair>(*tickets) : 0;
   auto inventory__ = inventory ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>(*inventory) : 0;
-  return GenericBoson::Zozo::CreateCharacter(
+  return GenericBoson::Zozo::CreateCharacterInfo(
       _fbb,
       id,
       user_id,

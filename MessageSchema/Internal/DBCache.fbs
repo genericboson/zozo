@@ -1,0 +1,33 @@
+include "Constant.fbs";
+include "CharacterInfo.fbs";
+include "ServerInfo.fbs";
+
+namespace GenericBoson.Zozo;
+
+table LoginDBReq
+{
+    account: string;
+}
+
+table LoginDBAck
+{
+    result_code : ResultCode;
+    server_infos: [ServerInfo];
+    characters  : [CharacterInfo];
+    password    : string;
+}
+
+union DBCachePayload
+{
+    LoginDBReq,
+    LoginDBAck,
+}
+
+table DBCacheMessage
+{
+    payload:DBCachePayload;
+}
+
+root_type LoginDBReq;
+root_type LoginDBAck;
+root_type DBCacheMessage;
