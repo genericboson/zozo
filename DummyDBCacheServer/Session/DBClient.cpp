@@ -51,7 +51,7 @@ namespace GenericBoson
         INFO_LOG("DBClient accepted ( DBClientId - {} )", m_id);
     }
 
-    void DBClient::Read(const uint8_t* pData, std::size_t dataSize)
+    awaitable<void> DBClient::Read(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 

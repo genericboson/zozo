@@ -26,27 +26,27 @@ struct LoginDBReqBuilder;
 struct LoginDBAck;
 struct LoginDBAckBuilder;
 
-struct DBCacheMessage;
-struct DBCacheMessageBuilder;
+struct DBCacheLobbyMessage;
+struct DBCacheLobbyMessageBuilder;
 
-enum DBCachePayload : uint8_t {
-  DBCachePayload_NONE = 0,
-  DBCachePayload_LoginDBReq = 1,
-  DBCachePayload_LoginDBAck = 2,
-  DBCachePayload_MIN = DBCachePayload_NONE,
-  DBCachePayload_MAX = DBCachePayload_LoginDBAck
+enum DBCacheLobbyPayload : uint8_t {
+  DBCacheLobbyPayload_NONE = 0,
+  DBCacheLobbyPayload_LoginDBReq = 1,
+  DBCacheLobbyPayload_LoginDBAck = 2,
+  DBCacheLobbyPayload_MIN = DBCacheLobbyPayload_NONE,
+  DBCacheLobbyPayload_MAX = DBCacheLobbyPayload_LoginDBAck
 };
 
-inline const DBCachePayload (&EnumValuesDBCachePayload())[3] {
-  static const DBCachePayload values[] = {
-    DBCachePayload_NONE,
-    DBCachePayload_LoginDBReq,
-    DBCachePayload_LoginDBAck
+inline const DBCacheLobbyPayload (&EnumValuesDBCacheLobbyPayload())[3] {
+  static const DBCacheLobbyPayload values[] = {
+    DBCacheLobbyPayload_NONE,
+    DBCacheLobbyPayload_LoginDBReq,
+    DBCacheLobbyPayload_LoginDBAck
   };
   return values;
 }
 
-inline const char * const *EnumNamesDBCachePayload() {
+inline const char * const *EnumNamesDBCacheLobbyPayload() {
   static const char * const names[4] = {
     "NONE",
     "LoginDBReq",
@@ -56,26 +56,26 @@ inline const char * const *EnumNamesDBCachePayload() {
   return names;
 }
 
-inline const char *EnumNameDBCachePayload(DBCachePayload e) {
-  if (::flatbuffers::IsOutRange(e, DBCachePayload_NONE, DBCachePayload_LoginDBAck)) return "";
+inline const char *EnumNameDBCacheLobbyPayload(DBCacheLobbyPayload e) {
+  if (::flatbuffers::IsOutRange(e, DBCacheLobbyPayload_NONE, DBCacheLobbyPayload_LoginDBAck)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesDBCachePayload()[index];
+  return EnumNamesDBCacheLobbyPayload()[index];
 }
 
-template<typename T> struct DBCachePayloadTraits {
-  static const DBCachePayload enum_value = DBCachePayload_NONE;
+template<typename T> struct DBCacheLobbyPayloadTraits {
+  static const DBCacheLobbyPayload enum_value = DBCacheLobbyPayload_NONE;
 };
 
-template<> struct DBCachePayloadTraits<GenericBoson::Zozo::LoginDBReq> {
-  static const DBCachePayload enum_value = DBCachePayload_LoginDBReq;
+template<> struct DBCacheLobbyPayloadTraits<GenericBoson::Zozo::LoginDBReq> {
+  static const DBCacheLobbyPayload enum_value = DBCacheLobbyPayload_LoginDBReq;
 };
 
-template<> struct DBCachePayloadTraits<GenericBoson::Zozo::LoginDBAck> {
-  static const DBCachePayload enum_value = DBCachePayload_LoginDBAck;
+template<> struct DBCacheLobbyPayloadTraits<GenericBoson::Zozo::LoginDBAck> {
+  static const DBCacheLobbyPayload enum_value = DBCacheLobbyPayload_LoginDBAck;
 };
 
-bool VerifyDBCachePayload(::flatbuffers::Verifier &verifier, const void *obj, DBCachePayload type);
-bool VerifyDBCachePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+bool VerifyDBCacheLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, DBCacheLobbyPayload type);
+bool VerifyDBCacheLobbyPayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
 struct LoginDBReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LoginDBReqBuilder Builder;
@@ -221,83 +221,83 @@ inline ::flatbuffers::Offset<LoginDBAck> CreateLoginDBAckDirect(
       password__);
 }
 
-struct DBCacheMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef DBCacheMessageBuilder Builder;
+struct DBCacheLobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DBCacheLobbyMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
     VT_PAYLOAD = 6
   };
-  GenericBoson::Zozo::DBCachePayload payload_type() const {
-    return static_cast<GenericBoson::Zozo::DBCachePayload>(GetField<uint8_t>(VT_PAYLOAD_TYPE, 0));
+  GenericBoson::Zozo::DBCacheLobbyPayload payload_type() const {
+    return static_cast<GenericBoson::Zozo::DBCacheLobbyPayload>(GetField<uint8_t>(VT_PAYLOAD_TYPE, 0));
   }
   const void *payload() const {
     return GetPointer<const void *>(VT_PAYLOAD);
   }
   template<typename T> const T *payload_as() const;
   const GenericBoson::Zozo::LoginDBReq *payload_as_LoginDBReq() const {
-    return payload_type() == GenericBoson::Zozo::DBCachePayload_LoginDBReq ? static_cast<const GenericBoson::Zozo::LoginDBReq *>(payload()) : nullptr;
+    return payload_type() == GenericBoson::Zozo::DBCacheLobbyPayload_LoginDBReq ? static_cast<const GenericBoson::Zozo::LoginDBReq *>(payload()) : nullptr;
   }
   const GenericBoson::Zozo::LoginDBAck *payload_as_LoginDBAck() const {
-    return payload_type() == GenericBoson::Zozo::DBCachePayload_LoginDBAck ? static_cast<const GenericBoson::Zozo::LoginDBAck *>(payload()) : nullptr;
+    return payload_type() == GenericBoson::Zozo::DBCacheLobbyPayload_LoginDBAck ? static_cast<const GenericBoson::Zozo::LoginDBAck *>(payload()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE, 1) &&
            VerifyOffset(verifier, VT_PAYLOAD) &&
-           VerifyDBCachePayload(verifier, payload(), payload_type()) &&
+           VerifyDBCacheLobbyPayload(verifier, payload(), payload_type()) &&
            verifier.EndTable();
   }
 };
 
-template<> inline const GenericBoson::Zozo::LoginDBReq *DBCacheMessage::payload_as<GenericBoson::Zozo::LoginDBReq>() const {
+template<> inline const GenericBoson::Zozo::LoginDBReq *DBCacheLobbyMessage::payload_as<GenericBoson::Zozo::LoginDBReq>() const {
   return payload_as_LoginDBReq();
 }
 
-template<> inline const GenericBoson::Zozo::LoginDBAck *DBCacheMessage::payload_as<GenericBoson::Zozo::LoginDBAck>() const {
+template<> inline const GenericBoson::Zozo::LoginDBAck *DBCacheLobbyMessage::payload_as<GenericBoson::Zozo::LoginDBAck>() const {
   return payload_as_LoginDBAck();
 }
 
-struct DBCacheMessageBuilder {
-  typedef DBCacheMessage Table;
+struct DBCacheLobbyMessageBuilder {
+  typedef DBCacheLobbyMessage Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_payload_type(GenericBoson::Zozo::DBCachePayload payload_type) {
-    fbb_.AddElement<uint8_t>(DBCacheMessage::VT_PAYLOAD_TYPE, static_cast<uint8_t>(payload_type), 0);
+  void add_payload_type(GenericBoson::Zozo::DBCacheLobbyPayload payload_type) {
+    fbb_.AddElement<uint8_t>(DBCacheLobbyMessage::VT_PAYLOAD_TYPE, static_cast<uint8_t>(payload_type), 0);
   }
   void add_payload(::flatbuffers::Offset<void> payload) {
-    fbb_.AddOffset(DBCacheMessage::VT_PAYLOAD, payload);
+    fbb_.AddOffset(DBCacheLobbyMessage::VT_PAYLOAD, payload);
   }
-  explicit DBCacheMessageBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit DBCacheLobbyMessageBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<DBCacheMessage> Finish() {
+  ::flatbuffers::Offset<DBCacheLobbyMessage> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<DBCacheMessage>(end);
+    auto o = ::flatbuffers::Offset<DBCacheLobbyMessage>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<DBCacheMessage> CreateDBCacheMessage(
+inline ::flatbuffers::Offset<DBCacheLobbyMessage> CreateDBCacheLobbyMessage(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    GenericBoson::Zozo::DBCachePayload payload_type = GenericBoson::Zozo::DBCachePayload_NONE,
+    GenericBoson::Zozo::DBCacheLobbyPayload payload_type = GenericBoson::Zozo::DBCacheLobbyPayload_NONE,
     ::flatbuffers::Offset<void> payload = 0) {
-  DBCacheMessageBuilder builder_(_fbb);
+  DBCacheLobbyMessageBuilder builder_(_fbb);
   builder_.add_payload(payload);
   builder_.add_payload_type(payload_type);
   return builder_.Finish();
 }
 
-inline bool VerifyDBCachePayload(::flatbuffers::Verifier &verifier, const void *obj, DBCachePayload type) {
+inline bool VerifyDBCacheLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, DBCacheLobbyPayload type) {
   switch (type) {
-    case DBCachePayload_NONE: {
+    case DBCacheLobbyPayload_NONE: {
       return true;
     }
-    case DBCachePayload_LoginDBReq: {
+    case DBCacheLobbyPayload_LoginDBReq: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginDBReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case DBCachePayload_LoginDBAck: {
+    case DBCacheLobbyPayload_LoginDBAck: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginDBAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
@@ -305,45 +305,45 @@ inline bool VerifyDBCachePayload(::flatbuffers::Verifier &verifier, const void *
   }
 }
 
-inline bool VerifyDBCachePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+inline bool VerifyDBCacheLobbyPayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
   if (!values || !types) return !values && !types;
   if (values->size() != types->size()) return false;
   for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
-    if (!VerifyDBCachePayload(
-        verifier,  values->Get(i), types->GetEnum<DBCachePayload>(i))) {
+    if (!VerifyDBCacheLobbyPayload(
+        verifier,  values->Get(i), types->GetEnum<DBCacheLobbyPayload>(i))) {
       return false;
     }
   }
   return true;
 }
 
-inline const GenericBoson::Zozo::DBCacheMessage *GetDBCacheMessage(const void *buf) {
-  return ::flatbuffers::GetRoot<GenericBoson::Zozo::DBCacheMessage>(buf);
+inline const GenericBoson::Zozo::DBCacheLobbyMessage *GetDBCacheLobbyMessage(const void *buf) {
+  return ::flatbuffers::GetRoot<GenericBoson::Zozo::DBCacheLobbyMessage>(buf);
 }
 
-inline const GenericBoson::Zozo::DBCacheMessage *GetSizePrefixedDBCacheMessage(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<GenericBoson::Zozo::DBCacheMessage>(buf);
+inline const GenericBoson::Zozo::DBCacheLobbyMessage *GetSizePrefixedDBCacheLobbyMessage(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<GenericBoson::Zozo::DBCacheLobbyMessage>(buf);
 }
 
-inline bool VerifyDBCacheMessageBuffer(
+inline bool VerifyDBCacheLobbyMessageBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<GenericBoson::Zozo::DBCacheMessage>(nullptr);
+  return verifier.VerifyBuffer<GenericBoson::Zozo::DBCacheLobbyMessage>(nullptr);
 }
 
-inline bool VerifySizePrefixedDBCacheMessageBuffer(
+inline bool VerifySizePrefixedDBCacheLobbyMessageBuffer(
     ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<GenericBoson::Zozo::DBCacheMessage>(nullptr);
+  return verifier.VerifySizePrefixedBuffer<GenericBoson::Zozo::DBCacheLobbyMessage>(nullptr);
 }
 
-inline void FinishDBCacheMessageBuffer(
+inline void FinishDBCacheLobbyMessageBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<GenericBoson::Zozo::DBCacheMessage> root) {
+    ::flatbuffers::Offset<GenericBoson::Zozo::DBCacheLobbyMessage> root) {
   fbb.Finish(root);
 }
 
-inline void FinishSizePrefixedDBCacheMessageBuffer(
+inline void FinishSizePrefixedDBCacheLobbyMessageBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<GenericBoson::Zozo::DBCacheMessage> root) {
+    ::flatbuffers::Offset<GenericBoson::Zozo::DBCacheLobbyMessage> root) {
   fbb.FinishSizePrefixed(root);
 }
 

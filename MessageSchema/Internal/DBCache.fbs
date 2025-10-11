@@ -17,17 +17,17 @@ table LoginDBAck
     password    : string;
 }
 
-union DBCachePayload
+union DBCacheLobbyPayload
 {
     LoginDBReq,
     LoginDBAck,
 }
 
-table DBCacheMessage
+table DBCacheLobbyMessage
 {
-    payload:DBCachePayload;
+    payload:DBCacheLobbyPayload;
 }
 
 root_type LoginDBReq;
 root_type LoginDBAck;
-root_type DBCacheMessage;
+root_type DBCacheLobbyMessage;

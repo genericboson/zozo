@@ -13,6 +13,6 @@ namespace GenericBoson
 		
 		virtual bool Initialize() = 0;
 
-		virtual void Read(const uint8_t* pData, std::size_t dataSize) = 0;
+		virtual awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
 	};
 }

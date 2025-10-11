@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/asio/thread_pool.hpp>
 #include <boost/asio/use_awaitable.hpp>
 
 namespace GenericBoson
@@ -22,13 +23,17 @@ namespace GenericBoson
 		void            Accept();
 		awaitable<void> Listen();
 
+		bool            IsRunning() const;
+
 		virtual auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
 			-> std::shared_ptr<IActor> = 0;
 
 	private:
 		std::atomic_bool                               m_isRunning{ true };
 
-		io_context                                     m_ioContext;
+		io_context                                     m_acceptIoContext;
+		thread_pool                                    m_threadPool{ std::thread::hardware_concurrency() * 2 };
+		strand<thread_pool::executor_type>             m_strand{ make_strand(m_threadPool.get_executor()) };
 		ip::tcp::acceptor                              m_acceptor;
 
 		executor_work_guard<io_context::executor_type> m_workGuard;

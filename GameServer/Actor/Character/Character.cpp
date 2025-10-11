@@ -49,7 +49,7 @@ namespace GenericBoson
         INFO_LOG("Client accepted ( ClientId - {} )", m_id);
     }
 
-    void Character::Read(const uint8_t* pData, std::size_t dataSize)
+    awaitable<void> Character::Read(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 

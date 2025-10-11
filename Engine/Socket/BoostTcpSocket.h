@@ -38,6 +38,12 @@ namespace GenericBoson
 			const uint8_t* pBuffer, 
 			std::size_t bufferSize) override;
 
+		auto ConnectAsync(
+			const std::string& ip,
+			const std::string& port,
+			std::function<void()>&& onConnected)
+			-> awaitable<void>;
+
 	private:
 		enum { WRITE_CHANNEL_SIZE = 4096 };
 

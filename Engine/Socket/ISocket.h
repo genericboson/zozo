@@ -27,5 +27,11 @@ namespace GenericBoson
 		virtual void EnqueueMessage(
 			const uint8_t* pBuffer,
 			std::size_t bufferSize) = 0;
+
+		virtual auto ConnectAsync(
+			const std::string&      ip, 
+			const std::string&      port,
+			std::function<void()>&& onConnected)
+			-> awaitable<void > = 0;
 	};
 }

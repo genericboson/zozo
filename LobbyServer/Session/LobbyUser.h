@@ -22,7 +22,7 @@ namespace GenericBoson
 		bool Initialize() override;
 
 		void Write();
-		void Read(const uint8_t* pData, std::size_t dataSize) override;
+		awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;

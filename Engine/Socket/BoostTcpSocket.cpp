@@ -93,7 +93,7 @@ namespace GenericBoson
 			if (const auto pOwner = m_wpOwner.lock();
 				readBodySize && pOwner)
 			{
-				pOwner->Read(m_readMsg.Body(), m_readMsg.BodySize());
+				co_await pOwner->Read(m_readMsg.Body(), m_readMsg.BodySize());
 			}
 			else
 			{
@@ -116,6 +116,30 @@ namespace GenericBoson
 			return false;
 
 		return true;
+	}
+
+	auto BoostTcpSocket::ConnectAsync(
+		const std::string&      ip,
+		const std::string&      port,
+		std::function<void()>&& onConnected)
+		-> awaitable<void>
+	{
+		ip::tcp::resolver resolver{ m_socket.get_executor()};
+
+		async_connect(m_socket, resolver.resolve(ip, port),
+			[this, OnConnected = std::move(onConnected)]
+			(boost::system::error_code error, ip::tcp::endpoint)
+			{
+				if (error)
+				{
+					std::cout << "Connect to DBCache server failed: " << error.message() << std::endl;
+				}
+				else
+				{
+					std::cout << "Connected to DBCache server" << std::endl;
+					OnConnected();
+				}
+			});
 	}
 
 	void BoostTcpSocket::EnqueueMessage(

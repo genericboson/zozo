@@ -7,8 +7,8 @@
 namespace GenericBoson
 {
 	ServerBase::ServerBase(int32_t port)
-		: m_workGuard(m_ioContext.get_executor()), m_acceptor(
-			m_ioContext,
+		: m_workGuard(m_acceptIoContext.get_executor()), m_acceptor(
+			m_acceptIoContext,
 			boost::asio::ip::tcp::endpoint(
 				boost::asio::ip::tcp::v4(), port))
 	{
@@ -21,7 +21,7 @@ namespace GenericBoson
 
 		Accept();
 
-		m_ioContext.run();
+		m_acceptIoContext.run();
 
 		return true;
 	}
@@ -29,24 +29,30 @@ namespace GenericBoson
 	void ServerBase::Stop()
 	{
 		m_isRunning = false;
-		m_ioContext.stop();
+		m_acceptIoContext.stop();
+	}
+
+	bool ServerBase::IsRunning() const
+	{
+		return m_isRunning;
 	}
 
 	awaitable<void> ServerBase::Listen()
 	{
 		auto ReadLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
 			{
+				auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
+					{
+						while (m_isRunning)
+						{
+							co_await pSocket->Write();
+						}
+					};
+
+				co_spawn(co_await this_coro::executor, WriteLoop(pSocket), detached);
 				while (m_isRunning)
 				{
 					co_await pSocket->Read();
-				}
-			};
-
-		auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
-			{
-				while (m_isRunning)
-				{
-					co_await pSocket->Write();
 				}
 			};
 
@@ -65,8 +71,7 @@ namespace GenericBoson
 
 			pActor->OnAccepted();
 
-			co_spawn(socket.get_executor(), ReadLoop(pSocket), detached);
-			co_spawn(socket.get_executor(), WriteLoop(pSocket), detached);
+			co_spawn(m_strand, ReadLoop(pSocket), detached);
 		}
 	}
 
@@ -77,6 +82,6 @@ namespace GenericBoson
 				return Listen();
 			};
 
-		co_spawn(m_ioContext, CallListen, detached);
+		co_spawn(m_acceptIoContext, CallListen, detached);
 	}
 }

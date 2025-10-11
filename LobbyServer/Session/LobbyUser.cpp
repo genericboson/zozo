@@ -53,7 +53,7 @@ namespace GenericBoson
         INFO_LOG("LobbyUser accepted ( LobbyUserId - {} )", m_id);
     }
 
-    void LobbyUser::Read(const uint8_t* pData, std::size_t dataSize)
+    awaitable<void> LobbyUser::Read(const uint8_t* pData, std::size_t dataSize)
     {
         using namespace Zozo;
 
@@ -70,18 +70,6 @@ namespace GenericBoson
             {
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_RETURN(loginReq);
-
-                DBCacheClient::GetInstance()->Upsert(*loginReq->account(),*loginReq->password()) |
-                    [lobbyUser = shared_from_this()](boost::future<std::shared_ptr<flatbuffers::FlatBufferBuilder>> ack)
-                    {
-                        //auto result = ack.get();
-                        //NULL_RETURN(result)
-
-                        lobbyUser->SendLoginAck();
-
-						//auto pAck = result->payload_as_LoginDBAck();
-                        //NULL_RETURN(pAck)
-                    };
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:
