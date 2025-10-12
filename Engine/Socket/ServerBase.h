@@ -4,12 +4,15 @@
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/use_awaitable.hpp>
 
+#include <boost/mysql.hpp>
+
 namespace GenericBoson
 {
 	class IActor;
 	class ISocket;
 
-	using namespace boost::asio;
+	namespace asio = boost::asio;
+	namespace mysql = boost::mysql;
 
 	class ServerBase
 	{
@@ -29,13 +32,15 @@ namespace GenericBoson
 			-> std::shared_ptr<IActor> = 0;
 
 	private:
-		std::atomic_bool                               m_isRunning{ true };
+		std::atomic_bool                                           m_isRunning{ true };
 
-		io_context                                     m_acceptIoContext;
-		thread_pool                                    m_threadPool{ std::thread::hardware_concurrency() * 2 };
-		strand<thread_pool::executor_type>             m_strand{ make_strand(m_threadPool.get_executor()) };
-		ip::tcp::acceptor                              m_acceptor;
+		asio::io_context                                           m_acceptIoContext;
+		asio::thread_pool                                          m_networkThreadPool{ std::thread::hardware_concurrency() * 2 };
+		asio::strand<asio::thread_pool::executor_type>             m_strand{ make_strand(m_networkThreadPool.get_executor()) };
+		ip::tcp::acceptor                                          m_acceptor;
+		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
 
-		executor_work_guard<io_context::executor_type> m_workGuard;
+		asio::thread_pool                                          m_dbThreadPool{ std::thread::hardware_concurrency() * 2 };
+		mysql::connection_pool                                     m_dbConnPool;
 	};
 }

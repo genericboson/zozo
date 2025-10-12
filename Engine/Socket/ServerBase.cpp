@@ -6,11 +6,31 @@
 
 namespace GenericBoson
 {
+	mysql::pool_params GetDbParams(
+		std::string_view hostname, 
+		std::string_view username, 
+		std::string_view password,
+		std::string_view dbname)
+	{
+		mysql::pool_params params;
+		params.server_address.emplace_host_and_port(hostname.data());
+		params.username = username;
+		params.password = password;
+		params.database = dbname;
+		params.thread_safe = true;
+
+		return params;
+	}
+
 	ServerBase::ServerBase(int32_t port)
-		: m_workGuard(m_acceptIoContext.get_executor()), m_acceptor(
+		: 
+		m_dbThreadPool{ std::thread::hardware_concurrency() * 2 },
+		m_networkThreadPool{ std::thread::hardware_concurrency() * 2 },
+		m_workGuard(m_acceptIoContext.get_executor()), m_acceptor(
 			m_acceptIoContext,
 			boost::asio::ip::tcp::endpoint(
-				boost::asio::ip::tcp::v4(), port))
+			boost::asio::ip::tcp::v4(), port)),
+		m_dbConnPool(m_dbThreadPool,GetDbParams("127.0.0.1","root","1234","test"))
 	{
 	}
 
