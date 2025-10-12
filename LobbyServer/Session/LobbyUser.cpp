@@ -16,13 +16,16 @@
 
 #include <DBCacheClient/DBCacheClient.h>
 
+#include "LobbyServer.h"
 #include "LobbyUser.h"
 #include "LobbyUserManager.h"
 
 namespace GenericBoson
 {
-    LobbyUser::LobbyUser(const std::shared_ptr<ISocket>& pSocket)
-        : m_id(0), m_pSocket(pSocket)
+    LobbyUser::LobbyUser(
+        LobbyServer& lobbyServer, 
+        const std::shared_ptr<ISocket>& pSocket)
+        : m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
     {
     }
 
@@ -70,6 +73,8 @@ namespace GenericBoson
             {
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_RETURN(loginReq);
+
+                //m_server.
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:

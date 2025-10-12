@@ -13,7 +13,7 @@ namespace GenericBoson
 		public std::enable_shared_from_this<LobbyUser>
 	{
 	public:
-		LobbyUser(const std::shared_ptr<ISocket>& pSocket);
+		LobbyUser(LobbyServer& lobbyServer, const std::shared_ptr<ISocket>& pSocket);
 
 		virtual ~LobbyUser() = default;
 
@@ -31,5 +31,6 @@ namespace GenericBoson
 	private:
 		int64_t                  m_id;
 		std::shared_ptr<ISocket> m_pSocket;
+		LobbyServer&             m_server;
 	};
 }

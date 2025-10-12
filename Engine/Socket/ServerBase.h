@@ -32,6 +32,16 @@ namespace GenericBoson
 			-> std::shared_ptr<IActor> = 0;
 
 	private:
+		static mysql::pool_params GetDbParams(
+			std::string_view hostname,
+			std::string_view username,
+			std::string_view password,
+			std::string_view dbname);
+
+	public:
+		mysql::connection_pool                                     m_dbConnPool;
+
+	private:
 		std::atomic_bool                                           m_isRunning{ true };
 
 		asio::io_context                                           m_acceptIoContext;
@@ -41,6 +51,5 @@ namespace GenericBoson
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
 
 		asio::thread_pool                                          m_dbThreadPool{ std::thread::hardware_concurrency() * 2 };
-		mysql::connection_pool                                     m_dbConnPool;
 	};
 }

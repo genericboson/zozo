@@ -6,7 +6,7 @@
 
 namespace GenericBoson
 {
-	mysql::pool_params GetDbParams(
+	mysql::pool_params ServerBase::GetDbParams(
 		std::string_view hostname, 
 		std::string_view username, 
 		std::string_view password,
@@ -30,7 +30,7 @@ namespace GenericBoson
 			m_acceptIoContext,
 			boost::asio::ip::tcp::endpoint(
 			boost::asio::ip::tcp::v4(), port)),
-		m_dbConnPool(m_dbThreadPool,GetDbParams("127.0.0.1","root","1234","test"))
+		m_dbConnPool(m_dbThreadPool,GetDbParams("127.0.0.1","root","1234","test")) // #todo read from ini file
 	{
 	}
 
@@ -41,6 +41,7 @@ namespace GenericBoson
 
 		Accept();
 
+		m_dbConnPool.async_run(asio::detached);
 		m_acceptIoContext.run();
 
 		return true;

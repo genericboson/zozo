@@ -17,6 +17,6 @@ namespace GenericBoson
 	auto LobbyServer::CreateActor(const std::shared_ptr<ISocket>& pSocket)
 		-> std::shared_ptr<IActor>
 	{
-		return std::make_shared<LobbyUser>(pSocket);
+		return std::make_shared<LobbyUser>(*this, pSocket);
 	}
 }
