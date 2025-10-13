@@ -175,13 +175,13 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_USER_ID = 6,
-    VT_PASSWORD = 8,
-    VT_HP = 10,
-    VT_HP_MAX = 12,
-    VT_MP = 14,
-    VT_MP_MAX = 16,
-    VT_POSITION = 18,
-    VT_NAME = 20,
+    VT_NAME = 8,
+    VT_LEVEL = 10,
+    VT_HP = 12,
+    VT_HP_MAX = 14,
+    VT_MP = 16,
+    VT_MP_MAX = 18,
+    VT_POSITION = 20,
     VT_STATS = 22,
     VT_TICKETS = 24,
     VT_APPEARANCE_ID = 26,
@@ -195,8 +195,11 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t user_id() const {
     return GetField<int64_t>(VT_USER_ID, 0);
   }
-  const ::flatbuffers::String *password() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PASSWORD);
+  const ::flatbuffers::String *name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  int32_t level() const {
+    return GetField<int32_t>(VT_LEVEL, 0);
   }
   int32_t hp() const {
     return GetField<int32_t>(VT_HP, 0);
@@ -212,9 +215,6 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const GenericBoson::Zozo::Vector2I *position() const {
     return GetStruct<const GenericBoson::Zozo::Vector2I *>(VT_POSITION);
-  }
-  const ::flatbuffers::String *name() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
   const ::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *> *stats() const {
     return GetPointer<const ::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *> *>(VT_STATS);
@@ -238,15 +238,14 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyField<int64_t>(verifier, VT_ID, 8) &&
            VerifyField<int64_t>(verifier, VT_USER_ID, 8) &&
-           VerifyOffset(verifier, VT_PASSWORD) &&
-           verifier.VerifyString(password()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(name()) &&
+           VerifyField<int32_t>(verifier, VT_LEVEL, 4) &&
            VerifyField<int32_t>(verifier, VT_HP, 4) &&
            VerifyField<int32_t>(verifier, VT_HP_MAX, 4) &&
            VerifyField<int32_t>(verifier, VT_MP, 4) &&
            VerifyField<int32_t>(verifier, VT_MP_MAX, 4) &&
            VerifyField<GenericBoson::Zozo::Vector2I>(verifier, VT_POSITION, 4) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_STATS) &&
            verifier.VerifyVector(stats()) &&
            VerifyOffset(verifier, VT_TICKETS) &&
@@ -271,8 +270,11 @@ struct CharacterInfoBuilder {
   void add_user_id(int64_t user_id) {
     fbb_.AddElement<int64_t>(CharacterInfo::VT_USER_ID, user_id, 0);
   }
-  void add_password(::flatbuffers::Offset<::flatbuffers::String> password) {
-    fbb_.AddOffset(CharacterInfo::VT_PASSWORD, password);
+  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
+    fbb_.AddOffset(CharacterInfo::VT_NAME, name);
+  }
+  void add_level(int32_t level) {
+    fbb_.AddElement<int32_t>(CharacterInfo::VT_LEVEL, level, 0);
   }
   void add_hp(int32_t hp) {
     fbb_.AddElement<int32_t>(CharacterInfo::VT_HP, hp, 0);
@@ -288,9 +290,6 @@ struct CharacterInfoBuilder {
   }
   void add_position(const GenericBoson::Zozo::Vector2I *position) {
     fbb_.AddStruct(CharacterInfo::VT_POSITION, position);
-  }
-  void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
-    fbb_.AddOffset(CharacterInfo::VT_NAME, name);
   }
   void add_stats(::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *>> stats) {
     fbb_.AddOffset(CharacterInfo::VT_STATS, stats);
@@ -325,13 +324,13 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int64_t id = 0,
     int64_t user_id = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> password = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
+    int32_t level = 0,
     int32_t hp = 0,
     int32_t hp_max = 0,
     int32_t mp = 0,
     int32_t mp_max = 0,
     const GenericBoson::Zozo::Vector2I *position = nullptr,
-    ::flatbuffers::Offset<::flatbuffers::String> name = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *>> stats = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::TicketPair *>> tickets = 0,
     int64_t appearance_id = 0,
@@ -347,13 +346,13 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(
   builder_.add_inventory(inventory);
   builder_.add_tickets(tickets);
   builder_.add_stats(stats);
-  builder_.add_name(name);
   builder_.add_position(position);
   builder_.add_mp_max(mp_max);
   builder_.add_mp(mp);
   builder_.add_hp_max(hp_max);
   builder_.add_hp(hp);
-  builder_.add_password(password);
+  builder_.add_level(level);
+  builder_.add_name(name);
   return builder_.Finish();
 }
 
@@ -361,20 +360,19 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int64_t id = 0,
     int64_t user_id = 0,
-    const char *password = nullptr,
+    const char *name = nullptr,
+    int32_t level = 0,
     int32_t hp = 0,
     int32_t hp_max = 0,
     int32_t mp = 0,
     int32_t mp_max = 0,
     const GenericBoson::Zozo::Vector2I *position = nullptr,
-    const char *name = nullptr,
     const std::vector<GenericBoson::Zozo::StatPair> *stats = nullptr,
     const std::vector<GenericBoson::Zozo::TicketPair> *tickets = nullptr,
     int64_t appearance_id = 0,
     int64_t current_quest_id = 0,
     const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> *inventory = nullptr,
     int32_t inventory_size = 0) {
-  auto password__ = password ? _fbb.CreateString(password) : 0;
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto stats__ = stats ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::StatPair>(*stats) : 0;
   auto tickets__ = tickets ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::TicketPair>(*tickets) : 0;
@@ -383,13 +381,13 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
       _fbb,
       id,
       user_id,
-      password__,
+      name__,
+      level,
       hp,
       hp_max,
       mp,
       mp_max,
       position,
-      name__,
       stats__,
       tickets__,
       appearance_id,

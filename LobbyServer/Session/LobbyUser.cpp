@@ -3,6 +3,9 @@
 #include <memory>
 
 #include <boost/asio.hpp>
+#include <boost/mysql.hpp>
+#include <boost/mysql/static_results.hpp>
+#include <boost/mysql/pfr.hpp>
 
 #include <flatbuffers/flatbuffers.h>
 
@@ -19,6 +22,7 @@
 #include "LobbyServer.h"
 #include "LobbyUser.h"
 #include "LobbyUserManager.h"
+#include "StaticResults.h"
 
 namespace GenericBoson
 {
@@ -71,10 +75,51 @@ namespace GenericBoson
         {
         case LobbyPayload::LobbyPayload_LoginReq:
             {
+            using namespace std::chrono_literals;
+
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_RETURN(loginReq);
 
-                //m_server.
+                auto [connErr, conn] = co_await m_server.m_dbConnPool.async_get_connection(
+                    asio::cancel_after(10s, // #todo get from environment variable
+                        asio::as_tuple(asio::use_awaitable)));
+                if (connErr != boost::system::errc::success)
+                {
+                    ERROR_LOG("Get DB connection from pool failed. error code - {}({})", connErr.value(), connErr.message());
+                    co_return;
+                }
+
+                mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
+                if (auto [dbErr] = co_await conn->async_execute(
+                    mysql::with_params("SELECT character_id AS user_characer.id, user_id, name, level FROM user "
+                        "JOIN user_character ON user.id = user_character.user_id "
+                        "WHERE account = {} AND password = {}", 
+                        loginReq->account()->c_str(), 
+                        loginReq->password()->c_str()),
+                    result,
+                    asio::as_tuple(asio::use_awaitable));
+                    dbErr)
+                {
+                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+                    co_return;
+                }
+
+                flatbuffers::FlatBufferBuilder fbb;
+
+                std::vector<flatbuffers::Offset<Zozo::CharacterInfo>> characterInfos;
+                if (result.rows().size() > 0)
+                {
+                    characterInfos.reserve(result.rows().size());
+                    for (const auto& dbInfo : result.rows())
+                    {
+                        auto nameStrOffset = fbb.CreateString(dbInfo.name);
+                        auto info = Zozo::CreateCharacterInfo(fbb, dbInfo.character_id, dbInfo.user_id, nameStrOffset, dbInfo.level);
+                        characterInfos.emplace_back(std::move(info));
+                    }
+                }
+                auto infosOffset = fbb.CreateVector(characterInfos);
+
+                auto loginAck = Zozo::CreateLoginAck(fbb, Zozo::ResultCode_Success,0, infosOffset);
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:

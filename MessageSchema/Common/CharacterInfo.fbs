@@ -41,7 +41,10 @@ table CharacterInfo
 {
     id      : long;
     user_id : long;
-    password: string;
+
+    name    : string;
+    level   : int;
+
 
     hp      : int;
     hp_max  : int;
@@ -50,7 +53,6 @@ table CharacterInfo
 
     position : Vector2I;
 
-    name             : string;
     stats            : [StatPair];
     tickets          : [TicketPair];
     appearance_id    : long;
