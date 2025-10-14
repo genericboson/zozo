@@ -120,6 +120,10 @@ namespace GenericBoson
                 auto infosOffset = fbb.CreateVector(characterInfos);
 
                 auto loginAck = Zozo::CreateLoginAck(fbb, Zozo::ResultCode_Success,0, infosOffset);
+                auto lobbyMsg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_LoginAck, loginAck.Union());
+                fbb.Finish(lobbyMsg);
+
+                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:
