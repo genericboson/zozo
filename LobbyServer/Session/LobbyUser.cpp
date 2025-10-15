@@ -140,18 +140,5 @@ namespace GenericBoson
 
     void LobbyUser::SendLoginAck()
     {
-        //// for debug
-        //flatbuffers::FlatBufferBuilder fbb;
-        //auto gameserverIp = fbb.CreateString("127.0.0.1");
-        //auto gameserverPort = fbb.CreateString("8001");
-        //auto token = fbb.CreateString("TestTokenA");
-        //auto loginDBAck = Zozo::CreateLoginDBAck(
-        //    fbb, Zozo::ResultCode_Success,
-        //    gameserverIp, gameserverPort, token);
-        //auto lobbyMsg = Zozo::CreateDBCacheLobbyMessage(fbb,
-        //    Zozo::DBCacheLobbyPayload_LoginDBAck, loginDBAck.Union());
-        //fbb.Finish(lobbyMsg);
-
-        //m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 	}
 }
