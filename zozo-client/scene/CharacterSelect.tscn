@@ -1,14 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://bpeovetxqtdgh"]
+[gd_scene load_steps=3 format=3 uid="uid://bpeovetxqtdgh"]
 
 [ext_resource type="Texture2D" uid="uid://dk6k8d5k51kea" path="res://art/character_select.png" id="1_lhj2g"]
+[ext_resource type="Script" uid="uid://b0f5s7hywv0fv" path="res://script/character_select.gd" id="1_qs5i6"]
 
 [node name="CharacterSelect" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+script = ExtResource("1_qs5i6")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="BackGround" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 1168.0
 offset_bottom = 664.0
 texture = ExtResource("1_lhj2g")
 stretch_mode = 1
+
+[node name="CharacterDropDown" type="OptionButton" parent="."]
+layout_mode = 0
+offset_left = 488.0
+offset_top = 536.0
+offset_right = 696.0
+offset_bottom = 556.0

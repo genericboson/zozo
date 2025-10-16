@@ -126,20 +126,17 @@ namespace GenericBoson
 	{
 		ip::tcp::resolver resolver{ m_socket.get_executor()};
 
-		async_connect(m_socket, resolver.resolve(ip, port),
-			[this, OnConnected = std::move(onConnected)]
-			(boost::system::error_code error, ip::tcp::endpoint)
-			{
-				if (error)
-				{
-					std::cout << "Connect to DBCache server failed: " << error.message() << std::endl;
-				}
-				else
-				{
-					std::cout << "Connected to DBCache server" << std::endl;
-					OnConnected();
-				}
-			});
+		if (
+			auto [error, _] = co_await async_connect(m_socket, resolver.resolve(ip, port), asio::as_tuple);
+			error)
+		{
+			std::cout << "Connect to DBCache server failed: " << error.message() << std::endl;
+		}
+		else
+		{
+			std::cout << "Connected to DBCache server" << std::endl;
+			onConnected();
+		}
 	}
 
 	void BoostTcpSocket::EnqueueMessage(

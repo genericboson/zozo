@@ -3,6 +3,8 @@
 #include <Engine/Tx/TxExecutor.h>
 #include <Engine/IActor.h>
 
+#include "LobbyServer.h"
+
 namespace GenericBoson
 {
 	class ISocket;

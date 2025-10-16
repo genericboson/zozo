@@ -1,7 +1,11 @@
 #pragma once
 
+#include <boost/asio/awaitable.hpp>
+
 namespace GenericBoson
 {
+	namespace asio = boost::asio;
+
 	class IActor
 	{
 	public:
@@ -13,6 +17,6 @@ namespace GenericBoson
 		
 		virtual bool Initialize() = 0;
 
-		virtual awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
+		virtual asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
 	};
 }
