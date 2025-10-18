@@ -1,6 +1,9 @@
 extends Node
 
-@onready var socket_manager = load("res://script/SocketManager.cs").new()
+var socket_manager = load("res://script/SocketManager.cs").new()
+var socketTimer = Timer.new()
+
+
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()
