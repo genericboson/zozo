@@ -66,10 +66,10 @@ namespace GenericBoson
 
         auto verifier = flatbuffers::Verifier(pData, dataSize);
         if (!VerifyLobbyMessageBuffer(verifier))
-            return;
+            co_return;
 
         auto message = Zozo::GetLobbyMessage(pData);
-        NULL_RETURN(message)
+        NULL_CO_RETURN(message)
 
         switch (message->payload_type())
         {
@@ -78,7 +78,7 @@ namespace GenericBoson
             using namespace std::chrono_literals;
 
 			    auto loginReq = message->payload_as_LoginReq();
-                NULL_RETURN(loginReq);
+                NULL_CO_RETURN(loginReq);
 
                 auto [connErr, conn] = co_await m_server.m_dbConnPool.async_get_connection(
                     asio::cancel_after(10s, // #todo get from environment variable

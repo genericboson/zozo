@@ -21,3 +21,5 @@ offset_left = 488.0
 offset_top = 536.0
 offset_right = 696.0
 offset_bottom = 556.0
+
+[connection signal="insert_to_dropdown" from="." to="." method="_on_insert_to_dropdown"]

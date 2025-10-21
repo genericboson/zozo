@@ -20,11 +20,11 @@ namespace GenericBoson
 		ServerBase(int32_t port);
 		virtual ~ServerBase() = default;
 
-		bool            Start();
-		void            Stop();
-
-		void            Accept();
-		awaitable<void> Listen();
+		bool                  Start();
+		void                  Stop();
+						      
+		void                  Accept();
+		asio::awaitable<void> Listen();
 
 		bool            IsRunning() const;
 
@@ -47,7 +47,7 @@ namespace GenericBoson
 		asio::io_context                                           m_acceptIoContext;
 		asio::thread_pool                                          m_networkThreadPool{ std::thread::hardware_concurrency() * 2 };
 		asio::strand<asio::thread_pool::executor_type>             m_strand{ make_strand(m_networkThreadPool.get_executor()) };
-		ip::tcp::acceptor                                          m_acceptor;
+		asio::ip::tcp::acceptor                                    m_acceptor;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
 
 		asio::thread_pool                                          m_dbThreadPool{ std::thread::hardware_concurrency() * 2 };

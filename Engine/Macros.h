@@ -17,4 +17,11 @@ namespace GenericBoson
 		WARN_LOG("Null = '" #expression "'"); \
 		return returnValue;                      \
 	}
+
+#define NULL_CO_RETURN( expression, returnValue )   \
+	if (!(expression))                           \
+	{                                            \
+		WARN_LOG("Null = '" #expression "'"); \
+		co_return returnValue;                      \
+	}
 }
