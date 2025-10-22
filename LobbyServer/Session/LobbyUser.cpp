@@ -80,17 +80,17 @@ namespace GenericBoson
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_CO_RETURN(loginReq);
 
-                auto [connErr, conn] = co_await m_server.m_pDbConnPool->async_get_connection(
-                    asio::cancel_after(10s, // #todo get from environment variable
-                        asio::as_tuple(asio::use_awaitable)));
-                if (connErr != boost::system::errc::success)
-                {
-                    ERROR_LOG("Get DB connection from pool failed. error code - {}({})", connErr.value(), connErr.message());
-                    co_return;
-                }
+                //auto [connErr, conn] = co_await m_server.m_pDbConnPool->async_get_connection(
+                //    asio::cancel_after(999s, // #todo get from environment variable
+                //        asio::as_tuple(asio::use_awaitable)));
+                //if (connErr != boost::system::errc::success)
+                //{
+                //    ERROR_LOG("Get DB connection from pool failed. error code - {}({})", connErr.value(), connErr.message());
+                //    co_return;
+                //}
 
                 mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
-                if (auto [dbErr] = co_await conn->async_execute(
+                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
                     mysql::with_params("SELECT character_id AS user_characer.id, user_id, name, level FROM user "
                         "JOIN user_character ON user.id = user_character.user_id "
                         "WHERE account = {} AND password = {}", 

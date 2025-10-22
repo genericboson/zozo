@@ -7,12 +7,12 @@ using System.Diagnostics;
 
 public partial class SocketManager : Node
 {
-    private StreamPeerTcp m_stream = new();
-    private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
-    private Queue<byte[]> m_sendQueue = new();
+    static private StreamPeerTcp m_stream = new();
+    static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
+    static private Queue<byte[]> m_sendQueue = new();
 
-    private int m_nextRecieveSize = 4;
-    private bool m_waitingHeader = true;
+    static private int m_nextRecieveSize = 4;
+    static private bool m_waitingHeader = true;
 
     public SocketManager()
     {
@@ -59,6 +59,7 @@ public partial class SocketManager : Node
         // send
         while (m_sendQueue.TryDequeue(out var data))
         {
+            GD.Print("Something to send exists");
             var err = m_stream.PutData(data);
             if (err != Error.Ok)
                 GD.PrintErr($"PutData error: {err}");
@@ -143,6 +144,7 @@ public partial class SocketManager : Node
 
     public void SendLogin(string account, string password)
     {
+        GD.Print("SendLogin");
         var fbb = new FlatBufferBuilder(1);
         var accountStr = fbb.CreateString(account);
         var passwordStr = fbb.CreateString(password);

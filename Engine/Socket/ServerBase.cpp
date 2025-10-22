@@ -6,7 +6,7 @@
 
 namespace GenericBoson
 {
-	mysql::pool_params ServerBase::GetDbParams(
+	mysql::pool_params ServerBase::GetDbPoolParams(
 		std::string_view hostname,
 		uint16_t         port,
 		std::string_view username, 
@@ -23,10 +23,27 @@ namespace GenericBoson
 		return params;
 	}
 
+	mysql::connect_params ServerBase::GetDbParams(
+		std::string_view hostname,
+		uint16_t         port,
+		std::string_view username,
+		std::string_view password,
+		std::string_view dbname)
+	{
+		mysql::connect_params params;
+		params.server_address.emplace_host_and_port(hostname.data());
+		params.username = username;
+		params.password = password;
+		//params.database = dbname;
+		//params.thread_safe = true;
+
+		return params;
+	}
+
 	ServerBase::ServerBase(int32_t port)
 		: 
 		m_networkThreadPool{ std::thread::hardware_concurrency() * 2 },
-		m_dbThreadPool{ std::thread::hardware_concurrency() * 2 },
+		//m_dbThreadPool{ std::thread::hardware_concurrency() * 2 },
 		m_workGuard(m_acceptIoContext.get_executor()),
 		m_acceptor(
 			m_acceptIoContext,
@@ -42,17 +59,32 @@ namespace GenericBoson
 			m_acceptor.local_endpoint().port());
 
 		Accept();
-		m_pDbConnPool = std::make_unique<mysql::connection_pool>(
-			m_dbThreadPool.get_executor(),
-			GetDbParams(
-				"127.0.0.1",
-				33069,
-				"root",
-				"1234",
-				"zozo_lobby"));
+		//m_pDbConnPool = std::make_unique<mysql::connection_pool>(
+		//	m_dbIoContext,//m_dbThreadPool.get_executor(),
+		//	GetDbPoolParams(
+		//		"127.0.0.1",
+		//		33069,
+		//		"root",
+		//		"1234",
+		//		"zozo_lobby"));
+		//
+		//m_pDbConnPool->async_run(asio::detached);
 
-		m_pDbConnPool->async_run(asio::detached);
-		m_acceptIoContext.run();
+		m_pIoThread = std::make_unique<std::jthread>([&]() { m_acceptIoContext.run(); });
+
+		m_pDbConn = std::make_unique<mysql::any_connection>(m_acceptIoContext);
+		auto [err] = m_pDbConn->async_connect(GetDbParams(
+			"127.0.0.1",
+			3306,
+			"root",
+			"1234",
+			"zozo_lobby"), asio::as_tuple(asio::use_future)).get();
+
+		if (err != boost::system::errc::success)
+		{
+			ERROR_LOG("DB connection failed. err - {}({})", err.value(), err.message());
+			return false;
+		}
 
 		return true;
 	}
