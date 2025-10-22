@@ -80,7 +80,7 @@ namespace GenericBoson
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_CO_RETURN(loginReq);
 
-                auto [connErr, conn] = co_await m_server.m_dbConnPool.async_get_connection(
+                auto [connErr, conn] = co_await m_server.m_pDbConnPool->async_get_connection(
                     asio::cancel_after(10s, // #todo get from environment variable
                         asio::as_tuple(asio::use_awaitable)));
                 if (connErr != boost::system::errc::success)

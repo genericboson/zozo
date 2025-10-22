@@ -21,12 +21,6 @@ public partial class SocketManager : Node
 
     public override void _Ready()
     {
-        if (m_stream.GetStatus() == StreamPeerTcp.Status.Connected)
-            return;
-
-        var err = m_stream.ConnectToHost("127.0.0.1", 8002);
-        if (err != Error.Ok)
-            GD.PrintErr($"ConnectToHost error: {err}");
     }
 
     public void EnqueueSend(byte[] data)
@@ -42,8 +36,19 @@ public partial class SocketManager : Node
         if (status != StreamPeerTcp.Status.Connected)
         {
             if (m_lastStatus == StreamPeerTcp.Status.Connected)
+            {
                 GD.Print($"Disconnected");
-            return;
+                return;
+            }
+
+            var err = m_stream.ConnectToHost("127.0.0.1", 8002);
+            if (err != Error.Ok)
+            {
+                GD.PrintErr($"ConnectToHost error: {err}");
+                return;
+            }
+
+            GD.Print($"Connected");
         }
         else if (m_lastStatus == StreamPeerTcp.Status.Connected)
         {

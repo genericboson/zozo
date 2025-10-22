@@ -34,22 +34,22 @@ namespace GenericBoson
 	private:
 		static mysql::pool_params GetDbParams(
 			std::string_view hostname,
+			uint16_t         port,
 			std::string_view username,
 			std::string_view password,
 			std::string_view dbname);
 
 	public:
-		mysql::connection_pool                                     m_dbConnPool;
+		std::unique_ptr<mysql::connection_pool>                    m_pDbConnPool;
 
 	private:
 		std::atomic_bool                                           m_isRunning{ true };
 
 		asio::io_context                                           m_acceptIoContext;
-		asio::thread_pool                                          m_networkThreadPool{ std::thread::hardware_concurrency() * 2 };
-		asio::strand<asio::thread_pool::executor_type>             m_strand{ make_strand(m_networkThreadPool.get_executor()) };
+		asio::thread_pool                                          m_networkThreadPool;
+		asio::thread_pool                                          m_dbThreadPool;
+		asio::strand<asio::thread_pool::executor_type>             m_strand;
 		asio::ip::tcp::acceptor                                    m_acceptor;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
-
-		asio::thread_pool                                          m_dbThreadPool{ std::thread::hardware_concurrency() * 2 };
 	};
 }
