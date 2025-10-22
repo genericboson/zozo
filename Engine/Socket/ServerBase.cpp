@@ -34,7 +34,7 @@ namespace GenericBoson
 		params.server_address.emplace_host_and_port(hostname.data());
 		params.username = username;
 		params.password = password;
-		//params.database = dbname;
+		params.database = dbname;
 		//params.thread_safe = true;
 
 		return params;
@@ -44,9 +44,9 @@ namespace GenericBoson
 		: 
 		m_networkThreadPool{ std::thread::hardware_concurrency() * 2 },
 		//m_dbThreadPool{ std::thread::hardware_concurrency() * 2 },
-		m_workGuard(m_acceptIoContext.get_executor()),
+		m_workGuard(m_ioContext.get_executor()),
 		m_acceptor(
-			m_acceptIoContext,
+			m_ioContext,
 			boost::asio::ip::tcp::endpoint(
 			boost::asio::ip::tcp::v4(), port)),
 		m_strand(make_strand(m_networkThreadPool.get_executor()))
@@ -70,9 +70,9 @@ namespace GenericBoson
 		//
 		//m_pDbConnPool->async_run(asio::detached);
 
-		m_pIoThread = std::make_unique<std::jthread>([&]() { m_acceptIoContext.run(); });
+		m_pIoThread = std::make_unique<std::jthread>([&]() { m_ioContext.run(); });
 
-		m_pDbConn = std::make_unique<mysql::any_connection>(m_acceptIoContext);
+		m_pDbConn = std::make_unique<mysql::any_connection>(m_ioContext);
 		auto [err] = m_pDbConn->async_connect(GetDbParams(
 			"127.0.0.1",
 			3306,
@@ -92,7 +92,7 @@ namespace GenericBoson
 	void ServerBase::Stop()
 	{
 		m_isRunning = false;
-		m_acceptIoContext.stop();
+		m_ioContext.stop();
 	}
 
 	bool ServerBase::IsRunning() const
@@ -145,6 +145,6 @@ namespace GenericBoson
 				return Listen();
 			};
 
-		co_spawn(m_acceptIoContext, CallListen, detached);
+		co_spawn(m_ioContext, CallListen, detached);
 	}
 }

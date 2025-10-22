@@ -89,13 +89,16 @@ namespace GenericBoson
                 //    co_return;
                 //}
 
+                auto joinParam = mysql::with_params("SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
+                    "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
+                    "ON user.id = uc.user_id "
+                    "WHERE user.account = {} AND user.password = {}",
+                    loginReq->account()->c_str(),
+                    loginReq->password()->c_str());
+
                 mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
                 if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-                    mysql::with_params("SELECT character_id AS user_characer.id, user_id, name, level FROM user "
-                        "JOIN user_character ON user.id = user_character.user_id "
-                        "WHERE account = {} AND password = {}", 
-                        loginReq->account()->c_str(), 
-                        loginReq->password()->c_str()),
+                    joinParam,
                     result,
                     asio::as_tuple(asio::use_awaitable));
                     dbErr)
@@ -112,8 +115,8 @@ namespace GenericBoson
                     characterInfos.reserve(result.rows().size());
                     for (const auto& dbInfo : result.rows())
                     {
-                        auto nameStrOffset = fbb.CreateString(dbInfo.name);
-                        auto info = Zozo::CreateCharacterInfo(fbb, dbInfo.character_id, dbInfo.user_id, nameStrOffset, dbInfo.level);
+                        auto nameStrOffset = fbb.CreateString(*dbInfo.name);
+                        auto info = Zozo::CreateCharacterInfo(fbb, *dbInfo.character_id, *dbInfo.user_id, nameStrOffset, *dbInfo.level);
                         characterInfos.emplace_back(std::move(info));
                     }
                 }

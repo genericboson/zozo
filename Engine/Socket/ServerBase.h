@@ -47,7 +47,6 @@ namespace GenericBoson
 			std::string_view dbname);
 
 	public:
-		//std::unique_ptr<mysql::connection_pool>                    m_pDbConnPool;
 		std::unique_ptr<mysql::any_connection>                     m_pDbConn;
 
 	private:
@@ -55,10 +54,8 @@ namespace GenericBoson
 
 		std::unique_ptr<std::jthread>                              m_pIoThread;
 
-		asio::io_context                                           m_acceptIoContext;
-		asio::io_context                                           m_dbIoContext;
+		asio::io_context                                           m_ioContext;
 		asio::thread_pool                                          m_networkThreadPool;
-		//asio::thread_pool                                          m_dbThreadPool;
 		asio::strand<asio::thread_pool::executor_type>             m_strand;
 		asio::ip::tcp::acceptor                                    m_acceptor;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
