@@ -18,8 +18,8 @@ namespace GenericBoson
 	public:
 		virtual ~ISocket() = default;
 
-		virtual awaitable<void> Write() = 0;
-		virtual awaitable<void> Read() = 0;
+		virtual awaitable<bool> Write() = 0;
+		virtual awaitable<bool> Read() = 0;
 
 		virtual ESocketType GetType() = 0;
 		virtual bool IsValid() const = 0;

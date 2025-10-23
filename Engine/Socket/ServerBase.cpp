@@ -108,14 +108,16 @@ namespace GenericBoson
 					{
 						while (m_isRunning)
 						{
-							co_await pSocket->Write();
+							if (!co_await pSocket->Write())
+								break;
 						}
 					};
 
 				co_spawn(co_await this_coro::executor, WriteLoop(pSocket), detached);
 				while (m_isRunning)
 				{
-					co_await pSocket->Read();
+					if (!co_await pSocket->Read())
+						break;
 				}
 			};
 

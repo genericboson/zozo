@@ -24,8 +24,8 @@ namespace GenericBoson
 
 		void Initialize(const std::shared_ptr<IActor>& pOwner);
 
-		awaitable<void> Write() override;
-		awaitable<void> Read() override;
+		awaitable<bool> Write() override;
+		awaitable<bool> Read() override;
 
 		ESocketType GetType() override;
 		bool IsValid() const override;

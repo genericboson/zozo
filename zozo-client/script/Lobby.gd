@@ -23,4 +23,5 @@ func _on_setting_pressed() -> void:
 	Global.message_box("개발 예정...")
 
 func _on_insert_to_dropdown(characterName: String) -> void:
+	print("signal received")
 	dropDown.add_item(characterName)

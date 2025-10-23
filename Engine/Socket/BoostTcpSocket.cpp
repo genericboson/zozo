@@ -38,7 +38,7 @@ namespace GenericBoson
 
 		if (errorCode == error::eof)
 		{
-			INFO_LOG("Socket disconnected in write");
+			INFO_LOG("Socket disconnected");
 		}
 		else if (errorCode != error::operation_aborted)
 		{
@@ -54,32 +54,34 @@ namespace GenericBoson
 		return false;
 	}
 
-	awaitable<void> BoostTcpSocket::Write()
+	awaitable<bool> BoostTcpSocket::Write()
 	{
 		auto [receiveError, msg] = co_await m_writeChannel.async_receive(
 			as_tuple(use_awaitable));
 
 		if (!IsSucceeded(receiveError))
-			co_return;
+			co_return false;
 
 		auto [writeError, writeSize] = co_await m_socket.async_write_some(
 			boost::asio::buffer(msg.Data(), msg.Length()),
 			as_tuple(use_awaitable));
 
 		if (!IsSucceeded(writeError))
-			co_return;
+			co_return false;
 
 		assert(writeSize == msg.Length());
+
+		co_return true;
 	}
 
-	awaitable<void> BoostTcpSocket::Read()
+	awaitable<bool> BoostTcpSocket::Read()
 	{
 		auto [readHeaderError,readHeaderSize] = co_await async_read(m_socket,
 			boost::asio::buffer(m_readMsg.Data(), Message::HEADER_SIZE),
 			as_tuple(use_awaitable));
 
 		if (!IsSucceeded(readHeaderError))
-			co_return;
+			co_return false;
 
 		if (readHeaderSize && m_readMsg.DecodeHeader())
 		{
@@ -88,7 +90,7 @@ namespace GenericBoson
 				as_tuple(use_awaitable));
 
 			if (!IsSucceeded(readBodyError))
-				co_return;
+				co_return false;
 
 			if (const auto pOwner = m_wpOwner.lock();
 				readBodySize && pOwner)
@@ -100,6 +102,8 @@ namespace GenericBoson
 				ERROR_LOG("Invalid Socket State or pOwner is nullptr. readBodySize - {}", readBodySize);
 			}
 		}
+
+		co_return true;
 	}
 
 	ESocketType BoostTcpSocket::GetType()

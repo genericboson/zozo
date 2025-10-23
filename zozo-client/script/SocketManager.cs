@@ -104,6 +104,7 @@ public partial class SocketManager : Node
                                     continue;
 
                                 EmitSignal("InsertToCharacterListDropdown", character.Value.Password);
+                                GD.Print($"Received LoginAck.password-{character.Value.Password}");
                             }
                             //GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
                         }
