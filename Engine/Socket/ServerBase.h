@@ -52,12 +52,14 @@ namespace GenericBoson
 	private:
 		std::atomic_bool                                           m_isRunning{ true };
 
+		int32_t                                                    m_listeningPort = 0;
+
 		std::unique_ptr<std::jthread>                              m_pIoThread;
+		std::unique_ptr<asio::ip::tcp::acceptor>                   m_pAcceptor;
 
 		asio::io_context                                           m_ioContext;
 		asio::thread_pool                                          m_networkThreadPool;
 		asio::strand<asio::thread_pool::executor_type>             m_strand;
-		asio::ip::tcp::acceptor                                    m_acceptor;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
 	};
 }

@@ -80,16 +80,8 @@ namespace GenericBoson
 			    auto loginReq = message->payload_as_LoginReq();
                 NULL_CO_RETURN(loginReq);
 
-                //auto [connErr, conn] = co_await m_server.m_pDbConnPool->async_get_connection(
-                //    asio::cancel_after(999s, // #todo get from environment variable
-                //        asio::as_tuple(asio::use_awaitable)));
-                //if (connErr != boost::system::errc::success)
-                //{
-                //    ERROR_LOG("Get DB connection from pool failed. error code - {}({})", connErr.value(), connErr.message());
-                //    co_return;
-                //}
-
-                auto joinParam = mysql::with_params("SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
+                auto queryStr = mysql::with_params(
+                    "SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
                     "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
                     "ON user.id = uc.user_id "
                     "WHERE user.account = {} AND user.password = {}",
@@ -98,7 +90,7 @@ namespace GenericBoson
 
                 mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
                 if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-                    joinParam,
+                    queryStr,
                     result,
                     asio::as_tuple(asio::use_awaitable));
                     dbErr)

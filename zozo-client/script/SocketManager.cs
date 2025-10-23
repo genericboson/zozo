@@ -14,6 +14,9 @@ public partial class SocketManager : Node
     static private int m_nextRecieveSize = 4;
     static private bool m_waitingHeader = true;
 
+    [Signal]
+    public delegate void InsertToCharacterListDropdownEventHandler(string password);
+
     public SocketManager()
     {
         m_stream.SetNoDelay(true);
@@ -100,7 +103,7 @@ public partial class SocketManager : Node
                                 if (character is null)
                                     continue;
 
-                                EmitSignal("InsertToDropDown", character.Value.Name);
+                                EmitSignal("InsertToCharacterListDropdown", character.Value.Password);
                             }
                             //GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
                         }
