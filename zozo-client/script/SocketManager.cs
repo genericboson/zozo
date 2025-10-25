@@ -99,12 +99,11 @@ public partial class SocketManager : Node
                                 if (character is null)
                                     continue;
 
-                                var myGDScript = GD.Load<GDScript>("res://script/Lobby.gd");
-                                var myGDScriptNode = (GodotObject)myGDScript.New(); // This is a GodotObject.
+                                Node gdscriptNode = GetNode<Node>("/root/Lobby");
 
-                                if (myGDScriptNode != null)
+                                if (gdscriptNode != null)
                                 {
-                                    myGDScriptNode.Call("_test", character.Value.Password);
+                                    gdscriptNode.Call("_test", character.Value.Password);
 
                                     //Variant returnValue = gdScriptNode.Call("get_data");
                                     //GD.Print($"GDScript returned: {returnValue}");
