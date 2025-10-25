@@ -14,9 +14,6 @@ public partial class SocketManager : Node
     static private int m_nextRecieveSize = 4;
     static private bool m_waitingHeader = true;
 
-    [Signal]
-    public delegate void InsertToCharacterListDropdownEventHandler(string password);
-
     public SocketManager()
     {
         m_stream.SetNoDelay(true);
@@ -62,7 +59,6 @@ public partial class SocketManager : Node
         // send
         while (m_sendQueue.TryDequeue(out var data))
         {
-            GD.Print("Something to send exists");
             var err = m_stream.PutData(data);
             if (err != Error.Ok)
                 GD.PrintErr($"PutData error: {err}");
@@ -103,7 +99,21 @@ public partial class SocketManager : Node
                                 if (character is null)
                                     continue;
 
-                                EmitSignal("InsertToCharacterListDropdown", character.Value.Password);
+                                var myGDScript = GD.Load<GDScript>("res://script/Lobby.gd");
+                                var myGDScriptNode = (GodotObject)myGDScript.New(); // This is a GodotObject.
+
+                                if (myGDScriptNode != null)
+                                {
+                                    myGDScriptNode.Call("_test", character.Value.Password);
+
+                                    //Variant returnValue = gdScriptNode.Call("get_data");
+                                    //GD.Print($"GDScript returned: {returnValue}");
+                                }
+                                else
+                                {
+                                    GD.PrintErr("Could not find MyGDScriptNode.");
+                                }
+
                                 GD.Print($"Received LoginAck.password-{character.Value.Password}");
                             }
                             //GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
