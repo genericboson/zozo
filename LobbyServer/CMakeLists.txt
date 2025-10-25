@@ -11,7 +11,6 @@ add_executable(LOBBY_SERVER
 
 target_link_directories(LOBBY_SERVER PRIVATE $ENV{BOOST_ROOT}/stage/lib)
 target_link_libraries(LOBBY_SERVER PRIVATE 
-	DBCACHE_CLIENT 
 	ENGINE 
 	Boost::charconv 
 	Threads::Threads 

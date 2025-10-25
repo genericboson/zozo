@@ -17,8 +17,6 @@
 #include <MessageSchema/External/LobbyServer_generated.h>
 #include <MessageSchema/Internal/DBCache_generated.h>
 
-#include <DBCacheClient/DBCacheClient.h>
-
 #include "LobbyServer.h"
 #include "LobbyUser.h"
 #include "LobbyUserManager.h"

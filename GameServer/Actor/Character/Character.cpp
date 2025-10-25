@@ -55,10 +55,10 @@ namespace GenericBoson
 
         auto verifier = flatbuffers::Verifier(pData, dataSize);
         if (!VerifyGameMessageBuffer(verifier))
-            return;
+            co_return;
 
         auto message = Zozo::GetGameMessage(pData);
-        NULL_RETURN(message)
+        NULL_CO_RETURN(message)
         
         switch (message->payload_type())
         {

@@ -8,6 +8,8 @@ namespace GenericBoson
 	class ISocket;
 	class Zone;
 
+	namespace asio = boost::asio;
+
 	class Character : 
 		public IActor, 
 		public TxExecutor,
@@ -23,7 +25,7 @@ namespace GenericBoson
 		bool Initialize() override;
 
 		void Write();
-		awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
+		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
