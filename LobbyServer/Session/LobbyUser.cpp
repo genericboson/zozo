@@ -77,11 +77,48 @@ namespace GenericBoson
                 NULL_CO_RETURN(authReq);
 
                 auto queryStr = mysql::with_params(
-                    "INSERT INTO   "
-                    "FROM zozo_lobby.user "
-                    "WHERE user.account = {} AND user.password = {}",
+                    "START TRANSACTION;"
+                    "SELECT COUNT(*) AS user_count FROM zozo_lobby.user WHERE user.account = {} AND user.password = {};"
+                    "UPDATE zozo_lobby.user SET token = {} "
+                    "WHERE EXISTS SELECT 1 FROM zozo_lobby.user "
+                    "WHERE user.account = {} AND user.password = {};"
+                    "COMMIT",
                     authReq->account()->c_str(),
                     authReq->password()->c_str());
+
+                mysql::static_results<
+                    std::tuple<>,
+                    mysql::pfr_by_name<AuthReq_Select_UserCount>,
+                    std::tuple<>,
+                    std::tuple<>> result;
+
+                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+                    queryStr,
+                    result,
+                    asio::as_tuple(asio::use_awaitable));
+                    dbErr)
+                {
+                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+                    co_return;
+                }
+
+                if (auto selectResults = result.rows<1>();
+                    !selectResults.empty() && selectResults.size() == 1)
+                {
+                    const AuthReq_Select_UserCount& selectResult = *selectResults.begin();
+                    if (selectResult.user_count == 1)
+                    {
+
+                    }
+                    else if (selectResult.user_count == 0)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
             }
             break;
         case LobbyPayload::LobbyPayload_LoginReq:

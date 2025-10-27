@@ -9,4 +9,9 @@ namespace GenericBoson
 		std::optional<std::string> name;
 		std::optional<int32_t>     level;
 	};
+
+	struct AuthReq_Select_UserCount
+	{
+		std::optional<int32_t>     user_count;
+	};
 }
