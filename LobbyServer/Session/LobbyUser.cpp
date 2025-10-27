@@ -71,6 +71,19 @@ namespace GenericBoson
 
         switch (message->payload_type())
         {
+        case LobbyPayload::LobbyPayload_AuthReq:
+            {
+                auto authReq = message->payload_as_AuthReq();
+                NULL_CO_RETURN(authReq);
+
+                auto queryStr = mysql::with_params(
+                    "INSERT INTO   "
+                    "FROM zozo_lobby.user "
+                    "WHERE user.account = {} AND user.password = {}",
+                    authReq->account()->c_str(),
+                    authReq->password()->c_str());
+            }
+            break;
         case LobbyPayload::LobbyPayload_LoginReq:
             {
             using namespace std::chrono_literals;
@@ -84,7 +97,7 @@ namespace GenericBoson
                     "ON user.id = uc.user_id "
                     "WHERE user.account = {} AND user.password = {}",
                     loginReq->account()->c_str(),
-                    loginReq->password()->c_str());
+                    loginReq->token()->c_str());
 
                 mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
                 if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(

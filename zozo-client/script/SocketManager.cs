@@ -93,28 +93,31 @@ public partial class SocketManager : Node
                     case LobbyPayload.LoginAck:
                         {
                             var loginAck = lobbyMessage.PayloadAsLoginAck();
+
+                            var characterNames = new List<string>();
                             for (var k = 0; k < loginAck.CharactersLength; ++k)
                             {
                                 var character = loginAck.Characters(k);
                                 if (character is null)
                                     continue;
 
-                                Node gdscriptNode = GetNode<Node>("/root/Lobby");
-
-                                if (gdscriptNode != null)
-                                {
-                                    gdscriptNode.Call("_test", character.Value.Password);
-
-                                    //Variant returnValue = gdScriptNode.Call("get_data");
-                                    //GD.Print($"GDScript returned: {returnValue}");
-                                }
-                                else
-                                {
-                                    GD.PrintErr("Could not find MyGDScriptNode.");
-                                }
-
-                                GD.Print($"Received LoginAck.password-{character.Value.Password}");
+                                characterNames.Add(character.Value.Password);
                             }
+
+                            Node gdscriptNode = GetNode<Node>("/root/Lobby");
+
+                            if (gdscriptNode != null)
+                            {
+                                gdscriptNode.Call("_test", characterNames.ToArray());
+
+                                //Variant returnValue = gdScriptNode.Call("get_data");
+                                //GD.Print($"GDScript returned: {returnValue}");
+                            }
+                            else
+                            {
+                                GD.PrintErr("Could not find MyGDScriptNode.");
+                            }
+
                             //GD.Print($"Received LoginAck.Gameserverip-{loginAck.Gameserverip}, Gameserverport-{loginAck.Gameserverport}, Token-{loginAck.Token}");
                         }
                         break;

@@ -4,10 +4,22 @@ include "ServerInfo.fbs";
 
 namespace GenericBoson.Zozo;
 
+table AuthReq
+{
+    account : string;
+    password : string;
+}
+
+table AuthAck
+{
+    result_code : ResultCode;
+    token : string;
+}
+
 table LoginReq
 {
     account : string;
-    password: string;
+    token : string;
 }
 
 table LoginAck
@@ -15,20 +27,23 @@ table LoginAck
     result_code : ResultCode;
     server_infos: [ServerInfo];
     characters  : [CharacterInfo];
-    token       : string;
 }
 
 union LobbyPayload
 {
+    AuthReq,
+    AuthAck,
     LoginReq,
     LoginAck,
 }
 
 table LobbyMessage
 {
-    payload:LobbyPayload;
+    payload : LobbyPayload;
 }
 
+root_type AuthReq;
+root_type AuthAck;
 root_type LoginReq;
 root_type LoginAck;
 root_type LobbyMessage;

@@ -14,3 +14,10 @@ offset_right = 1168.0
 offset_bottom = 664.0
 texture = ExtResource("1_lhj2g")
 stretch_mode = 1
+
+[node name="CharacterDropDown" type="OptionButton" parent="."]
+layout_mode = 0
+offset_left = 696.0
+offset_top = 416.0
+offset_right = 904.0
+offset_bottom = 436.0

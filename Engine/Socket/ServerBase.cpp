@@ -37,7 +37,7 @@ namespace GenericBoson
 		params.username = username;
 		params.password = password;
 		params.database = dbname;
-		//params.thread_safe = true;
+		params.multi_queries = true;
 
 		return params;
 	}
