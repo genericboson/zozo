@@ -19,20 +19,20 @@ namespace Zozo {
 enum ResultCode : uint32_t {
   ResultCode_Success = 0,
   ResultCode_InvalidPacket = 1,
-  ResultCode_NotAuthenticated = 2,
-  ResultCode_ServerFull = 3,
-  ResultCode_Banned = 4,
+  ResultCode_WrongPassword = 2,
+  ResultCode_NewAccount = 3,
+  ResultCode_LogicError = 4,
   ResultCode_MIN = ResultCode_Success,
-  ResultCode_MAX = ResultCode_Banned
+  ResultCode_MAX = ResultCode_LogicError
 };
 
 inline const ResultCode (&EnumValuesResultCode())[5] {
   static const ResultCode values[] = {
     ResultCode_Success,
     ResultCode_InvalidPacket,
-    ResultCode_NotAuthenticated,
-    ResultCode_ServerFull,
-    ResultCode_Banned
+    ResultCode_WrongPassword,
+    ResultCode_NewAccount,
+    ResultCode_LogicError
   };
   return values;
 }
@@ -41,16 +41,16 @@ inline const char * const *EnumNamesResultCode() {
   static const char * const names[6] = {
     "Success",
     "InvalidPacket",
-    "NotAuthenticated",
-    "ServerFull",
-    "Banned",
+    "WrongPassword",
+    "NewAccount",
+    "LogicError",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameResultCode(ResultCode e) {
-  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_Banned)) return "";
+  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_LogicError)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesResultCode()[index];
 }

@@ -21,25 +21,19 @@ public struct CharacterInfo : IFlatbufferObject
 
   public long Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public long UserId { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  public string Password { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string Name { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPasswordBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetPasswordBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetPasswordArray() { return __p.__vector_as_array<byte>(8); }
-  public int Hp { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int HpMax { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int Mp { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int MpMax { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(18); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public string Name { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(20, 1); }
-#else
-  public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(20); }
-#endif
-  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(8); }
+  public int Level { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int Hp { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int HpMax { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int Mp { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int MpMax { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(20); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public GenericBoson.Zozo.StatPair? Stats(int j) { int o = __p.__offset(22); return o != 0 ? (GenericBoson.Zozo.StatPair?)(new GenericBoson.Zozo.StatPair()).__assign(__p.__vector(o) + j * 16, __p.bb) : null; }
   public int StatsLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   public GenericBoson.Zozo.TicketPair? Tickets(int j) { int o = __p.__offset(24); return o != 0 ? (GenericBoson.Zozo.TicketPair?)(new GenericBoson.Zozo.TicketPair()).__assign(__p.__vector(o) + j * 16, __p.bb) : null; }
@@ -53,13 +47,13 @@ public struct CharacterInfo : IFlatbufferObject
   public static void StartCharacterInfo(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddId(FlatBufferBuilder builder, long id) { builder.AddLong(0, id, 0); }
   public static void AddUserId(FlatBufferBuilder builder, long userId) { builder.AddLong(1, userId, 0); }
-  public static void AddPassword(FlatBufferBuilder builder, StringOffset passwordOffset) { builder.AddOffset(2, passwordOffset.Value, 0); }
-  public static void AddHp(FlatBufferBuilder builder, int hp) { builder.AddInt(3, hp, 0); }
-  public static void AddHpMax(FlatBufferBuilder builder, int hpMax) { builder.AddInt(4, hpMax, 0); }
-  public static void AddMp(FlatBufferBuilder builder, int mp) { builder.AddInt(5, mp, 0); }
-  public static void AddMpMax(FlatBufferBuilder builder, int mpMax) { builder.AddInt(6, mpMax, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(7, positionOffset.Value, 0); }
-  public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(8, nameOffset.Value, 0); }
+  public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(2, nameOffset.Value, 0); }
+  public static void AddLevel(FlatBufferBuilder builder, int level) { builder.AddInt(3, level, 0); }
+  public static void AddHp(FlatBufferBuilder builder, int hp) { builder.AddInt(4, hp, 0); }
+  public static void AddHpMax(FlatBufferBuilder builder, int hpMax) { builder.AddInt(5, hpMax, 0); }
+  public static void AddMp(FlatBufferBuilder builder, int mp) { builder.AddInt(6, mp, 0); }
+  public static void AddMpMax(FlatBufferBuilder builder, int mpMax) { builder.AddInt(7, mpMax, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(8, positionOffset.Value, 0); }
   public static void AddStats(FlatBufferBuilder builder, VectorOffset statsOffset) { builder.AddOffset(9, statsOffset.Value, 0); }
   public static void StartStatsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(16, numElems, 8); }
   public static void AddTickets(FlatBufferBuilder builder, VectorOffset ticketsOffset) { builder.AddOffset(10, ticketsOffset.Value, 0); }
@@ -87,13 +81,13 @@ static public class CharacterInfoVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*Id*/, 8 /*long*/, 8, false)
       && verifier.VerifyField(tablePos, 6 /*UserId*/, 8 /*long*/, 8, false)
-      && verifier.VerifyString(tablePos, 8 /*Password*/, false)
-      && verifier.VerifyField(tablePos, 10 /*Hp*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 12 /*HpMax*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 14 /*Mp*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 16 /*MpMax*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 18 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
-      && verifier.VerifyString(tablePos, 20 /*Name*/, false)
+      && verifier.VerifyString(tablePos, 8 /*Name*/, false)
+      && verifier.VerifyField(tablePos, 10 /*Level*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*Hp*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 14 /*HpMax*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 16 /*Mp*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 18 /*MpMax*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 20 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
       && verifier.VerifyVectorOfData(tablePos, 22 /*Stats*/, 16 /*GenericBoson.Zozo.StatPair*/, false)
       && verifier.VerifyVectorOfData(tablePos, 24 /*Tickets*/, 16 /*GenericBoson.Zozo.TicketPair*/, false)
       && verifier.VerifyField(tablePos, 26 /*AppearanceId*/, 8 /*long*/, 8, false)

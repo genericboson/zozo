@@ -26,26 +26,26 @@ public struct LoginReq : IFlatbufferObject
   public ArraySegment<byte>? GetAccountBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetAccountArray() { return __p.__vector_as_array<byte>(4); }
-  public string Password { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string Token { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPasswordBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetPasswordBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetPasswordArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(6); }
 
   public static Offset<GenericBoson.Zozo.LoginReq> CreateLoginReq(FlatBufferBuilder builder,
       StringOffset accountOffset = default(StringOffset),
-      StringOffset passwordOffset = default(StringOffset)) {
+      StringOffset tokenOffset = default(StringOffset)) {
     builder.StartTable(2);
-    LoginReq.AddPassword(builder, passwordOffset);
+    LoginReq.AddToken(builder, tokenOffset);
     LoginReq.AddAccount(builder, accountOffset);
     return LoginReq.EndLoginReq(builder);
   }
 
   public static void StartLoginReq(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddAccount(FlatBufferBuilder builder, StringOffset accountOffset) { builder.AddOffset(0, accountOffset.Value, 0); }
-  public static void AddPassword(FlatBufferBuilder builder, StringOffset passwordOffset) { builder.AddOffset(1, passwordOffset.Value, 0); }
+  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(1, tokenOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.LoginReq> EndLoginReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.LoginReq>(o);
@@ -59,7 +59,7 @@ static public class LoginReqVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*Account*/, false)
-      && verifier.VerifyString(tablePos, 6 /*Password*/, false)
+      && verifier.VerifyString(tablePos, 6 /*Token*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

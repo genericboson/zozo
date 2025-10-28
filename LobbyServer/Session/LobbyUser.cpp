@@ -6,6 +6,9 @@
 #include <boost/mysql.hpp>
 #include <boost/mysql/static_results.hpp>
 #include <boost/mysql/pfr.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <flatbuffers/flatbuffers.h>
 
@@ -69,12 +72,16 @@ namespace GenericBoson
         auto message = Zozo::GetLobbyMessage(pData);
         NULL_CO_RETURN(message)
 
+        flatbuffers::FlatBufferBuilder fbb;
+
         switch (message->payload_type())
         {
         case LobbyPayload::LobbyPayload_AuthReq:
             {
                 auto authReq = message->payload_as_AuthReq();
                 NULL_CO_RETURN(authReq);
+
+                const auto tmpUuid = boost::uuids::to_string(boost::uuids::random_generator()());
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
@@ -83,6 +90,7 @@ namespace GenericBoson
                     "WHERE EXISTS SELECT 1 FROM zozo_lobby.user "
                     "WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
+                    tmpUuid,
                     authReq->account()->c_str(),
                     authReq->password()->c_str());
 
@@ -102,23 +110,27 @@ namespace GenericBoson
                     co_return;
                 }
 
+                auto resultCode = Zozo::ResultCode::ResultCode_Success;
+
                 if (auto selectResults = result.rows<1>();
                     !selectResults.empty() && selectResults.size() == 1)
                 {
                     const AuthReq_Select_UserCount& selectResult = *selectResults.begin();
-                    if (selectResult.user_count == 1)
+                    if (selectResult.user_count == 0)
                     {
-
+                        resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
                     }
-                    else if (selectResult.user_count == 0)
+                    else if (selectResult.user_count > 1)
                     {
-
-                    }
-                    else
-                    {
-
+                        resultCode = Zozo::ResultCode::ResultCode_LogicError;
                     }
                 }
+
+                auto tokenOffset = fbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
+                auto authAck = Zozo::CreateAuthAck(fbb, resultCode, tokenOffset);
+                auto lobbyMsg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
+
+                fbb.Finish(lobbyMsg);
             }
             break;
         case LobbyPayload::LobbyPayload_LoginReq:
@@ -147,8 +159,6 @@ namespace GenericBoson
                     co_return;
                 }
 
-                flatbuffers::FlatBufferBuilder fbb;
-
                 std::vector<flatbuffers::Offset<Zozo::CharacterInfo>> characterInfos;
                 if (result.rows().size() > 0)
                 {
@@ -164,9 +174,8 @@ namespace GenericBoson
 
                 auto loginAck = Zozo::CreateLoginAck(fbb, Zozo::ResultCode_Success,0, infosOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_LoginAck, loginAck.Union());
+                
                 fbb.Finish(lobbyMsg);
-
-                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
         case LobbyPayload::LobbyPayload_LoginAck:
@@ -175,10 +184,14 @@ namespace GenericBoson
             }
             break;
         default:
+            {
                 WARN_LOG("Unhandled message ( payload_type - %s )",
                     EnumNameLobbyPayload(message->payload_type()));
-                break;
             }
+            co_return;
+        }
+
+        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
     }
 
     void LobbyUser::SendLoginAck()

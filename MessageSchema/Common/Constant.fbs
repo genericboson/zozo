@@ -6,4 +6,5 @@ enum ResultCode : uint
   InvalidPacket    = 1,
   WrongPassword    = 2,
   NewAccount       = 3,
+  LogicError       = 4,
 }

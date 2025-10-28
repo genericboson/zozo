@@ -8,8 +8,10 @@ namespace GenericBoson.Zozo
 public enum LobbyPayload : byte
 {
   NONE = 0,
-  LoginReq = 1,
-  LoginAck = 2,
+  AuthReq = 1,
+  AuthAck = 2,
+  LoginReq = 3,
+  LoginAck = 4,
 };
 
 
@@ -21,6 +23,12 @@ static public class LobbyPayloadVerify
     bool result = true;
     switch((LobbyPayload)typeId)
     {
+      case LobbyPayload.AuthReq:
+        result = GenericBoson.Zozo.AuthReqVerify.Verify(verifier, tablePos);
+        break;
+      case LobbyPayload.AuthAck:
+        result = GenericBoson.Zozo.AuthAckVerify.Verify(verifier, tablePos);
+        break;
       case LobbyPayload.LoginReq:
         result = GenericBoson.Zozo.LoginReqVerify.Verify(verifier, tablePos);
         break;

@@ -9,9 +9,9 @@ public enum ResultCode : uint
 {
   Success = 0,
   InvalidPacket = 1,
-  NotAuthenticated = 2,
-  ServerFull = 3,
-  Banned = 4,
+  WrongPassword = 2,
+  NewAccount = 3,
+  LogicError = 4,
 };
 
 
