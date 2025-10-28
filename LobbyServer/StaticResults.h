@@ -12,6 +12,6 @@ namespace GenericBoson
 
 	struct AuthReq_Select_UserCount
 	{
-		std::optional<int32_t>     user_count;
+		std::optional<int64_t>     user_count;
 	};
 }

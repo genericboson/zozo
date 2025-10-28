@@ -83,16 +83,16 @@ namespace GenericBoson
 
                 const auto tmpUuid = boost::uuids::to_string(boost::uuids::random_generator()());
 
+                const auto accountStr = authReq->account()->c_str();
+                const auto passwordStr = authReq->password()->c_str();
+
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
                     "SELECT COUNT(*) AS user_count FROM zozo_lobby.user WHERE user.account = {} AND user.password = {};"
-                    "UPDATE zozo_lobby.user SET token = {} "
-                    "WHERE EXISTS SELECT 1 FROM zozo_lobby.user "
-                    "WHERE user.account = {} AND user.password = {};"
+                    "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
-                    tmpUuid,
-                    authReq->account()->c_str(),
-                    authReq->password()->c_str());
+                    accountStr, passwordStr,
+                    tmpUuid, accountStr, passwordStr);
 
                 mysql::static_results<
                     std::tuple<>,
@@ -110,7 +110,7 @@ namespace GenericBoson
                     co_return;
                 }
 
-                auto resultCode = Zozo::ResultCode::ResultCode_Success;
+                auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
 
                 if (auto selectResults = result.rows<1>();
                     !selectResults.empty() && selectResults.size() == 1)
@@ -120,9 +120,9 @@ namespace GenericBoson
                     {
                         resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
                     }
-                    else if (selectResult.user_count > 1)
+                    else if (selectResult.user_count == 1)
                     {
-                        resultCode = Zozo::ResultCode::ResultCode_LogicError;
+                        resultCode = Zozo::ResultCode::ResultCode_Success;
                     }
                 }
 
