@@ -88,7 +88,7 @@ namespace GenericBoson
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
-                    "SELECT COUNT(*) AS user_count FROM zozo_lobby.user WHERE user.account = {} AND user.password = {};"
+                    "SELECT password AS user_count FROM zozo_lobby.user WHERE user.account = {}"
                     "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
                     accountStr, passwordStr,
@@ -96,7 +96,7 @@ namespace GenericBoson
 
                 mysql::static_results<
                     std::tuple<>,
-                    mysql::pfr_by_name<AuthReq_Select_UserCount>,
+                    mysql::pfr_by_name<AuthReq_Select_User>,
                     std::tuple<>,
                     std::tuple<>> result;
 
@@ -113,16 +113,23 @@ namespace GenericBoson
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
 
                 if (auto selectResults = result.rows<1>();
-                    !selectResults.empty() && selectResults.size() == 1)
+                    !selectResults.empty())
                 {
-                    const AuthReq_Select_UserCount& selectResult = *selectResults.begin();
-                    if (selectResult.user_count == 0)
+                    if (selectResults.size() == 0)
                     {
-                        resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
+                        resultCode = Zozo::ResultCode::ResultCode_NewAccount;
                     }
-                    else if (selectResult.user_count == 1)
+                    else if (selectResults.size() == 1)
                     {
-                        resultCode = Zozo::ResultCode::ResultCode_Success;
+                        const AuthReq_Select_User& selectResult = *selectResults.begin();
+                        if (selectResult.password == passwordStr)
+                        {
+                            resultCode = Zozo::ResultCode::ResultCode_Success;
+                        }
+                        else
+                        {
+                            resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
+                        }
                     }
                 }
 

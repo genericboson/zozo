@@ -10,8 +10,8 @@ namespace GenericBoson
 		std::optional<int32_t>     level;
 	};
 
-	struct AuthReq_Select_UserCount
+	struct AuthReq_Select_User
 	{
-		std::optional<int64_t>     user_count;
+		std::optional<std::string> password;
 	};
 }

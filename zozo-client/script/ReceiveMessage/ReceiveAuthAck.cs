@@ -8,15 +8,27 @@ namespace Zozo
         public void ReceiveAuthAck(LobbyMessage lobbyMessage)
         {
             var authAck = lobbyMessage.PayloadAsAuthAck();
+            ConsumeResultCode(authAck.ResultCode);
+        }
 
-            Node gdscriptNode = GetNode<Node>("/root/Lobby");
-            if (gdscriptNode != null)
+        private void ConsumeResultCode(ResultCode resultCode)
+        {
+            switch(resultCode)
             {
-                gdscriptNode.Call("consumeAuthAck", (int)authAck.ResultCode);
-            }
-            else
-            {
-                GD.PrintErr("Could not find MyGDScriptNode.");
+                case ResultCode.Success:
+                    GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
+                    break;
+                case ResultCode.NewAccount:
+                    GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
+                    break;
+                case ResultCode.WrongPassword:
+                    using (var globalNode = GetNode<Node>("/root/Global"))
+                    {
+                        globalNode.Call("message_box", "Wrong password");
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

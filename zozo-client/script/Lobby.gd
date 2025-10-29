@@ -12,12 +12,3 @@ func _on_setting_pressed() -> void:
 func _add_password():
 	print("signaled")
 	#dropDown.add_item(password)
-	
-func consumeAuthAck(authResult: int) -> void:
-	match authResult:
-		0:
-			get_tree().change_scene_to_file("res://scene/CharacterSelect.tscn")
-		2:
-			Global.message_box("Wrong password")
-		_:
-			Global.message_box("Logic error")
