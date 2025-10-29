@@ -88,7 +88,7 @@ namespace GenericBoson
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
-                    "SELECT password AS user_count FROM zozo_lobby.user WHERE user.account = {}"
+                    "SELECT password FROM zozo_lobby.user WHERE user.account = {};"
                     "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
                     accountStr, passwordStr,
@@ -112,24 +112,22 @@ namespace GenericBoson
 
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
 
+                
                 if (auto selectResults = result.rows<1>();
-                    !selectResults.empty())
+                    selectResults.size() == 0)
                 {
-                    if (selectResults.size() == 0)
+                    resultCode = Zozo::ResultCode::ResultCode_NewAccount;
+                }
+                else if (selectResults.size() == 1)
+                {
+                    const AuthReq_Select_User& selectResult = *selectResults.begin();
+                    if (selectResult.password == passwordStr)
                     {
-                        resultCode = Zozo::ResultCode::ResultCode_NewAccount;
+                        resultCode = Zozo::ResultCode::ResultCode_Success;
                     }
-                    else if (selectResults.size() == 1)
+                    else
                     {
-                        const AuthReq_Select_User& selectResult = *selectResults.begin();
-                        if (selectResult.password == passwordStr)
-                        {
-                            resultCode = Zozo::ResultCode::ResultCode_Success;
-                        }
-                        else
-                        {
-                            resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
-                        }
+                        resultCode = Zozo::ResultCode::ResultCode_WrongPassword;
                     }
                 }
 
