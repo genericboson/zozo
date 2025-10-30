@@ -121,7 +121,7 @@ namespace GenericBoson
                 else if (selectResults.size() == 1)
                 {
                     const AuthReq_Select_User& selectResult = *selectResults.begin();
-                    if (selectResult.password == passwordStr)
+                    if (selectResult.password.value_or("") == passwordStr)
                     {
                         resultCode = Zozo::ResultCode::ResultCode_Success;
                     }
@@ -138,6 +138,50 @@ namespace GenericBoson
                 fbb.Finish(lobbyMsg);
             }
             break;
+        case LobbyPayload::LobbyPayload_CharacterListReq:
+            {
+                auto req = message->payload_as_CharacterListReq();
+                NULL_CO_RETURN(req)
+
+                    auto queryStr = mysql::with_params(
+                        "SELECT uc.name AS name, uc.level AS level "
+                        "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
+                        "ON user.id = uc.user_id "
+                        "WHERE user.account = {} AND user.token = {};",
+                        req->account()->c_str(),
+                        req->token()->c_str());
+
+                mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
+                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+                    queryStr,
+                    result,
+                    asio::as_tuple(asio::use_awaitable));
+                    dbErr)
+                {
+                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+                    co_return;
+                }
+
+                auto selectResults = result.rows<0>();
+
+                std::vector<flatbuffers::Offset<flatbuffers::String>> names;
+
+                for (auto& selectResult : selectResults)
+                {
+                    auto name = fbb.CreateString(std::format("{}[{}]", 
+                        selectResult.name.value_or(""), 
+                        selectResult.level.value_or(0)));
+                    names.emplace_back(std::move(name));
+                }
+
+                const auto namesOffset = fbb.CreateVector(names);
+
+                const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, namesOffset);
+                const auto msg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_CharacterListAck, ack.Union());
+
+                fbb.Finish(msg);
+            }
+            break;
         case LobbyPayload::LobbyPayload_LoginReq:
             {
             using namespace std::chrono_literals;
@@ -149,7 +193,7 @@ namespace GenericBoson
                     "SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
                     "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
                     "ON user.id = uc.user_id "
-                    "WHERE user.account = {} AND user.password = {}",
+                    "WHERE user.account = {} AND user.password = {};",
                     loginReq->account()->c_str(),
                     loginReq->token()->c_str());
 

@@ -17,7 +17,26 @@ stretch_mode = 1
 
 [node name="CharacterDropDown" type="OptionButton" parent="."]
 layout_mode = 0
-offset_left = 696.0
-offset_top = 416.0
-offset_right = 904.0
-offset_bottom = 436.0
+offset_left = 496.0
+offset_top = 408.0
+offset_right = 704.0
+offset_bottom = 428.0
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 72.0
+offset_bottom = 56.0
+text = "Back"
+
+[node name="SelectButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 568.0
+offset_top = 448.0
+offset_right = 632.0
+offset_bottom = 496.0
+text = "Select"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="SelectButton" to="." method="_on_select_button_pressed"]

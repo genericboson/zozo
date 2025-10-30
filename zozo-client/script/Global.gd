@@ -2,6 +2,9 @@ extends Node
 
 var socket_manager = load("res://script/SocketManager.cs").new()
 
+var account = ""
+var token = ""
+
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()
 	dialog.dialog_text = text

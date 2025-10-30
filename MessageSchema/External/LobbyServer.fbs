@@ -16,6 +16,18 @@ table AuthAck
     token : string;
 }
 
+table CharacterListReq
+{
+    account : string;
+    token : string;
+}
+
+table CharacterListAck
+{
+    result_code : ResultCode;
+    character_names : [string];
+}
+
 table LoginReq
 {
     account : string;
@@ -33,6 +45,8 @@ union LobbyPayload
 {
     AuthReq,
     AuthAck,
+    CharacterListReq,
+    CharacterListAck,
     LoginReq,
     LoginAck,
 }

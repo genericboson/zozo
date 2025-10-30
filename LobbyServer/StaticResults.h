@@ -14,4 +14,10 @@ namespace GenericBoson
 	{
 		std::optional<std::string> password;
 	};
+
+	struct CharacterList_Select_UserCharacter
+	{
+		std::optional<std::string> name;
+		std::optional<int32_t>     level;
+	};
 }

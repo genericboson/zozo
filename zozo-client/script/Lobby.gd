@@ -4,6 +4,7 @@ extends Control
 @onready var passwordInput = $PasswordInput
 
 func _on_button_pressed() -> void:
+	Global.account = accountInput.text
 	Global.socket_manager.SendAuthReq(accountInput.text,passwordInput.text)
 	
 func _on_setting_pressed() -> void:

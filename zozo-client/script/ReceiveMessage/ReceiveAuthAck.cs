@@ -8,27 +8,35 @@ namespace Zozo
         public void ReceiveAuthAck(LobbyMessage lobbyMessage)
         {
             var authAck = lobbyMessage.PayloadAsAuthAck();
-            ConsumeResultCode(authAck.ResultCode);
+            ConsumeAuthAck(authAck);
         }
 
-        private void ConsumeResultCode(ResultCode resultCode)
+        private void ConsumeAuthAck(AuthAck ack)
         {
-            switch(resultCode)
+            using (var globalNode = GetNode<Node>("/root/Global"))
             {
-                case ResultCode.Success:
-                    GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
-                    break;
-                case ResultCode.NewAccount:
-                    GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
-                    break;
-                case ResultCode.WrongPassword:
-                    using (var globalNode = GetNode<Node>("/root/Global"))
-                    {
-                        globalNode.Call("message_box", "Wrong password");
-                    }
-                    break;
-                default:
-                    break;
+                switch (ack.ResultCode)
+                {
+                    case ResultCode.Success:
+                        {
+                            globalNode.Set("token", ack.Token);
+                            GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
+                        }
+                        break;
+                    case ResultCode.NewAccount:
+                        {
+                            globalNode.Set("token", ack.Token);
+                            GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
+                        }
+                        break;
+                    case ResultCode.WrongPassword:
+                        {
+                            globalNode.Call("message_box", "Wrong password");
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
