@@ -58,6 +58,8 @@ table LobbyMessage
 
 root_type AuthReq;
 root_type AuthAck;
+root_type CharacterListReq;
+root_type CharacterListAck;
 root_type LoginReq;
 root_type LoginAck;
 root_type LobbyMessage;

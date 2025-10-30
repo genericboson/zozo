@@ -104,13 +104,14 @@ namespace Zozo
                     case LobbyPayload.AuthAck:
                         ReceiveAuthAck(lobbyMessage);
                         break;
+                    case LobbyPayload.CharacterListAck:
+                        ReceiveCharacterListAck(lobbyMessage);
+                        break;
                     case LobbyPayload.LoginAck:
-
+                        ReceiveLoginAck(lobbyMessage);
                         break;
                     default:
-                        {
-                            GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
-                        }
+                        GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
                         break;
                 }
             }

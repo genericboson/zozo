@@ -83,6 +83,8 @@ namespace GenericBoson
 
                 const auto tmpUuid = boost::uuids::to_string(boost::uuids::random_generator()());
 
+                INFO_LOG("[AuthReq] new token : {}", tmpUuid);
+
                 const auto accountStr = authReq->account()->c_str();
                 const auto passwordStr = authReq->password()->c_str();
 
@@ -91,7 +93,7 @@ namespace GenericBoson
                     "SELECT password FROM zozo_lobby.user WHERE user.account = {};"
                     "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
-                    accountStr, passwordStr,
+                    accountStr,
                     tmpUuid, accountStr, passwordStr);
 
                 mysql::static_results<
@@ -143,13 +145,17 @@ namespace GenericBoson
                 auto req = message->payload_as_CharacterListReq();
                 NULL_CO_RETURN(req)
 
-                    auto queryStr = mysql::with_params(
-                        "SELECT uc.name AS name, uc.level AS level "
-                        "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
-                        "ON user.id = uc.user_id "
-                        "WHERE user.account = {} AND user.token = {};",
-                        req->account()->c_str(),
-                        req->token()->c_str());
+                const auto accountStr = req->account()->c_str();
+                const auto tokenStr = req->token()->c_str();
+
+                INFO_LOG("[CharacterListReq] token : {}", tokenStr);
+
+                auto queryStr = mysql::with_params(
+                    "SELECT uc.name AS name, uc.level AS level "
+                    "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
+                    "ON user.id = uc.user_id "
+                    "WHERE user.account = {} AND user.token = {};",
+                    accountStr, tokenStr);
 
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
                 if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
@@ -168,7 +174,7 @@ namespace GenericBoson
 
                 for (auto& selectResult : selectResults)
                 {
-                    auto name = fbb.CreateString(std::format("{}[{}]", 
+                    auto name = fbb.CreateString(std::format("{} [Lv.{}]", 
                         selectResult.name.value_or(""), 
                         selectResult.level.value_or(0)));
                     names.emplace_back(std::move(name));
@@ -193,7 +199,7 @@ namespace GenericBoson
                     "SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
                     "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
                     "ON user.id = uc.user_id "
-                    "WHERE user.account = {} AND user.password = {};",
+                    "WHERE user.account = {} AND user.token = {};",
                     loginReq->account()->c_str(),
                     loginReq->token()->c_str());
 
