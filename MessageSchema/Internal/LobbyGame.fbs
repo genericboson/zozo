@@ -1,0 +1,29 @@
+include "Constant.fbs";
+include "ServerInfo.fbs";
+
+namespace GenericBoson.Zozo;
+
+table PassTokenReq
+{
+    token: string;
+}
+
+table PassTokenAck
+{
+    result_code : ResultCode;
+}
+
+union LobbyGamePayload
+{
+    PassTokenReq,
+    PassTokenAck,
+}
+
+table LobbyGameMessage
+{
+    payload:LobbyGamePayload;
+}
+
+root_type PassTokenReq;
+root_type PassTokenAck;
+root_type LobbyGameMessage;
