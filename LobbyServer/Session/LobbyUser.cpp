@@ -18,7 +18,6 @@
 
 #include "CharacterInfo_generated.h"
 #include <MessageSchema/External/LobbyServer_generated.h>
-#include <MessageSchema/Internal/DBCache_generated.h>
 
 #include "LobbyServer.h"
 #include "LobbyUser.h"
@@ -114,7 +113,6 @@ namespace GenericBoson
 
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
 
-                
                 if (auto selectResults = result.rows<1>();
                     selectResults.size() == 0)
                 {

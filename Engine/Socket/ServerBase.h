@@ -20,13 +20,14 @@ namespace GenericBoson
 		ServerBase(int32_t port);
 		virtual ~ServerBase() = default;
 
-		bool                  Start();
-		void                  Stop();
-						      
-		void                  Accept();
-		asio::awaitable<void> Listen();
+		bool Start();
+		void Stop();
 
-		bool            IsRunning() const;
+		void Accept();
+		auto Listen()
+			-> asio::awaitable<void>;
+
+		bool IsRunning() const;
 
 		virtual auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
 			-> std::shared_ptr<IActor> = 0;

@@ -14,18 +14,18 @@ namespace GenericBoson
 {
 	class ISocket;
 
-	using namespace boost::asio;
+	namespace asio = boost::asio;
 	using namespace boost::asio::experimental::awaitable_operators;
 
 	class BoostTcpSocket : public ISocket
 	{
 	public:
-		BoostTcpSocket(ip::tcp::socket pSocket);
+		BoostTcpSocket(asio::ip::tcp::socket pSocket);
 
 		void Initialize(const std::shared_ptr<IActor>& pOwner);
 
-		awaitable<bool> Write() override;
-		awaitable<bool> Read() override;
+		asio::awaitable<bool> Write() override;
+		asio::awaitable<bool> Read() override;
 
 		ESocketType GetType() override;
 		bool IsValid() const override;
@@ -39,18 +39,19 @@ namespace GenericBoson
 			std::size_t bufferSize) override;
 
 		auto ConnectAsync(
-			const std::string& ip,
-			const std::string& port,
-			std::function<void()>&& onConnected)
-			-> awaitable<void>;
+			const std::string&             ip,
+			const std::string&             port,
+			std::function<
+				asio::awaitable<void>()>&& onConnected)
+			-> asio::awaitable<bool>;
 
 	private:
 		enum { WRITE_CHANNEL_SIZE = 4096 };
 
 	private:
-		ip::tcp::socket              m_socket;
+		asio::ip::tcp::socket        m_socket;
 		Message				         m_readMsg;
-		experimental::concurrent_channel<
+		asio::experimental::concurrent_channel<
 			void(boost::system::error_code, Message)>
 			                         m_writeChannel;
 

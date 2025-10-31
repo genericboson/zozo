@@ -4,7 +4,7 @@ namespace GenericBoson
 {
 	class Message;
 
-	using namespace boost::asio;
+	namespace asio = boost::asio;
 
 	enum class ESocketType
 	{
@@ -18,8 +18,8 @@ namespace GenericBoson
 	public:
 		virtual ~ISocket() = default;
 
-		virtual awaitable<bool> Write() = 0;
-		virtual awaitable<bool> Read() = 0;
+		virtual asio::awaitable<bool> Write() = 0;
+		virtual asio::awaitable<bool> Read() = 0;
 
 		virtual ESocketType GetType() = 0;
 		virtual bool IsValid() const = 0;
@@ -29,9 +29,10 @@ namespace GenericBoson
 			std::size_t bufferSize) = 0;
 
 		virtual auto ConnectAsync(
-			const std::string&      ip, 
-			const std::string&      port,
-			std::function<void()>&& onConnected)
-			-> awaitable<void > = 0;
+			const std::string&             ip, 
+			const std::string&             port,
+			std::function<
+				asio::awaitable<void>()>&& onConnected)
+			-> asio::awaitable<bool> = 0;
 	};
 }

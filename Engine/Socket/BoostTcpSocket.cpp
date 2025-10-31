@@ -36,11 +36,11 @@ namespace GenericBoson
 		if (errorCode == boost::system::errc::success)
 			return true;
 
-		if (errorCode == error::eof)
+		if (errorCode == asio::error::eof)
 		{
 			INFO_LOG("Socket disconnected");
 		}
-		else if (errorCode != error::operation_aborted)
+		else if (errorCode != asio::error::operation_aborted)
 		{
 			ERROR_LOG("Socket write error ( code - {}({}) )",
 				errorCode.value(), errorCode.message());
@@ -54,17 +54,17 @@ namespace GenericBoson
 		return false;
 	}
 
-	awaitable<bool> BoostTcpSocket::Write()
+	asio::awaitable<bool> BoostTcpSocket::Write()
 	{
 		auto [receiveError, msg] = co_await m_writeChannel.async_receive(
-			as_tuple(use_awaitable));
+			asio::as_tuple(asio::use_awaitable));
 
 		if (!IsSucceeded(receiveError))
 			co_return false;
 
 		auto [writeError, writeSize] = co_await m_socket.async_write_some(
 			boost::asio::buffer(msg.Data(), msg.Length()),
-			as_tuple(use_awaitable));
+			asio::as_tuple(asio::use_awaitable));
 
 		if (!IsSucceeded(writeError))
 			co_return false;
@@ -74,20 +74,20 @@ namespace GenericBoson
 		co_return true;
 	}
 
-	awaitable<bool> BoostTcpSocket::Read()
+	asio::awaitable<bool> BoostTcpSocket::Read()
 	{
-		auto [readHeaderError,readHeaderSize] = co_await async_read(m_socket,
+		auto [readHeaderError,readHeaderSize] = co_await asio::async_read(m_socket,
 			boost::asio::buffer(m_readMsg.Data(), Message::HEADER_SIZE),
-			as_tuple(use_awaitable));
+			asio::as_tuple(asio::use_awaitable));
 
 		if (!IsSucceeded(readHeaderError))
 			co_return false;
 
 		if (readHeaderSize && m_readMsg.DecodeHeader())
 		{
-			auto [readBodyError,readBodySize] = co_await async_read(m_socket,
+			auto [readBodyError,readBodySize] = co_await asio::async_read(m_socket,
 				boost::asio::buffer(m_readMsg.Body(), m_readMsg.BodySize()),
-				as_tuple(use_awaitable));
+				asio::as_tuple(asio::use_awaitable));
 
 			if (!IsSucceeded(readBodyError))
 				co_return false;
@@ -123,24 +123,24 @@ namespace GenericBoson
 	}
 
 	auto BoostTcpSocket::ConnectAsync(
-		const std::string&      ip,
-		const std::string&      port,
-		std::function<void()>&& onConnected)
-		-> awaitable<void>
+		const std::string&             ip,
+		const std::string&             port,
+		std::function<
+			asio::awaitable<void>()>&& onConnected)
+		-> asio::awaitable<bool>
 	{
-		ip::tcp::resolver resolver{ m_socket.get_executor()};
+		asio::ip::tcp::resolver resolver{ m_socket.get_executor()};
 
-		if (
-			auto [error, _] = co_await async_connect(m_socket, resolver.resolve(ip, port), asio::as_tuple);
+		if (auto [error, _] = co_await async_connect(m_socket, resolver.resolve(ip, port), asio::as_tuple);
 			error)
 		{
-			std::cout << "Connect to DBCache server failed: " << error.message() << std::endl;
+			ERROR_LOG("Connect to DBCache server failed: {}", error.message());
+			co_return false;
 		}
-		else
-		{
-			std::cout << "Connected to DBCache server" << std::endl;
-			onConnected();
-		}
+
+		INFO_LOG("Connected to DBCache server");
+		co_await onConnected();
+		co_return true;
 	}
 
 	void BoostTcpSocket::EnqueueMessage(

@@ -3,8 +3,22 @@ include "CharacterMove.fbs";
 
 namespace GenericBoson.Zozo;
 
+table CharacterListReq
+{
+    account : string;
+    token : string;
+}
+
+table CharacterListAck
+{
+    result_code : ResultCode;
+    character_names : [string];
+}
+
 union GamePayload
 {
+    CharacterListReq,
+    CharacterListAck,
     CharacterMoveReq,
     CharacterMoveAck,
 }
@@ -14,4 +28,6 @@ table GameMessage
     payload:GamePayload;
 }
 
+root_type CharacterListReq;
+root_type CharacterListAck;
 root_type GameMessage;

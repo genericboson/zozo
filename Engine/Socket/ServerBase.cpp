@@ -100,11 +100,11 @@ namespace GenericBoson
 		return m_isRunning;
 	}
 
-	awaitable<void> ServerBase::Listen()
+	asio::awaitable<void> ServerBase::Listen()
 	{
-		auto ReadLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
+		auto ReadLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
 			{
-				auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> awaitable<void>
+				auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
 					{
 						while (m_isRunning)
 						{
@@ -113,7 +113,7 @@ namespace GenericBoson
 						}
 					};
 
-				co_spawn(co_await this_coro::executor, WriteLoop(pSocket), detached);
+				asio::co_spawn(co_await asio::this_coro::executor, WriteLoop(pSocket), asio::detached);
 				while (m_isRunning)
 				{
 					if (!co_await pSocket->Read())
@@ -123,7 +123,7 @@ namespace GenericBoson
 
 		while (m_isRunning)
 		{
-			auto socket = co_await m_pAcceptor->async_accept(use_awaitable);
+			auto socket = co_await m_pAcceptor->async_accept(asio::use_awaitable);
 
 			auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
 			auto pActor = CreateActor(pSocket);
@@ -136,17 +136,17 @@ namespace GenericBoson
 
 			pActor->OnAccepted();
 
-			co_spawn(m_strand, ReadLoop(pSocket), detached);
+			asio::co_spawn(m_strand, ReadLoop(pSocket), asio::detached);
 		}
 	}
 
 	void ServerBase::Accept()
 	{
-		auto CallListen = [this]() -> awaitable<void>
+		auto CallListen = [this]() -> asio::awaitable<void>
 			{
 				return Listen();
 			};
 
-		co_spawn(m_ioContext, CallListen, detached);
+		asio::co_spawn(m_ioContext, CallListen, asio::detached);
 	}
 }

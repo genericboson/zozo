@@ -19,20 +19,30 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 namespace GenericBoson {
 namespace Zozo {
 
+struct CharacterListReq;
+struct CharacterListReqBuilder;
+
+struct CharacterListAck;
+struct CharacterListAckBuilder;
+
 struct GameMessage;
 struct GameMessageBuilder;
 
 enum GamePayload : uint8_t {
   GamePayload_NONE = 0,
-  GamePayload_CharacterMoveReq = 1,
-  GamePayload_CharacterMoveAck = 2,
+  GamePayload_CharacterListReq = 1,
+  GamePayload_CharacterListAck = 2,
+  GamePayload_CharacterMoveReq = 3,
+  GamePayload_CharacterMoveAck = 4,
   GamePayload_MIN = GamePayload_NONE,
   GamePayload_MAX = GamePayload_CharacterMoveAck
 };
 
-inline const GamePayload (&EnumValuesGamePayload())[3] {
+inline const GamePayload (&EnumValuesGamePayload())[5] {
   static const GamePayload values[] = {
     GamePayload_NONE,
+    GamePayload_CharacterListReq,
+    GamePayload_CharacterListAck,
     GamePayload_CharacterMoveReq,
     GamePayload_CharacterMoveAck
   };
@@ -40,8 +50,10 @@ inline const GamePayload (&EnumValuesGamePayload())[3] {
 }
 
 inline const char * const *EnumNamesGamePayload() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
     "NONE",
+    "CharacterListReq",
+    "CharacterListAck",
     "CharacterMoveReq",
     "CharacterMoveAck",
     nullptr
@@ -59,6 +71,14 @@ template<typename T> struct GamePayloadTraits {
   static const GamePayload enum_value = GamePayload_NONE;
 };
 
+template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterListReq> {
+  static const GamePayload enum_value = GamePayload_CharacterListReq;
+};
+
+template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterListAck> {
+  static const GamePayload enum_value = GamePayload_CharacterListAck;
+};
+
 template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterMoveReq> {
   static const GamePayload enum_value = GamePayload_CharacterMoveReq;
 };
@@ -69,6 +89,135 @@ template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterMoveAck> {
 
 bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, GamePayload type);
 bool VerifyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+
+struct CharacterListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterListReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ACCOUNT = 4,
+    VT_TOKEN = 6
+  };
+  const ::flatbuffers::String *account() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ACCOUNT);
+  }
+  const ::flatbuffers::String *token() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ACCOUNT) &&
+           verifier.VerifyString(account()) &&
+           VerifyOffset(verifier, VT_TOKEN) &&
+           verifier.VerifyString(token()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CharacterListReqBuilder {
+  typedef CharacterListReq Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_account(::flatbuffers::Offset<::flatbuffers::String> account) {
+    fbb_.AddOffset(CharacterListReq::VT_ACCOUNT, account);
+  }
+  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
+    fbb_.AddOffset(CharacterListReq::VT_TOKEN, token);
+  }
+  explicit CharacterListReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CharacterListReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CharacterListReq>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> account = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
+  CharacterListReqBuilder builder_(_fbb);
+  builder_.add_token(token);
+  builder_.add_account(account);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReqDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *account = nullptr,
+    const char *token = nullptr) {
+  auto account__ = account ? _fbb.CreateString(account) : 0;
+  auto token__ = token ? _fbb.CreateString(token) : 0;
+  return GenericBoson::Zozo::CreateCharacterListReq(
+      _fbb,
+      account__,
+      token__);
+}
+
+struct CharacterListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterListAckBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT_CODE = 4,
+    VT_CHARACTER_NAMES = 6
+  };
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *character_names() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CHARACTER_NAMES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           VerifyOffset(verifier, VT_CHARACTER_NAMES) &&
+           verifier.VerifyVector(character_names()) &&
+           verifier.VerifyVectorOfStrings(character_names()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CharacterListAckBuilder {
+  typedef CharacterListAck Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(CharacterListAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  void add_character_names(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> character_names) {
+    fbb_.AddOffset(CharacterListAck::VT_CHARACTER_NAMES, character_names);
+  }
+  explicit CharacterListAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CharacterListAck> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CharacterListAck>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CharacterListAck> CreateCharacterListAck(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> character_names = 0) {
+  CharacterListAckBuilder builder_(_fbb);
+  builder_.add_character_names(character_names);
+  builder_.add_result_code(result_code);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CharacterListAck> CreateCharacterListAckDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *character_names = nullptr) {
+  auto character_names__ = character_names ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*character_names) : 0;
+  return GenericBoson::Zozo::CreateCharacterListAck(
+      _fbb,
+      result_code,
+      character_names__);
+}
 
 struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GameMessageBuilder Builder;
@@ -83,6 +232,12 @@ struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_PAYLOAD);
   }
   template<typename T> const T *payload_as() const;
+  const GenericBoson::Zozo::CharacterListReq *payload_as_CharacterListReq() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterListReq ? static_cast<const GenericBoson::Zozo::CharacterListReq *>(payload()) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterListAck *payload_as_CharacterListAck() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterListAck ? static_cast<const GenericBoson::Zozo::CharacterListAck *>(payload()) : nullptr;
+  }
   const GenericBoson::Zozo::CharacterMoveReq *payload_as_CharacterMoveReq() const {
     return payload_type() == GenericBoson::Zozo::GamePayload_CharacterMoveReq ? static_cast<const GenericBoson::Zozo::CharacterMoveReq *>(payload()) : nullptr;
   }
@@ -97,6 +252,14 @@ struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.EndTable();
   }
 };
+
+template<> inline const GenericBoson::Zozo::CharacterListReq *GameMessage::payload_as<GenericBoson::Zozo::CharacterListReq>() const {
+  return payload_as_CharacterListReq();
+}
+
+template<> inline const GenericBoson::Zozo::CharacterListAck *GameMessage::payload_as<GenericBoson::Zozo::CharacterListAck>() const {
+  return payload_as_CharacterListAck();
+}
 
 template<> inline const GenericBoson::Zozo::CharacterMoveReq *GameMessage::payload_as<GenericBoson::Zozo::CharacterMoveReq>() const {
   return payload_as_CharacterMoveReq();
@@ -141,6 +304,14 @@ inline bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj
   switch (type) {
     case GamePayload_NONE: {
       return true;
+    }
+    case GamePayload_CharacterListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListReq *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case GamePayload_CharacterListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListAck *>(obj);
+      return verifier.VerifyTable(ptr);
     }
     case GamePayload_CharacterMoveReq: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterMoveReq *>(obj);

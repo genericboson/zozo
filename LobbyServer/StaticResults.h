@@ -2,6 +2,8 @@
 
 namespace GenericBoson
 {
+	// Lobby
+
 	struct Join_User_UserCharacter
 	{
 		std::optional<int64_t>     character_id;
@@ -20,4 +22,6 @@ namespace GenericBoson
 		std::optional<std::string> name;
 		std::optional<int32_t>     level;
 	};
+
+	// Game
 }
