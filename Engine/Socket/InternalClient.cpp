@@ -6,18 +6,22 @@
 namespace GenericBoson
 {
 	InternalClient::InternalClient(
-		const ServerBase&  owner,
-		const std::string& ip,
-		const std::string& port)
-		: m_owner(owner), m_ip(ip), m_port(port)
+		const std::shared_ptr<ServerBase>& pOwner,
+		const std::string&                 ip,
+		const std::string&                 port)
+		: m_wpOwner(pOwner), m_ip(ip), m_port(port)
 	{
 	}
 
-	asio::awaitable<bool> InternalClient::Initialize()
+	asio::awaitable<bool> InternalClient::Initialize(const std::unique_ptr<IActor>& pActor)
 	{
+		NULL_CO_RETURN(pActor)
+
 		const auto pOwner = m_wpOwner.lock();
 		if (!pOwner)
 			return;
+
+		m_pSocket->Initialize(pActor);
 
 		m_pSocket = std::make_shared<BoostTcpSocket>(
 			ip::tcp::socket{ m_ioContext });
@@ -25,17 +29,35 @@ namespace GenericBoson
 		co_await m_pSocket->ConnectAsync(m_ip, m_port,
 			[this]() -> awaitable<void>
 			{
-				while (true)
-				{
-					const auto pOwner = m_wpOwner.lock();
-					if (!pOwner)
-						break;
+				asio::co_spawn(co_await asio::this_coro::executor, [this]()
+					{
+						while (true)
+						{
+							const auto pOwner = m_wpOwner.lock();
+							if (!pOwner)
+								break;
 
-					if (!pOwner->IsRunning())
-						break;
+							if (!pOwner->IsRunning())
+								break;
 
-					co_await m_pSocket->Write();
-				}
+							co_await m_pSocket->Write();
+						}
+					}, asio::detached);
+
+				asio::co_spawn(co_await asio::this_coro::executor, [this]()
+					{
+						while (true)
+						{
+							const auto pOwner = m_wpOwner.lock();
+							if (!pOwner)
+								break;
+
+							if (!pOwner->IsRunning())
+								break;
+
+							co_await m_pSocket->Read();
+						}
+					}, asio::detached);
 			});
 	}
 

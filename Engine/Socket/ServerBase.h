@@ -20,7 +20,7 @@ namespace GenericBoson
 		ServerBase(int32_t port);
 		virtual ~ServerBase() = default;
 
-		bool Start();
+		virtual bool Start();
 		void Stop();
 
 		void Accept();
@@ -50,7 +50,7 @@ namespace GenericBoson
 	public:
 		std::unique_ptr<mysql::any_connection>                     m_pDbConn;
 
-	private:
+	protected:
 		std::atomic_bool                                           m_isRunning{ true };
 
 		int32_t                                                    m_listeningPort = 0;

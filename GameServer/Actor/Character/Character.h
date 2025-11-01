@@ -8,7 +8,8 @@ namespace GenericBoson
 	class ISocket;
 	class Zone;
 
-	namespace asio = boost::asio;
+	namespace asio  = boost::asio;
+	namespace mysql = boost::mysql;
 
 	class Character : 
 		public IActor, 
