@@ -2,6 +2,7 @@
 
 #include "BoostTcpSocket.h"
 #include "InternalClient.h"
+#include "ServerBase.h"
 
 namespace GenericBoson
 {
@@ -13,23 +14,24 @@ namespace GenericBoson
 	{
 	}
 
-	asio::awaitable<bool> InternalClient::Initialize(const std::unique_ptr<IActor>& pActor)
+	asio::awaitable<bool> InternalClient::Initialize(const std::shared_ptr<IActor>& pActor)
 	{
-		NULL_CO_RETURN(pActor)
+		NULL_CO_RETURN(pActor, false)
 
 		const auto pOwner = m_wpOwner.lock();
 		if (!pOwner)
-			return;
+			co_return false;
+
+		m_pSocket = std::make_unique<BoostTcpSocket>(
+			asio::ip::tcp::socket{ m_ioContext });
 
 		m_pSocket->Initialize(pActor);
 
-		m_pSocket = std::make_shared<BoostTcpSocket>(
-			ip::tcp::socket{ m_ioContext });
-
 		co_await m_pSocket->ConnectAsync(m_ip, m_port,
-			[this]() -> awaitable<void>
+			[this]() -> asio::awaitable<void>
 			{
-				asio::co_spawn(co_await asio::this_coro::executor, [this]()
+				asio::co_spawn(co_await asio::this_coro::executor, 
+					[this]() -> asio::awaitable<bool>
 					{
 						while (true)
 						{
@@ -44,7 +46,8 @@ namespace GenericBoson
 						}
 					}, asio::detached);
 
-				asio::co_spawn(co_await asio::this_coro::executor, [this]()
+				asio::co_spawn(co_await asio::this_coro::executor, 
+					[this]() -> asio::awaitable<bool>
 					{
 						while (true)
 						{

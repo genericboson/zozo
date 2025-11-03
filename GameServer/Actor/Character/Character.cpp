@@ -21,6 +21,8 @@
 
 namespace GenericBoson
 {
+    namespace mysql = boost::mysql;
+
     Character::Character(const std::shared_ptr<ISocket>& pSocket)
 		: m_id(0), m_pSocket(pSocket)
     {

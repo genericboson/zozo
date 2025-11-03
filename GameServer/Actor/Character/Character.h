@@ -9,7 +9,6 @@ namespace GenericBoson
 	class Zone;
 
 	namespace asio  = boost::asio;
-	namespace mysql = boost::mysql;
 
 	class Character : 
 		public IActor, 

@@ -14,11 +14,12 @@ namespace GenericBoson
 			const std::string&                  ip, 
 			const std::string&                  port);
 
-		asio::awaitable<bool> Initialize(const std::unique_ptr<IActor>& pActor);
+		asio::awaitable<bool> Initialize(const std::shared_ptr<IActor>& pActor);
 		
 	private:
-		std::weak_ptr<ServerBase> m_wpOwner;
+		std::weak_ptr<ServerBase>       m_wpOwner;
+		std::unique_ptr<BoostTcpSocket> m_pSocket;
 
-		std::string               m_ip, m_port;
+		std::string                     m_ip, m_port;
 	};
 }
