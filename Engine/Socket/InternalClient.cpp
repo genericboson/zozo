@@ -31,8 +31,8 @@ namespace GenericBoson
 			[this]() -> asio::awaitable<void>
 			{
 				asio::co_spawn(co_await asio::this_coro::executor, 
-					[this]() -> asio::awaitable<bool>
 					{
+					[this]() -> asio::awaitable<bool>
 						while (true)
 						{
 							const auto pOwner = m_wpOwner.lock();
