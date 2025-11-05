@@ -1,6 +1,5 @@
 #include "PCH.h"
 
-#include "BoostTcpSocket.h"
 #include "InternalClient.h"
 #include "ServerBase.h"
 
@@ -22,17 +21,16 @@ namespace GenericBoson
 		if (!pOwner)
 			co_return false;
 
-		m_pSocket = std::make_unique<BoostTcpSocket>(
-			asio::ip::tcp::socket{ m_ioContext });
+		m_pSocket = std::make_unique<BoostTcpSocket>(pOwner->GetIoContextRef());
 
 		m_pSocket->Initialize(pActor);
 
 		co_await m_pSocket->ConnectAsync(m_ip, m_port,
 			[this]() -> asio::awaitable<void>
 			{
-				asio::co_spawn(co_await asio::this_coro::executor, 
+				asio::co_spawn(co_await asio::this_coro::executor,
+					[this]() -> asio::awaitable<void>
 					{
-					[this]() -> asio::awaitable<bool>
 						while (true)
 						{
 							const auto pOwner = m_wpOwner.lock();
@@ -47,7 +45,7 @@ namespace GenericBoson
 					}, asio::detached);
 
 				asio::co_spawn(co_await asio::this_coro::executor, 
-					[this]() -> asio::awaitable<bool>
+					[this]() -> asio::awaitable<void>
 					{
 						while (true)
 						{

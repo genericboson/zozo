@@ -1,7 +1,11 @@
 #pragma once
 
+#include "BoostTcpSocket.h"
+
 namespace GenericBoson
 {
+	class BoostTcpSocket;
+	class IActor;
 	class ServerBase;
 
 	namespace asio = boost::asio;

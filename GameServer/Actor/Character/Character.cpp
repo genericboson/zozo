@@ -15,6 +15,7 @@
 
 #include <MessageSchema/External/GameServer_generated.h>
 
+#include "GameServer.h"
 #include "Character.h"
 #include "CharacterManager.h"
 #include "StaticResults.h"
@@ -23,8 +24,10 @@ namespace GenericBoson
 {
     namespace mysql = boost::mysql;
 
-    Character::Character(const std::shared_ptr<ISocket>& pSocket)
-		: m_id(0), m_pSocket(pSocket)
+    Character::Character(
+        const std::shared_ptr<GameServer>& pServer,
+        const std::shared_ptr<ISocket>&    pSocket)
+		: m_id(0), m_wpServer(pServer), m_pSocket(pSocket)
     {
     }
 
@@ -59,6 +62,13 @@ namespace GenericBoson
     {
         using namespace Zozo;
 
+        const auto pServer = m_wpServer.lock();
+        if (!pServer)
+        {
+            WARN_LOG( "owner server weak ptr is nullptr. character id - {}", m_id );
+            co_return;
+        }
+
         auto verifier = flatbuffers::Verifier(pData, dataSize);
         if (!VerifyGameMessageBuffer(verifier))
             co_return;
@@ -88,7 +98,7 @@ namespace GenericBoson
                     accountStr, tokenStr);
 
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+                if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
                     queryStr,
                     result,
                     asio::as_tuple(asio::use_awaitable));

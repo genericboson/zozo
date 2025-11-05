@@ -20,7 +20,7 @@ namespace GenericBoson
 
 		const auto clientTask = [this]() -> asio::awaitable<void>
 			{
-				co_await m_pClient->Initialize();
+				co_await m_pClient->Initialize(m_pLobbyProxy);
 			};
 
 		asio::co_spawn(m_ioContext, clientTask, asio::detached);
@@ -37,6 +37,6 @@ namespace GenericBoson
 	auto GameServer::CreateActor(const std::shared_ptr<ISocket>& pSocket) 
 		-> std::shared_ptr<IActor>
 	{
-		return std::make_shared<Character>(pSocket);
+		return std::make_shared<Character>(shared_from_this(), pSocket);
 	}
 }

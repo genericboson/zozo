@@ -149,4 +149,9 @@ namespace GenericBoson
 
 		asio::co_spawn(m_ioContext, CallListen, asio::detached);
 	}
+
+	asio::io_context& ServerBase::GetIoContextRef()
+	{
+		return m_ioContext;
+	}
 }

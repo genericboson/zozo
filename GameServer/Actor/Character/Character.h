@@ -5,6 +5,7 @@
 
 namespace GenericBoson
 {
+	class GameServer;
 	class ISocket;
 	class Zone;
 
@@ -16,7 +17,9 @@ namespace GenericBoson
 		public std::enable_shared_from_this<Character>
 	{
 	public:
-		Character(const std::shared_ptr<ISocket>& pSocket );
+		Character(
+			const std::shared_ptr<GameServer>& pServer, 
+			const std::shared_ptr<ISocket>&    pSocket);
 
 		virtual ~Character() = default;
 
@@ -30,8 +33,10 @@ namespace GenericBoson
 		void OnDisconnected() override;
 		void OnAccepted() override;
 	private:
-		int64_t                  m_id;
-		std::shared_ptr<ISocket> m_pSocket;
-		std::weak_ptr<Zone>      m_wpZone;
+		int64_t                   m_id;
+		std::shared_ptr<ISocket>  m_pSocket;
+		std::weak_ptr<Zone>       m_wpZone;
+
+		std::weak_ptr<GameServer> m_wpServer;
 	};
 }

@@ -21,6 +21,7 @@ namespace GenericBoson
 	{
 	public:
 		BoostTcpSocket(asio::ip::tcp::socket pSocket);
+		BoostTcpSocket(asio::io_context& ioContext);
 
 		void Initialize(const std::shared_ptr<IActor>& pOwner);
 

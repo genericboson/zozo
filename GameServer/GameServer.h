@@ -5,6 +5,7 @@
 #include <Engine/Socket/InternalClient.h>
 #include <Engine/Socket/ServerBase.h>
 
+#include "Actor/LobbyProxy.h"
 #include "Actor/Zone.h"
 
 namespace GenericBoson
@@ -24,6 +25,8 @@ namespace GenericBoson
 	private:
 		std::unordered_map< int64_t, Zone > m_zones;
 
-		std::unique_ptr<InternalClient> m_pClient;
+		std::unique_ptr<InternalClient>     m_pClient;
+										    
+		std::shared_ptr<IActor>             m_pLobbyProxy = std::make_shared<LobbyProxy>();
 	};
 }

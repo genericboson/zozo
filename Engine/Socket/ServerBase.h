@@ -32,6 +32,8 @@ namespace GenericBoson
 		virtual auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
 			-> std::shared_ptr<IActor> = 0;
 
+		asio::io_context& GetIoContextRef();
+
 	private:
 		static mysql::pool_params GetDbPoolParams(
 			std::string_view hostname,

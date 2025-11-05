@@ -11,6 +11,11 @@ namespace GenericBoson
 	{
 	}
 
+	BoostTcpSocket::BoostTcpSocket(asio::io_context& ioContext)
+		: BoostTcpSocket(boost::asio::ip::tcp::socket(ioContext))
+	{
+	}
+
 	void BoostTcpSocket::Initialize(const std::shared_ptr<IActor>& pOwner)
 	{
 		m_wpOwner = pOwner;

@@ -17,8 +17,6 @@ namespace GenericBoson
 		
 		virtual bool Initialize() = 0;
 
-		virtual boost::asio::io_context GetIoContext() = 0;
-
 		virtual asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
 	};
 }
