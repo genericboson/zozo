@@ -6,14 +6,14 @@ int main()
 {
 	using namespace GenericBoson;
 
-	GameServer server;
+	auto pServer = GameServer::CreateGameServer(8001);
 
-	if (!server.Start())
+	if (!pServer->Start())
 		return -1;
 
 	static_cast< void >(getchar());
 
-	server.Stop();
+	pServer->Stop();
 
 	return 0;
 }

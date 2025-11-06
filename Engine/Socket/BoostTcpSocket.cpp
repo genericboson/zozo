@@ -139,11 +139,11 @@ namespace GenericBoson
 		if (auto [error, _] = co_await async_connect(m_socket, resolver.resolve(ip, port), asio::as_tuple);
 			error)
 		{
-			ERROR_LOG("Connect to DBCache server failed: {}", error.message());
+			ERROR_LOG("Connect to {}:{} failed: {}", ip, port, error.message());
 			co_return false;
 		}
 
-		INFO_LOG("Connected to DBCache server");
+		INFO_LOG("Connected to {}:{} succeeded", ip, port);
 		co_await onConnected();
 		co_return true;
 	}

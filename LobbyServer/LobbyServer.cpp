@@ -19,4 +19,10 @@ namespace GenericBoson
 	{
 		return std::make_shared<LobbyUser>(*this, pSocket);
 	}
+
+	bool LobbyServer::Start()
+	{
+		INFO_LOG("LobbyServer started ( port - {} )", m_listeningPort);
+		return ServerBase::Start();
+	}
 }

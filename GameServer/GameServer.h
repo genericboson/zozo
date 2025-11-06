@@ -15,13 +15,18 @@ namespace GenericBoson
 		public std::enable_shared_from_this<GameServer>
 	{
 	public:
-		GameServer(int32_t port = 8001);
+		GameServer(int32_t port);
+
 		virtual ~GameServer() = default;
 
 		bool Start() override;
 
 		auto CreateActor(const std::shared_ptr<ISocket>& pSocket) 
 			-> std::shared_ptr<IActor> override;
+
+	public:
+		static auto CreateGameServer(int32_t port = 8001) -> std::shared_ptr<GameServer>;
+
 	private:
 		std::unordered_map< int64_t, Zone > m_zones;
 

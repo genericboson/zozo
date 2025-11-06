@@ -31,6 +31,7 @@ namespace GenericBoson
 			return false;
 		}
 
+		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
 		return true;
 	}
 
@@ -38,5 +39,10 @@ namespace GenericBoson
 		-> std::shared_ptr<IActor>
 	{
 		return std::make_shared<Character>(shared_from_this(), pSocket);
+	}
+
+	auto GameServer::CreateGameServer(int32_t port /*= 8001*/) -> std::shared_ptr<GameServer>
+	{
+		return std::make_shared<GameServer>(port);
 	}
 }

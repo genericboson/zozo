@@ -66,8 +66,6 @@ namespace GenericBoson
 			return false;
 		}
 
-		INFO_LOG("LobbyServer started ( port - {} )", m_listeningPort);
-
 		Accept();
 
 		m_pIoThread = std::make_unique<std::jthread>([&]() { m_ioContext.run(); });
