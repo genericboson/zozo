@@ -1,6 +1,9 @@
 #include "PCH.h"
 
 #include <boost/exception/all.hpp>
+#include <boost/process/environment.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #include "ServerBase.h"
 
@@ -49,6 +52,18 @@ namespace GenericBoson
 		m_workGuard{ m_ioContext.get_executor() },
 		m_strand{ make_strand(m_networkThreadPool.get_executor()) }
 	{
+	}
+
+	bool ServerBase::ReadIni()
+	{
+		namespace pt = boost::property_tree;
+		namespace bpe = boost::process::environment;
+
+		pt::ptree iniPt;
+
+		pt::ini_parser::read_ini("", iniPt);
+
+		return true;
 	}
 
 	bool ServerBase::Start()

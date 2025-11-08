@@ -18,12 +18,18 @@ namespace GenericBoson
 			const std::string&                  ip, 
 			const std::string&                  port);
 
-		asio::awaitable<bool> Initialize(const std::shared_ptr<IActor>& pActor);
+		asio::awaitable<bool> KeepSending(const std::shared_ptr<IActor>& pActor);
+
+		void SetOnConnected(std::function<void()>&& onConnected);
+
+		void EnqueueMessage(const uint8_t* buffer, size_t size);
 		
 	private:
 		std::weak_ptr<ServerBase>       m_wpOwner;
 		std::unique_ptr<BoostTcpSocket> m_pSocket;
 
 		std::string                     m_ip, m_port;
+
+		std::function<void()>           m_onConnected;
 	};
 }

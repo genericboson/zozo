@@ -13,7 +13,17 @@ namespace GenericBoson
 	{
 	}
 
-	asio::awaitable<bool> InternalClient::Initialize(const std::shared_ptr<IActor>& pActor)
+	void InternalClient::SetOnConnected(std::function<void()>&& onConnected)
+	{
+		m_onConnected = onConnected;
+	}
+
+	void InternalClient::EnqueueMessage(const uint8_t* buffer, size_t size)
+	{
+		m_pSocket->EnqueueMessage(buffer, size);
+	}
+
+	asio::awaitable<bool> InternalClient::KeepSending(const std::shared_ptr<IActor>& pActor)
 	{
 		NULL_CO_RETURN(pActor, false)
 
@@ -28,6 +38,8 @@ namespace GenericBoson
 		co_await m_pSocket->ConnectAsync(m_ip, m_port,
 			[this]() -> asio::awaitable<void>
 			{
+				m_onConnected();
+
 				asio::co_spawn(co_await asio::this_coro::executor,
 					[this]() -> asio::awaitable<void>
 					{

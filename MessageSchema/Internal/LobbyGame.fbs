@@ -3,32 +3,21 @@ include "ServerInfo.fbs";
 
 namespace GenericBoson.Zozo;
 
-table PassTokenReq
+table RegisterReq
 {
-    token: string;
+    server_name : string;
 }
 
-table PassTokenAck
+table RegisterAck
 {
-    result_code : ResultCode;
-}
-
-table CharacterListReq
-{
-    account : string;
     token : string;
-}
-
-table CharacterListAck
-{
     result_code : ResultCode;
-    character_names : [string];
 }
 
 union LobbyGamePayload
 {
-    PassTokenReq,
-    PassTokenAck,
+    RegisterReq,
+    RegisterAck,
 }
 
 table LobbyGameMessage
@@ -36,6 +25,6 @@ table LobbyGameMessage
     payload:LobbyGamePayload;
 }
 
-root_type PassTokenReq;
-root_type PassTokenAck;
+root_type RegisterReq;
+root_type RegisterAck;
 root_type LobbyGameMessage;

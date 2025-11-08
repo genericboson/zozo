@@ -19,28 +19,28 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 namespace GenericBoson {
 namespace Zozo {
 
-struct PassTokenReq;
-struct PassTokenReqBuilder;
+struct RegisterReq;
+struct RegisterReqBuilder;
 
-struct PassTokenAck;
-struct PassTokenAckBuilder;
+struct RegisterAck;
+struct RegisterAckBuilder;
 
 struct LobbyGameMessage;
 struct LobbyGameMessageBuilder;
 
 enum LobbyGamePayload : uint8_t {
   LobbyGamePayload_NONE = 0,
-  LobbyGamePayload_PassTokenReq = 1,
-  LobbyGamePayload_PassTokenAck = 2,
+  LobbyGamePayload_RegisterReq = 1,
+  LobbyGamePayload_RegisterAck = 2,
   LobbyGamePayload_MIN = LobbyGamePayload_NONE,
-  LobbyGamePayload_MAX = LobbyGamePayload_PassTokenAck
+  LobbyGamePayload_MAX = LobbyGamePayload_RegisterAck
 };
 
 inline const LobbyGamePayload (&EnumValuesLobbyGamePayload())[3] {
   static const LobbyGamePayload values[] = {
     LobbyGamePayload_NONE,
-    LobbyGamePayload_PassTokenReq,
-    LobbyGamePayload_PassTokenAck
+    LobbyGamePayload_RegisterReq,
+    LobbyGamePayload_RegisterAck
   };
   return values;
 }
@@ -48,15 +48,15 @@ inline const LobbyGamePayload (&EnumValuesLobbyGamePayload())[3] {
 inline const char * const *EnumNamesLobbyGamePayload() {
   static const char * const names[4] = {
     "NONE",
-    "PassTokenReq",
-    "PassTokenAck",
+    "RegisterReq",
+    "RegisterAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameLobbyGamePayload(LobbyGamePayload e) {
-  if (::flatbuffers::IsOutRange(e, LobbyGamePayload_NONE, LobbyGamePayload_PassTokenAck)) return "";
+  if (::flatbuffers::IsOutRange(e, LobbyGamePayload_NONE, LobbyGamePayload_RegisterAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesLobbyGamePayload()[index];
 }
@@ -65,107 +65,129 @@ template<typename T> struct LobbyGamePayloadTraits {
   static const LobbyGamePayload enum_value = LobbyGamePayload_NONE;
 };
 
-template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::PassTokenReq> {
-  static const LobbyGamePayload enum_value = LobbyGamePayload_PassTokenReq;
+template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::RegisterReq> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_RegisterReq;
 };
 
-template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::PassTokenAck> {
-  static const LobbyGamePayload enum_value = LobbyGamePayload_PassTokenAck;
+template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::RegisterAck> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_RegisterAck;
 };
 
 bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyGamePayload type);
 bool VerifyLobbyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
-struct PassTokenReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PassTokenReqBuilder Builder;
+struct RegisterReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RegisterReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TOKEN = 4
+    VT_SERVER_NAME = 4
   };
-  const ::flatbuffers::String *token() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
+  const ::flatbuffers::String *server_name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SERVER_NAME);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_TOKEN) &&
-           verifier.VerifyString(token()) &&
+           VerifyOffset(verifier, VT_SERVER_NAME) &&
+           verifier.VerifyString(server_name()) &&
            verifier.EndTable();
   }
 };
 
-struct PassTokenReqBuilder {
-  typedef PassTokenReq Table;
+struct RegisterReqBuilder {
+  typedef RegisterReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
-    fbb_.AddOffset(PassTokenReq::VT_TOKEN, token);
+  void add_server_name(::flatbuffers::Offset<::flatbuffers::String> server_name) {
+    fbb_.AddOffset(RegisterReq::VT_SERVER_NAME, server_name);
   }
-  explicit PassTokenReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit RegisterReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PassTokenReq> Finish() {
+  ::flatbuffers::Offset<RegisterReq> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PassTokenReq>(end);
+    auto o = ::flatbuffers::Offset<RegisterReq>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PassTokenReq> CreatePassTokenReq(
+inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
-  PassTokenReqBuilder builder_(_fbb);
-  builder_.add_token(token);
+    ::flatbuffers::Offset<::flatbuffers::String> server_name = 0) {
+  RegisterReqBuilder builder_(_fbb);
+  builder_.add_server_name(server_name);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<PassTokenReq> CreatePassTokenReqDirect(
+inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReqDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *token = nullptr) {
-  auto token__ = token ? _fbb.CreateString(token) : 0;
-  return GenericBoson::Zozo::CreatePassTokenReq(
+    const char *server_name = nullptr) {
+  auto server_name__ = server_name ? _fbb.CreateString(server_name) : 0;
+  return GenericBoson::Zozo::CreateRegisterReq(
       _fbb,
-      token__);
+      server_name__);
 }
 
-struct PassTokenAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PassTokenAckBuilder Builder;
+struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RegisterAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT_CODE = 4
+    VT_TOKEN = 4,
+    VT_RESULT_CODE = 6
   };
+  const ::flatbuffers::String *token() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
+  }
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TOKEN) &&
+           verifier.VerifyString(token()) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            verifier.EndTable();
   }
 };
 
-struct PassTokenAckBuilder {
-  typedef PassTokenAck Table;
+struct RegisterAckBuilder {
+  typedef RegisterAck Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
-    fbb_.AddElement<uint32_t>(PassTokenAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
+    fbb_.AddOffset(RegisterAck::VT_TOKEN, token);
   }
-  explicit PassTokenAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(RegisterAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  explicit RegisterAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<PassTokenAck> Finish() {
+  ::flatbuffers::Offset<RegisterAck> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PassTokenAck>(end);
+    auto o = ::flatbuffers::Offset<RegisterAck>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<PassTokenAck> CreatePassTokenAck(
+inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> token = 0,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
-  PassTokenAckBuilder builder_(_fbb);
+  RegisterAckBuilder builder_(_fbb);
   builder_.add_result_code(result_code);
+  builder_.add_token(token);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *token = nullptr,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+  auto token__ = token ? _fbb.CreateString(token) : 0;
+  return GenericBoson::Zozo::CreateRegisterAck(
+      _fbb,
+      token__,
+      result_code);
 }
 
 struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -181,11 +203,11 @@ struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_PAYLOAD);
   }
   template<typename T> const T *payload_as() const;
-  const GenericBoson::Zozo::PassTokenReq *payload_as_PassTokenReq() const {
-    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_PassTokenReq ? static_cast<const GenericBoson::Zozo::PassTokenReq *>(payload()) : nullptr;
+  const GenericBoson::Zozo::RegisterReq *payload_as_RegisterReq() const {
+    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_RegisterReq ? static_cast<const GenericBoson::Zozo::RegisterReq *>(payload()) : nullptr;
   }
-  const GenericBoson::Zozo::PassTokenAck *payload_as_PassTokenAck() const {
-    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_PassTokenAck ? static_cast<const GenericBoson::Zozo::PassTokenAck *>(payload()) : nullptr;
+  const GenericBoson::Zozo::RegisterAck *payload_as_RegisterAck() const {
+    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_RegisterAck ? static_cast<const GenericBoson::Zozo::RegisterAck *>(payload()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -196,12 +218,12 @@ struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
 };
 
-template<> inline const GenericBoson::Zozo::PassTokenReq *LobbyGameMessage::payload_as<GenericBoson::Zozo::PassTokenReq>() const {
-  return payload_as_PassTokenReq();
+template<> inline const GenericBoson::Zozo::RegisterReq *LobbyGameMessage::payload_as<GenericBoson::Zozo::RegisterReq>() const {
+  return payload_as_RegisterReq();
 }
 
-template<> inline const GenericBoson::Zozo::PassTokenAck *LobbyGameMessage::payload_as<GenericBoson::Zozo::PassTokenAck>() const {
-  return payload_as_PassTokenAck();
+template<> inline const GenericBoson::Zozo::RegisterAck *LobbyGameMessage::payload_as<GenericBoson::Zozo::RegisterAck>() const {
+  return payload_as_RegisterAck();
 }
 
 struct LobbyGameMessageBuilder {
@@ -240,12 +262,12 @@ inline bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void
     case LobbyGamePayload_NONE: {
       return true;
     }
-    case LobbyGamePayload_PassTokenReq: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::PassTokenReq *>(obj);
+    case LobbyGamePayload_RegisterReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case LobbyGamePayload_PassTokenAck: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::PassTokenAck *>(obj);
+    case LobbyGamePayload_RegisterAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -1,10 +1,13 @@
 #include "PCH.h"
 
+#include <flatbuffers/flatbuffers.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
 #include "GameServer.h"
+
+#include <MessageSchema/Internal/LobbyGame_generated.h>
 
 namespace GenericBoson
 {
@@ -15,21 +18,34 @@ namespace GenericBoson
 
 	bool GameServer::Start()
 	{
-		// #todo - ini
-		m_pClient = std::make_unique<InternalClient>(shared_from_this(), "127.0.0.1", "8002");
-
-		const auto clientTask = [this]() -> asio::awaitable<void>
-			{
-				co_await m_pClient->Initialize(m_pLobbyProxy);
-			};
-
-		asio::co_spawn(m_ioContext, clientTask, asio::detached);
-
 		if (!ServerBase::Start())
 		{
 			ERROR_LOG("ServerBase::Start for GameServer failed");
 			return false;
 		}
+
+		// #todo - ini
+		m_pClient = std::make_unique<InternalClient>(shared_from_this(), "127.0.0.1", "8002");
+		m_pClient->SetOnConnected([this]() {
+			flatbuffers::FlatBufferBuilder fbb;
+
+			auto nameStr = fbb.CreateString("");
+			auto req = Zozo::CreateRegisterReq(fbb, nameStr);
+			auto msg = Zozo::CreateLobbyGameMessage(fbb, 
+				Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq, 
+				req.Union());
+
+			fbb.Finish(msg);
+			
+			m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+		});
+
+		const auto clientTask = [this]() -> asio::awaitable<void>
+			{
+				co_await m_pClient->KeepSending(m_pLobbyProxy);
+			};
+
+		asio::co_spawn(m_ioContext, clientTask, asio::detached);
 
 		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
 		return true;

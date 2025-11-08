@@ -35,6 +35,9 @@ namespace GenericBoson
 		asio::io_context& GetIoContextRef();
 
 	private:
+		bool ReadIni();
+
+	private:
 		static mysql::pool_params GetDbPoolParams(
 			std::string_view hostname,
 			uint16_t         port,
