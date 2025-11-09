@@ -1,5 +1,7 @@
 #include "PCH.h"
 
+#include <filesystem>
+
 #include <boost/exception/all.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -58,16 +60,53 @@ namespace GenericBoson
 	{
 		namespace pt = boost::property_tree;
 		namespace bpe = boost::process::environment;
+		namespace fs = std::filesystem;
+
+		const auto& targetPath = fs::current_path();
+		INFO_LOG("ReadIni target path : {}", targetPath.string());
+
+		std::optional<std::string> opIniPath;
+		for (const auto& entry : fs::directory_iterator(targetPath))
+		{
+			if (!entry.is_regular_file())
+				continue;
+
+			const fs::path& entryPath = entry.path();
+
+			if (entryPath.extension() != ".ini")
+				continue;
+
+			if (opIniPath)
+			{
+				ERROR_LOG("Multiple ini file exists. current path : {}",
+					targetPath.string());
+				return false;
+			}
+
+			opIniPath = entryPath.filename().string();
+		}
 
 		pt::ptree iniPt;
 
-		pt::ini_parser::read_ini("", iniPt);
+		if (!opIniPath)
+		{
+			ERROR_LOG("No file exist. current path : {}",
+				targetPath.string());
+			return false;
+		}
+
+		pt::ini_parser::read_ini(*opIniPath, iniPt);
+		m_listeningPort = iniPt.get<int32_t>("LISTEN_PORT", m_listeningPort);
+
 
 		return true;
 	}
 
 	bool ServerBase::Start()
 	{
+		if (!ReadIni())
+			return false;
+
 		try
 		{
 			m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(
