@@ -29,7 +29,7 @@ namespace GenericBoson
 			flatbuffers::FlatBufferBuilder fbb;
 
 			auto nameStr = fbb.CreateString("");
-			auto req = Zozo::CreateRegisterReq(fbb, nameStr);
+			auto req = Zozo::CreateRegisterReq(fbb, m_id, nameStr);
 			auto msg = Zozo::CreateLobbyGameMessage(fbb, 
 				Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq, 
 				req.Union());
@@ -56,7 +56,15 @@ namespace GenericBoson
 		if (!opIniPt)
 			return opIniPt;
 
-		m_id = opIniPt->get<decltype(m_id)>("SERVER_ID");
+		try
+		{
+			m_id = opIniPt->get<decltype(m_id)>("SERVER_ID");
+		}
+		catch (const boost::wrapexcept<boost::property_tree::ptree_bad_path>& e)
+		{
+			ERROR_LOG("No SERVER_ID in INI file");
+			return std::nullopt;
+		}
 
 		m_lobbyIp   = opIniPt->get<decltype(m_lobbyIp)>("LOBBY_IP", "127.0.0.1");
 		m_lobbyPort = opIniPt->get<decltype(m_lobbyPort)>("LOBBY_PORT", "8002");

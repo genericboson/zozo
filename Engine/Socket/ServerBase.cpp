@@ -64,9 +64,12 @@ namespace GenericBoson
 		auto iniPath = std::format("{}.{}", (executablePath.parent_path() / executablePath.stem()).string(), "ini");
 
 		pt::ptree iniPt;
-
 		pt::ini_parser::read_ini(iniPath, iniPt);
-		m_listeningPort = iniPt.get<int32_t>("LISTEN_PORT", m_listeningPort);
+		m_dbIp           = iniPt.get<decltype(m_dbIp)>        ("DB_IP", "127.0.0.1");
+		m_dbPort         = iniPt.get<decltype(m_dbPort)>      ("DB_PORT", 3306);
+		m_dbAccount      = iniPt.get<decltype(m_dbAccount)>   ("DB_ACCOUNT", "root");
+		m_dbPassword     = iniPt.get<decltype(m_dbPassword)>  ("DB_PASSWORD", "1234");
+		m_dbMainSchema   = iniPt.get<decltype(m_dbMainSchema)>("DB_MAIN_SCHEMA");
 
 		return iniPt;
 	}
@@ -95,11 +98,11 @@ namespace GenericBoson
 
 		m_pDbConn = std::make_unique<mysql::any_connection>(m_ioContext);
 		auto [err] = m_pDbConn->async_connect(GetDbParams(
-			"127.0.0.1",
-			3306,
-			"root",
-			"1234",
-			"zozo_lobby"), asio::as_tuple(asio::use_future)).get();
+			m_dbIp,
+			m_dbPort,
+			m_dbAccount,
+			m_dbPassword,
+			m_dbMainSchema), asio::as_tuple(asio::use_future)).get();
 
 		if (err != boost::system::errc::success)
 		{

@@ -5,6 +5,7 @@ namespace GenericBoson.Zozo;
 
 table RegisterReq
 {
+    server_id : int;
     server_name : string;
 }
 

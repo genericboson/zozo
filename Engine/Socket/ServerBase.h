@@ -63,6 +63,9 @@ namespace GenericBoson
 
 		int32_t                                                    m_listeningPort = 0;
 
+		std::string                                                m_dbIp, m_dbAccount, m_dbPassword, m_dbMainSchema;
+		uint16_t                                                   m_dbPort;
+
 		std::unique_ptr<std::jthread>                              m_pIoThread;
 		std::unique_ptr<asio::ip::tcp::acceptor>                   m_pAcceptor;
 

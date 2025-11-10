@@ -79,13 +79,18 @@ bool VerifyLobbyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::fla
 struct RegisterReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RegisterReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SERVER_NAME = 4
+    VT_SERVER_ID = 4,
+    VT_SERVER_NAME = 6
   };
+  int32_t server_id() const {
+    return GetField<int32_t>(VT_SERVER_ID, 0);
+  }
   const ::flatbuffers::String *server_name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SERVER_NAME);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_SERVER_ID, 4) &&
            VerifyOffset(verifier, VT_SERVER_NAME) &&
            verifier.VerifyString(server_name()) &&
            verifier.EndTable();
@@ -96,6 +101,9 @@ struct RegisterReqBuilder {
   typedef RegisterReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_server_id(int32_t server_id) {
+    fbb_.AddElement<int32_t>(RegisterReq::VT_SERVER_ID, server_id, 0);
+  }
   void add_server_name(::flatbuffers::Offset<::flatbuffers::String> server_name) {
     fbb_.AddOffset(RegisterReq::VT_SERVER_NAME, server_name);
   }
@@ -112,18 +120,22 @@ struct RegisterReqBuilder {
 
 inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t server_id = 0,
     ::flatbuffers::Offset<::flatbuffers::String> server_name = 0) {
   RegisterReqBuilder builder_(_fbb);
   builder_.add_server_name(server_name);
+  builder_.add_server_id(server_id);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReqDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t server_id = 0,
     const char *server_name = nullptr) {
   auto server_name__ = server_name ? _fbb.CreateString(server_name) : 0;
   return GenericBoson::Zozo::CreateRegisterReq(
       _fbb,
+      server_id,
       server_name__);
 }
 
