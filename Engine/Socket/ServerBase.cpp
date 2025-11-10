@@ -2,10 +2,8 @@
 
 #include <filesystem>
 
+#include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/exception/all.hpp>
-#include <boost/process/environment.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
 
 #include "ServerBase.h"
 
@@ -56,50 +54,21 @@ namespace GenericBoson
 	{
 	}
 
-	bool ServerBase::ReadIni()
+	std::optional<pt::ptree> ServerBase::ReadIni()
 	{
-		namespace pt = boost::property_tree;
-		namespace bpe = boost::process::environment;
-		namespace fs = std::filesystem;
-
-		const auto& targetPath = fs::current_path();
+		const auto& targetPath = std::filesystem::current_path();
 		INFO_LOG("ReadIni target path : {}", targetPath.string());
 
-		std::optional<std::string> opIniPath;
-		for (const auto& entry : fs::directory_iterator(targetPath))
-		{
-			if (!entry.is_regular_file())
-				continue;
+		boost::filesystem::path executablePath = boost::dll::program_location();
 
-			const fs::path& entryPath = entry.path();
-
-			if (entryPath.extension() != ".ini")
-				continue;
-
-			if (opIniPath)
-			{
-				ERROR_LOG("Multiple ini file exists. current path : {}",
-					targetPath.string());
-				return false;
-			}
-
-			opIniPath = entryPath.filename().string();
-		}
+		auto iniPath = std::format("{}.{}", (executablePath.parent_path() / executablePath.stem()).string(), "ini");
 
 		pt::ptree iniPt;
 
-		if (!opIniPath)
-		{
-			ERROR_LOG("No file exist. current path : {}",
-				targetPath.string());
-			return false;
-		}
-
-		pt::ini_parser::read_ini(*opIniPath, iniPt);
+		pt::ini_parser::read_ini(iniPath, iniPt);
 		m_listeningPort = iniPt.get<int32_t>("LISTEN_PORT", m_listeningPort);
 
-
-		return true;
+		return iniPt;
 	}
 
 	bool ServerBase::Start()

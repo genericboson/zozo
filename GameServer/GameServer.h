@@ -27,11 +27,18 @@ namespace GenericBoson
 	public:
 		static auto CreateGameServer(int32_t port = 8001) -> std::shared_ptr<GameServer>;
 
+	protected:
+		std::optional<pt::ptree> ReadIni() override;
+
 	private:
 		std::unordered_map< int64_t, Zone > m_zones;
 
 		std::unique_ptr<InternalClient>     m_pClient;
 										    
 		std::shared_ptr<IActor>             m_pLobbyProxy = std::make_shared<LobbyProxy>();
+
+		std::string                         m_lobbyIp, m_lobbyPort;
+
+		int32_t                             m_id;
 	};
 }

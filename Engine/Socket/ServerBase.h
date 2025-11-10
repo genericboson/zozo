@@ -3,6 +3,8 @@
 #include <boost/asio.hpp>
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/use_awaitable.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #include <boost/mysql.hpp>
 
@@ -13,6 +15,7 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 	namespace mysql = boost::mysql;
+	namespace pt = boost::property_tree;
 
 	class ServerBase
 	{
@@ -34,8 +37,8 @@ namespace GenericBoson
 
 		asio::io_context& GetIoContextRef();
 
-	private:
-		bool ReadIni();
+	protected:
+		virtual std::optional<pt::ptree> ReadIni();
 
 	private:
 		static mysql::pool_params GetDbPoolParams(

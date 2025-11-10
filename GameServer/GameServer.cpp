@@ -24,8 +24,7 @@ namespace GenericBoson
 			return false;
 		}
 
-		// #todo - ini
-		m_pClient = std::make_unique<InternalClient>(shared_from_this(), "127.0.0.1", "8002");
+		m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
 		m_pClient->SetOnConnected([this]() {
 			flatbuffers::FlatBufferBuilder fbb;
 
@@ -49,6 +48,18 @@ namespace GenericBoson
 
 		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
 		return true;
+	}
+
+	std::optional<pt::ptree> GameServer::ReadIni()
+	{
+		const auto opIniPt = ServerBase::ReadIni();
+		if (!opIniPt)
+			return opIniPt;
+
+		m_id = opIniPt->get<decltype(m_id)>("SERVER_ID");
+
+		m_lobbyIp   = opIniPt->get<decltype(m_lobbyIp)>("LOBBY_IP", "127.0.0.1");
+		m_lobbyPort = opIniPt->get<decltype(m_lobbyPort)>("LOBBY_PORT", "8002");
 	}
 
 	auto GameServer::CreateActor(const std::shared_ptr<ISocket>& pSocket) 
