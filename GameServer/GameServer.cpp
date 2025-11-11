@@ -28,8 +28,7 @@ namespace GenericBoson
 		m_pClient->SetOnConnected([this]() {
 			flatbuffers::FlatBufferBuilder fbb;
 
-			auto nameStr = fbb.CreateString("");
-			auto req = Zozo::CreateRegisterReq(fbb, m_id, nameStr);
+			auto req = Zozo::CreateRegisterReq(fbb, m_id);
 			auto msg = Zozo::CreateLobbyGameMessage(fbb, 
 				Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq, 
 				req.Union());

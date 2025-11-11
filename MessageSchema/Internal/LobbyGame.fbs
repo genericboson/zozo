@@ -6,13 +6,20 @@ namespace GenericBoson.Zozo;
 table RegisterReq
 {
     server_id : int;
-    server_name : string;
 }
 
 table RegisterAck
 {
-    token : string;
     result_code : ResultCode;
+
+    token          : string;
+    db_ip          : string;
+    db_acount      : string;
+    db_password    : string;
+    db_main_schema : string;
+    server_name    : string;
+    db_port        : int;
+    listen_port    : int;
 }
 
 union LobbyGamePayload
