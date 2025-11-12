@@ -73,5 +73,7 @@ namespace GenericBoson
 		asio::thread_pool                                          m_networkThreadPool;
 		asio::strand<asio::thread_pool::executor_type>             m_strand;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
+
+		std::function<void()>                                      OnAfterReadIni;
 	};
 }

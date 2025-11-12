@@ -38,8 +38,17 @@ namespace GenericBoson
 
 		switch (message->payload_type())
 		{
-        
+		case LobbyGamePayload::LobbyGamePayload_RegisterAck:
+			{
+				auto registerAck = message->payload_as_RegisterAck();
+				NULL_CO_RETURN(registerAck);
+			}
             break;
+		case LobbyGamePayload::LobbyGamePayload_RegisterReq:
+			{
+				ERROR_LOG("Logic error");
+			}
+			break;
         default:
             {
             }

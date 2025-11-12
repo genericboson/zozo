@@ -79,6 +79,9 @@ namespace GenericBoson
 		if (!ReadIni())
 			return false;
 
+		if(OnAfterReadIni)
+			OnAfterReadIni();
+
 		try
 		{
 			m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(

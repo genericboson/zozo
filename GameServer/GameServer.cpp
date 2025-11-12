@@ -24,28 +24,31 @@ namespace GenericBoson
 			return false;
 		}
 
-		m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
-		m_pClient->SetOnConnected([this]() {
-			flatbuffers::FlatBufferBuilder fbb;
+		OnAfterReadIni = [this](){
+			m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
+			m_pClient->SetOnConnected([this]() {
+				flatbuffers::FlatBufferBuilder fbb;
 
-			auto req = Zozo::CreateRegisterReq(fbb, m_id);
-			auto msg = Zozo::CreateLobbyGameMessage(fbb, 
-				Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq, 
-				req.Union());
+				auto req = Zozo::CreateRegisterReq(fbb, m_id);
+				auto msg = Zozo::CreateLobbyGameMessage(fbb,
+					Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq,
+					req.Union());
 
-			fbb.Finish(msg);
-			
-			m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-		});
+				fbb.Finish(msg);
 
-		const auto clientTask = [this]() -> asio::awaitable<void>
-			{
-				co_await m_pClient->KeepSending(m_pLobbyProxy);
-			};
+				m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+				});
 
-		asio::co_spawn(m_ioContext, clientTask, asio::detached);
+			const auto clientTask = [this]() -> asio::awaitable<void>
+				{
+					co_await m_pClient->KeepSending(m_pLobbyProxy);
+				};
 
-		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
+			asio::co_spawn(m_ioContext, clientTask, asio::detached);
+
+			INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
+		};
+
 		return true;
 	}
 
