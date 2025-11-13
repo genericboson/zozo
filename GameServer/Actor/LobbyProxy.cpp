@@ -42,6 +42,8 @@ namespace GenericBoson
 			{
 				auto registerAck = message->payload_as_RegisterAck();
 				NULL_CO_RETURN(registerAck);
+
+				registerAck->db_acount()->str()
 			}
             break;
 		case LobbyGamePayload::LobbyGamePayload_RegisterReq:

@@ -137,7 +137,7 @@ namespace GenericBoson
 
                 fbb.Finish(lobbyMsg);
             }
-            break;
+            break;  
         case LobbyPayload::LobbyPayload_LoginReq:
             {
             using namespace std::chrono_literals;
