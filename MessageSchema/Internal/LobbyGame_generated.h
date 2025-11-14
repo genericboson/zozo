@@ -121,20 +121,16 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RegisterAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
-    VT_TOKEN = 6,
-    VT_DB_IP = 8,
-    VT_DB_ACOUNT = 10,
-    VT_DB_PASSWORD = 12,
-    VT_DB_MAIN_SCHEMA = 14,
-    VT_SERVER_NAME = 16,
-    VT_DB_PORT = 18,
-    VT_LISTEN_PORT = 20
+    VT_DB_IP = 6,
+    VT_DB_ACOUNT = 8,
+    VT_DB_PASSWORD = 10,
+    VT_DB_MAIN_SCHEMA = 12,
+    VT_SERVER_NAME = 14,
+    VT_DB_PORT = 16,
+    VT_LISTEN_PORT = 18
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
-  }
-  const ::flatbuffers::String *token() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
   }
   const ::flatbuffers::String *db_ip() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DB_IP);
@@ -160,8 +156,6 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
-           VerifyOffset(verifier, VT_TOKEN) &&
-           verifier.VerifyString(token()) &&
            VerifyOffset(verifier, VT_DB_IP) &&
            verifier.VerifyString(db_ip()) &&
            VerifyOffset(verifier, VT_DB_ACOUNT) &&
@@ -184,9 +178,6 @@ struct RegisterAckBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
     fbb_.AddElement<uint32_t>(RegisterAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
-  }
-  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
-    fbb_.AddOffset(RegisterAck::VT_TOKEN, token);
   }
   void add_db_ip(::flatbuffers::Offset<::flatbuffers::String> db_ip) {
     fbb_.AddOffset(RegisterAck::VT_DB_IP, db_ip);
@@ -223,7 +214,6 @@ struct RegisterAckBuilder {
 inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
-    ::flatbuffers::Offset<::flatbuffers::String> token = 0,
     ::flatbuffers::Offset<::flatbuffers::String> db_ip = 0,
     ::flatbuffers::Offset<::flatbuffers::String> db_acount = 0,
     ::flatbuffers::Offset<::flatbuffers::String> db_password = 0,
@@ -239,7 +229,6 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(
   builder_.add_db_password(db_password);
   builder_.add_db_acount(db_acount);
   builder_.add_db_ip(db_ip);
-  builder_.add_token(token);
   builder_.add_result_code(result_code);
   return builder_.Finish();
 }
@@ -247,7 +236,6 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(
 inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
-    const char *token = nullptr,
     const char *db_ip = nullptr,
     const char *db_acount = nullptr,
     const char *db_password = nullptr,
@@ -255,7 +243,6 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
     const char *server_name = nullptr,
     int32_t db_port = 0,
     int32_t listen_port = 0) {
-  auto token__ = token ? _fbb.CreateString(token) : 0;
   auto db_ip__ = db_ip ? _fbb.CreateString(db_ip) : 0;
   auto db_acount__ = db_acount ? _fbb.CreateString(db_acount) : 0;
   auto db_password__ = db_password ? _fbb.CreateString(db_password) : 0;
@@ -264,7 +251,6 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
   return GenericBoson::Zozo::CreateRegisterAck(
       _fbb,
       result_code,
-      token__,
       db_ip__,
       db_acount__,
       db_password__,

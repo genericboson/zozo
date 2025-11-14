@@ -18,6 +18,7 @@
 
 #include "CharacterInfo_generated.h"
 #include <MessageSchema/External/LobbyServer_generated.h>
+#include <MessageSchema/Internal/LobbyGame_generated.h>
 
 #include "LobbyServer.h"
 #include "LobbyUser.h"
@@ -187,6 +188,11 @@ namespace GenericBoson
             {
                 ERROR_LOG("Logic error");
             }
+            break;
+        case LobbyGamePayload::LobbyGamePayload_RegisterReq:
+        {
+
+        }
             break;
         default:
             {

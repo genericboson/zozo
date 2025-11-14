@@ -14,6 +14,8 @@ namespace GenericBoson
 		public ServerBase, 
 		public std::enable_shared_from_this<GameServer>
 	{
+		friend class LobbyProxy;
+
 	public:
 		GameServer(int32_t port);
 

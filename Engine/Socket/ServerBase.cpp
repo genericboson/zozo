@@ -65,12 +65,7 @@ namespace GenericBoson
 
 		pt::ptree iniPt;
 		pt::ini_parser::read_ini(iniPath, iniPt);
-		m_dbIp           = iniPt.get<decltype(m_dbIp)>        ("DB_IP", "127.0.0.1");
-		m_dbPort         = iniPt.get<decltype(m_dbPort)>      ("DB_PORT", 3306);
-		m_dbAccount      = iniPt.get<decltype(m_dbAccount)>   ("DB_ACCOUNT", "root");
-		m_dbPassword     = iniPt.get<decltype(m_dbPassword)>  ("DB_PASSWORD", "1234");
-		m_dbMainSchema   = iniPt.get<decltype(m_dbMainSchema)>("DB_MAIN_SCHEMA");
-
+		
 		return iniPt;
 	}
 

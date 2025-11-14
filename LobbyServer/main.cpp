@@ -6,14 +6,20 @@ int main()
 {
 	using namespace GenericBoson;
 
-	LobbyServer server;
+	LobbyServer externalServer{ LobbyServer::ELobbyServerSort::EXTERNAL };
 
-	if (!server.Start())
+	if (!externalServer.Start())
+		return -1;
+
+	LobbyServer internalServer{ LobbyServer::ELobbyServerSort::INTERNAL };
+
+	if (!internalServer.Start())
 		return -1;
 
 	static_cast< void >(getchar());
 
-	server.Stop();
+	internalServer.Stop();
+	externalServer.Stop();
 
 	return 0;
 }

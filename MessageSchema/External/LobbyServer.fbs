@@ -1,6 +1,7 @@
 include "Constant.fbs";
 include "CharacterInfo.fbs";
 include "ServerInfo.fbs";
+include "LobbyGame.fbs";
 
 namespace GenericBoson.Zozo;
 
@@ -35,6 +36,8 @@ union LobbyPayload
     AuthAck,
     LoginReq,
     LoginAck,
+    RegisterReq,
+    RegisterAck,
 }
 
 table LobbyMessage
