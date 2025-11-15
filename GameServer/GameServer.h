@@ -37,7 +37,7 @@ namespace GenericBoson
 
 		std::unique_ptr<InternalClient>     m_pClient;
 										    
-		std::shared_ptr<IActor>             m_pLobbyProxy = std::make_shared<LobbyProxy>();
+		std::shared_ptr<IActor>             m_pLobbyProxy;
 
 		std::string                         m_lobbyIp, m_lobbyPort;
 

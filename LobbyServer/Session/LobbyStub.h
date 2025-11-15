@@ -11,14 +11,17 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 
-	class LobbyUser :
+	class LobbyStub :
 		public IActor,
 		public TxExecutor,
-		public std::enable_shared_from_this<LobbyUser>
+		public std::enable_shared_from_this<LobbyStub>
 	{
 	public:
-		LobbyUser(LobbyServer& lobbyServer, const std::shared_ptr<ISocket>& pSocket);
-		virtual ~LobbyUser() = default;
+		LobbyStub( 
+			LobbyServer& lobbyServer,
+			const std::shared_ptr<ISocket>& pSocket);
+
+		virtual ~LobbyStub() = default;
 
 		int64_t Id() const override;
 		bool Initialize() override;
@@ -29,10 +32,9 @@ namespace GenericBoson
 		void OnDisconnected() override;
 		void OnAccepted() override;
 
-		void SendLoginAck();
 	private:
 		int64_t                  m_id;
 		std::shared_ptr<ISocket> m_pSocket;
-		LobbyServer&             m_server;
+		LobbyServer& m_server;
 	};
 }

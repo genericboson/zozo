@@ -12,7 +12,7 @@
 namespace GenericBoson
 {
 	GameServer::GameServer(int32_t port /*= 8001*/)
-		: ServerBase(port)
+		: ServerBase(port), m_pLobbyProxy{ std::make_shared<LobbyProxy>( *this ) }
 	{
 	}
 

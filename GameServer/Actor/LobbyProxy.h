@@ -6,6 +6,8 @@
 
 namespace GenericBoson
 {
+	class GameServer;
+
 	class LobbyProxy : public IActor
 	{
 	public:
