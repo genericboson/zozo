@@ -77,7 +77,7 @@ namespace GenericBoson
         {
         case LobbyGamePayload::LobbyGamePayload_RegisterReq:
             {
-                
+                INFO_LOG("RegisterReq received");
             }
             break;
         case LobbyGamePayload::LobbyGamePayload_RegisterAck:

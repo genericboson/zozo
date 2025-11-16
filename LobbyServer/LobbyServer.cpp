@@ -4,6 +4,7 @@
 
 #include "LobbyServer.h"
 
+#include "Session/LobbyStub.h"
 #include "Session/LobbyUser.h"
 #include "Session/LobbyUserManager.h"
 
@@ -22,13 +23,23 @@ namespace GenericBoson
 		if ( m_sort == ELobbyServerSort::EXTERNAL )
 			return std::make_shared<LobbyUser>(*this, pSocket);
 
-		return std::make_shared<LobbyUser>(*this, pSocket);
+		return std::make_shared<LobbyStub>(*this, pSocket);
 	}
 
 	bool LobbyServer::Start()
 	{
-		INFO_LOG("LobbyServer started ( port - {} )", m_listeningPort);
-		return ServerBase::Start();
+		auto startResult = ServerBase::Start();
+
+		if (m_sort == ELobbyServerSort::EXTERNAL)
+		{
+			INFO_LOG("External LobbyServer started ( port - {} )", m_listeningPort);
+		}
+		else
+		{
+			INFO_LOG("Internal LobbyServer started ( port - {} )", m_listeningPort);
+		}
+
+		return startResult;
 	}
 
 	std::optional<pt::ptree> LobbyServer::ReadIni()
@@ -37,7 +48,7 @@ namespace GenericBoson
 		if (!opIniPt)
 			return std::nullopt;
 
-		const auto iniPt = *opIniPt;
+		const auto& iniPt = *opIniPt;
 
 		m_dbIp = iniPt.get<decltype(m_dbIp)>("DB_IP", "127.0.0.1");
 		m_dbPort = iniPt.get<decltype(m_dbPort)>("DB_PORT", 3306);
@@ -54,5 +65,7 @@ namespace GenericBoson
 			else
 				ERROR_LOG("LOGIC ERROR");
 		}
+
+		return opIniPt;
 	}
 }

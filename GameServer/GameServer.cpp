@@ -16,6 +16,36 @@ namespace GenericBoson
 	{
 	}
 
+	bool GameServer::AfterReadIni()
+	{
+		m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
+		m_pClient->SetOnConnected([this]() {
+			flatbuffers::FlatBufferBuilder fbb;
+
+			auto req = Zozo::CreateRegisterReq(fbb, m_id);
+			auto msg = Zozo::CreateLobbyGameMessage(fbb,
+				Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq,
+				req.Union());
+
+			fbb.Finish(msg);
+
+			m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+
+			INFO_LOG("RegisterReq sent");
+		});
+
+		const auto clientTask = [this]() -> asio::awaitable<void>
+			{
+				co_await m_pClient->KeepSending(m_pLobbyProxy);
+			};
+
+		asio::co_spawn(m_ioContext, clientTask, asio::detached);
+
+		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
+
+		return true;
+	}
+
 	bool GameServer::Start()
 	{
 		if (!ServerBase::Start())
@@ -23,31 +53,6 @@ namespace GenericBoson
 			ERROR_LOG("ServerBase::Start for GameServer failed");
 			return false;
 		}
-
-		OnAfterReadIni = [this](){
-			m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
-			m_pClient->SetOnConnected([this]() {
-				flatbuffers::FlatBufferBuilder fbb;
-
-				auto req = Zozo::CreateRegisterReq(fbb, m_id);
-				auto msg = Zozo::CreateLobbyGameMessage(fbb,
-					Zozo::LobbyGamePayload::LobbyGamePayload_RegisterReq,
-					req.Union());
-
-				fbb.Finish(msg);
-
-				m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-				});
-
-			const auto clientTask = [this]() -> asio::awaitable<void>
-				{
-					co_await m_pClient->KeepSending(m_pLobbyProxy);
-				};
-
-			asio::co_spawn(m_ioContext, clientTask, asio::detached);
-
-			INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
-		};
 
 		return true;
 	}
@@ -70,6 +75,8 @@ namespace GenericBoson
 
 		m_lobbyIp   = opIniPt->get<decltype(m_lobbyIp)>("LOBBY_IP", "127.0.0.1");
 		m_lobbyPort = opIniPt->get<decltype(m_lobbyPort)>("LOBBY_PORT", "8002");
+
+		return opIniPt;
 	}
 
 	auto GameServer::CreateActor(const std::shared_ptr<ISocket>& pSocket) 

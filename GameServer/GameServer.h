@@ -22,7 +22,7 @@ namespace GenericBoson
 		virtual ~GameServer() = default;
 
 		bool Start() override;
-
+		bool AfterReadIni() override;
 		auto CreateActor(const std::shared_ptr<ISocket>& pSocket) 
 			-> std::shared_ptr<IActor> override;
 

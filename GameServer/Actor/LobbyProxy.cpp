@@ -70,6 +70,8 @@ namespace GenericBoson
 
 				m_server.m_name          = registerAck->server_name()->str();
 				m_server.m_listeningPort = registerAck->listen_port();
+
+				m_server.InitializeConnection();
 			}
             break;
 		case LobbyGamePayload::LobbyGamePayload_RegisterReq:

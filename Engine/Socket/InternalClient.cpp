@@ -73,18 +73,4 @@ namespace GenericBoson
 					}, asio::detached);
 			});
 	}
-
-	//auto DBCacheClient::Upsert(const flatbuffers::String& accountStr)
-	//	-> boost::future<std::shared_ptr<flatbuffers::FlatBufferBuilder>>
-	//{
-	//	flatbuffers::FlatBufferBuilder fbb;
-	//	auto loginDBReq = Zozo::CreateLoginDBReq(fbb);// , account, password);
-	//	auto dbcacheMsg = Zozo::CreateDBCacheLobbyMessage(fbb,
-	//		Zozo::DBCacheLobbyPayload::DBCacheLobbyPayload_LoginDBReq,
-	//		loginDBReq.Union());
-
-	//	fbb.Finish(dbcacheMsg);
-
-	//	m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-	//}
 }

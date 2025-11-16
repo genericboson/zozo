@@ -69,14 +69,8 @@ namespace GenericBoson
 		return iniPt;
 	}
 
-	bool ServerBase::Start()
+	bool ServerBase::InitializeConnection()
 	{
-		if (!ReadIni())
-			return false;
-
-		if(OnAfterReadIni)
-			OnAfterReadIni();
-
 		try
 		{
 			m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(
@@ -91,8 +85,6 @@ namespace GenericBoson
 		}
 
 		Accept();
-
-		m_pIoThread = std::make_unique<std::jthread>([&]() { m_ioContext.run(); });
 
 		m_pDbConn = std::make_unique<mysql::any_connection>(m_ioContext);
 		auto [err] = m_pDbConn->async_connect(GetDbParams(
@@ -109,6 +101,21 @@ namespace GenericBoson
 		}
 
 		return true;
+	}
+
+	bool ServerBase::AfterReadIni()
+	{
+		return InitializeConnection();
+	}
+
+	bool ServerBase::Start()
+	{
+		if (!ReadIni())
+			return false;
+
+		m_pIoThread = std::make_unique<std::jthread>([&]() { m_ioContext.run(); });
+
+		return AfterReadIni();
 	}
 
 	void ServerBase::Stop()

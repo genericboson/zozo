@@ -19,11 +19,17 @@ namespace GenericBoson
 
 	class ServerBase
 	{
+		friend class LobbyProxy;
+
 	public:
 		ServerBase(int32_t port);
 		virtual ~ServerBase() = default;
 
 		virtual bool Start();
+		virtual bool AfterReadIni();
+		virtual auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
+			-> std::shared_ptr<IActor> = 0;
+
 		void Stop();
 
 		void Accept();
@@ -32,13 +38,12 @@ namespace GenericBoson
 
 		bool IsRunning() const;
 
-		virtual auto CreateActor(const std::shared_ptr<ISocket>& pSocket)
-			-> std::shared_ptr<IActor> = 0;
-
 		asio::io_context& GetIoContextRef();
 
 	protected:
 		virtual std::optional<pt::ptree> ReadIni();
+
+		bool InitializeConnection();
 
 	private:
 		static mysql::pool_params GetDbPoolParams(
@@ -78,7 +83,5 @@ namespace GenericBoson
 		asio::thread_pool                                          m_networkThreadPool;
 		asio::strand<asio::thread_pool::executor_type>             m_strand;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
-
-		std::function<void()>                                      OnAfterReadIni;
 	};
 }
