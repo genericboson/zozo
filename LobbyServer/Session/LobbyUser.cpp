@@ -69,7 +69,7 @@ namespace GenericBoson
             co_return;
 
         auto message = Zozo::GetLobbyMessage(pData);
-        NULL_CO_RETURN(message)
+        NULL_CO_RETURN(message);
 
         flatbuffers::FlatBufferBuilder fbb;
 
@@ -147,7 +147,7 @@ namespace GenericBoson
 
                 auto queryStr = mysql::with_params(
                     "SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
-                    "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
+                    "FROM zozo_lobby.user JOIN zozo_game.character AS uc "
                     "ON user.id = uc.user_id "
                     "WHERE user.account = {} AND user.token = {};",
                     loginReq->account()->c_str(),

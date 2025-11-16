@@ -14,4 +14,15 @@ namespace GenericBoson
 	{
 		std::optional<std::string> password;
 	};
+
+	struct RegisterReq_Select_GameServer
+	{
+		std::string db_ip;
+		std::string db_account;
+		std::string db_password;
+		std::string db_main_schema;
+		std::string server_name;
+		int32_t     db_port;
+		int32_t     listen_port;
+	};
 }

@@ -69,15 +69,70 @@ namespace GenericBoson
             co_return;
 
         auto message = Zozo::GetLobbyGameMessage(pData);
-        NULL_CO_RETURN(message)
+        NULL_CO_RETURN(message);
 
-            flatbuffers::FlatBufferBuilder fbb;
+        flatbuffers::FlatBufferBuilder fbb;
 
         switch (message->payload_type())
         {
         case LobbyGamePayload::LobbyGamePayload_RegisterReq:
             {
-                INFO_LOG("RegisterReq received");
+                auto regReq = message->payload_as_RegisterReq();
+                NULL_CO_RETURN(regReq);
+
+                const auto serverId = regReq->server_id();
+
+                auto queryStr = mysql::with_params(
+                    "SELECT * FROM zozo_lobby.game_server WHERE id = {};"
+                    , serverId );
+
+                mysql::static_results<mysql::pfr_by_name<RegisterReq_Select_GameServer>> result;
+                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+                    queryStr,
+                    result,
+                    asio::as_tuple(asio::use_awaitable));
+                    dbErr)
+                {
+                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+                    co_return;
+                }
+
+                auto resultCode = Zozo::ResultCode_NoData;
+                if (result.rows().size() == 1)
+                {
+                    const auto dbInfo = *result.rows().begin();
+
+                    auto dbIp = fbb.CreateString(dbInfo.db_ip);
+                    auto dbAccount = fbb.CreateString(dbInfo.db_account);
+                    auto dbPassword = fbb.CreateString(dbInfo.db_password);
+                    auto dbMainSchema = fbb.CreateString(dbInfo.db_main_schema);
+                    auto serverName = fbb.CreateString(dbInfo.server_name);
+
+                    auto ack = Zozo::CreateRegisterAck(fbb, Zozo::ResultCode_Success, 
+                        dbIp, dbAccount, dbPassword, dbMainSchema, serverName,
+                        dbInfo.db_port, dbInfo.listen_port);
+                    auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
+                    fbb.Finish(msg);
+
+                    INFO_LOG("GameServer ( server id - {} ) registered. "
+                        "dpIp - {}, dbAccount - {}, dbPassword - {}, dbMainSchema - {}, serverName - {}, "
+                        "db_port - {}, listen_port - {}",
+                        serverId, dbInfo.db_ip, dbInfo.db_account, dbInfo.db_password, 
+                        dbInfo.db_main_schema, dbInfo.server_name, 
+                        dbInfo.db_port, dbInfo.listen_port);
+
+                    break;
+                }
+
+                if (result.rows().size() > 1)
+                    resultCode = Zozo::ResultCode_LogicError;
+
+                ERROR_LOG("GameServer register failed. server id - {}, error code - {}({})", 
+                    serverId, static_cast<int>(resultCode), EnumNameResultCode(resultCode));
+
+                auto ack = Zozo::CreateRegisterAck(fbb, resultCode);
+                auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
+                fbb.Finish(msg);
             }
             break;
         case LobbyGamePayload::LobbyGamePayload_RegisterAck:

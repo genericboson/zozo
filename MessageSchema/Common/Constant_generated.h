@@ -22,35 +22,38 @@ enum ResultCode : uint32_t {
   ResultCode_WrongPassword = 2,
   ResultCode_NewAccount = 3,
   ResultCode_LogicError = 4,
+  ResultCode_NoData = 5,
   ResultCode_MIN = ResultCode_Success,
-  ResultCode_MAX = ResultCode_LogicError
+  ResultCode_MAX = ResultCode_NoData
 };
 
-inline const ResultCode (&EnumValuesResultCode())[5] {
+inline const ResultCode (&EnumValuesResultCode())[6] {
   static const ResultCode values[] = {
     ResultCode_Success,
     ResultCode_InvalidPacket,
     ResultCode_WrongPassword,
     ResultCode_NewAccount,
-    ResultCode_LogicError
+    ResultCode_LogicError,
+    ResultCode_NoData
   };
   return values;
 }
 
 inline const char * const *EnumNamesResultCode() {
-  static const char * const names[6] = {
+  static const char * const names[7] = {
     "Success",
     "InvalidPacket",
     "WrongPassword",
     "NewAccount",
     "LogicError",
+    "NoData",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameResultCode(ResultCode e) {
-  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_LogicError)) return "";
+  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_NoData)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesResultCode()[index];
 }
