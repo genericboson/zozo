@@ -7,8 +7,10 @@ using System.Diagnostics;
 
 namespace Zozo
 {
-    public partial class SocketManager : Node
+    abstract public partial class SocketManager : Node
     {
+        abstract protected void ConsumePayload(ByteBuffer bb);
+
         static private StreamPeerTcp m_stream = new();
         static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
         static private Queue<byte[]> m_sendQueue = new();
@@ -97,23 +99,7 @@ namespace Zozo
                 m_waitingHeader = true;
 
                 var bb = new ByteBuffer(buffer);
-                var lobbyMessage = LobbyMessage.GetRootAsLobbyMessage(bb);
-
-                switch (lobbyMessage.PayloadType)
-                {
-                    case LobbyPayload.AuthAck:
-                        ReceiveAuthAck(lobbyMessage);
-                        break;
-                    case LobbyPayload.CharacterListAck:
-                        ReceiveCharacterListAck(lobbyMessage);
-                        break;
-                    case LobbyPayload.LoginAck:
-                        ReceiveLoginAck(lobbyMessage);
-                        break;
-                    default:
-                        GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
-                        break;
-                }
+                ConsumePayload();
             }
         }
 

@@ -8,8 +8,10 @@ namespace GenericBoson.Zozo
 public enum GamePayload : byte
 {
   NONE = 0,
-  CharacterMoveReq = 1,
-  CharacterMoveAck = 2,
+  CharacterListReq = 1,
+  CharacterListAck = 2,
+  CharacterMoveReq = 3,
+  CharacterMoveAck = 4,
 };
 
 
@@ -21,6 +23,12 @@ static public class GamePayloadVerify
     bool result = true;
     switch((GamePayload)typeId)
     {
+      case GamePayload.CharacterListReq:
+        result = GenericBoson.Zozo.CharacterListReqVerify.Verify(verifier, tablePos);
+        break;
+      case GamePayload.CharacterListAck:
+        result = GenericBoson.Zozo.CharacterListAckVerify.Verify(verifier, tablePos);
+        break;
       case GamePayload.CharacterMoveReq:
         result = GenericBoson.Zozo.CharacterMoveReqVerify.Verify(verifier, tablePos);
         break;

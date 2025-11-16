@@ -12,6 +12,7 @@ public enum ResultCode : uint
   WrongPassword = 2,
   NewAccount = 3,
   LogicError = 4,
+  NoData = 5,
 };
 
 

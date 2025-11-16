@@ -15,7 +15,7 @@ namespace Zozo
                 var accountStr = fbb.CreateString(account);
                 var tokenStr = fbb.CreateString(token);
                 var req = CharacterListReq.CreateCharacterListReq(fbb, accountStr, tokenStr);
-                var message = LobbyMessage.CreateLobbyMessage(fbb, LobbyPayload.CharacterListReq, req.Value);
+                var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterListReq, req.Value);
                 fbb.Finish(message.Value);
             });
         }
