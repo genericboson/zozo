@@ -13,28 +13,16 @@ table AuthReq
 table AuthAck
 {
     result_code : ResultCode;
+    user_id : long;
     token : string;
-}
-
-table LoginReq
-{
-    account : string;
-    token : string;
-}
-
-table LoginAck
-{
-    result_code : ResultCode;
+    user_id : long;
     server_infos: [ServerInfo];
-    characters  : [CharacterInfo];
 }
 
 union LobbyPayload
 {
     AuthReq,
     AuthAck,
-    LoginReq,
-    LoginAck,
 }
 
 table LobbyMessage
@@ -44,6 +32,4 @@ table LobbyMessage
 
 root_type AuthReq;
 root_type AuthAck;
-root_type LoginReq;
-root_type LoginAck;
 root_type LobbyMessage;

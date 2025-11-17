@@ -5,7 +5,7 @@ namespace GenericBoson.Zozo;
 
 table CharacterListReq
 {
-    account : string;
+    user_id : long;
     token : string;
 }
 

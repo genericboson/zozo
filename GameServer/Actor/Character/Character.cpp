@@ -74,7 +74,7 @@ namespace GenericBoson
             co_return;
 
         auto message = Zozo::GetGameMessage(pData);
-        NULL_CO_RETURN(message)
+        NULL_CO_RETURN(message);
 
         flatbuffers::FlatBufferBuilder fbb;
         
@@ -83,19 +83,16 @@ namespace GenericBoson
         case GamePayload::GamePayload_CharacterListReq:
             {
                 auto req = message->payload_as_CharacterListReq();
-                NULL_CO_RETURN(req)
+                NULL_CO_RETURN(req);
 
-                    const auto accountStr = req->account()->c_str();
-                const auto tokenStr = req->token()->c_str();
+                const auto accountStr = req->account()->c_str();
+                const auto tokenStr   = req->token()->c_str();
 
                 INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
                 auto queryStr = mysql::with_params(
-                    "SELECT uc.name AS name, uc.level AS level "
-                    "FROM zozo_lobby.user JOIN zozo_lobby.user_character AS uc "
-                    "ON user.id = uc.user_id "
-                    "WHERE user.account = {} AND user.token = {};",
-                    accountStr, tokenStr);
+                    "SELECT id, name, level FROM {}.character WHERE user_id = {}",
+                    pServer->m_dbMainSchema);
 
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
                 if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
