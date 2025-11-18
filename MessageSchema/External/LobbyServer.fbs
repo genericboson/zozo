@@ -15,7 +15,14 @@ table AuthAck
     result_code : ResultCode;
     user_id : long;
     token : string;
-    user_id : long;
+    
+}
+
+table ServerListReq {}
+
+table ServerListAck
+{
+    result_code : ResultCode;
     server_infos: [ServerInfo];
 }
 

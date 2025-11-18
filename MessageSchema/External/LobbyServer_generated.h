@@ -26,11 +26,11 @@ struct AuthReqBuilder;
 struct AuthAck;
 struct AuthAckBuilder;
 
-struct LoginReq;
-struct LoginReqBuilder;
+struct ServerListReq;
+struct ServerListReqBuilder;
 
-struct LoginAck;
-struct LoginAckBuilder;
+struct ServerListAck;
+struct ServerListAckBuilder;
 
 struct LobbyMessage;
 struct LobbyMessageBuilder;
@@ -39,37 +39,31 @@ enum LobbyPayload : uint8_t {
   LobbyPayload_NONE = 0,
   LobbyPayload_AuthReq = 1,
   LobbyPayload_AuthAck = 2,
-  LobbyPayload_LoginReq = 3,
-  LobbyPayload_LoginAck = 4,
   LobbyPayload_MIN = LobbyPayload_NONE,
-  LobbyPayload_MAX = LobbyPayload_LoginAck
+  LobbyPayload_MAX = LobbyPayload_AuthAck
 };
 
-inline const LobbyPayload (&EnumValuesLobbyPayload())[5] {
+inline const LobbyPayload (&EnumValuesLobbyPayload())[3] {
   static const LobbyPayload values[] = {
     LobbyPayload_NONE,
     LobbyPayload_AuthReq,
-    LobbyPayload_AuthAck,
-    LobbyPayload_LoginReq,
-    LobbyPayload_LoginAck
+    LobbyPayload_AuthAck
   };
   return values;
 }
 
 inline const char * const *EnumNamesLobbyPayload() {
-  static const char * const names[6] = {
+  static const char * const names[4] = {
     "NONE",
     "AuthReq",
     "AuthAck",
-    "LoginReq",
-    "LoginAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameLobbyPayload(LobbyPayload e) {
-  if (::flatbuffers::IsOutRange(e, LobbyPayload_NONE, LobbyPayload_LoginAck)) return "";
+  if (::flatbuffers::IsOutRange(e, LobbyPayload_NONE, LobbyPayload_AuthAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesLobbyPayload()[index];
 }
@@ -84,14 +78,6 @@ template<> struct LobbyPayloadTraits<GenericBoson::Zozo::AuthReq> {
 
 template<> struct LobbyPayloadTraits<GenericBoson::Zozo::AuthAck> {
   static const LobbyPayload enum_value = LobbyPayload_AuthAck;
-};
-
-template<> struct LobbyPayloadTraits<GenericBoson::Zozo::LoginReq> {
-  static const LobbyPayload enum_value = LobbyPayload_LoginReq;
-};
-
-template<> struct LobbyPayloadTraits<GenericBoson::Zozo::LoginAck> {
-  static const LobbyPayload enum_value = LobbyPayload_LoginAck;
 };
 
 bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyPayload type);
@@ -166,10 +152,14 @@ struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
-    VT_TOKEN = 6
+    VT_USER_ID = 6,
+    VT_TOKEN = 8
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  int64_t user_id() const {
+    return GetField<int64_t>(VT_USER_ID, 0);
   }
   const ::flatbuffers::String *token() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
@@ -177,6 +167,7 @@ struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           VerifyField<int64_t>(verifier, VT_USER_ID, 8) &&
            VerifyOffset(verifier, VT_TOKEN) &&
            verifier.VerifyString(token()) &&
            verifier.EndTable();
@@ -189,6 +180,9 @@ struct AuthAckBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
     fbb_.AddElement<uint32_t>(AuthAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  void add_user_id(int64_t user_id) {
+    fbb_.AddElement<int64_t>(AuthAck::VT_USER_ID, user_id, 0);
   }
   void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
     fbb_.AddOffset(AuthAck::VT_TOKEN, token);
@@ -207,8 +201,10 @@ struct AuthAckBuilder {
 inline ::flatbuffers::Offset<AuthAck> CreateAuthAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    int64_t user_id = 0,
     ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
   AuthAckBuilder builder_(_fbb);
+  builder_.add_user_id(user_id);
   builder_.add_token(token);
   builder_.add_result_code(result_code);
   return builder_.Finish();
@@ -217,85 +213,50 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAck(
 inline ::flatbuffers::Offset<AuthAck> CreateAuthAckDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
+    int64_t user_id = 0,
     const char *token = nullptr) {
   auto token__ = token ? _fbb.CreateString(token) : 0;
   return GenericBoson::Zozo::CreateAuthAck(
       _fbb,
       result_code,
+      user_id,
       token__);
 }
 
-struct LoginReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LoginReqBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ACCOUNT = 4,
-    VT_TOKEN = 6
-  };
-  const ::flatbuffers::String *account() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ACCOUNT);
-  }
-  const ::flatbuffers::String *token() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
-  }
+struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ServerListReqBuilder Builder;
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ACCOUNT) &&
-           verifier.VerifyString(account()) &&
-           VerifyOffset(verifier, VT_TOKEN) &&
-           verifier.VerifyString(token()) &&
            verifier.EndTable();
   }
 };
 
-struct LoginReqBuilder {
-  typedef LoginReq Table;
+struct ServerListReqBuilder {
+  typedef ServerListReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_account(::flatbuffers::Offset<::flatbuffers::String> account) {
-    fbb_.AddOffset(LoginReq::VT_ACCOUNT, account);
-  }
-  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
-    fbb_.AddOffset(LoginReq::VT_TOKEN, token);
-  }
-  explicit LoginReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit ServerListReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LoginReq> Finish() {
+  ::flatbuffers::Offset<ServerListReq> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LoginReq>(end);
+    auto o = ::flatbuffers::Offset<ServerListReq>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LoginReq> CreateLoginReq(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> account = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
-  LoginReqBuilder builder_(_fbb);
-  builder_.add_token(token);
-  builder_.add_account(account);
+inline ::flatbuffers::Offset<ServerListReq> CreateServerListReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb) {
+  ServerListReqBuilder builder_(_fbb);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<LoginReq> CreateLoginReqDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *account = nullptr,
-    const char *token = nullptr) {
-  auto account__ = account ? _fbb.CreateString(account) : 0;
-  auto token__ = token ? _fbb.CreateString(token) : 0;
-  return GenericBoson::Zozo::CreateLoginReq(
-      _fbb,
-      account__,
-      token__);
-}
-
-struct LoginAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef LoginAckBuilder Builder;
+struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ServerListAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
-    VT_SERVER_INFOS = 6,
-    VT_CHARACTERS = 8
+    VT_SERVER_INFOS = 6
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
@@ -303,70 +264,56 @@ struct LoginAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>> *server_infos() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>> *>(VT_SERVER_INFOS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>> *characters() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>> *>(VT_CHARACTERS);
-  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            VerifyOffset(verifier, VT_SERVER_INFOS) &&
            verifier.VerifyVector(server_infos()) &&
            verifier.VerifyVectorOfTables(server_infos()) &&
-           VerifyOffset(verifier, VT_CHARACTERS) &&
-           verifier.VerifyVector(characters()) &&
-           verifier.VerifyVectorOfTables(characters()) &&
            verifier.EndTable();
   }
 };
 
-struct LoginAckBuilder {
-  typedef LoginAck Table;
+struct ServerListAckBuilder {
+  typedef ServerListAck Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
-    fbb_.AddElement<uint32_t>(LoginAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+    fbb_.AddElement<uint32_t>(ServerListAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
   }
   void add_server_infos(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>>> server_infos) {
-    fbb_.AddOffset(LoginAck::VT_SERVER_INFOS, server_infos);
+    fbb_.AddOffset(ServerListAck::VT_SERVER_INFOS, server_infos);
   }
-  void add_characters(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>>> characters) {
-    fbb_.AddOffset(LoginAck::VT_CHARACTERS, characters);
-  }
-  explicit LoginAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit ServerListAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<LoginAck> Finish() {
+  ::flatbuffers::Offset<ServerListAck> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<LoginAck>(end);
+    auto o = ::flatbuffers::Offset<ServerListAck>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<LoginAck> CreateLoginAck(
+inline ::flatbuffers::Offset<ServerListAck> CreateServerListAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>>> server_infos = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>>> characters = 0) {
-  LoginAckBuilder builder_(_fbb);
-  builder_.add_characters(characters);
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>>> server_infos = 0) {
+  ServerListAckBuilder builder_(_fbb);
   builder_.add_server_infos(server_infos);
   builder_.add_result_code(result_code);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<LoginAck> CreateLoginAckDirect(
+inline ::flatbuffers::Offset<ServerListAck> CreateServerListAckDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
-    const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>> *server_infos = nullptr,
-    const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>> *characters = nullptr) {
+    const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>> *server_infos = nullptr) {
   auto server_infos__ = server_infos ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>>(*server_infos) : 0;
-  auto characters__ = characters ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo>>(*characters) : 0;
-  return GenericBoson::Zozo::CreateLoginAck(
+  return GenericBoson::Zozo::CreateServerListAck(
       _fbb,
       result_code,
-      server_infos__,
-      characters__);
+      server_infos__);
 }
 
 struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -388,12 +335,6 @@ struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GenericBoson::Zozo::AuthAck *payload_as_AuthAck() const {
     return payload_type() == GenericBoson::Zozo::LobbyPayload_AuthAck ? static_cast<const GenericBoson::Zozo::AuthAck *>(payload()) : nullptr;
   }
-  const GenericBoson::Zozo::LoginReq *payload_as_LoginReq() const {
-    return payload_type() == GenericBoson::Zozo::LobbyPayload_LoginReq ? static_cast<const GenericBoson::Zozo::LoginReq *>(payload()) : nullptr;
-  }
-  const GenericBoson::Zozo::LoginAck *payload_as_LoginAck() const {
-    return payload_type() == GenericBoson::Zozo::LobbyPayload_LoginAck ? static_cast<const GenericBoson::Zozo::LoginAck *>(payload()) : nullptr;
-  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE, 1) &&
@@ -409,14 +350,6 @@ template<> inline const GenericBoson::Zozo::AuthReq *LobbyMessage::payload_as<Ge
 
 template<> inline const GenericBoson::Zozo::AuthAck *LobbyMessage::payload_as<GenericBoson::Zozo::AuthAck>() const {
   return payload_as_AuthAck();
-}
-
-template<> inline const GenericBoson::Zozo::LoginReq *LobbyMessage::payload_as<GenericBoson::Zozo::LoginReq>() const {
-  return payload_as_LoginReq();
-}
-
-template<> inline const GenericBoson::Zozo::LoginAck *LobbyMessage::payload_as<GenericBoson::Zozo::LoginAck>() const {
-  return payload_as_LoginAck();
 }
 
 struct LobbyMessageBuilder {
@@ -461,14 +394,6 @@ inline bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *ob
     }
     case LobbyPayload_AuthAck: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthAck *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case LobbyPayload_LoginReq: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginReq *>(obj);
-      return verifier.VerifyTable(ptr);
-    }
-    case LobbyPayload_LoginAck: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::LoginAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

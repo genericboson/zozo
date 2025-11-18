@@ -89,7 +89,7 @@ namespace GenericBoson
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
-                    "SELECT password FROM zozo_lobby.user WHERE user.account = {};"
+                    "SELECT password, id FROM zozo_lobby.user WHERE user.account = {};"
                     "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
                     accountStr,
@@ -113,6 +113,7 @@ namespace GenericBoson
 
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
 
+                int64_t userId{};
                 if (auto selectResults = result.rows<1>();
                     selectResults.size() == 0)
                 {
@@ -124,6 +125,7 @@ namespace GenericBoson
                     if (selectResult.password.value_or("") == passwordStr)
                     {
                         resultCode = Zozo::ResultCode::ResultCode_Success;
+                        userId = selectResult.id;
                     }
                     else
                     {
@@ -132,60 +134,10 @@ namespace GenericBoson
                 }
 
                 auto tokenOffset = fbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
-                auto authAck = Zozo::CreateAuthAck(fbb, resultCode, tokenOffset);
+                auto authAck = Zozo::CreateAuthAck(fbb, resultCode, userId, tokenOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
 
                 fbb.Finish(lobbyMsg);
-            }
-            break;  
-        case LobbyPayload::LobbyPayload_LoginReq:
-            {
-            using namespace std::chrono_literals;
-
-			    auto loginReq = message->payload_as_LoginReq();
-                NULL_CO_RETURN(loginReq);
-
-                auto queryStr = mysql::with_params(
-                    "SELECT uc.id AS character_id, uc.user_id AS user_id, uc.name AS name, uc.level AS level "
-                    "FROM zozo_lobby.user JOIN zozo_game.character AS uc "
-                    "ON user.id = uc.user_id "
-                    "WHERE user.account = {} AND user.token = {};",
-                    loginReq->account()->c_str(),
-                    loginReq->token()->c_str());
-
-                mysql::static_results<mysql::pfr_by_name<Join_User_UserCharacter>> result;
-                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-                    queryStr,
-                    result,
-                    asio::as_tuple(asio::use_awaitable));
-                    dbErr)
-                {
-                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-                    co_return;
-                }
-
-                std::vector<flatbuffers::Offset<Zozo::CharacterInfo>> characterInfos;
-                if (result.rows().size() > 0)
-                {
-                    characterInfos.reserve(result.rows().size());
-                    for (const auto& dbInfo : result.rows())
-                    {
-                        auto nameStrOffset = fbb.CreateString(*dbInfo.name);
-                        auto info = Zozo::CreateCharacterInfo(fbb, *dbInfo.character_id, *dbInfo.user_id, nameStrOffset, *dbInfo.level);
-                        characterInfos.emplace_back(std::move(info));
-                    }
-                }
-                auto infosOffset = fbb.CreateVector(characterInfos);
-
-                auto loginAck = Zozo::CreateLoginAck(fbb, Zozo::ResultCode_Success,0, infosOffset);
-                auto lobbyMsg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload_LoginAck, loginAck.Union());
-                
-                fbb.Finish(lobbyMsg);
-            }
-            break;
-        case LobbyPayload::LobbyPayload_LoginAck:
-            {
-                ERROR_LOG("Logic error");
             }
             break;
         default:

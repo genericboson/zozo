@@ -12,6 +12,7 @@ namespace GenericBoson
 
 	struct AuthReq_Select_User
 	{
+		int64_t                    id;
 		std::optional<std::string> password;
 	};
 
