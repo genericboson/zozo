@@ -15,7 +15,6 @@ table AuthAck
     result_code : ResultCode;
     user_id : long;
     token : string;
-    
 }
 
 table ServerListReq {}
@@ -30,6 +29,8 @@ union LobbyPayload
 {
     AuthReq,
     AuthAck,
+    ServerListReq,
+    ServerListAck,
 }
 
 table LobbyMessage
@@ -39,4 +40,6 @@ table LobbyMessage
 
 root_type AuthReq;
 root_type AuthAck;
+root_type ServerListReq;
+root_type ServerListAck;
 root_type LobbyMessage;

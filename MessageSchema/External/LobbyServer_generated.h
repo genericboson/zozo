@@ -39,31 +39,37 @@ enum LobbyPayload : uint8_t {
   LobbyPayload_NONE = 0,
   LobbyPayload_AuthReq = 1,
   LobbyPayload_AuthAck = 2,
+  LobbyPayload_ServerListReq = 3,
+  LobbyPayload_ServerListAck = 4,
   LobbyPayload_MIN = LobbyPayload_NONE,
-  LobbyPayload_MAX = LobbyPayload_AuthAck
+  LobbyPayload_MAX = LobbyPayload_ServerListAck
 };
 
-inline const LobbyPayload (&EnumValuesLobbyPayload())[3] {
+inline const LobbyPayload (&EnumValuesLobbyPayload())[5] {
   static const LobbyPayload values[] = {
     LobbyPayload_NONE,
     LobbyPayload_AuthReq,
-    LobbyPayload_AuthAck
+    LobbyPayload_AuthAck,
+    LobbyPayload_ServerListReq,
+    LobbyPayload_ServerListAck
   };
   return values;
 }
 
 inline const char * const *EnumNamesLobbyPayload() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
     "NONE",
     "AuthReq",
     "AuthAck",
+    "ServerListReq",
+    "ServerListAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameLobbyPayload(LobbyPayload e) {
-  if (::flatbuffers::IsOutRange(e, LobbyPayload_NONE, LobbyPayload_AuthAck)) return "";
+  if (::flatbuffers::IsOutRange(e, LobbyPayload_NONE, LobbyPayload_ServerListAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesLobbyPayload()[index];
 }
@@ -78,6 +84,14 @@ template<> struct LobbyPayloadTraits<GenericBoson::Zozo::AuthReq> {
 
 template<> struct LobbyPayloadTraits<GenericBoson::Zozo::AuthAck> {
   static const LobbyPayload enum_value = LobbyPayload_AuthAck;
+};
+
+template<> struct LobbyPayloadTraits<GenericBoson::Zozo::ServerListReq> {
+  static const LobbyPayload enum_value = LobbyPayload_ServerListReq;
+};
+
+template<> struct LobbyPayloadTraits<GenericBoson::Zozo::ServerListAck> {
+  static const LobbyPayload enum_value = LobbyPayload_ServerListAck;
 };
 
 bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyPayload type);
@@ -335,6 +349,12 @@ struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GenericBoson::Zozo::AuthAck *payload_as_AuthAck() const {
     return payload_type() == GenericBoson::Zozo::LobbyPayload_AuthAck ? static_cast<const GenericBoson::Zozo::AuthAck *>(payload()) : nullptr;
   }
+  const GenericBoson::Zozo::ServerListReq *payload_as_ServerListReq() const {
+    return payload_type() == GenericBoson::Zozo::LobbyPayload_ServerListReq ? static_cast<const GenericBoson::Zozo::ServerListReq *>(payload()) : nullptr;
+  }
+  const GenericBoson::Zozo::ServerListAck *payload_as_ServerListAck() const {
+    return payload_type() == GenericBoson::Zozo::LobbyPayload_ServerListAck ? static_cast<const GenericBoson::Zozo::ServerListAck *>(payload()) : nullptr;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE, 1) &&
@@ -350,6 +370,14 @@ template<> inline const GenericBoson::Zozo::AuthReq *LobbyMessage::payload_as<Ge
 
 template<> inline const GenericBoson::Zozo::AuthAck *LobbyMessage::payload_as<GenericBoson::Zozo::AuthAck>() const {
   return payload_as_AuthAck();
+}
+
+template<> inline const GenericBoson::Zozo::ServerListReq *LobbyMessage::payload_as<GenericBoson::Zozo::ServerListReq>() const {
+  return payload_as_ServerListReq();
+}
+
+template<> inline const GenericBoson::Zozo::ServerListAck *LobbyMessage::payload_as<GenericBoson::Zozo::ServerListAck>() const {
+  return payload_as_ServerListAck();
 }
 
 struct LobbyMessageBuilder {
@@ -394,6 +422,14 @@ inline bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *ob
     }
     case LobbyPayload_AuthAck: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthAck *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case LobbyPayload_ServerListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListReq *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case LobbyPayload_ServerListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

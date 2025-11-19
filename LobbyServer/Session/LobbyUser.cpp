@@ -75,6 +75,16 @@ namespace GenericBoson
 
         switch (message->payload_type())
         {
+        case LobbyPayload::LobbyPayload_ServerListReq:
+            {
+                
+            }
+            break;
+        case LobbyPayload::LobbyPayload_ServerListAck:
+            {
+                ERROR_LOG("Logic Error");
+            }
+            break;
         case LobbyPayload::LobbyPayload_AuthReq:
             {
                 auto authReq = message->payload_as_AuthReq();
