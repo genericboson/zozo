@@ -25,5 +25,6 @@ namespace GenericBoson
 		std::string server_name;
 		int32_t     db_port;
 		int32_t     listen_port;
+		int32_t     max_ccu;
 	};
 }

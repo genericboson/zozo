@@ -20,6 +20,7 @@
 #include <MessageSchema/External/LobbyServer_generated.h>
 
 #include "LobbyServer.h"
+#include "LobbyStubManager.h"
 #include "LobbyUser.h"
 #include "LobbyUserManager.h"
 #include "StaticResults.h"
@@ -77,7 +78,14 @@ namespace GenericBoson
         {
         case LobbyPayload::LobbyPayload_ServerListReq:
             {
+                auto listReq = message->payload_as_ServerListReq();
+                NULL_CO_RETURN(listReq);
+
+                const auto infos = LobbyStubManager::GetInstance()->GetServerInfos(fbb);
                 
+                auto infosVector = fbb.CreateVector(infos);
+
+                //Zozo::CreateServerListAck(fbb, Zozo::ResultCode_Success, strsVector)
             }
             break;
         case LobbyPayload::LobbyPayload_ServerListAck:

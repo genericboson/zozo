@@ -8,6 +8,7 @@
 namespace GenericBoson
 {
 	class ISocket;
+	class LobbyStubManager;
 
 	namespace asio = boost::asio;
 
@@ -16,6 +17,8 @@ namespace GenericBoson
 		public TxExecutor,
 		public std::enable_shared_from_this<LobbyStub>
 	{
+		friend class LobbyStubManager;
+
 	public:
 		LobbyStub( 
 			LobbyServer& lobbyServer,
@@ -27,13 +30,16 @@ namespace GenericBoson
 		bool Initialize() override;
 
 		void Write();
-		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
+		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override
+e;
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
-
 	private:
-		int64_t                  m_id;
+		int64_t                  m_id = 0;
+		std::string              m_name, m_ip, m_port;
+		int32_t                  m_currentCCU = 0, m_maxCCU = 0;
+
 		std::shared_ptr<ISocket> m_pSocket;
 		LobbyServer& m_server;
 	};

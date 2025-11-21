@@ -4,6 +4,7 @@ namespace GenericBoson.Zozo;
 
 table ServerInfo
 {
+    id         : int;
     name       : string;
     ip         : string;
     port       : string;

@@ -239,8 +239,22 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAckDirect(
 
 struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerListReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IP = 4,
+    VT_PORT = 6
+  };
+  const ::flatbuffers::String *ip() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IP);
+  }
+  const ::flatbuffers::String *port() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PORT);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_IP) &&
+           verifier.VerifyString(ip()) &&
+           VerifyOffset(verifier, VT_PORT) &&
+           verifier.VerifyString(port()) &&
            verifier.EndTable();
   }
 };
@@ -249,6 +263,12 @@ struct ServerListReqBuilder {
   typedef ServerListReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_ip(::flatbuffers::Offset<::flatbuffers::String> ip) {
+    fbb_.AddOffset(ServerListReq::VT_IP, ip);
+  }
+  void add_port(::flatbuffers::Offset<::flatbuffers::String> port) {
+    fbb_.AddOffset(ServerListReq::VT_PORT, port);
+  }
   explicit ServerListReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -261,9 +281,25 @@ struct ServerListReqBuilder {
 };
 
 inline ::flatbuffers::Offset<ServerListReq> CreateServerListReq(
-    ::flatbuffers::FlatBufferBuilder &_fbb) {
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ip = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> port = 0) {
   ServerListReqBuilder builder_(_fbb);
+  builder_.add_port(port);
+  builder_.add_ip(ip);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ServerListReq> CreateServerListReqDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ip = nullptr,
+    const char *port = nullptr) {
+  auto ip__ = ip ? _fbb.CreateString(ip) : 0;
+  auto port__ = port ? _fbb.CreateString(port) : 0;
+  return GenericBoson::Zozo::CreateServerListReq(
+      _fbb,
+      ip__,
+      port__);
 }
 
 struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

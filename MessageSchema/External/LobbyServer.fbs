@@ -17,7 +17,11 @@ table AuthAck
     token : string;
 }
 
-table ServerListReq {}
+table ServerListReq
+{
+    ip : string;
+    port : string;
+}
 
 table ServerListAck
 {

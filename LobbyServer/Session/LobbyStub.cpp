@@ -112,7 +112,11 @@ namespace GenericBoson
                     auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
                     fbb.Finish(msg);
 
-                    m_id = serverId;
+                    m_id   = serverId;
+                    m_name = dbInfo.server_name;
+
+                    m_ip   = regReq->;
+                    //m_port = ;
 
                     LobbyStubManager::GetInstance()->AddLobbyStub(shared_from_this());
 

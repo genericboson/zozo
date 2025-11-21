@@ -2,6 +2,8 @@
 
 #include <Engine/Singleton.h>
 
+namespace Zozo { class ServerInfo;  }
+
 namespace GenericBoson
 {
 	class LobbyStub;
@@ -10,7 +12,8 @@ namespace GenericBoson
 	{
 	public:
 		void AddLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub);
-		std::vector<int64_t> GetServerIds();
+		auto GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
+			-> std::vector<flatbuffers::Offset<Zozo::ServerInfo>>;
 
 	private:
 		std::shared_mutex m_lock;

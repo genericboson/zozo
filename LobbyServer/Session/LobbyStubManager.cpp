@@ -1,7 +1,11 @@
 #include "PCH.h"
 
+#include <flatbuffers/flatbuffers.h>
+#include <ranges>
+
 #include "LobbyStub.h"
 #include "LobbyStubManager.h"
+#include "MessageSchema/Common/ServerInfo_generated.h"
 
 namespace GenericBoson
 {
@@ -12,14 +16,23 @@ namespace GenericBoson
 		m_lobbyStubs[pLobbyStub->Id()] = pLobbyStub;
 	}
 
-	std::vector<int64_t> LobbyStubManager::GetServerIds()
+	auto LobbyStubManager::GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
+		->  std::vector<flatbuffers::Offset<Zozo::ServerInfo>>
 	{
-		std::vector<int64_t> ids;
+		std::vector<flatbuffers::Offset<Zozo::ServerInfo>> strs;
 
-		ids.reserve(m_lobbyStubs.size());
+		std::shared_lock<std::shared_mutex> lock(m_lock);
 
-		ids.assign(m_lobbyStubs.begin(), m_lobbyStubs.end());
+		strs.reserve(m_lobbyStubs.size());
 
-		return ids;
+		for (const auto& pLobbyStub : m_lobbyStubs | std::views::values )
+		{
+			auto strOffset = fbb.CreateString(std::format(
+				"[{}] {}", pLobbyStub->m_id, pLobbyStub->m_name));
+
+			strs.emplace_back(std::move(strOffset));
+		}
+
+		return strs;
 	}
-}
+} 

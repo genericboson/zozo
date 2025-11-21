@@ -24,12 +24,16 @@ struct ServerInfoBuilder;
 struct ServerInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_IP = 6,
-    VT_PORT = 8,
-    VT_CURRENT_CCU = 10,
-    VT_MAX_CCU = 12
+    VT_ID = 4,
+    VT_NAME = 6,
+    VT_IP = 8,
+    VT_PORT = 10,
+    VT_CURRENT_CCU = 12,
+    VT_MAX_CCU = 14
   };
+  int32_t id() const {
+    return GetField<int32_t>(VT_ID, 0);
+  }
   const ::flatbuffers::String *name() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
@@ -47,6 +51,7 @@ struct ServerInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_ID, 4) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(name()) &&
            VerifyOffset(verifier, VT_IP) &&
@@ -63,6 +68,9 @@ struct ServerInfoBuilder {
   typedef ServerInfo Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_id(int32_t id) {
+    fbb_.AddElement<int32_t>(ServerInfo::VT_ID, id, 0);
+  }
   void add_name(::flatbuffers::Offset<::flatbuffers::String> name) {
     fbb_.AddOffset(ServerInfo::VT_NAME, name);
   }
@@ -91,6 +99,7 @@ struct ServerInfoBuilder {
 
 inline ::flatbuffers::Offset<ServerInfo> CreateServerInfo(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t id = 0,
     ::flatbuffers::Offset<::flatbuffers::String> name = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ip = 0,
     ::flatbuffers::Offset<::flatbuffers::String> port = 0,
@@ -102,11 +111,13 @@ inline ::flatbuffers::Offset<ServerInfo> CreateServerInfo(
   builder_.add_port(port);
   builder_.add_ip(ip);
   builder_.add_name(name);
+  builder_.add_id(id);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<ServerInfo> CreateServerInfoDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t id = 0,
     const char *name = nullptr,
     const char *ip = nullptr,
     const char *port = nullptr,
@@ -117,6 +128,7 @@ inline ::flatbuffers::Offset<ServerInfo> CreateServerInfoDirect(
   auto port__ = port ? _fbb.CreateString(port) : 0;
   return GenericBoson::Zozo::CreateServerInfo(
       _fbb,
+      id,
       name__,
       ip__,
       port__,
