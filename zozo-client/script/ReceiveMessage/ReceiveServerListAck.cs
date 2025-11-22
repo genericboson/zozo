@@ -22,7 +22,7 @@ namespace Zozo
                         var servers = new List<string>();
                         for (var i = 0; i < ack.ServerInfosLength; ++i)
                         {
-                            servers.Add(ack.ServerInfos(i));
+                            servers.Add(ack.ServerInfos(i).GetValueOrDefault().Name);
                         }
 
                         selectNode.Call("_add_servers", servers.ToArray());

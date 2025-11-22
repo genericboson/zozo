@@ -2,7 +2,7 @@
 
 #include <Engine/Singleton.h>
 
-namespace Zozo { class ServerInfo;  }
+#include "MessageSchema/Common/ServerInfo_generated.h"
 
 namespace GenericBoson
 {

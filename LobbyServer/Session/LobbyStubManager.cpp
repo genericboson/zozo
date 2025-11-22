@@ -5,7 +5,6 @@
 
 #include "LobbyStub.h"
 #include "LobbyStubManager.h"
-#include "MessageSchema/Common/ServerInfo_generated.h"
 
 namespace GenericBoson
 {

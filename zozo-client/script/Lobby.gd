@@ -18,3 +18,7 @@ func _on_setting_pressed() -> void:
 func _add_password():
 	print("signaled")
 	#dropDown.add_item(password)
+
+func _add_servers(servers: Array) -> void:
+	for server in servers:
+		serverSelect.add_item(server)
