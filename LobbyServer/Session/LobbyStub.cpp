@@ -47,6 +47,7 @@ namespace GenericBoson
 
     void LobbyStub::Write()
     {
+        //m_pSocket->EnqueueMessage();
     }
 
     void LobbyStub::OnDisconnected()
@@ -100,11 +101,11 @@ namespace GenericBoson
                 {
                     const auto dbInfo = *result.rows().begin();
 
-                    auto dbIp = fbb.CreateString(dbInfo.db_ip);
-                    auto dbAccount = fbb.CreateString(dbInfo.db_account);
-                    auto dbPassword = fbb.CreateString(dbInfo.db_password);
+                    auto dbIp         = fbb.CreateString(dbInfo.db_ip);
+                    auto dbAccount    = fbb.CreateString(dbInfo.db_account);
+                    auto dbPassword   = fbb.CreateString(dbInfo.db_password);
                     auto dbMainSchema = fbb.CreateString(dbInfo.db_main_schema);
-                    auto serverName = fbb.CreateString(dbInfo.server_name);
+                    auto serverName   = fbb.CreateString(dbInfo.server_name);
 
                     auto ack = Zozo::CreateRegisterAck(fbb, Zozo::ResultCode_Success, 
                         dbIp, dbAccount, dbPassword, dbMainSchema, serverName,
@@ -112,11 +113,12 @@ namespace GenericBoson
                     auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
                     fbb.Finish(msg);
 
-                    m_id   = serverId;
-                    m_name = dbInfo.server_name;
+                    m_id     = serverId;
+                    m_name   = dbInfo.server_name;
 
-                    m_ip   = regReq->;
-                    //m_port = ;
+                    m_ip     = m_pSocket->GetRemoteIp();
+                    m_port   = std::to_string( dbInfo.listen_port );
+                    m_maxCCU = dbInfo.max_ccu;
 
                     LobbyStubManager::GetInstance()->AddLobbyStub(shared_from_this());
 

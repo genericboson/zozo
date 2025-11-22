@@ -19,20 +19,25 @@ namespace GenericBoson
 	auto LobbyStubManager::GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
 		->  std::vector<flatbuffers::Offset<Zozo::ServerInfo>>
 	{
-		std::vector<flatbuffers::Offset<Zozo::ServerInfo>> strs;
+		std::vector<flatbuffers::Offset<Zozo::ServerInfo>> infos;
 
 		std::shared_lock<std::shared_mutex> lock(m_lock);
 
-		strs.reserve(m_lobbyStubs.size());
+		infos.reserve(m_lobbyStubs.size());
 
 		for (const auto& pLobbyStub : m_lobbyStubs | std::views::values )
 		{
-			auto strOffset = fbb.CreateString(std::format(
-				"[{}] {}", pLobbyStub->m_id, pLobbyStub->m_name));
+			auto nameStrOffset = fbb.CreateString(pLobbyStub->m_name);
+			auto ipStrOffset   = fbb.CreateString(pLobbyStub->m_ip);
+			auto portStrOffset = fbb.CreateString(pLobbyStub->m_port);
 
-			strs.emplace_back(std::move(strOffset));
+			auto serverInfo = Zozo::CreateServerInfo(fbb, 
+				pLobbyStub->m_id, nameStrOffset, ipStrOffset, portStrOffset, 
+				pLobbyStub->m_currentCCU, pLobbyStub->m_maxCCU);
+
+			infos.emplace_back(std::move(serverInfo));
 		}
 
-		return strs;
+		return infos;
 	}
 } 

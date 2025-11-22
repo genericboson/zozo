@@ -46,6 +46,8 @@ namespace GenericBoson
 				asio::awaitable<void>()>&& onConnected)
 			-> asio::awaitable<bool>;
 
+		std::string GetRemoteIp() override;
+
 	private:
 		enum { WRITE_CHANNEL_SIZE = 4096 };
 

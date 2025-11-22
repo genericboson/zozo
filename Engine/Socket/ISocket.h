@@ -34,5 +34,7 @@ namespace GenericBoson
 			std::function<
 				asio::awaitable<void>()>&& onConnected)
 			-> asio::awaitable<bool> = 0;
+
+		virtual std::string GetRemoteIp() = 0;
 	};
 }

@@ -9,34 +9,30 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-public struct LoginAck : IFlatbufferObject
+public struct ServerListAck : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_2_10(); }
-  public static LoginAck GetRootAsLoginAck(ByteBuffer _bb) { return GetRootAsLoginAck(_bb, new LoginAck()); }
-  public static LoginAck GetRootAsLoginAck(ByteBuffer _bb, LoginAck obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static ServerListAck GetRootAsServerListAck(ByteBuffer _bb) { return GetRootAsServerListAck(_bb, new ServerListAck()); }
+  public static ServerListAck GetRootAsServerListAck(ByteBuffer _bb, ServerListAck obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
-  public LoginAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public ServerListAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
   public GenericBoson.Zozo.ServerInfo? ServerInfos(int j) { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.ServerInfo?)(new GenericBoson.Zozo.ServerInfo()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ServerInfosLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public GenericBoson.Zozo.CharacterInfo? Characters(int j) { int o = __p.__offset(8); return o != 0 ? (GenericBoson.Zozo.CharacterInfo?)(new GenericBoson.Zozo.CharacterInfo()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int CharactersLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
 
-  public static Offset<GenericBoson.Zozo.LoginAck> CreateLoginAck(FlatBufferBuilder builder,
+  public static Offset<GenericBoson.Zozo.ServerListAck> CreateServerListAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success,
-      VectorOffset server_infosOffset = default(VectorOffset),
-      VectorOffset charactersOffset = default(VectorOffset)) {
-    builder.StartTable(3);
-    LoginAck.AddCharacters(builder, charactersOffset);
-    LoginAck.AddServerInfos(builder, server_infosOffset);
-    LoginAck.AddResultCode(builder, result_code);
-    return LoginAck.EndLoginAck(builder);
+      VectorOffset server_infosOffset = default(VectorOffset)) {
+    builder.StartTable(2);
+    ServerListAck.AddServerInfos(builder, server_infosOffset);
+    ServerListAck.AddResultCode(builder, result_code);
+    return ServerListAck.EndServerListAck(builder);
   }
 
-  public static void StartLoginAck(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartServerListAck(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
   public static void AddServerInfos(FlatBufferBuilder builder, VectorOffset serverInfosOffset) { builder.AddOffset(1, serverInfosOffset.Value, 0); }
   public static VectorOffset CreateServerInfosVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.ServerInfo>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -44,27 +40,20 @@ public struct LoginAck : IFlatbufferObject
   public static VectorOffset CreateServerInfosVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.ServerInfo>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateServerInfosVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.ServerInfo>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartServerInfosVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCharacters(FlatBufferBuilder builder, VectorOffset charactersOffset) { builder.AddOffset(2, charactersOffset.Value, 0); }
-  public static VectorOffset CreateCharactersVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterInfo>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCharactersVectorBlock(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterInfo>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCharactersVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.CharacterInfo>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCharactersVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.CharacterInfo>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCharactersVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static Offset<GenericBoson.Zozo.LoginAck> EndLoginAck(FlatBufferBuilder builder) {
+  public static Offset<GenericBoson.Zozo.ServerListAck> EndServerListAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
-    return new Offset<GenericBoson.Zozo.LoginAck>(o);
+    return new Offset<GenericBoson.Zozo.ServerListAck>(o);
   }
 }
 
 
-static public class LoginAckVerify
+static public class ServerListAckVerify
 {
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
       && verifier.VerifyVectorOfTables(tablePos, 6 /*ServerInfos*/, GenericBoson.Zozo.ServerInfoVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 8 /*Characters*/, GenericBoson.Zozo.CharacterInfoVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

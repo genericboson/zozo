@@ -10,8 +10,8 @@ public enum LobbyPayload : byte
   NONE = 0,
   AuthReq = 1,
   AuthAck = 2,
-  LoginReq = 3,
-  LoginAck = 4,
+  ServerListReq = 3,
+  ServerListAck = 4,
 };
 
 
@@ -29,11 +29,11 @@ static public class LobbyPayloadVerify
       case LobbyPayload.AuthAck:
         result = GenericBoson.Zozo.AuthAckVerify.Verify(verifier, tablePos);
         break;
-      case LobbyPayload.LoginReq:
-        result = GenericBoson.Zozo.LoginReqVerify.Verify(verifier, tablePos);
+      case LobbyPayload.ServerListReq:
+        result = GenericBoson.Zozo.ServerListReqVerify.Verify(verifier, tablePos);
         break;
-      case LobbyPayload.LoginAck:
-        result = GenericBoson.Zozo.LoginAckVerify.Verify(verifier, tablePos);
+      case LobbyPayload.ServerListAck:
+        result = GenericBoson.Zozo.ServerListAckVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

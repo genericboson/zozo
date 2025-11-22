@@ -85,7 +85,10 @@ namespace GenericBoson
                 
                 auto infosVector = fbb.CreateVector(infos);
 
-                //Zozo::CreateServerListAck(fbb, Zozo::ResultCode_Success, strsVector)
+                auto ack = Zozo::CreateServerListAck(fbb, Zozo::ResultCode_Success, infosVector);
+                auto msg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload::LobbyPayload_AuthAck, ack.Union());
+
+                fbb.Finish(msg);
             }
             break;
         case LobbyPayload::LobbyPayload_ServerListAck:
@@ -104,6 +107,7 @@ namespace GenericBoson
 
                 const auto accountStr = authReq->account()->c_str();
                 const auto passwordStr = authReq->password()->c_str();
+                const auto serverId = authReq->server_id();
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"

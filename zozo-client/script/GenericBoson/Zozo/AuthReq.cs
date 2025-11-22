@@ -33,19 +33,23 @@ public struct AuthReq : IFlatbufferObject
   public ArraySegment<byte>? GetPasswordBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetPasswordArray() { return __p.__vector_as_array<byte>(6); }
+  public int ServerId { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<GenericBoson.Zozo.AuthReq> CreateAuthReq(FlatBufferBuilder builder,
       StringOffset accountOffset = default(StringOffset),
-      StringOffset passwordOffset = default(StringOffset)) {
-    builder.StartTable(2);
+      StringOffset passwordOffset = default(StringOffset),
+      int server_id = 0) {
+    builder.StartTable(3);
+    AuthReq.AddServerId(builder, server_id);
     AuthReq.AddPassword(builder, passwordOffset);
     AuthReq.AddAccount(builder, accountOffset);
     return AuthReq.EndAuthReq(builder);
   }
 
-  public static void StartAuthReq(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartAuthReq(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddAccount(FlatBufferBuilder builder, StringOffset accountOffset) { builder.AddOffset(0, accountOffset.Value, 0); }
   public static void AddPassword(FlatBufferBuilder builder, StringOffset passwordOffset) { builder.AddOffset(1, passwordOffset.Value, 0); }
+  public static void AddServerId(FlatBufferBuilder builder, int serverId) { builder.AddInt(2, serverId, 0); }
   public static Offset<GenericBoson.Zozo.AuthReq> EndAuthReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.AuthReq>(o);
@@ -60,6 +64,7 @@ static public class AuthReqVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*Account*/, false)
       && verifier.VerifyString(tablePos, 6 /*Password*/, false)
+      && verifier.VerifyField(tablePos, 8 /*ServerId*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

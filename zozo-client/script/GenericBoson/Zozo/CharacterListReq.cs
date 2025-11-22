@@ -19,13 +19,7 @@ public struct CharacterListReq : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CharacterListReq __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public string Account { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetAccountBytes() { return __p.__vector_as_span<byte>(4, 1); }
-#else
-  public ArraySegment<byte>? GetAccountBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
-  public byte[] GetAccountArray() { return __p.__vector_as_array<byte>(4); }
+  public long UserId { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public string Token { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -35,16 +29,16 @@ public struct CharacterListReq : IFlatbufferObject
   public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(6); }
 
   public static Offset<GenericBoson.Zozo.CharacterListReq> CreateCharacterListReq(FlatBufferBuilder builder,
-      StringOffset accountOffset = default(StringOffset),
+      long user_id = 0,
       StringOffset tokenOffset = default(StringOffset)) {
     builder.StartTable(2);
+    CharacterListReq.AddUserId(builder, user_id);
     CharacterListReq.AddToken(builder, tokenOffset);
-    CharacterListReq.AddAccount(builder, accountOffset);
     return CharacterListReq.EndCharacterListReq(builder);
   }
 
   public static void StartCharacterListReq(FlatBufferBuilder builder) { builder.StartTable(2); }
-  public static void AddAccount(FlatBufferBuilder builder, StringOffset accountOffset) { builder.AddOffset(0, accountOffset.Value, 0); }
+  public static void AddUserId(FlatBufferBuilder builder, long userId) { builder.AddLong(0, userId, 0); }
   public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(1, tokenOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.CharacterListReq> EndCharacterListReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -58,7 +52,7 @@ static public class CharacterListReqVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*Account*/, false)
+      && verifier.VerifyField(tablePos, 4 /*UserId*/, 8 /*long*/, 8, false)
       && verifier.VerifyString(tablePos, 6 /*Token*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }

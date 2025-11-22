@@ -19,51 +19,55 @@ public struct ServerInfo : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ServerInfo __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public string Name { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string Name { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(4); }
-  public string Ip { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(6); }
+  public string Ip { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIpBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetIpBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetIpBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetIpBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetIpArray() { return __p.__vector_as_array<byte>(6); }
-  public string Port { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetIpArray() { return __p.__vector_as_array<byte>(8); }
+  public string Port { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPortBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetPortBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetPortBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetPortBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetPortArray() { return __p.__vector_as_array<byte>(8); }
-  public int CurrentCcu { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int MaxCcu { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetPortArray() { return __p.__vector_as_array<byte>(10); }
+  public int CurrentCcu { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int MaxCcu { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<GenericBoson.Zozo.ServerInfo> CreateServerInfo(FlatBufferBuilder builder,
+      int id = 0,
       StringOffset nameOffset = default(StringOffset),
       StringOffset ipOffset = default(StringOffset),
       StringOffset portOffset = default(StringOffset),
       int current_ccu = 0,
       int max_ccu = 0) {
-    builder.StartTable(5);
+    builder.StartTable(6);
     ServerInfo.AddMaxCcu(builder, max_ccu);
     ServerInfo.AddCurrentCcu(builder, current_ccu);
     ServerInfo.AddPort(builder, portOffset);
     ServerInfo.AddIp(builder, ipOffset);
     ServerInfo.AddName(builder, nameOffset);
+    ServerInfo.AddId(builder, id);
     return ServerInfo.EndServerInfo(builder);
   }
 
-  public static void StartServerInfo(FlatBufferBuilder builder) { builder.StartTable(5); }
-  public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(0, nameOffset.Value, 0); }
-  public static void AddIp(FlatBufferBuilder builder, StringOffset ipOffset) { builder.AddOffset(1, ipOffset.Value, 0); }
-  public static void AddPort(FlatBufferBuilder builder, StringOffset portOffset) { builder.AddOffset(2, portOffset.Value, 0); }
-  public static void AddCurrentCcu(FlatBufferBuilder builder, int currentCcu) { builder.AddInt(3, currentCcu, 0); }
-  public static void AddMaxCcu(FlatBufferBuilder builder, int maxCcu) { builder.AddInt(4, maxCcu, 0); }
+  public static void StartServerInfo(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
+  public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(1, nameOffset.Value, 0); }
+  public static void AddIp(FlatBufferBuilder builder, StringOffset ipOffset) { builder.AddOffset(2, ipOffset.Value, 0); }
+  public static void AddPort(FlatBufferBuilder builder, StringOffset portOffset) { builder.AddOffset(3, portOffset.Value, 0); }
+  public static void AddCurrentCcu(FlatBufferBuilder builder, int currentCcu) { builder.AddInt(4, currentCcu, 0); }
+  public static void AddMaxCcu(FlatBufferBuilder builder, int maxCcu) { builder.AddInt(5, maxCcu, 0); }
   public static Offset<GenericBoson.Zozo.ServerInfo> EndServerInfo(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.ServerInfo>(o);
@@ -76,11 +80,12 @@ static public class ServerInfoVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*Name*/, false)
-      && verifier.VerifyString(tablePos, 6 /*Ip*/, false)
-      && verifier.VerifyString(tablePos, 8 /*Port*/, false)
-      && verifier.VerifyField(tablePos, 10 /*CurrentCcu*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 12 /*MaxCcu*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 4 /*Id*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 6 /*Name*/, false)
+      && verifier.VerifyString(tablePos, 8 /*Ip*/, false)
+      && verifier.VerifyString(tablePos, 10 /*Port*/, false)
+      && verifier.VerifyField(tablePos, 12 /*CurrentCcu*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 14 /*MaxCcu*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

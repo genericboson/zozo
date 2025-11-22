@@ -101,7 +101,8 @@ struct AuthReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ACCOUNT = 4,
-    VT_PASSWORD = 6
+    VT_PASSWORD = 6,
+    VT_SERVER_ID = 8
   };
   const ::flatbuffers::String *account() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ACCOUNT);
@@ -109,12 +110,16 @@ struct AuthReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *password() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PASSWORD);
   }
+  int32_t server_id() const {
+    return GetField<int32_t>(VT_SERVER_ID, 0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ACCOUNT) &&
            verifier.VerifyString(account()) &&
            VerifyOffset(verifier, VT_PASSWORD) &&
            verifier.VerifyString(password()) &&
+           VerifyField<int32_t>(verifier, VT_SERVER_ID, 4) &&
            verifier.EndTable();
   }
 };
@@ -128,6 +133,9 @@ struct AuthReqBuilder {
   }
   void add_password(::flatbuffers::Offset<::flatbuffers::String> password) {
     fbb_.AddOffset(AuthReq::VT_PASSWORD, password);
+  }
+  void add_server_id(int32_t server_id) {
+    fbb_.AddElement<int32_t>(AuthReq::VT_SERVER_ID, server_id, 0);
   }
   explicit AuthReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -143,8 +151,10 @@ struct AuthReqBuilder {
 inline ::flatbuffers::Offset<AuthReq> CreateAuthReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> account = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> password = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> password = 0,
+    int32_t server_id = 0) {
   AuthReqBuilder builder_(_fbb);
+  builder_.add_server_id(server_id);
   builder_.add_password(password);
   builder_.add_account(account);
   return builder_.Finish();
@@ -153,13 +163,15 @@ inline ::flatbuffers::Offset<AuthReq> CreateAuthReq(
 inline ::flatbuffers::Offset<AuthReq> CreateAuthReqDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *account = nullptr,
-    const char *password = nullptr) {
+    const char *password = nullptr,
+    int32_t server_id = 0) {
   auto account__ = account ? _fbb.CreateString(account) : 0;
   auto password__ = password ? _fbb.CreateString(password) : 0;
   return GenericBoson::Zozo::CreateAuthReq(
       _fbb,
       account__,
-      password__);
+      password__,
+      server_id);
 }
 
 struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -239,22 +251,8 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAckDirect(
 
 struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerListReqBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_IP = 4,
-    VT_PORT = 6
-  };
-  const ::flatbuffers::String *ip() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IP);
-  }
-  const ::flatbuffers::String *port() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PORT);
-  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_IP) &&
-           verifier.VerifyString(ip()) &&
-           VerifyOffset(verifier, VT_PORT) &&
-           verifier.VerifyString(port()) &&
            verifier.EndTable();
   }
 };
@@ -263,12 +261,6 @@ struct ServerListReqBuilder {
   typedef ServerListReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_ip(::flatbuffers::Offset<::flatbuffers::String> ip) {
-    fbb_.AddOffset(ServerListReq::VT_IP, ip);
-  }
-  void add_port(::flatbuffers::Offset<::flatbuffers::String> port) {
-    fbb_.AddOffset(ServerListReq::VT_PORT, port);
-  }
   explicit ServerListReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -281,25 +273,9 @@ struct ServerListReqBuilder {
 };
 
 inline ::flatbuffers::Offset<ServerListReq> CreateServerListReq(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> ip = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> port = 0) {
+    ::flatbuffers::FlatBufferBuilder &_fbb) {
   ServerListReqBuilder builder_(_fbb);
-  builder_.add_port(port);
-  builder_.add_ip(ip);
   return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<ServerListReq> CreateServerListReqDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *ip = nullptr,
-    const char *port = nullptr) {
-  auto ip__ = ip ? _fbb.CreateString(ip) : 0;
-  auto port__ = port ? _fbb.CreateString(port) : 0;
-  return GenericBoson::Zozo::CreateServerListReq(
-      _fbb,
-      ip__,
-      port__);
 }
 
 struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

@@ -8,6 +8,7 @@ table AuthReq
 {
     account : string;
     password : string;
+    server_id : int;
 }
 
 table AuthAck
@@ -17,11 +18,7 @@ table AuthAck
     token : string;
 }
 
-table ServerListReq
-{
-    ip : string;
-    port : string;
-}
+table ServerListReq {}
 
 table ServerListAck
 {

@@ -20,26 +20,30 @@ public struct AuthAck : IFlatbufferObject
   public AuthAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
-  public string Token { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public long UserId { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  public string Token { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(8); }
 
   public static Offset<GenericBoson.Zozo.AuthAck> CreateAuthAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success,
+      long user_id = 0,
       StringOffset tokenOffset = default(StringOffset)) {
-    builder.StartTable(2);
+    builder.StartTable(3);
+    AuthAck.AddUserId(builder, user_id);
     AuthAck.AddToken(builder, tokenOffset);
     AuthAck.AddResultCode(builder, result_code);
     return AuthAck.EndAuthAck(builder);
   }
 
-  public static void StartAuthAck(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartAuthAck(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
-  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(1, tokenOffset.Value, 0); }
+  public static void AddUserId(FlatBufferBuilder builder, long userId) { builder.AddLong(1, userId, 0); }
+  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(2, tokenOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.AuthAck> EndAuthAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.AuthAck>(o);
@@ -53,7 +57,8 @@ static public class AuthAckVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
-      && verifier.VerifyString(tablePos, 6 /*Token*/, false)
+      && verifier.VerifyField(tablePos, 6 /*UserId*/, 8 /*long*/, 8, false)
+      && verifier.VerifyString(tablePos, 8 /*Token*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

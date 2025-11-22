@@ -24,8 +24,8 @@ public struct LobbyMessage : IFlatbufferObject
   public TTable? Payload<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
   public GenericBoson.Zozo.AuthReq PayloadAsAuthReq() { return Payload<GenericBoson.Zozo.AuthReq>().Value; }
   public GenericBoson.Zozo.AuthAck PayloadAsAuthAck() { return Payload<GenericBoson.Zozo.AuthAck>().Value; }
-  public GenericBoson.Zozo.LoginReq PayloadAsLoginReq() { return Payload<GenericBoson.Zozo.LoginReq>().Value; }
-  public GenericBoson.Zozo.LoginAck PayloadAsLoginAck() { return Payload<GenericBoson.Zozo.LoginAck>().Value; }
+  public GenericBoson.Zozo.ServerListReq PayloadAsServerListReq() { return Payload<GenericBoson.Zozo.ServerListReq>().Value; }
+  public GenericBoson.Zozo.ServerListAck PayloadAsServerListAck() { return Payload<GenericBoson.Zozo.ServerListAck>().Value; }
 
   public static Offset<GenericBoson.Zozo.LobbyMessage> CreateLobbyMessage(FlatBufferBuilder builder,
       GenericBoson.Zozo.LobbyPayload payload_type = GenericBoson.Zozo.LobbyPayload.NONE,
