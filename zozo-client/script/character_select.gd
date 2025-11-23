@@ -18,4 +18,4 @@ func _add_characters(characters: Array) -> void:
 
 func _on_ready() -> void:
 	dropDown.add_item("Choose your character")
-	Global.socket_manager.SendCharacterListReq(Global.account, Global.token)
+	Global.game_socket_manager.SendCharacterListReq(Global.account, Global.token)

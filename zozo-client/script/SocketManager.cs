@@ -7,11 +7,9 @@ using System.Diagnostics;
 
 namespace Zozo
 {
-    abstract public partial class SocketManager : Node
+    public partial class SocketManager
     {
-        abstract protected void ConsumePayload(ByteBuffer bb);
-
-        static private StreamPeerTcp m_stream = new();
+        static public StreamPeerTcp m_stream = new();
         static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
         static private Queue<byte[]> m_sendQueue = new();
 
@@ -28,18 +26,7 @@ namespace Zozo
             m_sendQueue.Enqueue(data);
         }
 
-        public override void _Process(double delta)
-        {
-            m_stream.Poll();
-            
-            if (!CheckConnect())
-                return;
-
-            SendAllMessage();
-            ReceiveMessage();
-        }
-
-        private bool CheckConnect()
+        public bool CheckConnect()
         {
             var status = m_stream.GetStatus();
 
@@ -65,7 +52,7 @@ namespace Zozo
             return true;
         }
 
-        private void SendAllMessage()
+        public void SendAllMessage()
         {
             while (m_sendQueue.TryDequeue(out var data))
             {
@@ -75,7 +62,7 @@ namespace Zozo
             }
         }
 
-        private void ReceiveMessage()
+        public void ReceiveMessage()
         {
             if (m_stream.GetAvailableBytes() <= 0)
                 return;
@@ -99,7 +86,7 @@ namespace Zozo
                 m_waitingHeader = true;
 
                 var bb = new ByteBuffer(buffer);
-                ConsumePayload();
+                ConsumePayload(bb);
             }
         }
 

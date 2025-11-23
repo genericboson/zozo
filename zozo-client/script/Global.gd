@@ -1,9 +1,11 @@
 extends Node
 
-var socket_manager = load("res://script/SocketManager.cs").new()
+var lobby_socket_manager = load("res://script/LobbySocketManager.cs").new()
+var game_socket_manager = load("res://script/GameSocketManager.cs").new()
 
 var account = ""
 var token = ""
+var user_id = 0
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()
