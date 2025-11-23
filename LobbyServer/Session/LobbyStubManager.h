@@ -11,14 +11,14 @@ namespace GenericBoson
 	class LobbyStubManager : public Singleton< LobbyStubManager >
 	{
 	public:
-		void AddLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub);
+		void AddRegisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub, int32_t serverId);
+		void AddUnregisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub);
 		auto GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
 			-> std::vector<flatbuffers::Offset<Zozo::ServerInfo>>;
 
 	private:
 		std::shared_mutex m_lock;
-
-	private:
-		std::unordered_map< int64_t, std::shared_ptr< LobbyStub > > m_lobbyStubs;
+		int64_t m_unregisteredCount = 0;
+		std::unordered_map< int64_t, std::shared_ptr< LobbyStub > > m_registeredStubs, m_unregisteredStubs;
 	};
 }

@@ -42,6 +42,9 @@ namespace GenericBoson
     {
         if (!m_pSocket->IsValid())
             return false;
+
+        LobbyStubManager::GetInstance()->AddUnregisteredLobbyStub(shared_from_this());
+
         return true;
     }
 
@@ -113,14 +116,13 @@ namespace GenericBoson
                     auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
                     fbb.Finish(msg);
 
-                    m_id     = serverId;
                     m_name   = dbInfo.server_name;
 
                     m_ip     = m_pSocket->GetRemoteIp();
                     m_port   = std::to_string( dbInfo.listen_port );
                     m_maxCCU = dbInfo.max_ccu;
 
-                    LobbyStubManager::GetInstance()->AddLobbyStub(shared_from_this());
+                    LobbyStubManager::GetInstance()->AddRegisteredLobbyStub(shared_from_this(), serverId);
 
                     INFO_LOG("GameServer ( server id - {} ) registered. "
                         "dpIp - {}, dbAccount - {}, dbPassword - {}, dbMainSchema - {}, serverName - {}, "

@@ -64,7 +64,16 @@ namespace GenericBoson
 		auto iniPath = std::format("{}.{}", (executablePath.parent_path() / executablePath.stem()).string(), "ini");
 
 		pt::ptree iniPt;
-		pt::ini_parser::read_ini(iniPath, iniPt);
+
+		try
+		{
+			pt::ini_parser::read_ini(iniPath, iniPt);
+		}
+		catch (const boost::exception& e)
+		{
+			ERROR_LOG("Exception occured in read ini. what - {}", boost::diagnostic_information(e));
+			return std::nullopt;
+		}
 		
 		return iniPt;
 	}
