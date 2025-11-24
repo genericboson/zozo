@@ -1,6 +1,7 @@
 using GenericBoson.Zozo;
 using Godot;
 using Google.FlatBuffers;
+using System;
 using System.Collections.Generic;
 using Zozo;
 
@@ -8,30 +9,12 @@ namespace Zozo
 {
     public partial class LobbySocketImpl : AbstractSocket
     {
-        static private StreamPeerTcp m_stream = new();
+        static public StreamPeerTcp m_stream = new();
         static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
         static private Queue<byte[]> m_sendQueue = new();
 
         static private int m_nextRecieveSize = 4;
         static private bool m_waitingHeader = true;
-
-        public override void ConsumePayload(ByteBuffer bb)
-        {
-            var lobbyMessage = LobbyMessage.GetRootAsLobbyMessage(bb);
-
-            switch (lobbyMessage.PayloadType)
-            {
-                case LobbyPayload.AuthAck:
-                    ReceiveAuthAck(lobbyMessage);
-                    break;
-                case LobbyPayload.ServerListAck:
-                    ReceiveServerListAck(lobbyMessage);
-                    break;
-                default:
-                    GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
-                    break;
-            }
-        }
 
         public override StreamPeerTcp.Status GetLastStatus()
         {

@@ -3,7 +3,7 @@ using Godot;
 
 namespace Zozo
 {
-    public partial class AbstractSocket : Node
+    public partial class LobbySocketManager : Node
     {
         public void ReceiveAuthAck(LobbyMessage lobbyMessage)
         {

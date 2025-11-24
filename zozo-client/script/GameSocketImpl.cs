@@ -8,27 +8,12 @@ namespace Zozo
 {
     public partial class GameSocketImpl : AbstractSocket
     {
-        static private StreamPeerTcp m_stream = new();
+        static public StreamPeerTcp m_stream = new();
         static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
         static private Queue<byte[]> m_sendQueue = new();
 
         static private int m_nextRecieveSize = 4;
         static private bool m_waitingHeader = true;
-
-        public override void ConsumePayload(ByteBuffer bb)
-        {
-            var gameMessage = GameMessage.GetRootAsGameMessage(bb);
-
-            switch (gameMessage.PayloadType)
-            {
-                case GamePayload.CharacterListAck:
-                    ReceiveCharacterListAck(gameMessage);
-                    break;
-                default:
-                    GD.PrintErr($"Unknown PayloadType: {gameMessage.PayloadType}");
-                    break;
-            }
-        }
 
         public override StreamPeerTcp.Status GetLastStatus()
         {

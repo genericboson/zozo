@@ -86,7 +86,7 @@ namespace GenericBoson
                 auto infosVector = fbb.CreateVector(infos);
 
                 auto ack = Zozo::CreateServerListAck(fbb, Zozo::ResultCode_Success, infosVector);
-                auto msg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload::LobbyPayload_AuthAck, ack.Union());
+                auto msg = Zozo::CreateLobbyMessage(fbb, Zozo::LobbyPayload::LobbyPayload_ServerListAck, ack.Union());
 
                 fbb.Finish(msg);
             }

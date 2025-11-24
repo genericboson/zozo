@@ -1,3 +1,4 @@
+using GenericBoson.Zozo;
 using Godot;
 
 namespace Zozo
@@ -14,7 +15,22 @@ namespace Zozo
                 return;
 
             m_lobbyImpl.SendAllMessage();
-            m_lobbyImpl.ReceiveMessage();
+            m_lobbyImpl.ReceiveMessage(bb => {
+                var lobbyMessage = LobbyMessage.GetRootAsLobbyMessage(bb);
+
+                switch (lobbyMessage.PayloadType)
+                {
+                    case LobbyPayload.AuthAck:
+                        ReceiveAuthAck(lobbyMessage);
+                        break;
+                    case LobbyPayload.ServerListAck:
+                        ReceiveServerListAck(lobbyMessage);
+                        break;
+                    default:
+                        GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
+                        break;
+                }
+            });
         }
     }
 }

@@ -1,3 +1,4 @@
+using GenericBoson.Zozo;
 using Godot;
 
 namespace Zozo
@@ -14,7 +15,20 @@ namespace Zozo
                 return;
 
             m_gameImpl.SendAllMessage();
-            m_gameImpl.ReceiveMessage();
+            m_gameImpl.ReceiveMessage(bb =>
+            {
+                var gameMessage = GameMessage.GetRootAsGameMessage(bb);
+
+                switch (gameMessage.PayloadType)
+                {
+                    case GamePayload.CharacterListAck:
+                        ReceiveCharacterListAck(gameMessage);
+                        break;
+                    default:
+                        GD.PrintErr($"Unknown PayloadType: {gameMessage.PayloadType}");
+                        break;
+                }
+            });
         }
     }
 }

@@ -19,8 +19,6 @@ namespace Zozo
         abstract public bool GetWaitingHeader();
         abstract public void SetWaitingHeader(bool isWaitingHeader);
 
-        abstract public void ConsumePayload(ByteBuffer bb);
-
         public AbstractSocket()
         {
             GetStream().SetNoDelay(true);
@@ -33,10 +31,16 @@ namespace Zozo
 
         public bool CheckConnect()
         {
-            var status = GetStream().GetStatus();
+            var startStatus = GetStream().GetStatus();
 
-            if (status == StreamPeerTcp.Status.Connected)
+            if (startStatus == StreamPeerTcp.Status.Connected)
+            {
+                if (GetLastStatus() != StreamPeerTcp.Status.Connected)
+                    GD.Print($"Connected");
+
+                SetLastStatus(startStatus);
                 return true;
+            }
 
             if (GetLastStatus() == StreamPeerTcp.Status.Connected)
             {
@@ -51,23 +55,30 @@ namespace Zozo
                 return false;
             }
 
-            GD.Print($"Connected");
-            SetLastStatus(status);
+            SetLastStatus(startStatus);
 
-            return true;
+            if (startStatus == StreamPeerTcp.Status.Connected)
+            {
+                GD.Print($"Connected");
+                return true;
+            }
+
+            return false;
         }
 
         public void SendAllMessage()
         {
             while (GetSendQueue().TryDequeue(out var data))
             {
+                var status = GetStream().GetStatus();
+                GD.Print($"Stream Status: {status}");
                 var err = GetStream().PutData(data);
                 if (err != Error.Ok)
                     GD.PrintErr($"PutData error: {err}");
             }
         }
 
-        public void ReceiveMessage()
+        public void ReceiveMessage(Action<ByteBuffer> callable)
         {
             if (GetStream().GetAvailableBytes() <= 0)
                 return;
@@ -91,7 +102,7 @@ namespace Zozo
                 SetWaitingHeader(true);
 
                 var bb = new ByteBuffer(buffer);
-                ConsumePayload(bb);
+               callable(bb);
             }
         }
 
