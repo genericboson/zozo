@@ -6,11 +6,11 @@ using System.Diagnostics;
 
 namespace Zozo
 {
-    public partial class SocketManager : Node
+    public partial class LobbySocketManager : Node
     {
         public void SendServerListReq()
         {
-            SendCommonLogic((FlatBufferBuilder fbb) =>
+            m_lobbyImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
                 ServerListReq.StartServerListReq(fbb);
                 var loginReq = ServerListReq.EndServerListReq(fbb);

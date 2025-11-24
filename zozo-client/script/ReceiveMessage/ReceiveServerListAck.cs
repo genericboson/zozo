@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Zozo
 {
-    public partial class SocketManager : Node
+    public partial class AbstractSocket : Node
     {
         public void ReceiveServerListAck(LobbyMessage gameMessage)
         {

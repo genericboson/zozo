@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://diusotvjg160h" path="res://art/lobby.bmp" id="1_ix0g6"]
 [ext_resource type="Script" uid="uid://cxcj24bm2rprq" path="res://script/Lobby.gd" id="1_qng6a"]
-[ext_resource type="Script" uid="uid://ck61pnj6g8b32" path="res://script/SocketManager.cs" id="3_tinju"]
+[ext_resource type="Script" uid="uid://druu25jgc1s8w" path="res://script/LobbySocketManager.cs" id="3_tinju"]
 
 [sub_resource type="SystemFont" id="SystemFont_ix0g6"]
 font_names = PackedStringArray("Comic Sans MS")

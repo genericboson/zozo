@@ -1,45 +1,50 @@
-using GenericBoson.Zozo;
 using Godot;
 using Google.FlatBuffers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace Zozo
 {
-    public partial class SocketManager
+    abstract public partial class AbstractSocket
     {
-        static public StreamPeerTcp m_stream = new();
-        static private StreamPeerTcp.Status m_lastStatus = StreamPeerTcp.Status.None;
-        static private Queue<byte[]> m_sendQueue = new();
+        abstract public StreamPeerTcp GetStream();
+        abstract public StreamPeerTcp.Status GetLastStatus();
+        abstract public void SetLastStatus(StreamPeerTcp.Status newStatus);
+        abstract public Queue<byte[]> GetSendQueue();
 
-        static private int m_nextRecieveSize = 4;
-        static private bool m_waitingHeader = true;
+        abstract public int GetNextReceiveSize();
+        abstract public void SetNextReceiveSize(int nextSize);
+        abstract public bool GetWaitingHeader();
+        abstract public void SetWaitingHeader(bool isWaitingHeader);
 
-        public SocketManager()
+        abstract public void ConsumePayload(ByteBuffer bb);
+
+        public AbstractSocket()
         {
-            m_stream.SetNoDelay(true);
+            GetStream().SetNoDelay(true);
         }
 
         public void EnqueueSend(byte[] data)
         {
-            m_sendQueue.Enqueue(data);
+            GetSendQueue().Enqueue(data);
         }
 
         public bool CheckConnect()
         {
-            var status = m_stream.GetStatus();
+            var status = GetStream().GetStatus();
 
             if (status == StreamPeerTcp.Status.Connected)
                 return true;
 
-            if (m_lastStatus == StreamPeerTcp.Status.Connected)
+            if (GetLastStatus() == StreamPeerTcp.Status.Connected)
             {
                 GD.Print($"Disconnected");
                 return false;
             }
 
-            var err = m_stream.ConnectToHost("127.0.0.1", 8002);
+            var err = GetStream().ConnectToHost("127.0.0.1", 8002);
             if (err != Error.Ok)
             {
                 GD.PrintErr($"ConnectToHost error: {err}");
@@ -47,16 +52,16 @@ namespace Zozo
             }
 
             GD.Print($"Connected");
-            m_lastStatus = status;
+            SetLastStatus(status);
 
             return true;
         }
 
         public void SendAllMessage()
         {
-            while (m_sendQueue.TryDequeue(out var data))
+            while (GetSendQueue().TryDequeue(out var data))
             {
-                var err = m_stream.PutData(data);
+                var err = GetStream().PutData(data);
                 if (err != Error.Ok)
                     GD.PrintErr($"PutData error: {err}");
             }
@@ -64,33 +69,33 @@ namespace Zozo
 
         public void ReceiveMessage()
         {
-            if (m_stream.GetAvailableBytes() <= 0)
+            if (GetStream().GetAvailableBytes() <= 0)
                 return;
 
             // Godot.StreamPeerTcp scatter and gather automatically
             // Checked from StreamPeerSocket::read in godot/core/io/stream__peer_socket.cpp
 
-            var received = m_stream.GetData(m_nextRecieveSize);
+            var received = GetStream().GetData(GetNextReceiveSize());
 
             var errorCode = (Godot.Error)received[0].AsInt32();
             var buffer = received[1].AsByteArray();
 
-            if (m_waitingHeader)
+            if (GetWaitingHeader())
             {
-                m_nextRecieveSize = System.BitConverter.ToInt32(buffer, 0);
-                m_waitingHeader = false;
+                SetNextReceiveSize(System.BitConverter.ToInt32(buffer, 0));
+                SetWaitingHeader(false);
             }
             else
             {
-                m_nextRecieveSize = 4;
-                m_waitingHeader = true;
+                SetNextReceiveSize(4);
+                SetWaitingHeader(true);
 
                 var bb = new ByteBuffer(buffer);
                 ConsumePayload(bb);
             }
         }
 
-        private void SendCommonLogic(Action<FlatBufferBuilder> callable)
+        public void SendCommonLogic(Action<FlatBufferBuilder> callable)
         {
             var fbb = new FlatBufferBuilder(1);
 

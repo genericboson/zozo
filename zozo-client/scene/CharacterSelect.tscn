@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dk6k8d5k51kea" path="res://art/character_select.png" id="1_lhj2g"]
 [ext_resource type="Script" uid="uid://b0f5s7hywv0fv" path="res://script/character_select.gd" id="1_qs5i6"]
-[ext_resource type="Script" uid="uid://ck61pnj6g8b32" path="res://script/SocketManager.cs" id="3_u3aol"]
+[ext_resource type="Script" uid="uid://ddcqije0detka" path="res://script/GameSocketManager.cs" id="3_u3aol"]
 
 [node name="CharacterSelect" type="Control"]
 layout_mode = 3

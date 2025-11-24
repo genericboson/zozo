@@ -1,30 +1,20 @@
-using GenericBoson.Zozo;
 using Godot;
-using Google.FlatBuffers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Zozo;
 
-namespace ZozoClient.script
+namespace Zozo
 {
-    public partial class GameSocketManager : SocketManager
+    public partial class GameSocketManager : Node
     {
-        protected override void ConsumePayload(ByteBuffer bb)
-        {
-            var lobbyMessage = GameMessage.GetRootAsGameMessage(bb);
+        private GameSocketImpl m_gameImpl = new();
 
-            switch (lobbyMessage.PayloadType)
-            {
-                case GamePayload.CharacterListAck:
-                    ReceiveCharacterListAck(lobbyMessage);
-                    break;
-                default:
-                    GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");
-                    break;
-            }
+        public override void _Process(double delta)
+        {
+            m_gameImpl.GetStream().Poll();
+
+            if (!m_gameImpl.CheckConnect())
+                return;
+
+            m_gameImpl.SendAllMessage();
+            m_gameImpl.ReceiveMessage();
         }
     }
 }

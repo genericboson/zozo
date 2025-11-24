@@ -6,11 +6,11 @@ using System.Diagnostics;
 
 namespace Zozo
 {
-    public partial class SocketManager : Node
+    public partial class LobbySocketManager : Node
     {
         public void SendAuthReq(string account, string password)
         {
-            SendCommonLogic((FlatBufferBuilder fbb) =>
+            m_lobbyImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
                 var accountStr = fbb.CreateString(account);
                 var passwordStr = fbb.CreateString(password);
