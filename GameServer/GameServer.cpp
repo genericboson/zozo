@@ -41,8 +41,6 @@ namespace GenericBoson
 
 		asio::co_spawn(m_ioContext, clientTask, asio::detached);
 
-		INFO_LOG("GameServer started ( port - {} )", m_listeningPort);
-
 		return true;
 	}
 

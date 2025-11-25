@@ -52,6 +52,8 @@ namespace GenericBoson
 				auto registerAck = message->payload_as_RegisterAck();
 				NULL_CO_RETURN(registerAck);
 
+				INFO_LOG("RegisterAck received");
+
 				NULL_CO_RETURN(registerAck->db_ip());
 				NULL_CO_RETURN(registerAck->db_acount());
 				NULL_CO_RETURN(registerAck->db_password());
@@ -71,7 +73,14 @@ namespace GenericBoson
 				m_server.m_name          = registerAck->server_name()->str();
 				m_server.m_listeningPort = registerAck->listen_port();
 
-				m_server.InitializeConnection();
+				if (co_await m_server.InitializeConnection())
+				{
+					INFO_LOG("GameServer started ( port - {} )", m_server.m_listeningPort);
+				}
+				else
+				{
+					WARN_LOG("GameServer failed ( port - {} )", m_server.m_listeningPort);
+				}
 			}
             break;
 		case LobbyGamePayload::LobbyGamePayload_RegisterReq:

@@ -78,22 +78,48 @@ namespace GenericBoson
 		return iniPt;
 	}
 
-	bool ServerBase::InitializeConnection()
+	asio::awaitable<bool> ServerBase::InitializeConnection()
 	{
-		try
-		{
-			m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(
-				m_ioContext,
-				boost::asio::ip::tcp::endpoint(
-					boost::asio::ip::tcp::v4(), m_listeningPort));
-		}
-		catch (const boost::exception& e)
-		{
-			ERROR_LOG("Exception occured in making acceptor. what - {}", boost::diagnostic_information(e));
-			return false;
-		}
+		m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(
+			m_ioContext,
+			boost::asio::ip::tcp::endpoint(
+				boost::asio::ip::tcp::v4(), m_listeningPort));
 
 		Accept();
+
+		INFO_LOG("Trying to connect DB ({}:{}) by ({}/{}). scheme : {}",
+			m_dbIp, m_dbPort, m_dbAccount, m_dbPassword, m_dbMainSchema);
+
+		m_pDbConn = std::make_unique<mysql::any_connection>(co_await asio::this_coro::executor);
+		auto [err] = co_await m_pDbConn->async_connect(GetDbParams(
+			m_dbIp,
+			m_dbPort,
+			m_dbAccount,
+			m_dbPassword,
+			m_dbMainSchema), asio::as_tuple);
+
+		if (err != boost::system::errc::success)
+		{
+			ERROR_LOG("DB connection failed. err - {}({})", err.value(), err.message());
+			co_return false;
+		}
+
+		INFO_LOG("DB connected");
+
+		co_return true;
+	}
+
+	bool ServerBase::AfterReadIni()
+	{
+		m_pAcceptor = std::make_unique<asio::ip::tcp::acceptor>(
+			m_ioContext,
+			boost::asio::ip::tcp::endpoint(
+				boost::asio::ip::tcp::v4(), m_listeningPort));
+
+		Accept();
+
+		INFO_LOG("Trying to connect DB ({}:{}) by ({}/{}). scheme : {}", 
+			m_dbIp, m_dbPort, m_dbAccount, m_dbPassword, m_dbMainSchema);
 
 		m_pDbConn = std::make_unique<mysql::any_connection>(m_ioContext);
 		auto [err] = m_pDbConn->async_connect(GetDbParams(
@@ -109,12 +135,9 @@ namespace GenericBoson
 			return false;
 		}
 
-		return true;
-	}
+		INFO_LOG("DB connected");
 
-	bool ServerBase::AfterReadIni()
-	{
-		return InitializeConnection();
+		return true;
 	}
 
 	bool ServerBase::Start()

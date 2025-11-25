@@ -43,7 +43,7 @@ namespace GenericBoson
 	protected:
 		virtual std::optional<pt::ptree> ReadIni();
 
-		bool InitializeConnection();
+		asio::awaitable<bool> InitializeConnection();
 
 	private:
 		static mysql::pool_params GetDbPoolParams(
