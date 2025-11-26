@@ -163,6 +163,11 @@ namespace GenericBoson
 
                             pLobbyStub->Write(stubFbb.GetBufferPointer(), stubFbb.GetSize());
                         }
+                        else
+                        {
+							WARN_LOG("No allowed server suggested by client ( serverId - {} )", serverId);
+                            resultCode = Zozo::ResultCode::ResultCode_NotAllowedServer;
+                        }
                     }
                     else
                     {

@@ -13,6 +13,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <unordered_map>
 
 #include <Engine/Macros.h>

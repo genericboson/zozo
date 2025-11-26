@@ -12,7 +12,7 @@ namespace GenericBoson
 	class TxExecutor
 	{
 	public:
-		EResultCode RunTx(const CacheTx& tx, CacheTxCallback&& callback);
+		EResultCode RunTx(CacheTxCallback&& callback);
 
 	private:
 		//boost::asio::execution_context* context;

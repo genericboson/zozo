@@ -12,6 +12,7 @@ namespace GenericBoson
 	class CacheTx
 	{
 	public:
+		static std::shared_ptr<CacheTx> Create();
 	private:
 		int32_t                      m_id;
 		CacheTxOption                m_option;

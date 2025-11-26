@@ -3,6 +3,7 @@
 #include <flatbuffers/flatbuffers.h>
 
 #include "LobbyProxy.h"
+#include "Character/CharacterManager.h"
 
 #include <MessageSchema/Internal/LobbyGame_generated.h>
 
@@ -97,7 +98,7 @@ namespace GenericBoson
 					relayReq->user_id(),
 					relayReq->token()->c_str());
 
-
+				CharacterManager::GetInstance()->Get()
 			}
 			break;
 		case LobbyGamePayload::LobbyGamePayload_AuthRelayAck:

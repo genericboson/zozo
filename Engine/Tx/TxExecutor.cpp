@@ -6,7 +6,7 @@
 
 namespace GenericBoson
 {
-    EResultCode TxExecutor::RunTx(const CacheTx& tx, CacheTxCallback&& callback)
+    EResultCode TxExecutor::RunTx(CacheTxCallback&& callback)
     {
         return EResultCode();
     }
