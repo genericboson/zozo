@@ -25,6 +25,12 @@ struct RegisterReqBuilder;
 struct RegisterAck;
 struct RegisterAckBuilder;
 
+struct AuthRelayReq;
+struct AuthRelayReqBuilder;
+
+struct AuthRelayAck;
+struct AuthRelayAckBuilder;
+
 struct LobbyGameMessage;
 struct LobbyGameMessageBuilder;
 
@@ -32,31 +38,37 @@ enum LobbyGamePayload : uint8_t {
   LobbyGamePayload_NONE = 0,
   LobbyGamePayload_RegisterReq = 1,
   LobbyGamePayload_RegisterAck = 2,
+  LobbyGamePayload_AuthRelayReq = 3,
+  LobbyGamePayload_AuthRelayAck = 4,
   LobbyGamePayload_MIN = LobbyGamePayload_NONE,
-  LobbyGamePayload_MAX = LobbyGamePayload_RegisterAck
+  LobbyGamePayload_MAX = LobbyGamePayload_AuthRelayAck
 };
 
-inline const LobbyGamePayload (&EnumValuesLobbyGamePayload())[3] {
+inline const LobbyGamePayload (&EnumValuesLobbyGamePayload())[5] {
   static const LobbyGamePayload values[] = {
     LobbyGamePayload_NONE,
     LobbyGamePayload_RegisterReq,
-    LobbyGamePayload_RegisterAck
+    LobbyGamePayload_RegisterAck,
+    LobbyGamePayload_AuthRelayReq,
+    LobbyGamePayload_AuthRelayAck
   };
   return values;
 }
 
 inline const char * const *EnumNamesLobbyGamePayload() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
     "NONE",
     "RegisterReq",
     "RegisterAck",
+    "AuthRelayReq",
+    "AuthRelayAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameLobbyGamePayload(LobbyGamePayload e) {
-  if (::flatbuffers::IsOutRange(e, LobbyGamePayload_NONE, LobbyGamePayload_RegisterAck)) return "";
+  if (::flatbuffers::IsOutRange(e, LobbyGamePayload_NONE, LobbyGamePayload_AuthRelayAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesLobbyGamePayload()[index];
 }
@@ -71,6 +83,14 @@ template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::RegisterReq> {
 
 template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::RegisterAck> {
   static const LobbyGamePayload enum_value = LobbyGamePayload_RegisterAck;
+};
+
+template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::AuthRelayReq> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_AuthRelayReq;
+};
+
+template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::AuthRelayAck> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_AuthRelayAck;
 };
 
 bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyGamePayload type);
@@ -260,6 +280,110 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
       listen_port);
 }
 
+struct AuthRelayReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthRelayReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_USER_ID = 4,
+    VT_TOKEN = 6
+  };
+  int32_t user_id() const {
+    return GetField<int32_t>(VT_USER_ID, 0);
+  }
+  const ::flatbuffers::String *token() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_USER_ID, 4) &&
+           VerifyOffset(verifier, VT_TOKEN) &&
+           verifier.VerifyString(token()) &&
+           verifier.EndTable();
+  }
+};
+
+struct AuthRelayReqBuilder {
+  typedef AuthRelayReq Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_user_id(int32_t user_id) {
+    fbb_.AddElement<int32_t>(AuthRelayReq::VT_USER_ID, user_id, 0);
+  }
+  void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
+    fbb_.AddOffset(AuthRelayReq::VT_TOKEN, token);
+  }
+  explicit AuthRelayReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<AuthRelayReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<AuthRelayReq>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<AuthRelayReq> CreateAuthRelayReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t user_id = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
+  AuthRelayReqBuilder builder_(_fbb);
+  builder_.add_token(token);
+  builder_.add_user_id(user_id);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<AuthRelayReq> CreateAuthRelayReqDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t user_id = 0,
+    const char *token = nullptr) {
+  auto token__ = token ? _fbb.CreateString(token) : 0;
+  return GenericBoson::Zozo::CreateAuthRelayReq(
+      _fbb,
+      user_id,
+      token__);
+}
+
+struct AuthRelayAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthRelayAckBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT_CODE = 4
+  };
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct AuthRelayAckBuilder {
+  typedef AuthRelayAck Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(AuthRelayAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  explicit AuthRelayAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<AuthRelayAck> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<AuthRelayAck>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<AuthRelayAck> CreateAuthRelayAck(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+  AuthRelayAckBuilder builder_(_fbb);
+  builder_.add_result_code(result_code);
+  return builder_.Finish();
+}
+
 struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LobbyGameMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -279,6 +403,12 @@ struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GenericBoson::Zozo::RegisterAck *payload_as_RegisterAck() const {
     return payload_type() == GenericBoson::Zozo::LobbyGamePayload_RegisterAck ? static_cast<const GenericBoson::Zozo::RegisterAck *>(payload()) : nullptr;
   }
+  const GenericBoson::Zozo::AuthRelayReq *payload_as_AuthRelayReq() const {
+    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_AuthRelayReq ? static_cast<const GenericBoson::Zozo::AuthRelayReq *>(payload()) : nullptr;
+  }
+  const GenericBoson::Zozo::AuthRelayAck *payload_as_AuthRelayAck() const {
+    return payload_type() == GenericBoson::Zozo::LobbyGamePayload_AuthRelayAck ? static_cast<const GenericBoson::Zozo::AuthRelayAck *>(payload()) : nullptr;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE, 1) &&
@@ -294,6 +424,14 @@ template<> inline const GenericBoson::Zozo::RegisterReq *LobbyGameMessage::paylo
 
 template<> inline const GenericBoson::Zozo::RegisterAck *LobbyGameMessage::payload_as<GenericBoson::Zozo::RegisterAck>() const {
   return payload_as_RegisterAck();
+}
+
+template<> inline const GenericBoson::Zozo::AuthRelayReq *LobbyGameMessage::payload_as<GenericBoson::Zozo::AuthRelayReq>() const {
+  return payload_as_AuthRelayReq();
+}
+
+template<> inline const GenericBoson::Zozo::AuthRelayAck *LobbyGameMessage::payload_as<GenericBoson::Zozo::AuthRelayAck>() const {
+  return payload_as_AuthRelayAck();
 }
 
 struct LobbyGameMessageBuilder {
@@ -338,6 +476,14 @@ inline bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void
     }
     case LobbyGamePayload_RegisterAck: {
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterAck *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case LobbyGamePayload_AuthRelayReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayReq *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case LobbyGamePayload_AuthRelayAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

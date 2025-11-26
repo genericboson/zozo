@@ -48,9 +48,9 @@ namespace GenericBoson
         return true;
     }
 
-    void LobbyStub::Write()
+    void LobbyStub::Write(const uint8_t* data, size_t size)
     {
-        //m_pSocket->EnqueueMessage();
+        m_pSocket->EnqueueMessage(data, size);
     }
 
     void LobbyStub::OnDisconnected()

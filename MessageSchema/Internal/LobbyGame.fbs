@@ -21,10 +21,23 @@ table RegisterAck
     listen_port    : int;
 }
 
+table AuthRelayReq
+{
+    user_id : int;
+    token : string;
+}
+
+table AuthRelayAck
+{
+    result_code : ResultCode;
+}
+
 union LobbyGamePayload
 {
     RegisterReq,
     RegisterAck,
+    AuthRelayReq,
+    AuthRelayAck,
 }
 
 table LobbyGameMessage
@@ -34,4 +47,6 @@ table LobbyGameMessage
 
 root_type RegisterReq;
 root_type RegisterAck;
+root_type AuthRelayReq;
+root_type AuthRelayAck;
 root_type LobbyGameMessage;

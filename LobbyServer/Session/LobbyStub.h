@@ -29,7 +29,7 @@ namespace GenericBoson
 		int64_t Id() const override;
 		bool Initialize() override;
 
-		void Write();
+		void Write(const uint8_t* data, size_t size);
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 	private:
 		void OnDisconnected() override;

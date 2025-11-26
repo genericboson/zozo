@@ -28,6 +28,18 @@ namespace GenericBoson
 		m_unregisteredStubs.erase(oldId);
 	}
 
+	auto LobbyStubManager::GetRegisteredLobbyStub(int32_t serverId)
+		-> std::shared_ptr<LobbyStub>
+	{
+		std::shared_lock<std::shared_mutex> lock(m_lock);
+
+		if (const auto found = m_registeredStubs.find(serverId);
+			found != m_registeredStubs.end())
+			return found->second;
+
+		return nullptr;
+	}
+
 	auto LobbyStubManager::GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
 		->  std::vector<flatbuffers::Offset<Zozo::ServerInfo>>
 	{

@@ -13,6 +13,9 @@ namespace GenericBoson
 	public:
 		void AddRegisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub, int32_t serverId);
 		void AddUnregisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub);
+
+		auto GetRegisteredLobbyStub(int32_t serverId)
+			-> std::shared_ptr<LobbyStub>;
 		auto GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
 			-> std::vector<flatbuffers::Offset<Zozo::ServerInfo>>;
 

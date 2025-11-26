@@ -90,6 +90,8 @@ namespace GenericBoson
 			break;
         default:
             {
+				ERROR_LOG("Invalid message sent to LobbyProxy. type - {}", 
+					EnumNameLobbyGamePayload(message->payload_type()));
             }
             break;
         }
