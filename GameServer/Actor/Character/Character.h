@@ -34,6 +34,8 @@ namespace GenericBoson
 		void OnAccepted() override;
 	private:
 		int64_t                   m_id;
+		std::string               m_token;
+
 		std::shared_ptr<ISocket>  m_pSocket;
 		std::weak_ptr<Zone>       m_wpZone;
 

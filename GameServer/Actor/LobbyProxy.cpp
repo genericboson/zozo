@@ -88,6 +88,23 @@ namespace GenericBoson
 				ERROR_LOG("Logic error");
 			}
 			break;
+		case LobbyGamePayload::LobbyGamePayload_AuthRelayReq:
+			{
+				auto relayReq = message->payload_as_AuthRelayReq();
+				NULL_CO_RETURN(relayReq);
+
+				INFO_LOG("AuthRelayReq received. UserId - {}, Token - {}",
+					relayReq->user_id(),
+					relayReq->token()->c_str());
+
+
+			}
+			break;
+		case LobbyGamePayload::LobbyGamePayload_AuthRelayAck:
+			{
+				ERROR_LOG("Logic error");
+			}
+			break;
         default:
             {
 				ERROR_LOG("Invalid message sent to LobbyProxy. type - {}", 
