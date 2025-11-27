@@ -42,9 +42,9 @@ namespace GenericBoson
 			co_return;
 
 		auto message = Zozo::GetLobbyGameMessage(pData);
-		NULL_CO_RETURN(message)
+		NULL_CO_RETURN(message);
 
-			flatbuffers::FlatBufferBuilder fbb;
+		flatbuffers::FlatBufferBuilder fbb;
 
 		switch (message->payload_type())
 		{
@@ -98,7 +98,13 @@ namespace GenericBoson
 					relayReq->user_id(),
 					relayReq->token()->c_str());
 
-				CharacterManager::GetInstance()->Get()
+				CharacterManager::GetInstance()->RegiterToken(
+					UserId{ relayReq->user_id() }, relayReq->token()->str());
+
+				auto ack = Zozo::CreateAuthRelayAck(fbb, Zozo::ResultCode_Success);
+				auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_AuthRelayAck, ack.Union());
+
+				fbb.Finish(msg);
 			}
 			break;
 		case LobbyGamePayload::LobbyGamePayload_AuthRelayAck:
@@ -113,5 +119,7 @@ namespace GenericBoson
             }
             break;
         }
+
+		m_server.m_pClient->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 	}
 }

@@ -15,10 +15,17 @@ namespace GenericBoson
 		void AddCharacter(std::shared_ptr< Character >&& pCharacter);
 
 		auto Get(CharacterId id) -> std::shared_ptr<Character>;
-		auto Get(UserId id) -> std::shared_ptr<Character>;
+		auto Get(UserId id) -> std::vector<std::shared_ptr<Character>>;
+
+		void RegiterToken(UserId userId, const std::string& token);
 
 	private:
+		auto _Get(CharacterId id) -> std::shared_ptr<Character>;
+
+	private:
+		std::shared_mutex m_lock;
 		std::unordered_map<CharacterId, std::shared_ptr<Character>> m_characters;
-		std::unordered_map<UserId, std::set<CharacterId>> m_userIdCharacterIds;
+		std::unordered_map<UserId, std::set<CharacterId>>           m_userIdCharacterIds;
+		std::unordered_map<UserId, std::string>                     m_tokens;
 	};
 }
