@@ -93,19 +93,18 @@ bool VerifyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuff
 struct CharacterListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterListReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ACCOUNT = 4,
+    VT_USER_ID = 4,
     VT_TOKEN = 6
   };
-  const ::flatbuffers::String *account() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ACCOUNT);
+  int64_t user_id() const {
+    return GetField<int64_t>(VT_USER_ID, 0);
   }
   const ::flatbuffers::String *token() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ACCOUNT) &&
-           verifier.VerifyString(account()) &&
+           VerifyField<int64_t>(verifier, VT_USER_ID, 8) &&
            VerifyOffset(verifier, VT_TOKEN) &&
            verifier.VerifyString(token()) &&
            verifier.EndTable();
@@ -116,8 +115,8 @@ struct CharacterListReqBuilder {
   typedef CharacterListReq Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_account(::flatbuffers::Offset<::flatbuffers::String> account) {
-    fbb_.AddOffset(CharacterListReq::VT_ACCOUNT, account);
+  void add_user_id(int64_t user_id) {
+    fbb_.AddElement<int64_t>(CharacterListReq::VT_USER_ID, user_id, 0);
   }
   void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
     fbb_.AddOffset(CharacterListReq::VT_TOKEN, token);
@@ -135,23 +134,22 @@ struct CharacterListReqBuilder {
 
 inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> account = 0,
+    int64_t user_id = 0,
     ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
   CharacterListReqBuilder builder_(_fbb);
+  builder_.add_user_id(user_id);
   builder_.add_token(token);
-  builder_.add_account(account);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReqDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *account = nullptr,
+    int64_t user_id = 0,
     const char *token = nullptr) {
-  auto account__ = account ? _fbb.CreateString(account) : 0;
   auto token__ = token ? _fbb.CreateString(token) : 0;
   return GenericBoson::Zozo::CreateCharacterListReq(
       _fbb,
-      account__,
+      user_id,
       token__);
 }
 

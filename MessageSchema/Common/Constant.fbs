@@ -9,4 +9,5 @@ enum ResultCode : uint
   LogicError       = 4,
   NoData           = 5,
   NotAllowedServer = 6,
+  InvalidToken     = 7,
 }

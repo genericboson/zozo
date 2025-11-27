@@ -44,6 +44,18 @@ namespace GenericBoson
 		m_tokens[userId] = token;
 	}
 
+	bool CharacterManager::IsValidUser(UserId userId, const std::string& token)
+	{
+		std::shared_lock<std::shared_mutex> lock{ m_lock };
+		if (const auto found = m_tokens.find(userId);
+			found != m_tokens.end())
+		{
+			if (found->second == token)
+				return true;
+		}
+		return false;
+	}
+
 	auto CharacterManager::_Get(CharacterId id) -> std::shared_ptr<Character>
 	{
 		if (const auto found = m_characters.find(id);

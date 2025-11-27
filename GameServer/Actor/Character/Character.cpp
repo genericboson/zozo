@@ -85,8 +85,16 @@ namespace GenericBoson
                 auto req = message->payload_as_CharacterListReq();
                 NULL_CO_RETURN(req);
 
-                const auto accountStr = req->account()->c_str();
-                const auto tokenStr   = req->token()->c_str();
+                const auto userId   = req->user_id();
+                const auto tokenStr = req->token()->c_str();
+
+                if (!CharacterManager::GetInstance()->IsValidUser(UserId{ userId }, tokenStr))
+                {
+                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidToken);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
+                    fbb.Finish(msg);
+					break;
+                }
 
                 INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
