@@ -8,13 +8,13 @@ namespace Zozo
 {
     public partial class LobbySocketManager : Node
     {
-        public void SendAuthReq(string account, string password)
+        public void SendAuthReq(int serverId, string account, string password)
         {
             m_lobbyImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
                 var accountStr = fbb.CreateString(account);
                 var passwordStr = fbb.CreateString(password);
-                var authReq = AuthReq.CreateAuthReq(fbb, accountStr, passwordStr);
+                var authReq = AuthReq.CreateAuthReq(fbb, accountStr, passwordStr, serverId);
                 var message = LobbyMessage.CreateLobbyMessage(fbb, LobbyPayload.AuthReq, authReq.Value);
                 fbb.Finish(message.Value);
             });

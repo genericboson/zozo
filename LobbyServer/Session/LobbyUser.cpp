@@ -136,8 +136,7 @@ namespace GenericBoson
                 }
 
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
-                auto tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
-
+                
                 int64_t userId{};
                 if (auto selectResults = result.rows<1>();
                     selectResults.size() == 0)
@@ -156,6 +155,7 @@ namespace GenericBoson
                         {
                             flatbuffers::FlatBufferBuilder stubFbb;
 
+                            auto tokenOffset = stubFbb.CreateString(tmpUuid);
                             auto req = Zozo::CreateAuthRelayReq(stubFbb, userId, tokenOffset);
 							auto msg = Zozo::CreateLobbyGameMessage(stubFbb, Zozo::LobbyGamePayload::LobbyGamePayload_AuthRelayReq, req.Union());
 
@@ -175,6 +175,7 @@ namespace GenericBoson
                     }
                 }
 
+                auto tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
                 auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
 

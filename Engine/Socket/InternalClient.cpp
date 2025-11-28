@@ -52,7 +52,8 @@ namespace GenericBoson
 							if (!pOwner->IsRunning())
 								break;
 
-							co_await m_pSocket->Write();
+							if (!co_await m_pSocket->Write())
+								break;
 						}
 					}, asio::detached);
 
@@ -68,7 +69,8 @@ namespace GenericBoson
 							if (!pOwner->IsRunning())
 								break;
 
-							co_await m_pSocket->Read();
+							if (!co_await m_pSocket->Read())
+								break;
 						}
 					}, asio::detached);
 			});

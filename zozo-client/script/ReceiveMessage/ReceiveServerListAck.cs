@@ -19,13 +19,14 @@ namespace Zozo
                 case ResultCode.Success:
                     using (var lobbyNode = GetNode<Node>("/root/Lobby"))
                     {
-                        var servers = new List<string>();
+                        var servers = new Godot.Collections.Dictionary<int,string>();
                         for (var i = 0; i < ack.ServerInfosLength; ++i)
                         {
-                            servers.Add(ack.ServerInfos(i).GetValueOrDefault().Name);
+                            var serverInfo = ack.ServerInfos(i).GetValueOrDefault();
+                            servers.Add(serverInfo.Id, serverInfo.Name);
                         }
 
-                        lobbyNode.Call("_add_servers", servers.ToArray());
+                        lobbyNode.Call("_add_servers", servers);
                     }
                     break;
                 default:
