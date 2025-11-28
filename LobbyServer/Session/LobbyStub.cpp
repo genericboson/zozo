@@ -73,8 +73,6 @@ namespace GenericBoson
         auto message = Zozo::GetLobbyGameMessage(pData);
         NULL_CO_RETURN(message);
 
-        flatbuffers::FlatBufferBuilder fbb;
-
         switch (message->payload_type())
         {
         case LobbyGamePayload::LobbyGamePayload_RegisterReq:
@@ -98,6 +96,8 @@ namespace GenericBoson
                     ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
                     co_return;
                 }
+
+                flatbuffers::FlatBufferBuilder fbb;
 
                 auto resultCode = Zozo::ResultCode_NoData;
                 if (result.rows().size() == 1)
@@ -131,6 +131,8 @@ namespace GenericBoson
                         dbInfo.db_main_schema, dbInfo.server_name, 
                         dbInfo.db_port, dbInfo.listen_port);
 
+                    m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+
                     break;
                 }
 
@@ -143,6 +145,8 @@ namespace GenericBoson
                 auto ack = Zozo::CreateRegisterAck(fbb, resultCode);
                 auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
                 fbb.Finish(msg);
+
+                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
         case LobbyGamePayload::LobbyGamePayload_RegisterAck:
@@ -157,7 +161,5 @@ namespace GenericBoson
             }
             co_return;
         }
-
-        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
     }
 }

@@ -76,8 +76,6 @@ namespace GenericBoson
         auto message = Zozo::GetGameMessage(pData);
         NULL_CO_RETURN(message);
 
-        flatbuffers::FlatBufferBuilder fbb;
-        
         switch (message->payload_type())
         {
         case GamePayload::GamePayload_CharacterListReq:
@@ -87,6 +85,8 @@ namespace GenericBoson
 
                 const auto userId   = req->user_id();
                 const auto tokenStr = req->token()->c_str();
+
+                flatbuffers::FlatBufferBuilder fbb;
 
                 if (!CharacterManager::GetInstance()->IsValidUser(UserId{ userId }, tokenStr))
                 {
@@ -131,6 +131,8 @@ namespace GenericBoson
                 const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
 
                 fbb.Finish(msg);
+
+                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
         case GamePayload::GamePayload_CharacterMoveReq:
             {
@@ -148,7 +150,5 @@ namespace GenericBoson
                 EnumNameGamePayload(message->payload_type()));
 			break;
         }
-
-        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
     }
 }

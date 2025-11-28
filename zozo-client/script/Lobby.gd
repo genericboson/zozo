@@ -10,6 +10,7 @@ func _ready() -> void:
 
 func _on_button_pressed() -> void:
 	Global.account = accountInput.text
+	print("start button pressed");
 	Global.lobby_socket_manager.SendAuthReq(accountInput.text,passwordInput.text)
 	
 func _on_setting_pressed() -> void:
