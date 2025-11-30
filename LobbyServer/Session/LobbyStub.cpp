@@ -149,6 +149,21 @@ namespace GenericBoson
                 m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
+        case LobbyGamePayload::LobbyGamePayload_AuthRelayAck:
+            {
+                auto ack = message->payload_as_AuthRelayAck();
+                NULL_CO_RETURN(ack);
+                if (ack->result_code() != Zozo::ResultCode_Success)
+                {
+                    ERROR_LOG("AuthRelayAck received with error code - {}({})",
+                        static_cast<int>(ack->result_code()),
+                        EnumNameResultCode(ack->result_code()));
+                    co_return;
+				}
+
+                INFO_LOG("AuthRelay succeeded");
+            }
+            break;
         case LobbyGamePayload::LobbyGamePayload_RegisterAck:
             {
                 ERROR_LOG("Logic error");
@@ -156,7 +171,7 @@ namespace GenericBoson
             break;
         default:
             {
-                WARN_LOG("Unhandled message ( payload_type - %s )",
+                WARN_LOG("Unhandled message ( payload_type - {} )",
                     EnumNameLobbyGamePayload(message->payload_type()));
             }
             co_return;

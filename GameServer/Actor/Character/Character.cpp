@@ -146,7 +146,7 @@ namespace GenericBoson
             }
             break;
         default:
-            WARN_LOG("Unhandled message ( payload_type - %s )", 
+            WARN_LOG("Unhandled message ( payload_type - {} )", 
                 EnumNameGamePayload(message->payload_type()));
 			break;
         }

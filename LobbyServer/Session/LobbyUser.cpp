@@ -184,7 +184,7 @@ namespace GenericBoson
             break;
         default:
             {
-                WARN_LOG("Unhandled message ( payload_type - %s )",
+                WARN_LOG("Unhandled message ( payload_type - {} )",
                     EnumNameLobbyPayload(message->payload_type()));
             }
             co_return;
