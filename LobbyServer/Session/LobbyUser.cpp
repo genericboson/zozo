@@ -151,19 +151,7 @@ namespace GenericBoson
                         resultCode = Zozo::ResultCode::ResultCode_Success;
                         userId = selectResult.id;
 
-                        if (const auto pLobbyStub = LobbyStubManager::GetInstance()->GetRegisteredLobbyStub(serverId))
-                        {
-                            flatbuffers::FlatBufferBuilder stubFbb;
-
-                            auto tokenOffset = stubFbb.CreateString(tmpUuid);
-                            auto req = Zozo::CreateAuthRelayReq(stubFbb, userId, tokenOffset);
-							auto msg = Zozo::CreateLobbyGameMessage(stubFbb, Zozo::LobbyGamePayload::LobbyGamePayload_AuthRelayReq, req.Union());
-
-							stubFbb.Finish(msg);
-
-                            pLobbyStub->Write(stubFbb.GetBufferPointer(), stubFbb.GetSize());
-                        }
-                        else
+						if (!LobbyStubManager::GetInstance()->SendAuthRelay(serverId, userId, tmpUuid))
                         {
 							WARN_LOG("No allowed server suggested by client ( serverId - {} )", serverId);
                             resultCode = Zozo::ResultCode::ResultCode_NotAllowedServer;
@@ -175,7 +163,11 @@ namespace GenericBoson
                     }
                 }
 
-                auto tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
+				flatbuffers::Offset<flatbuffers::String> tokenOffset = 0;
+                if (resultCode == Zozo::ResultCode::ResultCode_Success)
+                {
+                    tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
+                }
                 auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
 

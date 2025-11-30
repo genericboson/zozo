@@ -8,14 +8,14 @@ namespace GenericBoson
 	public:
 		static SUBJECT* GetInstance()
 		{
-			static std::mutex g_Lock;
+			static std::mutex g_lock;
 			static std::atomic<SUBJECT*> g_pInstance;
 
 			SUBJECT* pInstance = g_pInstance.load(std::memory_order_relaxed);
 			std::atomic_thread_fence(std::memory_order_acquire);
 			if (pInstance == nullptr)
 			{
-				std::lock_guard<std::mutex> lock(g_Lock);
+				std::lock_guard<std::mutex> lock(g_lock);
 				pInstance = g_pInstance.load(std::memory_order_relaxed);
 				if (pInstance == nullptr)
 				{

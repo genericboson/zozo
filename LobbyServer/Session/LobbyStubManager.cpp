@@ -6,6 +6,8 @@
 #include "LobbyStub.h"
 #include "LobbyStubManager.h"
 
+#include <MessageSchema/Internal/LobbyGame_generated.h>
+
 namespace GenericBoson
 {
 	void LobbyStubManager::AddUnregisteredLobbyStub(std::shared_ptr<LobbyStub>&& pLobbyStub)
@@ -28,16 +30,35 @@ namespace GenericBoson
 		m_unregisteredStubs.erase(oldId);
 	}
 
-	auto LobbyStubManager::GetRegisteredLobbyStub(int32_t serverId)
+	auto LobbyStubManager::_GetRegisteredLobbyStub(int32_t serverId)
 		-> std::shared_ptr<LobbyStub>
 	{
-		std::shared_lock<std::shared_mutex> lock(m_lock);
-
 		if (const auto found = m_registeredStubs.find(serverId);
 			found != m_registeredStubs.end())
 			return found->second;
 
 		return nullptr;
+	}
+
+	bool LobbyStubManager::SendAuthRelay(int32_t serverId, int64_t userId, const std::string& tmpUuid)
+	{
+		std::shared_lock<std::shared_mutex> lock(m_lock);
+
+		if (const auto pLobbyStub = LobbyStubManager::GetInstance()->_GetRegisteredLobbyStub(serverId))
+		{
+			flatbuffers::FlatBufferBuilder stubFbb;
+
+			auto tokenOffset = stubFbb.CreateString(tmpUuid);
+			auto req = Zozo::CreateAuthRelayReq(stubFbb, userId, tokenOffset);
+			auto msg = Zozo::CreateLobbyGameMessage(stubFbb, Zozo::LobbyGamePayload::LobbyGamePayload_AuthRelayReq, req.Union());
+
+			stubFbb.Finish(msg);
+
+			pLobbyStub->Write(stubFbb.GetBufferPointer(), stubFbb.GetSize());
+			return true;
+		}
+
+		return false;
 	}
 
 	auto LobbyStubManager::GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)

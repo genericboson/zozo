@@ -16,6 +16,8 @@ table AuthAck
     result_code : ResultCode;
     user_id : long;
     token : string;
+    ip : string;
+    port : int;
 }
 
 table ServerListReq {}

@@ -22,7 +22,7 @@ set_property(TARGET GAME_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 target_precompile_headers(GAME_SERVER PUBLIC PCH.h)
 
-target_compile_definitions(GAME_SERVER PRIVATE _UNICODE UNICODE)
+target_compile_definitions(GAME_SERVER PRIVATE _UNICODE UNICODE $<$<CONFIG:Debug>:DEBUG>)
 target_include_directories(GAME_SERVER PUBLIC 
 	${CMAKE_CURRENT_SOURCE_DIR} 
 	${CMAKE_CURRENT_SOURCE_DIR}/.. 

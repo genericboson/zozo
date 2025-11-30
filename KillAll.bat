@@ -5,5 +5,5 @@ rem -- Add VirtualTerminalLevel=1 as DWORD to HKEY_CURRENT_USER\Console
 
 path out\build\x64-debug\bin
 
-start LOBBY_SERVER.exe
-start GAME_SERVER.exe
+taskkill /f /im LOBBY_SERVER.exe
+taskkill /f /im GAME_SERVER.exe
