@@ -14,7 +14,8 @@ namespace GenericBoson
 		void AddRegisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub, int32_t serverId);
 		void AddUnregisteredLobbyStub(std::shared_ptr< LobbyStub >&& pLobbyStub);
 
-		bool SendAuthRelay(int32_t serverId, int64_t userId, const std::string& tmpUuid);
+		auto SendAuthRelay(int32_t serverId, int64_t userId, const std::string& tmpUuid)
+			-> std::optional<std::pair<std::string, std::string>>;
 
 		auto GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
 			-> std::vector<flatbuffers::Offset<Zozo::ServerInfo>>;

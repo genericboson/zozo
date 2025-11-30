@@ -179,7 +179,9 @@ struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_USER_ID = 6,
-    VT_TOKEN = 8
+    VT_TOKEN = 8,
+    VT_IP = 10,
+    VT_PORT = 12
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
@@ -190,12 +192,22 @@ struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *token() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TOKEN);
   }
+  const ::flatbuffers::String *ip() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IP);
+  }
+  const ::flatbuffers::String *port() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PORT);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            VerifyField<int64_t>(verifier, VT_USER_ID, 8) &&
            VerifyOffset(verifier, VT_TOKEN) &&
            verifier.VerifyString(token()) &&
+           VerifyOffset(verifier, VT_IP) &&
+           verifier.VerifyString(ip()) &&
+           VerifyOffset(verifier, VT_PORT) &&
+           verifier.VerifyString(port()) &&
            verifier.EndTable();
   }
 };
@@ -213,6 +225,12 @@ struct AuthAckBuilder {
   void add_token(::flatbuffers::Offset<::flatbuffers::String> token) {
     fbb_.AddOffset(AuthAck::VT_TOKEN, token);
   }
+  void add_ip(::flatbuffers::Offset<::flatbuffers::String> ip) {
+    fbb_.AddOffset(AuthAck::VT_IP, ip);
+  }
+  void add_port(::flatbuffers::Offset<::flatbuffers::String> port) {
+    fbb_.AddOffset(AuthAck::VT_PORT, port);
+  }
   explicit AuthAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -228,9 +246,13 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
     int64_t user_id = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> token = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> token = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ip = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> port = 0) {
   AuthAckBuilder builder_(_fbb);
   builder_.add_user_id(user_id);
+  builder_.add_port(port);
+  builder_.add_ip(ip);
   builder_.add_token(token);
   builder_.add_result_code(result_code);
   return builder_.Finish();
@@ -240,13 +262,19 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAckDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
     int64_t user_id = 0,
-    const char *token = nullptr) {
+    const char *token = nullptr,
+    const char *ip = nullptr,
+    const char *port = nullptr) {
   auto token__ = token ? _fbb.CreateString(token) : 0;
+  auto ip__ = ip ? _fbb.CreateString(ip) : 0;
+  auto port__ = port ? _fbb.CreateString(port) : 0;
   return GenericBoson::Zozo::CreateAuthAck(
       _fbb,
       result_code,
       user_id,
-      token__);
+      token__,
+      ip__,
+      port__);
 }
 
 struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

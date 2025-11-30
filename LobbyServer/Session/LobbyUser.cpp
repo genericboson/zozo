@@ -107,9 +107,9 @@ namespace GenericBoson
 
                 INFO_LOG("[AuthReq] new token : {}", tmpUuid);
 
-                const auto accountStr = authReq->account()->c_str();
+                const auto accountStr  = authReq->account()->c_str();
                 const auto passwordStr = authReq->password()->c_str();
-                const auto serverId = authReq->server_id();
+                const auto serverId    = authReq->server_id();
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
@@ -138,6 +138,7 @@ namespace GenericBoson
                 auto resultCode = Zozo::ResultCode::ResultCode_LogicError;
                 
                 int64_t userId{};
+                std::string gameIp, gamePort;
                 if (auto selectResults = result.rows<1>();
                     selectResults.size() == 0)
                 {
@@ -151,7 +152,13 @@ namespace GenericBoson
                         resultCode = Zozo::ResultCode::ResultCode_Success;
                         userId = selectResult.id;
 
-						if (!LobbyStubManager::GetInstance()->SendAuthRelay(serverId, userId, tmpUuid))
+                        if (const auto relayResult = LobbyStubManager::GetInstance()->SendAuthRelay(serverId, userId, tmpUuid))
+                        {
+                            std::tie(gameIp, gamePort) = *relayResult;
+                            INFO_LOG("Auth relay sent to server ( serverId - {}, userId - {} , ip - {}, port - {} )",
+								serverId, userId, gameIp, gamePort);
+                        }
+                        else
                         {
 							WARN_LOG("No allowed server suggested by client ( serverId - {} )", serverId);
                             resultCode = Zozo::ResultCode::ResultCode_NotAllowedServer;
@@ -163,12 +170,14 @@ namespace GenericBoson
                     }
                 }
 
-				flatbuffers::Offset<flatbuffers::String> tokenOffset = 0;
+				flatbuffers::Offset<flatbuffers::String> tokenOffset = 0, ipOffset = 0, portOffset = 0;
                 if (resultCode == Zozo::ResultCode::ResultCode_Success)
                 {
                     tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
+					ipOffset    = userFbb.CreateString(gameIp);
+					portOffset  = userFbb.CreateString(gamePort);
                 }
-                auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset);
+                auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset, ipOffset, portOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
 
                 userFbb.Finish(lobbyMsg);

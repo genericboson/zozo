@@ -40,7 +40,8 @@ namespace GenericBoson
 		return nullptr;
 	}
 
-	bool LobbyStubManager::SendAuthRelay(int32_t serverId, int64_t userId, const std::string& tmpUuid)
+	auto LobbyStubManager::SendAuthRelay(int32_t serverId, int64_t userId, const std::string& tmpUuid)
+		-> std::optional<std::pair<std::string, std::string>>
 	{
 		std::shared_lock<std::shared_mutex> lock(m_lock);
 
@@ -55,10 +56,10 @@ namespace GenericBoson
 			stubFbb.Finish(msg);
 
 			pLobbyStub->Write(stubFbb.GetBufferPointer(), stubFbb.GetSize());
-			return true;
+			return { { pLobbyStub->m_ip, pLobbyStub->m_port } };
 		}
 
-		return false;
+		return std::nullopt;
 	}
 
 	auto LobbyStubManager::GetServerInfos(flatbuffers::FlatBufferBuilder& fbb)
