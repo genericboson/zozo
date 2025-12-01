@@ -11,7 +11,7 @@ namespace Zozo
         {
             m_lobbyImpl.GetStream().Poll();
 
-            if (!m_lobbyImpl.CheckConnect())
+            if (!m_lobbyImpl.CheckConnect("127.0.0.1", "8002"))
                 return;
 
             m_lobbyImpl.SendAllMessage();

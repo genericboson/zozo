@@ -16,16 +16,6 @@ namespace Zozo
         static private int m_nextRecieveSize = 4;
         static private bool m_waitingHeader = true;
 
-        public override string GetIpString()
-        {
-            return "127.0.0.1";
-        }
-
-        public override int GetPort()
-        {
-            return 8002;
-        }
-
         public override StreamPeerTcp.Status GetLastStatus()
         {
             return m_lastStatus;

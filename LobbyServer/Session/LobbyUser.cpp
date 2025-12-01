@@ -171,7 +171,8 @@ namespace GenericBoson
                 }
 
 				flatbuffers::Offset<flatbuffers::String> tokenOffset = 0, ipOffset = 0, portOffset = 0;
-                if (resultCode == Zozo::ResultCode::ResultCode_Success)
+                if (resultCode == Zozo::ResultCode::ResultCode_Success || 
+                    resultCode == Zozo::ResultCode::ResultCode_NewAccount)
                 {
                     tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
 					ipOffset    = userFbb.CreateString(gameIp);

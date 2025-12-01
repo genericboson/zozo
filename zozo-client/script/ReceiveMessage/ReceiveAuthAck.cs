@@ -18,14 +18,24 @@ namespace Zozo
                 switch (ack.ResultCode)
                 {
                     case ResultCode.Success:
+                    case ResultCode.NewAccount:
                         {
                             globalNode.Set("token", ack.Token);
+                            globalNode.Set("gameServerIp", ack.Ip);
+                            globalNode.Set("gameServerPort", ack.Port);
+                        }
+                        break;
+                }
+
+                switch (ack.ResultCode)
+                {
+                    case ResultCode.Success:
+                        {
                             GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
                         }
                         break;
                     case ResultCode.NewAccount:
                         {
-                            globalNode.Set("token", ack.Token);
                             GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
                         }
                         break;

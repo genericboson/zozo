@@ -13,6 +13,8 @@ public enum ResultCode : uint
   NewAccount = 3,
   LogicError = 4,
   NoData = 5,
+  NotAllowedServer = 6,
+  InvalidToken = 7,
 };
 
 

@@ -28,22 +28,42 @@ public struct AuthAck : IFlatbufferObject
   public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(8); }
+  public string Ip { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIpBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetIpBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetIpArray() { return __p.__vector_as_array<byte>(10); }
+  public string Port { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPortBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetPortBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetPortArray() { return __p.__vector_as_array<byte>(12); }
 
   public static Offset<GenericBoson.Zozo.AuthAck> CreateAuthAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success,
       long user_id = 0,
-      StringOffset tokenOffset = default(StringOffset)) {
-    builder.StartTable(3);
+      StringOffset tokenOffset = default(StringOffset),
+      StringOffset ipOffset = default(StringOffset),
+      StringOffset portOffset = default(StringOffset)) {
+    builder.StartTable(5);
     AuthAck.AddUserId(builder, user_id);
+    AuthAck.AddPort(builder, portOffset);
+    AuthAck.AddIp(builder, ipOffset);
     AuthAck.AddToken(builder, tokenOffset);
     AuthAck.AddResultCode(builder, result_code);
     return AuthAck.EndAuthAck(builder);
   }
 
-  public static void StartAuthAck(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartAuthAck(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
   public static void AddUserId(FlatBufferBuilder builder, long userId) { builder.AddLong(1, userId, 0); }
   public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(2, tokenOffset.Value, 0); }
+  public static void AddIp(FlatBufferBuilder builder, StringOffset ipOffset) { builder.AddOffset(3, ipOffset.Value, 0); }
+  public static void AddPort(FlatBufferBuilder builder, StringOffset portOffset) { builder.AddOffset(4, portOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.AuthAck> EndAuthAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.AuthAck>(o);
@@ -59,6 +79,8 @@ static public class AuthAckVerify
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
       && verifier.VerifyField(tablePos, 6 /*UserId*/, 8 /*long*/, 8, false)
       && verifier.VerifyString(tablePos, 8 /*Token*/, false)
+      && verifier.VerifyString(tablePos, 10 /*Ip*/, false)
+      && verifier.VerifyString(tablePos, 12 /*Port*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

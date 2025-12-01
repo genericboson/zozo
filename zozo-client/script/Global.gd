@@ -6,6 +6,8 @@ var game_socket_manager = load("res://script/GameSocketManager.cs").new()
 var account = ""
 var token = ""
 var user_id = 0
+var gameServerIp = ""
+var gameServerPort = ""
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()

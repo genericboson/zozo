@@ -126,10 +126,10 @@ namespace GenericBoson
 
                     INFO_LOG("GameServer ( server id - {} ) registered. "
                         "dpIp - {}, dbAccount - {}, dbPassword - {}, dbMainSchema - {}, serverName - {}, "
-                        "db_port - {}, listen_port - {}",
+                        "db_port - {}, listen_port - {}, endpoint by asio : {}",
                         serverId, dbInfo.db_ip, dbInfo.db_account, dbInfo.db_password, 
                         dbInfo.db_main_schema, dbInfo.server_name, 
-                        dbInfo.db_port, dbInfo.listen_port);
+                        dbInfo.db_port, dbInfo.listen_port, m_ip);
 
                     m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 

@@ -19,9 +19,6 @@ namespace Zozo
         abstract public bool GetWaitingHeader();
         abstract public void SetWaitingHeader(bool isWaitingHeader);
 
-        abstract public string GetIpString();
-        abstract public int GetPort();
-
         public AbstractSocket()
         {
             GetStream().SetNoDelay(true);
@@ -32,7 +29,7 @@ namespace Zozo
             GetSendQueue().Enqueue(data);
         }
 
-        public bool CheckConnect()
+        public bool CheckConnect(string ipStr, string portStr)
         {
             var startStatus = GetStream().GetStatus();
 
@@ -52,7 +49,7 @@ namespace Zozo
                 return false;
             }
 
-            var err = GetStream().ConnectToHost(GetIpString(), GetPort());
+            var err = GetStream().ConnectToHost(ipStr, int.Parse(portStr));
             if (err != Error.Ok)
             {
                 GD.PrintErr($"ConnectToHost error: {err}");

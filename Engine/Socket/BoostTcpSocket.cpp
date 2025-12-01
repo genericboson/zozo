@@ -61,7 +61,7 @@ namespace GenericBoson
 
 	std::string BoostTcpSocket::GetRemoteIp()
 	{
-		return &m_socket.remote_endpoint().data()->sa_data[0];
+		return m_socket.remote_endpoint().address().to_string();
 	}
 
 	asio::awaitable<bool> BoostTcpSocket::Write()
