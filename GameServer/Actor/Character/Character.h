@@ -3,6 +3,8 @@
 #include <Engine/Tx/TxExecutor.h>
 #include <Engine/IActor.h>
 
+#include <MessageSchema/Common/CharacterInfo_generated.h>
+
 namespace GenericBoson
 {
 	class GameServer;
@@ -35,6 +37,8 @@ namespace GenericBoson
 	private:
 		int64_t                   m_id;
 		std::string               m_token;
+
+		Zozo::CharacterInfo 	  m_characterInfo;
 
 		std::shared_ptr<ISocket>  m_pSocket;
 		std::weak_ptr<Zone>       m_wpZone;

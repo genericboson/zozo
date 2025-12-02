@@ -20,26 +20,26 @@ public struct CharacterListAck : IFlatbufferObject
   public CharacterListAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
-  public string CharacterNames(int j) { int o = __p.__offset(6); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int CharacterNamesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public GenericBoson.Zozo.CharacterPairData? CharacterPairDatas(int j) { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.CharacterPairData?)(new GenericBoson.Zozo.CharacterPairData()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int CharacterPairDatasLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<GenericBoson.Zozo.CharacterListAck> CreateCharacterListAck(FlatBufferBuilder builder,
       GenericBoson.Zozo.ResultCode result_code = GenericBoson.Zozo.ResultCode.Success,
-      VectorOffset character_namesOffset = default(VectorOffset)) {
+      VectorOffset character_pair_datasOffset = default(VectorOffset)) {
     builder.StartTable(2);
-    CharacterListAck.AddCharacterNames(builder, character_namesOffset);
+    CharacterListAck.AddCharacterPairDatas(builder, character_pair_datasOffset);
     CharacterListAck.AddResultCode(builder, result_code);
     return CharacterListAck.EndCharacterListAck(builder);
   }
 
   public static void StartCharacterListAck(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
-  public static void AddCharacterNames(FlatBufferBuilder builder, VectorOffset characterNamesOffset) { builder.AddOffset(1, characterNamesOffset.Value, 0); }
-  public static VectorOffset CreateCharacterNamesVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCharacterNamesVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCharacterNamesVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCharacterNamesVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCharacterNamesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCharacterPairDatas(FlatBufferBuilder builder, VectorOffset characterPairDatasOffset) { builder.AddOffset(1, characterPairDatasOffset.Value, 0); }
+  public static VectorOffset CreateCharacterPairDatasVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterPairData>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCharacterPairDatasVectorBlock(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterPairData>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCharacterPairDatasVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.CharacterPairData>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCharacterPairDatasVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.CharacterPairData>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCharacterPairDatasVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<GenericBoson.Zozo.CharacterListAck> EndCharacterListAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterListAck>(o);
@@ -53,7 +53,7 @@ static public class CharacterListAckVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 6 /*CharacterNames*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 6 /*CharacterPairDatas*/, GenericBoson.Zozo.CharacterPairDataVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

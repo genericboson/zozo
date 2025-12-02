@@ -10,11 +10,12 @@ func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/Lobby.tscn")
 
 func _on_select_button_pressed() -> void:
-	pass # Replace with function body.
+	var selectedCharacterId = dropDown.get_selected_id()
+	GDGlobal.game_socket_manager.SendCharacterSelectReq(selectedCharacterId, Global.token)
 	
-func _add_characters(characters: Array) -> void:
-	for character in characters:
-		dropDown.add_item(character)
+func _add_characters(characters: Dictionary[int,String]) -> void:
+	for key in characters:
+		dropDown.add_item(characters[key], key)
 
 func _on_ready() -> void:
 	dropDown.add_item("Choose your character")

@@ -10,13 +10,29 @@ table CharacterListReq
     token : string;
 }
 
+table CharacterPairData
+{
+    id : long;
+    name : string;
+}
+
 table CharacterListAck
 {
     result_code : ResultCode;
-    character_names : [string];
+    
+    character_pair_datas : [CharacterPairData];
 }
-table CharacterSpawnReq
+
+table CharacterSelectReq
 {
+    id : long;
+    token : string;
+}
+
+table CharacterSelectAck
+{
+    result_code : ResultCode;
+    
     data : CharacterInfo;
     pos : CharacterPositionUpdateReq;
 }
@@ -25,6 +41,8 @@ union GamePayload
 {
     CharacterListReq,
     CharacterListAck,
+    CharacterSelectReq,
+    CharacterSelectAck,
     CharacterPositionUpdateReq,
     CharacterPositionUpdateAck,
 }
@@ -34,6 +52,8 @@ table GameMessage
     payload:GamePayload;
 }
 
+root_type CharacterSelectReq;
+root_type CharacterSelectAck;
 root_type CharacterListReq;
 root_type CharacterListAck;
 root_type GameMessage;

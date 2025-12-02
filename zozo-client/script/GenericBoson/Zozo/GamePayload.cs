@@ -10,8 +10,10 @@ public enum GamePayload : byte
   NONE = 0,
   CharacterListReq = 1,
   CharacterListAck = 2,
-  CharacterPositionUpdateReq = 3,
-  CharacterPositionUpdateAck = 4,
+  CharacterSelectReq = 3,
+  CharacterSelectAck = 4,
+  CharacterPositionUpdateReq = 5,
+  CharacterPositionUpdateAck = 6,
 };
 
 
@@ -28,6 +30,12 @@ static public class GamePayloadVerify
         break;
       case GamePayload.CharacterListAck:
         result = GenericBoson.Zozo.CharacterListAckVerify.Verify(verifier, tablePos);
+        break;
+      case GamePayload.CharacterSelectReq:
+        result = GenericBoson.Zozo.CharacterSelectReqVerify.Verify(verifier, tablePos);
+        break;
+      case GamePayload.CharacterSelectAck:
+        result = GenericBoson.Zozo.CharacterSelectAckVerify.Verify(verifier, tablePos);
         break;
       case GamePayload.CharacterPositionUpdateReq:
         result = GenericBoson.Zozo.CharacterPositionUpdateReqVerify.Verify(verifier, tablePos);

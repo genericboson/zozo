@@ -19,13 +19,14 @@ namespace Zozo
                 case ResultCode.Success:
                     using (var selectNode = GetNode<Node>("/root/CharacterSelect"))
                     {
-                        var characters = new List<string>();
-                        for (var i = 0; i < ack.CharacterNamesLength; ++i)
+                        var characters = new Godot.Collections.Dictionary<long, string>();
+                        for (var i = 0; i < ack.CharacterPairDatasLength; ++i)
                         {
-                            characters.Add(ack.CharacterNames(i));
+                            var pairData = ack.CharacterPairDatas(i).GetValueOrDefault();
+                            characters.Add(pairData.Id, pairData.Name);
                         }
 
-                        selectNode.Call("_add_characters", characters.ToArray());
+                        selectNode.Call("_add_characters", characters);
                     }
                     break;
                 default:

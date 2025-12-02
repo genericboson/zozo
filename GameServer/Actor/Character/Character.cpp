@@ -116,19 +116,21 @@ namespace GenericBoson
 
                 auto selectResults = result.rows<0>();
 
-                std::vector<flatbuffers::Offset<flatbuffers::String>> names;
+                std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
                 for (auto& selectResult : selectResults)
                 {
                     auto name = fbb.CreateString(std::format("{} [Lv.{}]",
                         selectResult.name.value_or(""),
                         selectResult.level.value_or(0)));
-                    names.emplace_back(std::move(name));
+
+                    auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
+                    pairDatas.emplace_back(std::move(characterDataPair));
                 }
 
-                const auto namesOffset = fbb.CreateVector(names);
+                const auto pairDatasOffset = fbb.CreateVector(pairDatas);
 
-                const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, namesOffset);
+                const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
                 const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
 
                 fbb.Finish(msg);
@@ -136,13 +138,28 @@ namespace GenericBoson
                 m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
-        case GamePayload::GamePayload_CharacterMoveReq:
+        case GamePayload::GamePayload_CharacterSelectReq:
             {
-			    auto moveReq = message->payload_as_CharacterMoveReq();
+                auto selectReq = message->payload_as_CharacterSelectReq();
+				NULL_CO_RETURN(selectReq);
+
+				flatbuffers::FlatBufferBuilder fbb;
+
+                //auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success,  )
+            }
+            break;
+        case GamePayload::GamePayload_CharacterSelectAck:
+            {
+                ERROR_LOG("Logic error");
+            }
+            break;
+        case GamePayload::GamePayload_CharacterPositionUpdateReq:
+            {
+			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
                 INFO_LOG("CharacterPos:{},{}", moveReq->x(), moveReq->y());
             }
             break;
-        case GamePayload::GamePayload_CharacterMoveAck:
+        case GamePayload::GamePayload_CharacterPositionUpdateAck:
             {
 			    ERROR_LOG("Logic error");
             }

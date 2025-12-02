@@ -7,6 +7,8 @@ public partial class CSGlobal : Node
 
     public CharacterInfo characterData = new();
 
+    public string testString = "Hello from CSGlobal";
+
     public override void _Ready()
     {
         Instance = this;
