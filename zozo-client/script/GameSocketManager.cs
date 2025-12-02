@@ -23,8 +23,8 @@ namespace Zozo
                     return;
                 }
 
-                m_gameServerIp = globalNode.Get("gameServerIp").AsString();
-                m_gameServerPort = globalNode.Get("gameServerPort").AsString();
+                m_gameServerIp = globalNode.Get("game_server_ip").AsString();
+                m_gameServerPort = globalNode.Get("game_server_port").AsString();
 
                 GD.Print($"Game Server IP: {m_gameServerIp}, Port: {m_gameServerPort}");
             }

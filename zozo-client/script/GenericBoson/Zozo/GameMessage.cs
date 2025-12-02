@@ -24,8 +24,8 @@ public struct GameMessage : IFlatbufferObject
   public TTable? Payload<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
   public GenericBoson.Zozo.CharacterListReq PayloadAsCharacterListReq() { return Payload<GenericBoson.Zozo.CharacterListReq>().Value; }
   public GenericBoson.Zozo.CharacterListAck PayloadAsCharacterListAck() { return Payload<GenericBoson.Zozo.CharacterListAck>().Value; }
-  public GenericBoson.Zozo.CharacterMoveReq PayloadAsCharacterMoveReq() { return Payload<GenericBoson.Zozo.CharacterMoveReq>().Value; }
-  public GenericBoson.Zozo.CharacterMoveAck PayloadAsCharacterMoveAck() { return Payload<GenericBoson.Zozo.CharacterMoveAck>().Value; }
+  public GenericBoson.Zozo.CharacterPositionUpdateReq PayloadAsCharacterPositionUpdateReq() { return Payload<GenericBoson.Zozo.CharacterPositionUpdateReq>().Value; }
+  public GenericBoson.Zozo.CharacterPositionUpdateAck PayloadAsCharacterPositionUpdateAck() { return Payload<GenericBoson.Zozo.CharacterPositionUpdateAck>().Value; }
 
   public static Offset<GenericBoson.Zozo.GameMessage> CreateGameMessage(FlatBufferBuilder builder,
       GenericBoson.Zozo.GamePayload payload_type = GenericBoson.Zozo.GamePayload.NONE,

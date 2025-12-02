@@ -1,0 +1,17 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+table CharacterPositionUpdateReq
+{
+    x: float;
+    y: float;
+}
+
+table CharacterPositionUpdateAck
+{
+    result_code: ResultCode;
+}
+
+root_type CharacterPositionUpdateReq;
+root_type CharacterPositionUpdateAck;

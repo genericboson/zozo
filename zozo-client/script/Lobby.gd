@@ -6,15 +6,15 @@ extends Control
 
 func _ready() -> void:
 	serverSelect.add_item("Choose server")
-	Global.lobby_socket_manager.SendServerListReq()
+	GDGlobal.lobby_socket_manager.SendServerListReq()
 
 func _on_button_pressed() -> void:
-	Global.account = accountInput.text
+	GDGlobal.account = accountInput.text
 	print("start button pressed");
-	Global.lobby_socket_manager.SendAuthReq(serverSelect.get_selected_id(),accountInput.text,passwordInput.text)
+	GDGlobal.lobby_socket_manager.SendAuthReq(serverSelect.get_selected_id(),accountInput.text,passwordInput.text)
 	
 func _on_setting_pressed() -> void:
-	Global.message_box("개발 예정...")
+	GDGlobal.message_box("개발 예정...")
 	
 func _add_password():
 	print("signaled")

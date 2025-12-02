@@ -13,8 +13,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 10,
              "Non-compatible flatbuffers version included");
 
+#include "CharacterInfo_generated.h"
 #include "Constant_generated.h"
-#include "CharacterMove_generated.h"
+#include "CharacterPositionUpdate_generated.h"
 
 namespace GenericBoson {
 namespace Zozo {
@@ -25,6 +26,9 @@ struct CharacterListReqBuilder;
 struct CharacterListAck;
 struct CharacterListAckBuilder;
 
+struct CharacterSpawnReq;
+struct CharacterSpawnReqBuilder;
+
 struct GameMessage;
 struct GameMessageBuilder;
 
@@ -32,10 +36,10 @@ enum GamePayload : uint8_t {
   GamePayload_NONE = 0,
   GamePayload_CharacterListReq = 1,
   GamePayload_CharacterListAck = 2,
-  GamePayload_CharacterMoveReq = 3,
-  GamePayload_CharacterMoveAck = 4,
+  GamePayload_CharacterPositionUpdateReq = 3,
+  GamePayload_CharacterPositionUpdateAck = 4,
   GamePayload_MIN = GamePayload_NONE,
-  GamePayload_MAX = GamePayload_CharacterMoveAck
+  GamePayload_MAX = GamePayload_CharacterPositionUpdateAck
 };
 
 inline const GamePayload (&EnumValuesGamePayload())[5] {
@@ -43,8 +47,8 @@ inline const GamePayload (&EnumValuesGamePayload())[5] {
     GamePayload_NONE,
     GamePayload_CharacterListReq,
     GamePayload_CharacterListAck,
-    GamePayload_CharacterMoveReq,
-    GamePayload_CharacterMoveAck
+    GamePayload_CharacterPositionUpdateReq,
+    GamePayload_CharacterPositionUpdateAck
   };
   return values;
 }
@@ -54,15 +58,15 @@ inline const char * const *EnumNamesGamePayload() {
     "NONE",
     "CharacterListReq",
     "CharacterListAck",
-    "CharacterMoveReq",
-    "CharacterMoveAck",
+    "CharacterPositionUpdateReq",
+    "CharacterPositionUpdateAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameGamePayload(GamePayload e) {
-  if (::flatbuffers::IsOutRange(e, GamePayload_NONE, GamePayload_CharacterMoveAck)) return "";
+  if (::flatbuffers::IsOutRange(e, GamePayload_NONE, GamePayload_CharacterPositionUpdateAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesGamePayload()[index];
 }
@@ -79,12 +83,12 @@ template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterListAck> {
   static const GamePayload enum_value = GamePayload_CharacterListAck;
 };
 
-template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterMoveReq> {
-  static const GamePayload enum_value = GamePayload_CharacterMoveReq;
+template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterPositionUpdateReq> {
+  static const GamePayload enum_value = GamePayload_CharacterPositionUpdateReq;
 };
 
-template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterMoveAck> {
-  static const GamePayload enum_value = GamePayload_CharacterMoveAck;
+template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterPositionUpdateAck> {
+  static const GamePayload enum_value = GamePayload_CharacterPositionUpdateAck;
 };
 
 bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, GamePayload type);
@@ -217,6 +221,59 @@ inline ::flatbuffers::Offset<CharacterListAck> CreateCharacterListAckDirect(
       character_names__);
 }
 
+struct CharacterSpawnReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterSpawnReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DATA = 4,
+    VT_POS = 6
+  };
+  const GenericBoson::Zozo::CharacterInfo *data() const {
+    return GetPointer<const GenericBoson::Zozo::CharacterInfo *>(VT_DATA);
+  }
+  const GenericBoson::Zozo::CharacterPositionUpdateReq *pos() const {
+    return GetPointer<const GenericBoson::Zozo::CharacterPositionUpdateReq *>(VT_POS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyTable(data()) &&
+           VerifyOffset(verifier, VT_POS) &&
+           verifier.VerifyTable(pos()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CharacterSpawnReqBuilder {
+  typedef CharacterSpawnReq Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_data(::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo> data) {
+    fbb_.AddOffset(CharacterSpawnReq::VT_DATA, data);
+  }
+  void add_pos(::flatbuffers::Offset<GenericBoson::Zozo::CharacterPositionUpdateReq> pos) {
+    fbb_.AddOffset(CharacterSpawnReq::VT_POS, pos);
+  }
+  explicit CharacterSpawnReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CharacterSpawnReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CharacterSpawnReq>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CharacterSpawnReq> CreateCharacterSpawnReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo> data = 0,
+    ::flatbuffers::Offset<GenericBoson::Zozo::CharacterPositionUpdateReq> pos = 0) {
+  CharacterSpawnReqBuilder builder_(_fbb);
+  builder_.add_pos(pos);
+  builder_.add_data(data);
+  return builder_.Finish();
+}
+
 struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GameMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -236,11 +293,11 @@ struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GenericBoson::Zozo::CharacterListAck *payload_as_CharacterListAck() const {
     return payload_type() == GenericBoson::Zozo::GamePayload_CharacterListAck ? static_cast<const GenericBoson::Zozo::CharacterListAck *>(payload()) : nullptr;
   }
-  const GenericBoson::Zozo::CharacterMoveReq *payload_as_CharacterMoveReq() const {
-    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterMoveReq ? static_cast<const GenericBoson::Zozo::CharacterMoveReq *>(payload()) : nullptr;
+  const GenericBoson::Zozo::CharacterPositionUpdateReq *payload_as_CharacterPositionUpdateReq() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterPositionUpdateReq ? static_cast<const GenericBoson::Zozo::CharacterPositionUpdateReq *>(payload()) : nullptr;
   }
-  const GenericBoson::Zozo::CharacterMoveAck *payload_as_CharacterMoveAck() const {
-    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterMoveAck ? static_cast<const GenericBoson::Zozo::CharacterMoveAck *>(payload()) : nullptr;
+  const GenericBoson::Zozo::CharacterPositionUpdateAck *payload_as_CharacterPositionUpdateAck() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_CharacterPositionUpdateAck ? static_cast<const GenericBoson::Zozo::CharacterPositionUpdateAck *>(payload()) : nullptr;
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -259,12 +316,12 @@ template<> inline const GenericBoson::Zozo::CharacterListAck *GameMessage::paylo
   return payload_as_CharacterListAck();
 }
 
-template<> inline const GenericBoson::Zozo::CharacterMoveReq *GameMessage::payload_as<GenericBoson::Zozo::CharacterMoveReq>() const {
-  return payload_as_CharacterMoveReq();
+template<> inline const GenericBoson::Zozo::CharacterPositionUpdateReq *GameMessage::payload_as<GenericBoson::Zozo::CharacterPositionUpdateReq>() const {
+  return payload_as_CharacterPositionUpdateReq();
 }
 
-template<> inline const GenericBoson::Zozo::CharacterMoveAck *GameMessage::payload_as<GenericBoson::Zozo::CharacterMoveAck>() const {
-  return payload_as_CharacterMoveAck();
+template<> inline const GenericBoson::Zozo::CharacterPositionUpdateAck *GameMessage::payload_as<GenericBoson::Zozo::CharacterPositionUpdateAck>() const {
+  return payload_as_CharacterPositionUpdateAck();
 }
 
 struct GameMessageBuilder {
@@ -311,12 +368,12 @@ inline bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case GamePayload_CharacterMoveReq: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterMoveReq *>(obj);
+    case GamePayload_CharacterPositionUpdateReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateReq *>(obj);
       return verifier.VerifyTable(ptr);
     }
-    case GamePayload_CharacterMoveAck: {
-      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterMoveAck *>(obj);
+    case GamePayload_CharacterPositionUpdateAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

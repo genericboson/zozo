@@ -21,8 +21,9 @@ namespace Zozo
                     case ResultCode.NewAccount:
                         {
                             globalNode.Set("token", ack.Token);
-                            globalNode.Set("gameServerIp", ack.Ip);
-                            globalNode.Set("gameServerPort", ack.Port);
+                            globalNode.Set("user_id", ack.UserId);
+                            globalNode.Set("game_server_ip", ack.Ip);
+                            globalNode.Set("game_server_port", ack.Port);
                         }
                         break;
                 }

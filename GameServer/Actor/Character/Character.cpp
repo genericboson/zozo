@@ -90,6 +90,7 @@ namespace GenericBoson
 
                 if (!CharacterManager::GetInstance()->IsValidUser(UserId{ userId }, tokenStr))
                 {
+                    WARN_LOG("[Invalid CharacterListReq]  token : {}, user id : {}", tokenStr, userId);
                     const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidToken);
                     const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
                     fbb.Finish(msg);
@@ -99,8 +100,8 @@ namespace GenericBoson
                 INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
                 auto queryStr = mysql::with_params(
-                    "SELECT id, name, level FROM {}.character WHERE user_id = {}",
-                    pServer->m_dbMainSchema);
+                    "SELECT id, name, level FROM zozo_game.character WHERE user_id = {};",
+                    userId);
 
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
                 if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
@@ -134,6 +135,7 @@ namespace GenericBoson
 
                 m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
+            break;
         case GamePayload::GamePayload_CharacterMoveReq:
             {
 			    auto moveReq = message->payload_as_CharacterMoveReq();

@@ -42,7 +42,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _AfterMove(x:float, y:float) ->void:
-	Global.socket_manager.SendCharacterMove(position.x, position.y)
+	GDGlobal.socket_manager.SendCharacterMove(position.x, position.y)
 	
 	#region for debug position
 	#var formatStr = "pos:[%f,%f]"

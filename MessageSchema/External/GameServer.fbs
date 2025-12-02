@@ -1,5 +1,6 @@
 include "Constant.fbs";
-include "CharacterMove.fbs";
+include "CharacterInfo.fbs";
+include "CharacterPositionUpdate.fbs";
 
 namespace GenericBoson.Zozo;
 
@@ -14,13 +15,18 @@ table CharacterListAck
     result_code : ResultCode;
     character_names : [string];
 }
+table CharacterSpawnReq
+{
+    data : CharacterInfo;
+    pos : CharacterPositionUpdateReq;
+}
 
 union GamePayload
 {
     CharacterListReq,
     CharacterListAck,
-    CharacterMoveReq,
-    CharacterMoveAck,
+    CharacterPositionUpdateReq,
+    CharacterPositionUpdateAck,
 }
 
 table GameMessage

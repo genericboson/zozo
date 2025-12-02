@@ -2,7 +2,6 @@ using GenericBoson.Zozo;
 using Godot;
 using Google.FlatBuffers;
 using System.Collections.Generic;
-using Godot;
 using Zozo;
 
 namespace Zozo

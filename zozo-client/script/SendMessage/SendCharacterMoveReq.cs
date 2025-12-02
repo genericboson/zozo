@@ -13,7 +13,7 @@ namespace Zozo
             m_gameImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
                 var characterMoveReq = CharacterMoveReq.CreateCharacterMoveReq(fbb, x, y);
-                var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterMoveReq, characterMoveReq.Value);
+                var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterPositionUpdateReq, characterMoveReq.Value);
                 fbb.Finish(message.Value);
             });
         }
