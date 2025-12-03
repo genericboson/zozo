@@ -20,8 +20,20 @@ namespace Zozo {
 
 struct ServerInfo;
 struct ServerInfoBuilder;
+struct ServerInfoT;
+
+struct ServerInfoT : public ::flatbuffers::NativeTable {
+  typedef ServerInfo TableType;
+  int32_t id = 0;
+  std::string name{};
+  std::string ip{};
+  std::string port{};
+  int32_t current_ccu = 0;
+  int32_t max_ccu = 0;
+};
 
 struct ServerInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ServerInfoT NativeTableType;
   typedef ServerInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
@@ -62,6 +74,9 @@ struct ServerInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_MAX_CCU, 4) &&
            verifier.EndTable();
   }
+  ServerInfoT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(ServerInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<ServerInfo> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct ServerInfoBuilder {
@@ -134,6 +149,49 @@ inline ::flatbuffers::Offset<ServerInfo> CreateServerInfoDirect(
       port__,
       current_ccu,
       max_ccu);
+}
+
+::flatbuffers::Offset<ServerInfo> CreateServerInfo(::flatbuffers::FlatBufferBuilder &_fbb, const ServerInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline ServerInfoT *ServerInfo::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<ServerInfoT>(new ServerInfoT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void ServerInfo::UnPackTo(ServerInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = name(); if (_e) _o->name = _e->str(); }
+  { auto _e = ip(); if (_e) _o->ip = _e->str(); }
+  { auto _e = port(); if (_e) _o->port = _e->str(); }
+  { auto _e = current_ccu(); _o->current_ccu = _e; }
+  { auto _e = max_ccu(); _o->max_ccu = _e; }
+}
+
+inline ::flatbuffers::Offset<ServerInfo> ServerInfo::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateServerInfo(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<ServerInfo> CreateServerInfo(::flatbuffers::FlatBufferBuilder &_fbb, const ServerInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const ServerInfoT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _name = _o->name.empty() ? 0 : _fbb.CreateString(_o->name);
+  auto _ip = _o->ip.empty() ? 0 : _fbb.CreateString(_o->ip);
+  auto _port = _o->port.empty() ? 0 : _fbb.CreateString(_o->port);
+  auto _current_ccu = _o->current_ccu;
+  auto _max_ccu = _o->max_ccu;
+  return GenericBoson::Zozo::CreateServerInfo(
+      _fbb,
+      _id,
+      _name,
+      _ip,
+      _port,
+      _current_ccu,
+      _max_ccu);
 }
 
 }  // namespace Zozo

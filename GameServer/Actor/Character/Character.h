@@ -3,6 +3,7 @@
 #include <Engine/Tx/TxExecutor.h>
 #include <Engine/IActor.h>
 
+#include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/Common/CharacterInfo_generated.h>
 
 namespace GenericBoson
@@ -38,7 +39,8 @@ namespace GenericBoson
 		int64_t                   m_id;
 		std::string               m_token;
 
-		Zozo::CharacterInfo 	  m_characterInfo;
+		Zozo::CharacterInfoT 	  m_info;
+		Zozo::Vector2I            m_position;
 
 		std::shared_ptr<ISocket>  m_pSocket;
 		std::weak_ptr<Zone>       m_wpZone;

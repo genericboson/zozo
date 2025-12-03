@@ -26,6 +26,7 @@ struct TicketPair;
 
 struct CharacterInfo;
 struct CharacterInfoBuilder;
+struct CharacterInfoT;
 
 enum Stat : int32_t {
   Stat_None = 0,
@@ -170,7 +171,31 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) TicketPair FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(TicketPair, 16);
 
+struct CharacterInfoT : public ::flatbuffers::NativeTable {
+  typedef CharacterInfo TableType;
+  int64_t id = 0;
+  int64_t user_id = 0;
+  std::string name{};
+  int32_t level = 0;
+  int32_t hp = 0;
+  int32_t hp_max = 0;
+  int32_t mp = 0;
+  int32_t mp_max = 0;
+  std::unique_ptr<GenericBoson::Zozo::Vector2I> position{};
+  std::vector<GenericBoson::Zozo::StatPair> stats{};
+  std::vector<GenericBoson::Zozo::TicketPair> tickets{};
+  int64_t appearance_id = 0;
+  int64_t current_quest_id = 0;
+  std::vector<std::unique_ptr<GenericBoson::Zozo::ItemInfoT>> inventory{};
+  int32_t inventory_size = 0;
+  CharacterInfoT() = default;
+  CharacterInfoT(const CharacterInfoT &o);
+  CharacterInfoT(CharacterInfoT&&) FLATBUFFERS_NOEXCEPT = default;
+  CharacterInfoT &operator=(CharacterInfoT o) FLATBUFFERS_NOEXCEPT;
+};
+
 struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterInfoT NativeTableType;
   typedef CharacterInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
@@ -258,6 +283,9 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_INVENTORY_SIZE, 4) &&
            verifier.EndTable();
   }
+  CharacterInfoT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterInfo> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterInfoBuilder {
@@ -394,6 +422,114 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
       current_quest_id,
       inventory__,
       inventory_size);
+}
+
+::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline CharacterInfoT::CharacterInfoT(const CharacterInfoT &o)
+      : id(o.id),
+        user_id(o.user_id),
+        name(o.name),
+        level(o.level),
+        hp(o.hp),
+        hp_max(o.hp_max),
+        mp(o.mp),
+        mp_max(o.mp_max),
+        position((o.position) ? new GenericBoson::Zozo::Vector2I(*o.position) : nullptr),
+        stats(o.stats),
+        tickets(o.tickets),
+        appearance_id(o.appearance_id),
+        current_quest_id(o.current_quest_id),
+        inventory_size(o.inventory_size) {
+  inventory.reserve(o.inventory.size());
+  for (const auto &inventory_ : o.inventory) { inventory.emplace_back((inventory_) ? new GenericBoson::Zozo::ItemInfoT(*inventory_) : nullptr); }
+}
+
+inline CharacterInfoT &CharacterInfoT::operator=(CharacterInfoT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(id, o.id);
+  std::swap(user_id, o.user_id);
+  std::swap(name, o.name);
+  std::swap(level, o.level);
+  std::swap(hp, o.hp);
+  std::swap(hp_max, o.hp_max);
+  std::swap(mp, o.mp);
+  std::swap(mp_max, o.mp_max);
+  std::swap(position, o.position);
+  std::swap(stats, o.stats);
+  std::swap(tickets, o.tickets);
+  std::swap(appearance_id, o.appearance_id);
+  std::swap(current_quest_id, o.current_quest_id);
+  std::swap(inventory, o.inventory);
+  std::swap(inventory_size, o.inventory_size);
+  return *this;
+}
+
+inline CharacterInfoT *CharacterInfo::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterInfoT>(new CharacterInfoT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterInfo::UnPackTo(CharacterInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = user_id(); _o->user_id = _e; }
+  { auto _e = name(); if (_e) _o->name = _e->str(); }
+  { auto _e = level(); _o->level = _e; }
+  { auto _e = hp(); _o->hp = _e; }
+  { auto _e = hp_max(); _o->hp_max = _e; }
+  { auto _e = mp(); _o->mp = _e; }
+  { auto _e = mp_max(); _o->mp_max = _e; }
+  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2I>(new GenericBoson::Zozo::Vector2I(*_e)); }
+  { auto _e = stats(); if (_e) { _o->stats.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->stats[_i] = *_e->Get(_i); } } else { _o->stats.resize(0); } }
+  { auto _e = tickets(); if (_e) { _o->tickets.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->tickets[_i] = *_e->Get(_i); } } else { _o->tickets.resize(0); } }
+  { auto _e = appearance_id(); _o->appearance_id = _e; }
+  { auto _e = current_quest_id(); _o->current_quest_id = _e; }
+  { auto _e = inventory(); if (_e) { _o->inventory.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->inventory[_i]) { _e->Get(_i)->UnPackTo(_o->inventory[_i].get(), _resolver); } else { _o->inventory[_i] = std::unique_ptr<GenericBoson::Zozo::ItemInfoT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->inventory.resize(0); } }
+  { auto _e = inventory_size(); _o->inventory_size = _e; }
+}
+
+inline ::flatbuffers::Offset<CharacterInfo> CharacterInfo::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterInfo(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterInfoT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _user_id = _o->user_id;
+  auto _name = _o->name.empty() ? 0 : _fbb.CreateString(_o->name);
+  auto _level = _o->level;
+  auto _hp = _o->hp;
+  auto _hp_max = _o->hp_max;
+  auto _mp = _o->mp;
+  auto _mp_max = _o->mp_max;
+  auto _position = _o->position ? _o->position.get() : nullptr;
+  auto _stats = _o->stats.size() ? _fbb.CreateVectorOfStructs(_o->stats) : 0;
+  auto _tickets = _o->tickets.size() ? _fbb.CreateVectorOfStructs(_o->tickets) : 0;
+  auto _appearance_id = _o->appearance_id;
+  auto _current_quest_id = _o->current_quest_id;
+  auto _inventory = _o->inventory.size() ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> (_o->inventory.size(), [](size_t i, _VectorArgs *__va) { return CreateItemInfo(*__va->__fbb, __va->__o->inventory[i].get(), __va->__rehasher); }, &_va ) : 0;
+  auto _inventory_size = _o->inventory_size;
+  return GenericBoson::Zozo::CreateCharacterInfo(
+      _fbb,
+      _id,
+      _user_id,
+      _name,
+      _level,
+      _hp,
+      _hp_max,
+      _mp,
+      _mp_max,
+      _position,
+      _stats,
+      _tickets,
+      _appearance_id,
+      _current_quest_id,
+      _inventory,
+      _inventory_size);
 }
 
 }  // namespace Zozo

@@ -22,21 +22,27 @@ namespace Zozo {
 
 struct CharacterListReq;
 struct CharacterListReqBuilder;
+struct CharacterListReqT;
 
 struct CharacterPairData;
 struct CharacterPairDataBuilder;
+struct CharacterPairDataT;
 
 struct CharacterListAck;
 struct CharacterListAckBuilder;
+struct CharacterListAckT;
 
 struct CharacterSelectReq;
 struct CharacterSelectReqBuilder;
+struct CharacterSelectReqT;
 
 struct CharacterSelectAck;
 struct CharacterSelectAckBuilder;
+struct CharacterSelectAckT;
 
 struct GameMessage;
 struct GameMessageBuilder;
+struct GameMessageT;
 
 enum GamePayload : uint8_t {
   GamePayload_NONE = 0,
@@ -111,10 +117,125 @@ template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterPositionUpdateA
   static const GamePayload enum_value = GamePayload_CharacterPositionUpdateAck;
 };
 
+template<typename T> struct GamePayloadUnionTraits {
+  static const GamePayload enum_value = GamePayload_NONE;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterListReqT> {
+  static const GamePayload enum_value = GamePayload_CharacterListReq;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterListAckT> {
+  static const GamePayload enum_value = GamePayload_CharacterListAck;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterSelectReqT> {
+  static const GamePayload enum_value = GamePayload_CharacterSelectReq;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterSelectAckT> {
+  static const GamePayload enum_value = GamePayload_CharacterSelectAck;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterPositionUpdateReqT> {
+  static const GamePayload enum_value = GamePayload_CharacterPositionUpdateReq;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterPositionUpdateAckT> {
+  static const GamePayload enum_value = GamePayload_CharacterPositionUpdateAck;
+};
+
+struct GamePayloadUnion {
+  GamePayload type;
+  void *value;
+
+  GamePayloadUnion() : type(GamePayload_NONE), value(nullptr) {}
+  GamePayloadUnion(GamePayloadUnion&& u) FLATBUFFERS_NOEXCEPT :
+    type(GamePayload_NONE), value(nullptr)
+    { std::swap(type, u.type); std::swap(value, u.value); }
+  GamePayloadUnion(const GamePayloadUnion &);
+  GamePayloadUnion &operator=(const GamePayloadUnion &u)
+    { GamePayloadUnion t(u); std::swap(type, t.type); std::swap(value, t.value); return *this; }
+  GamePayloadUnion &operator=(GamePayloadUnion &&u) FLATBUFFERS_NOEXCEPT
+    { std::swap(type, u.type); std::swap(value, u.value); return *this; }
+  ~GamePayloadUnion() { Reset(); }
+
+  void Reset();
+
+  template <typename T>
+  void Set(T&& val) {
+    typedef typename std::remove_reference<T>::type RT;
+    Reset();
+    type = GamePayloadUnionTraits<RT>::enum_value;
+    if (type != GamePayload_NONE) {
+      value = new RT(std::forward<T>(val));
+    }
+  }
+
+  static void *UnPack(const void *obj, GamePayload type, const ::flatbuffers::resolver_function_t *resolver);
+  ::flatbuffers::Offset<void> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr) const;
+
+  GenericBoson::Zozo::CharacterListReqT *AsCharacterListReq() {
+    return type == GamePayload_CharacterListReq ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterListReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterListReqT *AsCharacterListReq() const {
+    return type == GamePayload_CharacterListReq ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterListReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::CharacterListAckT *AsCharacterListAck() {
+    return type == GamePayload_CharacterListAck ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterListAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterListAckT *AsCharacterListAck() const {
+    return type == GamePayload_CharacterListAck ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterListAckT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::CharacterSelectReqT *AsCharacterSelectReq() {
+    return type == GamePayload_CharacterSelectReq ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterSelectReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterSelectReqT *AsCharacterSelectReq() const {
+    return type == GamePayload_CharacterSelectReq ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterSelectReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::CharacterSelectAckT *AsCharacterSelectAck() {
+    return type == GamePayload_CharacterSelectAck ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterSelectAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterSelectAckT *AsCharacterSelectAck() const {
+    return type == GamePayload_CharacterSelectAck ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterSelectAckT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::CharacterPositionUpdateReqT *AsCharacterPositionUpdateReq() {
+    return type == GamePayload_CharacterPositionUpdateReq ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterPositionUpdateReqT *AsCharacterPositionUpdateReq() const {
+    return type == GamePayload_CharacterPositionUpdateReq ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::CharacterPositionUpdateAckT *AsCharacterPositionUpdateAck() {
+    return type == GamePayload_CharacterPositionUpdateAck ?
+      reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::CharacterPositionUpdateAckT *AsCharacterPositionUpdateAck() const {
+    return type == GamePayload_CharacterPositionUpdateAck ?
+      reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateAckT *>(value) : nullptr;
+  }
+};
+
 bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, GamePayload type);
 bool VerifyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
+struct CharacterListReqT : public ::flatbuffers::NativeTable {
+  typedef CharacterListReq TableType;
+  int64_t user_id = 0;
+  std::string token{};
+};
+
 struct CharacterListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterListReqT NativeTableType;
   typedef CharacterListReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_USER_ID = 4,
@@ -133,6 +254,9 @@ struct CharacterListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(token()) &&
            verifier.EndTable();
   }
+  CharacterListReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterListReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterListReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterListReqBuilder {
@@ -177,7 +301,16 @@ inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReqDirect(
       token__);
 }
 
+::flatbuffers::Offset<CharacterListReq> CreateCharacterListReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct CharacterPairDataT : public ::flatbuffers::NativeTable {
+  typedef CharacterPairData TableType;
+  int64_t id = 0;
+  std::string name{};
+};
+
 struct CharacterPairData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterPairDataT NativeTableType;
   typedef CharacterPairDataBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
@@ -196,6 +329,9 @@ struct CharacterPairData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            verifier.VerifyString(name()) &&
            verifier.EndTable();
   }
+  CharacterPairDataT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterPairDataT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterPairData> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPairDataT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterPairDataBuilder {
@@ -240,7 +376,20 @@ inline ::flatbuffers::Offset<CharacterPairData> CreateCharacterPairDataDirect(
       name__);
 }
 
+::flatbuffers::Offset<CharacterPairData> CreateCharacterPairData(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPairDataT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct CharacterListAckT : public ::flatbuffers::NativeTable {
+  typedef CharacterListAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+  std::vector<std::unique_ptr<GenericBoson::Zozo::CharacterPairDataT>> character_pair_datas{};
+  CharacterListAckT() = default;
+  CharacterListAckT(const CharacterListAckT &o);
+  CharacterListAckT(CharacterListAckT&&) FLATBUFFERS_NOEXCEPT = default;
+  CharacterListAckT &operator=(CharacterListAckT o) FLATBUFFERS_NOEXCEPT;
+};
+
 struct CharacterListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterListAckT NativeTableType;
   typedef CharacterListAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
@@ -260,6 +409,9 @@ struct CharacterListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(character_pair_datas()) &&
            verifier.EndTable();
   }
+  CharacterListAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterListAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterListAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterListAckBuilder {
@@ -304,7 +456,16 @@ inline ::flatbuffers::Offset<CharacterListAck> CreateCharacterListAckDirect(
       character_pair_datas__);
 }
 
+::flatbuffers::Offset<CharacterListAck> CreateCharacterListAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct CharacterSelectReqT : public ::flatbuffers::NativeTable {
+  typedef CharacterSelectReq TableType;
+  int64_t id = 0;
+  std::string token{};
+};
+
 struct CharacterSelectReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterSelectReqT NativeTableType;
   typedef CharacterSelectReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
@@ -323,6 +484,9 @@ struct CharacterSelectReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyString(token()) &&
            verifier.EndTable();
   }
+  CharacterSelectReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterSelectReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterSelectReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterSelectReqBuilder {
@@ -367,7 +531,21 @@ inline ::flatbuffers::Offset<CharacterSelectReq> CreateCharacterSelectReqDirect(
       token__);
 }
 
+::flatbuffers::Offset<CharacterSelectReq> CreateCharacterSelectReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct CharacterSelectAckT : public ::flatbuffers::NativeTable {
+  typedef CharacterSelectAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+  std::unique_ptr<GenericBoson::Zozo::CharacterInfoT> data{};
+  std::unique_ptr<GenericBoson::Zozo::CharacterPositionUpdateReqT> pos{};
+  CharacterSelectAckT() = default;
+  CharacterSelectAckT(const CharacterSelectAckT &o);
+  CharacterSelectAckT(CharacterSelectAckT&&) FLATBUFFERS_NOEXCEPT = default;
+  CharacterSelectAckT &operator=(CharacterSelectAckT o) FLATBUFFERS_NOEXCEPT;
+};
+
 struct CharacterSelectAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterSelectAckT NativeTableType;
   typedef CharacterSelectAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
@@ -392,6 +570,9 @@ struct CharacterSelectAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyTable(pos()) &&
            verifier.EndTable();
   }
+  CharacterSelectAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterSelectAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterSelectAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct CharacterSelectAckBuilder {
@@ -430,7 +611,15 @@ inline ::flatbuffers::Offset<CharacterSelectAck> CreateCharacterSelectAck(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<CharacterSelectAck> CreateCharacterSelectAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct GameMessageT : public ::flatbuffers::NativeTable {
+  typedef GameMessage TableType;
+  GenericBoson::Zozo::GamePayloadUnion payload{};
+};
+
 struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef GameMessageT NativeTableType;
   typedef GameMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
@@ -468,6 +657,9 @@ struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyGamePayload(verifier, payload(), payload_type()) &&
            verifier.EndTable();
   }
+  GameMessageT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(GameMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<GameMessage> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const GameMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 template<> inline const GenericBoson::Zozo::CharacterListReq *GameMessage::payload_as<GenericBoson::Zozo::CharacterListReq>() const {
@@ -525,6 +717,210 @@ inline ::flatbuffers::Offset<GameMessage> CreateGameMessage(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<GameMessage> CreateGameMessage(::flatbuffers::FlatBufferBuilder &_fbb, const GameMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline CharacterListReqT *CharacterListReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterListReqT>(new CharacterListReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterListReq::UnPackTo(CharacterListReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = user_id(); _o->user_id = _e; }
+  { auto _e = token(); if (_e) _o->token = _e->str(); }
+}
+
+inline ::flatbuffers::Offset<CharacterListReq> CharacterListReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterListReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterListReq> CreateCharacterListReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterListReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _user_id = _o->user_id;
+  auto _token = _o->token.empty() ? 0 : _fbb.CreateString(_o->token);
+  return GenericBoson::Zozo::CreateCharacterListReq(
+      _fbb,
+      _user_id,
+      _token);
+}
+
+inline CharacterPairDataT *CharacterPairData::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterPairDataT>(new CharacterPairDataT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterPairData::UnPackTo(CharacterPairDataT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = name(); if (_e) _o->name = _e->str(); }
+}
+
+inline ::flatbuffers::Offset<CharacterPairData> CharacterPairData::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPairDataT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterPairData(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterPairData> CreateCharacterPairData(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPairDataT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterPairDataT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _name = _o->name.empty() ? 0 : _fbb.CreateString(_o->name);
+  return GenericBoson::Zozo::CreateCharacterPairData(
+      _fbb,
+      _id,
+      _name);
+}
+
+inline CharacterListAckT::CharacterListAckT(const CharacterListAckT &o)
+      : result_code(o.result_code) {
+  character_pair_datas.reserve(o.character_pair_datas.size());
+  for (const auto &character_pair_datas_ : o.character_pair_datas) { character_pair_datas.emplace_back((character_pair_datas_) ? new GenericBoson::Zozo::CharacterPairDataT(*character_pair_datas_) : nullptr); }
+}
+
+inline CharacterListAckT &CharacterListAckT::operator=(CharacterListAckT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(result_code, o.result_code);
+  std::swap(character_pair_datas, o.character_pair_datas);
+  return *this;
+}
+
+inline CharacterListAckT *CharacterListAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterListAckT>(new CharacterListAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterListAck::UnPackTo(CharacterListAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+  { auto _e = character_pair_datas(); if (_e) { _o->character_pair_datas.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->character_pair_datas[_i]) { _e->Get(_i)->UnPackTo(_o->character_pair_datas[_i].get(), _resolver); } else { _o->character_pair_datas[_i] = std::unique_ptr<GenericBoson::Zozo::CharacterPairDataT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->character_pair_datas.resize(0); } }
+}
+
+inline ::flatbuffers::Offset<CharacterListAck> CharacterListAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterListAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterListAck> CreateCharacterListAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterListAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterListAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  auto _character_pair_datas = _o->character_pair_datas.size() ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::CharacterPairData>> (_o->character_pair_datas.size(), [](size_t i, _VectorArgs *__va) { return CreateCharacterPairData(*__va->__fbb, __va->__o->character_pair_datas[i].get(), __va->__rehasher); }, &_va ) : 0;
+  return GenericBoson::Zozo::CreateCharacterListAck(
+      _fbb,
+      _result_code,
+      _character_pair_datas);
+}
+
+inline CharacterSelectReqT *CharacterSelectReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterSelectReqT>(new CharacterSelectReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterSelectReq::UnPackTo(CharacterSelectReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = token(); if (_e) _o->token = _e->str(); }
+}
+
+inline ::flatbuffers::Offset<CharacterSelectReq> CharacterSelectReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterSelectReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterSelectReq> CreateCharacterSelectReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterSelectReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _token = _o->token.empty() ? 0 : _fbb.CreateString(_o->token);
+  return GenericBoson::Zozo::CreateCharacterSelectReq(
+      _fbb,
+      _id,
+      _token);
+}
+
+inline CharacterSelectAckT::CharacterSelectAckT(const CharacterSelectAckT &o)
+      : result_code(o.result_code),
+        data((o.data) ? new GenericBoson::Zozo::CharacterInfoT(*o.data) : nullptr),
+        pos((o.pos) ? new GenericBoson::Zozo::CharacterPositionUpdateReqT(*o.pos) : nullptr) {
+}
+
+inline CharacterSelectAckT &CharacterSelectAckT::operator=(CharacterSelectAckT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(result_code, o.result_code);
+  std::swap(data, o.data);
+  std::swap(pos, o.pos);
+  return *this;
+}
+
+inline CharacterSelectAckT *CharacterSelectAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterSelectAckT>(new CharacterSelectAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterSelectAck::UnPackTo(CharacterSelectAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+  { auto _e = data(); if (_e) { if(_o->data) { _e->UnPackTo(_o->data.get(), _resolver); } else { _o->data = std::unique_ptr<GenericBoson::Zozo::CharacterInfoT>(_e->UnPack(_resolver)); } } else if (_o->data) { _o->data.reset(); } }
+  { auto _e = pos(); if (_e) { if(_o->pos) { _e->UnPackTo(_o->pos.get(), _resolver); } else { _o->pos = std::unique_ptr<GenericBoson::Zozo::CharacterPositionUpdateReqT>(_e->UnPack(_resolver)); } } else if (_o->pos) { _o->pos.reset(); } }
+}
+
+inline ::flatbuffers::Offset<CharacterSelectAck> CharacterSelectAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterSelectAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterSelectAck> CreateCharacterSelectAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterSelectAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  auto _data = _o->data ? CreateCharacterInfo(_fbb, _o->data.get(), _rehasher) : 0;
+  auto _pos = _o->pos ? CreateCharacterPositionUpdateReq(_fbb, _o->pos.get(), _rehasher) : 0;
+  return GenericBoson::Zozo::CreateCharacterSelectAck(
+      _fbb,
+      _result_code,
+      _data,
+      _pos);
+}
+
+inline GameMessageT *GameMessage::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<GameMessageT>(new GameMessageT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void GameMessage::UnPackTo(GameMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = payload_type(); _o->payload.type = _e; }
+  { auto _e = payload(); if (_e) _o->payload.value = GenericBoson::Zozo::GamePayloadUnion::UnPack(_e, payload_type(), _resolver); }
+}
+
+inline ::flatbuffers::Offset<GameMessage> GameMessage::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const GameMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateGameMessage(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<GameMessage> CreateGameMessage(::flatbuffers::FlatBufferBuilder &_fbb, const GameMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const GameMessageT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _payload_type = _o->payload.type;
+  auto _payload = _o->payload.Pack(_fbb);
+  return GenericBoson::Zozo::CreateGameMessage(
+      _fbb,
+      _payload_type,
+      _payload);
+}
+
 inline bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, GamePayload type) {
   switch (type) {
     case GamePayload_NONE: {
@@ -570,6 +966,137 @@ inline bool VerifyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::f
   return true;
 }
 
+inline void *GamePayloadUnion::UnPack(const void *obj, GamePayload type, const ::flatbuffers::resolver_function_t *resolver) {
+  (void)resolver;
+  switch (type) {
+    case GamePayload_CharacterListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_CharacterListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_CharacterSelectReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterSelectReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_CharacterSelectAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterSelectAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_CharacterPositionUpdateReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_CharacterPositionUpdateAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    default: return nullptr;
+  }
+}
+
+inline ::flatbuffers::Offset<void> GamePayloadUnion::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher) const {
+  (void)_rehasher;
+  switch (type) {
+    case GamePayload_CharacterListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListReqT *>(value);
+      return CreateCharacterListReq(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_CharacterListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterListAckT *>(value);
+      return CreateCharacterListAck(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_CharacterSelectReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterSelectReqT *>(value);
+      return CreateCharacterSelectReq(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_CharacterSelectAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterSelectAckT *>(value);
+      return CreateCharacterSelectAck(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_CharacterPositionUpdateReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateReqT *>(value);
+      return CreateCharacterPositionUpdateReq(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_CharacterPositionUpdateAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterPositionUpdateAckT *>(value);
+      return CreateCharacterPositionUpdateAck(_fbb, ptr, _rehasher).Union();
+    }
+    default: return 0;
+  }
+}
+
+inline GamePayloadUnion::GamePayloadUnion(const GamePayloadUnion &u) : type(u.type), value(nullptr) {
+  switch (type) {
+    case GamePayload_CharacterListReq: {
+      value = new GenericBoson::Zozo::CharacterListReqT(*reinterpret_cast<GenericBoson::Zozo::CharacterListReqT *>(u.value));
+      break;
+    }
+    case GamePayload_CharacterListAck: {
+      value = new GenericBoson::Zozo::CharacterListAckT(*reinterpret_cast<GenericBoson::Zozo::CharacterListAckT *>(u.value));
+      break;
+    }
+    case GamePayload_CharacterSelectReq: {
+      value = new GenericBoson::Zozo::CharacterSelectReqT(*reinterpret_cast<GenericBoson::Zozo::CharacterSelectReqT *>(u.value));
+      break;
+    }
+    case GamePayload_CharacterSelectAck: {
+      value = new GenericBoson::Zozo::CharacterSelectAckT(*reinterpret_cast<GenericBoson::Zozo::CharacterSelectAckT *>(u.value));
+      break;
+    }
+    case GamePayload_CharacterPositionUpdateReq: {
+      value = new GenericBoson::Zozo::CharacterPositionUpdateReqT(*reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateReqT *>(u.value));
+      break;
+    }
+    case GamePayload_CharacterPositionUpdateAck: {
+      value = new GenericBoson::Zozo::CharacterPositionUpdateAckT(*reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateAckT *>(u.value));
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+inline void GamePayloadUnion::Reset() {
+  switch (type) {
+    case GamePayload_CharacterListReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterListReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_CharacterListAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterListAckT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_CharacterSelectReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterSelectReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_CharacterSelectAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterSelectAckT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_CharacterPositionUpdateReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_CharacterPositionUpdateAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterPositionUpdateAckT *>(value);
+      delete ptr;
+      break;
+    }
+    default: break;
+  }
+  value = nullptr;
+  type = GamePayload_NONE;
+}
+
 inline const GenericBoson::Zozo::GameMessage *GetGameMessage(const void *buf) {
   return ::flatbuffers::GetRoot<GenericBoson::Zozo::GameMessage>(buf);
 }
@@ -598,6 +1125,18 @@ inline void FinishSizePrefixedGameMessageBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
     ::flatbuffers::Offset<GenericBoson::Zozo::GameMessage> root) {
   fbb.FinishSizePrefixed(root);
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::GameMessageT> UnPackGameMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::GameMessageT>(GetGameMessage(buf)->UnPack(res));
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::GameMessageT> UnPackSizePrefixedGameMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::GameMessageT>(GetSizePrefixedGameMessage(buf)->UnPack(res));
 }
 
 }  // namespace Zozo

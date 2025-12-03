@@ -145,7 +145,14 @@ namespace GenericBoson
 
 				flatbuffers::FlatBufferBuilder fbb;
 
-                //auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success,  )
+                auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
+                auto reqOffset = Zozo::CreateCharacterPositionUpdateReq(fbb, &m_position);
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset, reqOffset);
+
+				auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+
+                fbb.Finish(msg);
+				m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
             }
             break;
         case GamePayload::GamePayload_CharacterSelectAck:

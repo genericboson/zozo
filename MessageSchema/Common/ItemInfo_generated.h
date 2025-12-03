@@ -20,6 +20,7 @@ namespace Zozo {
 
 struct ItemInfo;
 struct ItemInfoBuilder;
+struct ItemInfoT;
 
 enum ItemType : int32_t {
   ItemType_None = 0,
@@ -93,7 +94,17 @@ inline const char *EnumNameItemAttribute(ItemAttribute e) {
   return EnumNamesItemAttribute()[index];
 }
 
+struct ItemInfoT : public ::flatbuffers::NativeTable {
+  typedef ItemInfo TableType;
+  int64_t id = 0;
+  std::string name{};
+  int64_t effect_id = 0;
+  std::vector<GenericBoson::Zozo::ItemAttribute> attribute{};
+  GenericBoson::Zozo::ItemType type = GenericBoson::Zozo::ItemType_None;
+};
+
 struct ItemInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ItemInfoT NativeTableType;
   typedef ItemInfoBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
@@ -128,6 +139,9 @@ struct ItemInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_TYPE, 4) &&
            verifier.EndTable();
   }
+  ItemInfoT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(ItemInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<ItemInfo> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ItemInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct ItemInfoBuilder {
@@ -192,6 +206,46 @@ inline ::flatbuffers::Offset<ItemInfo> CreateItemInfoDirect(
       effect_id,
       attribute__,
       type);
+}
+
+::flatbuffers::Offset<ItemInfo> CreateItemInfo(::flatbuffers::FlatBufferBuilder &_fbb, const ItemInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline ItemInfoT *ItemInfo::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<ItemInfoT>(new ItemInfoT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void ItemInfo::UnPackTo(ItemInfoT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = name(); if (_e) _o->name = _e->str(); }
+  { auto _e = effect_id(); _o->effect_id = _e; }
+  { auto _e = attribute(); if (_e) { _o->attribute.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->attribute[_i] = static_cast<GenericBoson::Zozo::ItemAttribute>(_e->Get(_i)); } } else { _o->attribute.resize(0); } }
+  { auto _e = type(); _o->type = _e; }
+}
+
+inline ::flatbuffers::Offset<ItemInfo> ItemInfo::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ItemInfoT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateItemInfo(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<ItemInfo> CreateItemInfo(::flatbuffers::FlatBufferBuilder &_fbb, const ItemInfoT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const ItemInfoT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _name = _o->name.empty() ? 0 : _fbb.CreateString(_o->name);
+  auto _effect_id = _o->effect_id;
+  auto _attribute = _o->attribute.size() ? _fbb.CreateVectorScalarCast<int32_t>(::flatbuffers::data(_o->attribute), _o->attribute.size()) : 0;
+  auto _type = _o->type;
+  return GenericBoson::Zozo::CreateItemInfo(
+      _fbb,
+      _id,
+      _name,
+      _effect_id,
+      _attribute,
+      _type);
 }
 
 }  // namespace Zozo

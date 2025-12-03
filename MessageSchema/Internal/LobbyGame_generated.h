@@ -21,18 +21,23 @@ namespace Zozo {
 
 struct RegisterReq;
 struct RegisterReqBuilder;
+struct RegisterReqT;
 
 struct RegisterAck;
 struct RegisterAckBuilder;
+struct RegisterAckT;
 
 struct AuthRelayReq;
 struct AuthRelayReqBuilder;
+struct AuthRelayReqT;
 
 struct AuthRelayAck;
 struct AuthRelayAckBuilder;
+struct AuthRelayAckT;
 
 struct LobbyGameMessage;
 struct LobbyGameMessageBuilder;
+struct LobbyGameMessageT;
 
 enum LobbyGamePayload : uint8_t {
   LobbyGamePayload_NONE = 0,
@@ -93,10 +98,100 @@ template<> struct LobbyGamePayloadTraits<GenericBoson::Zozo::AuthRelayAck> {
   static const LobbyGamePayload enum_value = LobbyGamePayload_AuthRelayAck;
 };
 
+template<typename T> struct LobbyGamePayloadUnionTraits {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_NONE;
+};
+
+template<> struct LobbyGamePayloadUnionTraits<GenericBoson::Zozo::RegisterReqT> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_RegisterReq;
+};
+
+template<> struct LobbyGamePayloadUnionTraits<GenericBoson::Zozo::RegisterAckT> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_RegisterAck;
+};
+
+template<> struct LobbyGamePayloadUnionTraits<GenericBoson::Zozo::AuthRelayReqT> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_AuthRelayReq;
+};
+
+template<> struct LobbyGamePayloadUnionTraits<GenericBoson::Zozo::AuthRelayAckT> {
+  static const LobbyGamePayload enum_value = LobbyGamePayload_AuthRelayAck;
+};
+
+struct LobbyGamePayloadUnion {
+  LobbyGamePayload type;
+  void *value;
+
+  LobbyGamePayloadUnion() : type(LobbyGamePayload_NONE), value(nullptr) {}
+  LobbyGamePayloadUnion(LobbyGamePayloadUnion&& u) FLATBUFFERS_NOEXCEPT :
+    type(LobbyGamePayload_NONE), value(nullptr)
+    { std::swap(type, u.type); std::swap(value, u.value); }
+  LobbyGamePayloadUnion(const LobbyGamePayloadUnion &);
+  LobbyGamePayloadUnion &operator=(const LobbyGamePayloadUnion &u)
+    { LobbyGamePayloadUnion t(u); std::swap(type, t.type); std::swap(value, t.value); return *this; }
+  LobbyGamePayloadUnion &operator=(LobbyGamePayloadUnion &&u) FLATBUFFERS_NOEXCEPT
+    { std::swap(type, u.type); std::swap(value, u.value); return *this; }
+  ~LobbyGamePayloadUnion() { Reset(); }
+
+  void Reset();
+
+  template <typename T>
+  void Set(T&& val) {
+    typedef typename std::remove_reference<T>::type RT;
+    Reset();
+    type = LobbyGamePayloadUnionTraits<RT>::enum_value;
+    if (type != LobbyGamePayload_NONE) {
+      value = new RT(std::forward<T>(val));
+    }
+  }
+
+  static void *UnPack(const void *obj, LobbyGamePayload type, const ::flatbuffers::resolver_function_t *resolver);
+  ::flatbuffers::Offset<void> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr) const;
+
+  GenericBoson::Zozo::RegisterReqT *AsRegisterReq() {
+    return type == LobbyGamePayload_RegisterReq ?
+      reinterpret_cast<GenericBoson::Zozo::RegisterReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::RegisterReqT *AsRegisterReq() const {
+    return type == LobbyGamePayload_RegisterReq ?
+      reinterpret_cast<const GenericBoson::Zozo::RegisterReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::RegisterAckT *AsRegisterAck() {
+    return type == LobbyGamePayload_RegisterAck ?
+      reinterpret_cast<GenericBoson::Zozo::RegisterAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::RegisterAckT *AsRegisterAck() const {
+    return type == LobbyGamePayload_RegisterAck ?
+      reinterpret_cast<const GenericBoson::Zozo::RegisterAckT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::AuthRelayReqT *AsAuthRelayReq() {
+    return type == LobbyGamePayload_AuthRelayReq ?
+      reinterpret_cast<GenericBoson::Zozo::AuthRelayReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::AuthRelayReqT *AsAuthRelayReq() const {
+    return type == LobbyGamePayload_AuthRelayReq ?
+      reinterpret_cast<const GenericBoson::Zozo::AuthRelayReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::AuthRelayAckT *AsAuthRelayAck() {
+    return type == LobbyGamePayload_AuthRelayAck ?
+      reinterpret_cast<GenericBoson::Zozo::AuthRelayAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::AuthRelayAckT *AsAuthRelayAck() const {
+    return type == LobbyGamePayload_AuthRelayAck ?
+      reinterpret_cast<const GenericBoson::Zozo::AuthRelayAckT *>(value) : nullptr;
+  }
+};
+
 bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyGamePayload type);
 bool VerifyLobbyGamePayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
+struct RegisterReqT : public ::flatbuffers::NativeTable {
+  typedef RegisterReq TableType;
+  int32_t server_id = 0;
+};
+
 struct RegisterReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RegisterReqT NativeTableType;
   typedef RegisterReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_SERVER_ID = 4
@@ -109,6 +204,9 @@ struct RegisterReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_SERVER_ID, 4) &&
            verifier.EndTable();
   }
+  RegisterReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(RegisterReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<RegisterReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct RegisterReqBuilder {
@@ -137,7 +235,22 @@ inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReq(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<RegisterReq> CreateRegisterReq(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct RegisterAckT : public ::flatbuffers::NativeTable {
+  typedef RegisterAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+  std::string db_ip{};
+  std::string db_acount{};
+  std::string db_password{};
+  std::string db_main_schema{};
+  std::string server_name{};
+  int32_t db_port = 0;
+  int32_t listen_port = 0;
+};
+
 struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RegisterAckT NativeTableType;
   typedef RegisterAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
@@ -190,6 +303,9 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_LISTEN_PORT, 4) &&
            verifier.EndTable();
   }
+  RegisterAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(RegisterAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<RegisterAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct RegisterAckBuilder {
@@ -280,7 +396,16 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
       listen_port);
 }
 
+::flatbuffers::Offset<RegisterAck> CreateRegisterAck(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct AuthRelayReqT : public ::flatbuffers::NativeTable {
+  typedef AuthRelayReq TableType;
+  int32_t user_id = 0;
+  std::string token{};
+};
+
 struct AuthRelayReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthRelayReqT NativeTableType;
   typedef AuthRelayReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_USER_ID = 4,
@@ -299,6 +424,9 @@ struct AuthRelayReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(token()) &&
            verifier.EndTable();
   }
+  AuthRelayReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(AuthRelayReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<AuthRelayReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct AuthRelayReqBuilder {
@@ -343,7 +471,15 @@ inline ::flatbuffers::Offset<AuthRelayReq> CreateAuthRelayReqDirect(
       token__);
 }
 
+::flatbuffers::Offset<AuthRelayReq> CreateAuthRelayReq(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct AuthRelayAckT : public ::flatbuffers::NativeTable {
+  typedef AuthRelayAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+};
+
 struct AuthRelayAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthRelayAckT NativeTableType;
   typedef AuthRelayAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4
@@ -356,6 +492,9 @@ struct AuthRelayAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            verifier.EndTable();
   }
+  AuthRelayAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(AuthRelayAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<AuthRelayAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct AuthRelayAckBuilder {
@@ -384,7 +523,15 @@ inline ::flatbuffers::Offset<AuthRelayAck> CreateAuthRelayAck(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<AuthRelayAck> CreateAuthRelayAck(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct LobbyGameMessageT : public ::flatbuffers::NativeTable {
+  typedef LobbyGameMessage TableType;
+  GenericBoson::Zozo::LobbyGamePayloadUnion payload{};
+};
+
 struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef LobbyGameMessageT NativeTableType;
   typedef LobbyGameMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
@@ -416,6 +563,9 @@ struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyLobbyGamePayload(verifier, payload(), payload_type()) &&
            verifier.EndTable();
   }
+  LobbyGameMessageT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(LobbyGameMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<LobbyGameMessage> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyGameMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 template<> inline const GenericBoson::Zozo::RegisterReq *LobbyGameMessage::payload_as<GenericBoson::Zozo::RegisterReq>() const {
@@ -465,6 +615,165 @@ inline ::flatbuffers::Offset<LobbyGameMessage> CreateLobbyGameMessage(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<LobbyGameMessage> CreateLobbyGameMessage(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyGameMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline RegisterReqT *RegisterReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<RegisterReqT>(new RegisterReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void RegisterReq::UnPackTo(RegisterReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = server_id(); _o->server_id = _e; }
+}
+
+inline ::flatbuffers::Offset<RegisterReq> RegisterReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateRegisterReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<RegisterReq> CreateRegisterReq(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const RegisterReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _server_id = _o->server_id;
+  return GenericBoson::Zozo::CreateRegisterReq(
+      _fbb,
+      _server_id);
+}
+
+inline RegisterAckT *RegisterAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<RegisterAckT>(new RegisterAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void RegisterAck::UnPackTo(RegisterAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+  { auto _e = db_ip(); if (_e) _o->db_ip = _e->str(); }
+  { auto _e = db_acount(); if (_e) _o->db_acount = _e->str(); }
+  { auto _e = db_password(); if (_e) _o->db_password = _e->str(); }
+  { auto _e = db_main_schema(); if (_e) _o->db_main_schema = _e->str(); }
+  { auto _e = server_name(); if (_e) _o->server_name = _e->str(); }
+  { auto _e = db_port(); _o->db_port = _e; }
+  { auto _e = listen_port(); _o->listen_port = _e; }
+}
+
+inline ::flatbuffers::Offset<RegisterAck> RegisterAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateRegisterAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const RegisterAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  auto _db_ip = _o->db_ip.empty() ? 0 : _fbb.CreateString(_o->db_ip);
+  auto _db_acount = _o->db_acount.empty() ? 0 : _fbb.CreateString(_o->db_acount);
+  auto _db_password = _o->db_password.empty() ? 0 : _fbb.CreateString(_o->db_password);
+  auto _db_main_schema = _o->db_main_schema.empty() ? 0 : _fbb.CreateString(_o->db_main_schema);
+  auto _server_name = _o->server_name.empty() ? 0 : _fbb.CreateString(_o->server_name);
+  auto _db_port = _o->db_port;
+  auto _listen_port = _o->listen_port;
+  return GenericBoson::Zozo::CreateRegisterAck(
+      _fbb,
+      _result_code,
+      _db_ip,
+      _db_acount,
+      _db_password,
+      _db_main_schema,
+      _server_name,
+      _db_port,
+      _listen_port);
+}
+
+inline AuthRelayReqT *AuthRelayReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<AuthRelayReqT>(new AuthRelayReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void AuthRelayReq::UnPackTo(AuthRelayReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = user_id(); _o->user_id = _e; }
+  { auto _e = token(); if (_e) _o->token = _e->str(); }
+}
+
+inline ::flatbuffers::Offset<AuthRelayReq> AuthRelayReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateAuthRelayReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<AuthRelayReq> CreateAuthRelayReq(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const AuthRelayReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _user_id = _o->user_id;
+  auto _token = _o->token.empty() ? 0 : _fbb.CreateString(_o->token);
+  return GenericBoson::Zozo::CreateAuthRelayReq(
+      _fbb,
+      _user_id,
+      _token);
+}
+
+inline AuthRelayAckT *AuthRelayAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<AuthRelayAckT>(new AuthRelayAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void AuthRelayAck::UnPackTo(AuthRelayAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+}
+
+inline ::flatbuffers::Offset<AuthRelayAck> AuthRelayAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateAuthRelayAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<AuthRelayAck> CreateAuthRelayAck(::flatbuffers::FlatBufferBuilder &_fbb, const AuthRelayAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const AuthRelayAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  return GenericBoson::Zozo::CreateAuthRelayAck(
+      _fbb,
+      _result_code);
+}
+
+inline LobbyGameMessageT *LobbyGameMessage::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<LobbyGameMessageT>(new LobbyGameMessageT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void LobbyGameMessage::UnPackTo(LobbyGameMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = payload_type(); _o->payload.type = _e; }
+  { auto _e = payload(); if (_e) _o->payload.value = GenericBoson::Zozo::LobbyGamePayloadUnion::UnPack(_e, payload_type(), _resolver); }
+}
+
+inline ::flatbuffers::Offset<LobbyGameMessage> LobbyGameMessage::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyGameMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateLobbyGameMessage(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<LobbyGameMessage> CreateLobbyGameMessage(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyGameMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const LobbyGameMessageT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _payload_type = _o->payload.type;
+  auto _payload = _o->payload.Pack(_fbb);
+  return GenericBoson::Zozo::CreateLobbyGameMessage(
+      _fbb,
+      _payload_type,
+      _payload);
+}
+
 inline bool VerifyLobbyGamePayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyGamePayload type) {
   switch (type) {
     case LobbyGamePayload_NONE: {
@@ -502,6 +811,103 @@ inline bool VerifyLobbyGamePayloadVector(::flatbuffers::Verifier &verifier, cons
   return true;
 }
 
+inline void *LobbyGamePayloadUnion::UnPack(const void *obj, LobbyGamePayload type, const ::flatbuffers::resolver_function_t *resolver) {
+  (void)resolver;
+  switch (type) {
+    case LobbyGamePayload_RegisterReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyGamePayload_RegisterAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyGamePayload_AuthRelayReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyGamePayload_AuthRelayAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    default: return nullptr;
+  }
+}
+
+inline ::flatbuffers::Offset<void> LobbyGamePayloadUnion::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher) const {
+  (void)_rehasher;
+  switch (type) {
+    case LobbyGamePayload_RegisterReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterReqT *>(value);
+      return CreateRegisterReq(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyGamePayload_RegisterAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::RegisterAckT *>(value);
+      return CreateRegisterAck(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyGamePayload_AuthRelayReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayReqT *>(value);
+      return CreateAuthRelayReq(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyGamePayload_AuthRelayAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthRelayAckT *>(value);
+      return CreateAuthRelayAck(_fbb, ptr, _rehasher).Union();
+    }
+    default: return 0;
+  }
+}
+
+inline LobbyGamePayloadUnion::LobbyGamePayloadUnion(const LobbyGamePayloadUnion &u) : type(u.type), value(nullptr) {
+  switch (type) {
+    case LobbyGamePayload_RegisterReq: {
+      value = new GenericBoson::Zozo::RegisterReqT(*reinterpret_cast<GenericBoson::Zozo::RegisterReqT *>(u.value));
+      break;
+    }
+    case LobbyGamePayload_RegisterAck: {
+      value = new GenericBoson::Zozo::RegisterAckT(*reinterpret_cast<GenericBoson::Zozo::RegisterAckT *>(u.value));
+      break;
+    }
+    case LobbyGamePayload_AuthRelayReq: {
+      value = new GenericBoson::Zozo::AuthRelayReqT(*reinterpret_cast<GenericBoson::Zozo::AuthRelayReqT *>(u.value));
+      break;
+    }
+    case LobbyGamePayload_AuthRelayAck: {
+      value = new GenericBoson::Zozo::AuthRelayAckT(*reinterpret_cast<GenericBoson::Zozo::AuthRelayAckT *>(u.value));
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+inline void LobbyGamePayloadUnion::Reset() {
+  switch (type) {
+    case LobbyGamePayload_RegisterReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::RegisterReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyGamePayload_RegisterAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::RegisterAckT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyGamePayload_AuthRelayReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::AuthRelayReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyGamePayload_AuthRelayAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::AuthRelayAckT *>(value);
+      delete ptr;
+      break;
+    }
+    default: break;
+  }
+  value = nullptr;
+  type = LobbyGamePayload_NONE;
+}
+
 inline const GenericBoson::Zozo::LobbyGameMessage *GetLobbyGameMessage(const void *buf) {
   return ::flatbuffers::GetRoot<GenericBoson::Zozo::LobbyGameMessage>(buf);
 }
@@ -530,6 +936,18 @@ inline void FinishSizePrefixedLobbyGameMessageBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
     ::flatbuffers::Offset<GenericBoson::Zozo::LobbyGameMessage> root) {
   fbb.FinishSizePrefixed(root);
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::LobbyGameMessageT> UnPackLobbyGameMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::LobbyGameMessageT>(GetLobbyGameMessage(buf)->UnPack(res));
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::LobbyGameMessageT> UnPackSizePrefixedLobbyGameMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::LobbyGameMessageT>(GetSizePrefixedLobbyGameMessage(buf)->UnPack(res));
 }
 
 }  // namespace Zozo

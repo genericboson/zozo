@@ -22,18 +22,23 @@ namespace Zozo {
 
 struct AuthReq;
 struct AuthReqBuilder;
+struct AuthReqT;
 
 struct AuthAck;
 struct AuthAckBuilder;
+struct AuthAckT;
 
 struct ServerListReq;
 struct ServerListReqBuilder;
+struct ServerListReqT;
 
 struct ServerListAck;
 struct ServerListAckBuilder;
+struct ServerListAckT;
 
 struct LobbyMessage;
 struct LobbyMessageBuilder;
+struct LobbyMessageT;
 
 enum LobbyPayload : uint8_t {
   LobbyPayload_NONE = 0,
@@ -94,10 +99,102 @@ template<> struct LobbyPayloadTraits<GenericBoson::Zozo::ServerListAck> {
   static const LobbyPayload enum_value = LobbyPayload_ServerListAck;
 };
 
+template<typename T> struct LobbyPayloadUnionTraits {
+  static const LobbyPayload enum_value = LobbyPayload_NONE;
+};
+
+template<> struct LobbyPayloadUnionTraits<GenericBoson::Zozo::AuthReqT> {
+  static const LobbyPayload enum_value = LobbyPayload_AuthReq;
+};
+
+template<> struct LobbyPayloadUnionTraits<GenericBoson::Zozo::AuthAckT> {
+  static const LobbyPayload enum_value = LobbyPayload_AuthAck;
+};
+
+template<> struct LobbyPayloadUnionTraits<GenericBoson::Zozo::ServerListReqT> {
+  static const LobbyPayload enum_value = LobbyPayload_ServerListReq;
+};
+
+template<> struct LobbyPayloadUnionTraits<GenericBoson::Zozo::ServerListAckT> {
+  static const LobbyPayload enum_value = LobbyPayload_ServerListAck;
+};
+
+struct LobbyPayloadUnion {
+  LobbyPayload type;
+  void *value;
+
+  LobbyPayloadUnion() : type(LobbyPayload_NONE), value(nullptr) {}
+  LobbyPayloadUnion(LobbyPayloadUnion&& u) FLATBUFFERS_NOEXCEPT :
+    type(LobbyPayload_NONE), value(nullptr)
+    { std::swap(type, u.type); std::swap(value, u.value); }
+  LobbyPayloadUnion(const LobbyPayloadUnion &);
+  LobbyPayloadUnion &operator=(const LobbyPayloadUnion &u)
+    { LobbyPayloadUnion t(u); std::swap(type, t.type); std::swap(value, t.value); return *this; }
+  LobbyPayloadUnion &operator=(LobbyPayloadUnion &&u) FLATBUFFERS_NOEXCEPT
+    { std::swap(type, u.type); std::swap(value, u.value); return *this; }
+  ~LobbyPayloadUnion() { Reset(); }
+
+  void Reset();
+
+  template <typename T>
+  void Set(T&& val) {
+    typedef typename std::remove_reference<T>::type RT;
+    Reset();
+    type = LobbyPayloadUnionTraits<RT>::enum_value;
+    if (type != LobbyPayload_NONE) {
+      value = new RT(std::forward<T>(val));
+    }
+  }
+
+  static void *UnPack(const void *obj, LobbyPayload type, const ::flatbuffers::resolver_function_t *resolver);
+  ::flatbuffers::Offset<void> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr) const;
+
+  GenericBoson::Zozo::AuthReqT *AsAuthReq() {
+    return type == LobbyPayload_AuthReq ?
+      reinterpret_cast<GenericBoson::Zozo::AuthReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::AuthReqT *AsAuthReq() const {
+    return type == LobbyPayload_AuthReq ?
+      reinterpret_cast<const GenericBoson::Zozo::AuthReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::AuthAckT *AsAuthAck() {
+    return type == LobbyPayload_AuthAck ?
+      reinterpret_cast<GenericBoson::Zozo::AuthAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::AuthAckT *AsAuthAck() const {
+    return type == LobbyPayload_AuthAck ?
+      reinterpret_cast<const GenericBoson::Zozo::AuthAckT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::ServerListReqT *AsServerListReq() {
+    return type == LobbyPayload_ServerListReq ?
+      reinterpret_cast<GenericBoson::Zozo::ServerListReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::ServerListReqT *AsServerListReq() const {
+    return type == LobbyPayload_ServerListReq ?
+      reinterpret_cast<const GenericBoson::Zozo::ServerListReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::ServerListAckT *AsServerListAck() {
+    return type == LobbyPayload_ServerListAck ?
+      reinterpret_cast<GenericBoson::Zozo::ServerListAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::ServerListAckT *AsServerListAck() const {
+    return type == LobbyPayload_ServerListAck ?
+      reinterpret_cast<const GenericBoson::Zozo::ServerListAckT *>(value) : nullptr;
+  }
+};
+
 bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyPayload type);
 bool VerifyLobbyPayloadVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
+struct AuthReqT : public ::flatbuffers::NativeTable {
+  typedef AuthReq TableType;
+  std::string account{};
+  std::string password{};
+  int32_t server_id = 0;
+};
+
 struct AuthReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthReqT NativeTableType;
   typedef AuthReqBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ACCOUNT = 4,
@@ -122,6 +219,9 @@ struct AuthReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_SERVER_ID, 4) &&
            verifier.EndTable();
   }
+  AuthReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(AuthReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<AuthReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct AuthReqBuilder {
@@ -174,7 +274,19 @@ inline ::flatbuffers::Offset<AuthReq> CreateAuthReqDirect(
       server_id);
 }
 
+::flatbuffers::Offset<AuthReq> CreateAuthReq(::flatbuffers::FlatBufferBuilder &_fbb, const AuthReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct AuthAckT : public ::flatbuffers::NativeTable {
+  typedef AuthAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+  int64_t user_id = 0;
+  std::string token{};
+  std::string ip{};
+  std::string port{};
+};
+
 struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef AuthAckT NativeTableType;
   typedef AuthAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
@@ -210,6 +322,9 @@ struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(port()) &&
            verifier.EndTable();
   }
+  AuthAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(AuthAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<AuthAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct AuthAckBuilder {
@@ -277,12 +392,22 @@ inline ::flatbuffers::Offset<AuthAck> CreateAuthAckDirect(
       port__);
 }
 
+::flatbuffers::Offset<AuthAck> CreateAuthAck(::flatbuffers::FlatBufferBuilder &_fbb, const AuthAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct ServerListReqT : public ::flatbuffers::NativeTable {
+  typedef ServerListReq TableType;
+};
+
 struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ServerListReqT NativeTableType;
   typedef ServerListReqBuilder Builder;
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            verifier.EndTable();
   }
+  ServerListReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(ServerListReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<ServerListReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct ServerListReqBuilder {
@@ -306,7 +431,20 @@ inline ::flatbuffers::Offset<ServerListReq> CreateServerListReq(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<ServerListReq> CreateServerListReq(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct ServerListAckT : public ::flatbuffers::NativeTable {
+  typedef ServerListAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+  std::vector<std::unique_ptr<GenericBoson::Zozo::ServerInfoT>> server_infos{};
+  ServerListAckT() = default;
+  ServerListAckT(const ServerListAckT &o);
+  ServerListAckT(ServerListAckT&&) FLATBUFFERS_NOEXCEPT = default;
+  ServerListAckT &operator=(ServerListAckT o) FLATBUFFERS_NOEXCEPT;
+};
+
 struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ServerListAckT NativeTableType;
   typedef ServerListAckBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
@@ -326,6 +464,9 @@ struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(server_infos()) &&
            verifier.EndTable();
   }
+  ServerListAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(ServerListAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<ServerListAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 struct ServerListAckBuilder {
@@ -370,7 +511,15 @@ inline ::flatbuffers::Offset<ServerListAck> CreateServerListAckDirect(
       server_infos__);
 }
 
+::flatbuffers::Offset<ServerListAck> CreateServerListAck(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct LobbyMessageT : public ::flatbuffers::NativeTable {
+  typedef LobbyMessage TableType;
+  GenericBoson::Zozo::LobbyPayloadUnion payload{};
+};
+
 struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef LobbyMessageT NativeTableType;
   typedef LobbyMessageBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
@@ -402,6 +551,9 @@ struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyLobbyPayload(verifier, payload(), payload_type()) &&
            verifier.EndTable();
   }
+  LobbyMessageT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(LobbyMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<LobbyMessage> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 };
 
 template<> inline const GenericBoson::Zozo::AuthReq *LobbyMessage::payload_as<GenericBoson::Zozo::AuthReq>() const {
@@ -451,6 +603,171 @@ inline ::flatbuffers::Offset<LobbyMessage> CreateLobbyMessage(
   return builder_.Finish();
 }
 
+::flatbuffers::Offset<LobbyMessage> CreateLobbyMessage(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+inline AuthReqT *AuthReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<AuthReqT>(new AuthReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void AuthReq::UnPackTo(AuthReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = account(); if (_e) _o->account = _e->str(); }
+  { auto _e = password(); if (_e) _o->password = _e->str(); }
+  { auto _e = server_id(); _o->server_id = _e; }
+}
+
+inline ::flatbuffers::Offset<AuthReq> AuthReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateAuthReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<AuthReq> CreateAuthReq(::flatbuffers::FlatBufferBuilder &_fbb, const AuthReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const AuthReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _account = _o->account.empty() ? 0 : _fbb.CreateString(_o->account);
+  auto _password = _o->password.empty() ? 0 : _fbb.CreateString(_o->password);
+  auto _server_id = _o->server_id;
+  return GenericBoson::Zozo::CreateAuthReq(
+      _fbb,
+      _account,
+      _password,
+      _server_id);
+}
+
+inline AuthAckT *AuthAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<AuthAckT>(new AuthAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void AuthAck::UnPackTo(AuthAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+  { auto _e = user_id(); _o->user_id = _e; }
+  { auto _e = token(); if (_e) _o->token = _e->str(); }
+  { auto _e = ip(); if (_e) _o->ip = _e->str(); }
+  { auto _e = port(); if (_e) _o->port = _e->str(); }
+}
+
+inline ::flatbuffers::Offset<AuthAck> AuthAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const AuthAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateAuthAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<AuthAck> CreateAuthAck(::flatbuffers::FlatBufferBuilder &_fbb, const AuthAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const AuthAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  auto _user_id = _o->user_id;
+  auto _token = _o->token.empty() ? 0 : _fbb.CreateString(_o->token);
+  auto _ip = _o->ip.empty() ? 0 : _fbb.CreateString(_o->ip);
+  auto _port = _o->port.empty() ? 0 : _fbb.CreateString(_o->port);
+  return GenericBoson::Zozo::CreateAuthAck(
+      _fbb,
+      _result_code,
+      _user_id,
+      _token,
+      _ip,
+      _port);
+}
+
+inline ServerListReqT *ServerListReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<ServerListReqT>(new ServerListReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void ServerListReq::UnPackTo(ServerListReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+}
+
+inline ::flatbuffers::Offset<ServerListReq> ServerListReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateServerListReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<ServerListReq> CreateServerListReq(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const ServerListReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  return GenericBoson::Zozo::CreateServerListReq(
+      _fbb);
+}
+
+inline ServerListAckT::ServerListAckT(const ServerListAckT &o)
+      : result_code(o.result_code) {
+  server_infos.reserve(o.server_infos.size());
+  for (const auto &server_infos_ : o.server_infos) { server_infos.emplace_back((server_infos_) ? new GenericBoson::Zozo::ServerInfoT(*server_infos_) : nullptr); }
+}
+
+inline ServerListAckT &ServerListAckT::operator=(ServerListAckT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(result_code, o.result_code);
+  std::swap(server_infos, o.server_infos);
+  return *this;
+}
+
+inline ServerListAckT *ServerListAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<ServerListAckT>(new ServerListAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void ServerListAck::UnPackTo(ServerListAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+  { auto _e = server_infos(); if (_e) { _o->server_infos.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->server_infos[_i]) { _e->Get(_i)->UnPackTo(_o->server_infos[_i].get(), _resolver); } else { _o->server_infos[_i] = std::unique_ptr<GenericBoson::Zozo::ServerInfoT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->server_infos.resize(0); } }
+}
+
+inline ::flatbuffers::Offset<ServerListAck> ServerListAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateServerListAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<ServerListAck> CreateServerListAck(::flatbuffers::FlatBufferBuilder &_fbb, const ServerListAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const ServerListAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  auto _server_infos = _o->server_infos.size() ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ServerInfo>> (_o->server_infos.size(), [](size_t i, _VectorArgs *__va) { return CreateServerInfo(*__va->__fbb, __va->__o->server_infos[i].get(), __va->__rehasher); }, &_va ) : 0;
+  return GenericBoson::Zozo::CreateServerListAck(
+      _fbb,
+      _result_code,
+      _server_infos);
+}
+
+inline LobbyMessageT *LobbyMessage::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<LobbyMessageT>(new LobbyMessageT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void LobbyMessage::UnPackTo(LobbyMessageT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = payload_type(); _o->payload.type = _e; }
+  { auto _e = payload(); if (_e) _o->payload.value = GenericBoson::Zozo::LobbyPayloadUnion::UnPack(_e, payload_type(), _resolver); }
+}
+
+inline ::flatbuffers::Offset<LobbyMessage> LobbyMessage::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyMessageT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateLobbyMessage(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<LobbyMessage> CreateLobbyMessage(::flatbuffers::FlatBufferBuilder &_fbb, const LobbyMessageT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const LobbyMessageT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _payload_type = _o->payload.type;
+  auto _payload = _o->payload.Pack(_fbb);
+  return GenericBoson::Zozo::CreateLobbyMessage(
+      _fbb,
+      _payload_type,
+      _payload);
+}
+
 inline bool VerifyLobbyPayload(::flatbuffers::Verifier &verifier, const void *obj, LobbyPayload type) {
   switch (type) {
     case LobbyPayload_NONE: {
@@ -488,6 +805,103 @@ inline bool VerifyLobbyPayloadVector(::flatbuffers::Verifier &verifier, const ::
   return true;
 }
 
+inline void *LobbyPayloadUnion::UnPack(const void *obj, LobbyPayload type, const ::flatbuffers::resolver_function_t *resolver) {
+  (void)resolver;
+  switch (type) {
+    case LobbyPayload_AuthReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyPayload_AuthAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyPayload_ServerListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case LobbyPayload_ServerListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    default: return nullptr;
+  }
+}
+
+inline ::flatbuffers::Offset<void> LobbyPayloadUnion::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const ::flatbuffers::rehasher_function_t *_rehasher) const {
+  (void)_rehasher;
+  switch (type) {
+    case LobbyPayload_AuthReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthReqT *>(value);
+      return CreateAuthReq(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyPayload_AuthAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::AuthAckT *>(value);
+      return CreateAuthAck(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyPayload_ServerListReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListReqT *>(value);
+      return CreateServerListReq(_fbb, ptr, _rehasher).Union();
+    }
+    case LobbyPayload_ServerListAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::ServerListAckT *>(value);
+      return CreateServerListAck(_fbb, ptr, _rehasher).Union();
+    }
+    default: return 0;
+  }
+}
+
+inline LobbyPayloadUnion::LobbyPayloadUnion(const LobbyPayloadUnion &u) : type(u.type), value(nullptr) {
+  switch (type) {
+    case LobbyPayload_AuthReq: {
+      value = new GenericBoson::Zozo::AuthReqT(*reinterpret_cast<GenericBoson::Zozo::AuthReqT *>(u.value));
+      break;
+    }
+    case LobbyPayload_AuthAck: {
+      value = new GenericBoson::Zozo::AuthAckT(*reinterpret_cast<GenericBoson::Zozo::AuthAckT *>(u.value));
+      break;
+    }
+    case LobbyPayload_ServerListReq: {
+      value = new GenericBoson::Zozo::ServerListReqT(*reinterpret_cast<GenericBoson::Zozo::ServerListReqT *>(u.value));
+      break;
+    }
+    case LobbyPayload_ServerListAck: {
+      value = new GenericBoson::Zozo::ServerListAckT(*reinterpret_cast<GenericBoson::Zozo::ServerListAckT *>(u.value));
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+inline void LobbyPayloadUnion::Reset() {
+  switch (type) {
+    case LobbyPayload_AuthReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::AuthReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyPayload_AuthAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::AuthAckT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyPayload_ServerListReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::ServerListReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case LobbyPayload_ServerListAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::ServerListAckT *>(value);
+      delete ptr;
+      break;
+    }
+    default: break;
+  }
+  value = nullptr;
+  type = LobbyPayload_NONE;
+}
+
 inline const GenericBoson::Zozo::LobbyMessage *GetLobbyMessage(const void *buf) {
   return ::flatbuffers::GetRoot<GenericBoson::Zozo::LobbyMessage>(buf);
 }
@@ -516,6 +930,18 @@ inline void FinishSizePrefixedLobbyMessageBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
     ::flatbuffers::Offset<GenericBoson::Zozo::LobbyMessage> root) {
   fbb.FinishSizePrefixed(root);
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::LobbyMessageT> UnPackLobbyMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::LobbyMessageT>(GetLobbyMessage(buf)->UnPack(res));
+}
+
+inline std::unique_ptr<GenericBoson::Zozo::LobbyMessageT> UnPackSizePrefixedLobbyMessage(
+    const void *buf,
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
+  return std::unique_ptr<GenericBoson::Zozo::LobbyMessageT>(GetSizePrefixedLobbyMessage(buf)->UnPack(res));
 }
 
 }  // namespace Zozo

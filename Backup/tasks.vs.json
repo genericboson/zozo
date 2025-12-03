@@ -7,7 +7,7 @@
       "type": "launch",
       "contextType": "custom",
       "command": "flatc.exe",
-      "args": [ "--cpp", "-o ${fileDirname}", "${file}" ]
+      "args": [ "--cpp", "-o ${fileDirname}", "${file}", "--gen-object-api" ]
     },
 	{
       "taskLabel": "execute-batch",

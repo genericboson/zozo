@@ -1,11 +1,11 @@
 include "Constant.fbs";
+include "Type.fbs";
 
 namespace GenericBoson.Zozo;
 
 table CharacterPositionUpdateReq
 {
-    x: float;
-    y: float;
+    position: Vector2I;
 }
 
 table CharacterPositionUpdateAck
