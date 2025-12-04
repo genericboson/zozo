@@ -172,6 +172,20 @@ namespace GenericBoson
                 auto queryStr = mysql::with_params(
                     "SELECT name, level FROM zozo_game.character WHERE id = {};", characterId);
 
+				// #todo change to CharacterSelect_Select_UserCharacter
+                mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
+                if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
+                    queryStr,
+                    result,
+                    asio::as_tuple(asio::use_awaitable));
+                    dbErr)
+                {
+                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+                    co_return;
+                }
+
+                auto selectResults = result.rows<0>();
+
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
                 auto reqOffset = Zozo::CreateCharacterPositionUpdateReq(fbb, &m_position);
                 auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset, reqOffset);
