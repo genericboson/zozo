@@ -17,6 +17,8 @@ namespace GenericBoson
 		auto Get(CharacterId id) -> std::shared_ptr<Character>;
 		auto Get(UserId id) -> std::vector<std::shared_ptr<Character>>;
 
+		UserId GetUserId(CharacterId id);
+
 		void RegiterToken(UserId userId, const std::string& token);
 		bool IsValidUser(UserId userId, const std::string& token);
 
@@ -27,6 +29,7 @@ namespace GenericBoson
 		std::shared_mutex m_lock;
 		std::unordered_map<CharacterId, std::shared_ptr<Character>> m_characters;
 		std::unordered_map<UserId, std::set<CharacterId>>           m_userIdCharacterIds;
+		std::unordered_map<CharacterId, UserId>                     m_characterIdUserId;
 		std::unordered_map<UserId, std::string>                     m_tokens;
 	};
 }

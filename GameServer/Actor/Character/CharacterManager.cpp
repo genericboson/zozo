@@ -38,6 +38,16 @@ namespace GenericBoson
 		return {};
 	}
 
+	UserId CharacterManager::GetUserId(CharacterId id)
+	{
+		std::shared_lock<std::shared_mutex> lock{ m_lock };
+		if (const auto found = m_characterIdUserId.find(id);
+			found != m_characterIdUserId.end())
+			return found->second;
+
+		return UserId{ 0 };
+	}
+
 	void CharacterManager::RegiterToken(UserId userId, const std::string& token)
 	{
 		std::unique_lock<std::shared_mutex> lock{ m_lock };

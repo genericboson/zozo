@@ -2,12 +2,13 @@ namespace GenericBoson.Zozo;
 
 enum ResultCode : uint
 {
-  Success          = 0,
-  InvalidPacket    = 1,
-  WrongPassword    = 2,
-  NewAccount       = 3,
-  LogicError       = 4,
-  NoData           = 5,
-  NotAllowedServer = 6,
-  InvalidToken     = 7,
+  Success            = 0,
+  InvalidPacket      = 1,
+  WrongPassword      = 2,
+  NewAccount         = 3,
+  LogicError         = 4,
+  NoData             = 5,
+  NotAllowedServer   = 6,
+  InvalidToken       = 7,
+  InvalidCharacterId = 8,
 }

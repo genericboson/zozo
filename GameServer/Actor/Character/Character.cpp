@@ -143,7 +143,34 @@ namespace GenericBoson
                 auto selectReq = message->payload_as_CharacterSelectReq();
 				NULL_CO_RETURN(selectReq);
 
-				flatbuffers::FlatBufferBuilder fbb;
+                flatbuffers::FlatBufferBuilder fbb;
+
+				const auto characterId = selectReq->id();
+				const auto tokenStr    = selectReq->token()->c_str();
+
+				const auto userId      = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
+                if (!userId)
+                {
+                    WARN_LOG("[Invalid CharacterId]  token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidCharacterId);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+                    break;
+                }
+
+                if (!CharacterManager::GetInstance()->IsValidUser(userId, tokenStr))
+                {
+                    WARN_LOG("[Invalid CharacterListReq]  token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidToken);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+                    break;
+                }
+
+                INFO_LOG("[CharacterListReq] token : {}", tokenStr);
+
+                auto queryStr = mysql::with_params(
+                    "SELECT name, level FROM zozo_game.character WHERE id = {};", characterId);
 
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
                 auto reqOffset = Zozo::CreateCharacterPositionUpdateReq(fbb, &m_position);
@@ -163,7 +190,7 @@ namespace GenericBoson
         case GamePayload::GamePayload_CharacterPositionUpdateReq:
             {
 			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
-                INFO_LOG("CharacterPos:{},{}", moveReq->x(), moveReq->y());
+                INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
             }
             break;
         case GamePayload::GamePayload_CharacterPositionUpdateAck:

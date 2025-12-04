@@ -25,11 +25,12 @@ enum ResultCode : uint32_t {
   ResultCode_NoData = 5,
   ResultCode_NotAllowedServer = 6,
   ResultCode_InvalidToken = 7,
+  ResultCode_InvalidCharacterId = 8,
   ResultCode_MIN = ResultCode_Success,
-  ResultCode_MAX = ResultCode_InvalidToken
+  ResultCode_MAX = ResultCode_InvalidCharacterId
 };
 
-inline const ResultCode (&EnumValuesResultCode())[8] {
+inline const ResultCode (&EnumValuesResultCode())[9] {
   static const ResultCode values[] = {
     ResultCode_Success,
     ResultCode_InvalidPacket,
@@ -38,13 +39,14 @@ inline const ResultCode (&EnumValuesResultCode())[8] {
     ResultCode_LogicError,
     ResultCode_NoData,
     ResultCode_NotAllowedServer,
-    ResultCode_InvalidToken
+    ResultCode_InvalidToken,
+    ResultCode_InvalidCharacterId
   };
   return values;
 }
 
 inline const char * const *EnumNamesResultCode() {
-  static const char * const names[9] = {
+  static const char * const names[10] = {
     "Success",
     "InvalidPacket",
     "WrongPassword",
@@ -53,13 +55,14 @@ inline const char * const *EnumNamesResultCode() {
     "NoData",
     "NotAllowedServer",
     "InvalidToken",
+    "InvalidCharacterId",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameResultCode(ResultCode e) {
-  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_InvalidToken)) return "";
+  if (::flatbuffers::IsOutRange(e, ResultCode_Success, ResultCode_InvalidCharacterId)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesResultCode()[index];
 }
