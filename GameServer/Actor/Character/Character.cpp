@@ -115,6 +115,14 @@ namespace GenericBoson
                 }
 
                 auto selectResults = result.rows<0>();
+                if (selectResults.size() <= 0)
+                {
+                    WARN_LOG("[CharacterListReq] NoData. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_NoData);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
+                    fbb.Finish(msg);
+                    co_return;
+                }
 
                 std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
@@ -152,7 +160,7 @@ namespace GenericBoson
                 if (!userId)
                 {
                     WARN_LOG("[Invalid CharacterId]  token : {}, user id : {}", tokenStr, userId);
-                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidCharacterId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidCharacterId);
                     const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
                     fbb.Finish(msg);
                     break;
@@ -160,14 +168,14 @@ namespace GenericBoson
 
                 if (!CharacterManager::GetInstance()->IsValidUser(userId, tokenStr))
                 {
-                    WARN_LOG("[Invalid CharacterListReq]  token : {}, user id : {}", tokenStr, userId);
-                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidToken);
+                    WARN_LOG("[Invalid CharacterSelectReq]  token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidToken);
                     const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
                     fbb.Finish(msg);
                     break;
                 }
 
-                INFO_LOG("[CharacterListReq] token : {}", tokenStr);
+                INFO_LOG("[CharacterSelectReq] token : {}", tokenStr);
 
                 auto queryStr = mysql::with_params(
                     "SELECT name, level FROM zozo_game.character WHERE id = {};", characterId);
@@ -185,6 +193,20 @@ namespace GenericBoson
                 }
 
                 auto selectResults = result.rows<0>();
+                if (selectResults.size() <= 0)
+                {
+                    WARN_LOG("[CharacterSelectReq] NoData. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_NoData);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+                    co_return;
+                }
+
+                for (auto& selectResult : selectResults)
+                {
+					m_info.level = selectResult.level.value_or(0);
+                    m_info.name = selectResult.name.value_or("");
+                }
 
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
                 auto reqOffset = Zozo::CreateCharacterPositionUpdateReq(fbb, &m_position);
