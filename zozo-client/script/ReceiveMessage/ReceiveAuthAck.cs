@@ -13,7 +13,7 @@ namespace Zozo
 
         private void ConsumeAuthAck(AuthAck ack)
         {
-            using (var globalNode = GetNode<Node>("/root/Global"))
+            using (var globalNode = GetNode<Node>("/root/GDGlobal"))
             {
                 switch (ack.ResultCode)
                 {

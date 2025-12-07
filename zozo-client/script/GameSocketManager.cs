@@ -16,7 +16,7 @@ namespace Zozo
 
             if (string.IsNullOrEmpty(m_gameServerIp) || string.IsNullOrEmpty(m_gameServerPort))
             {
-                var globalNode = GetNode<Node>("/root/Global");
+                var globalNode = GetNode<Node>("/root/GDGlobal");
                 if (globalNode == null)
                 {
                     GD.PrintErr("Global node not found");
@@ -41,6 +41,9 @@ namespace Zozo
                 {
                     case GamePayload.CharacterListAck:
                         ReceiveCharacterListAck(gameMessage);
+                        break;
+                    case GamePayload.CharacterSelectAck:
+                        ReceiveCharacterSelectAck(gameMessage);
                         break;
                     default:
                         GD.PrintErr($"Unknown PayloadType: {gameMessage.PayloadType}");

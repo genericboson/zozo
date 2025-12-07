@@ -1,8 +1,6 @@
 using GenericBoson.Zozo;
 using Godot;
 using Google.FlatBuffers;
-using System;
-using System.Diagnostics;
 
 namespace Zozo
 {

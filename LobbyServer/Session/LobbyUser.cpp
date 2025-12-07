@@ -74,14 +74,14 @@ namespace GenericBoson
         auto message = Zozo::GetLobbyMessage(pData);
         NULL_CO_RETURN(message);
 
-        flatbuffers::FlatBufferBuilder userFbb;
-
         switch (message->payload_type())
         {
         case LobbyPayload::LobbyPayload_ServerListReq:
             {
                 auto listReq = message->payload_as_ServerListReq();
                 NULL_CO_RETURN(listReq);
+
+                flatbuffers::FlatBufferBuilder userFbb;
 
                 const auto infos = LobbyStubManager::GetInstance()->GetServerInfos(userFbb);
                 
@@ -91,6 +91,8 @@ namespace GenericBoson
                 auto msg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload::LobbyPayload_ServerListAck, ack.Union());
 
                 userFbb.Finish(msg);
+
+                m_pSocket->EnqueueMessage(userFbb.GetBufferPointer(), userFbb.GetSize());
             }
             break;
         case LobbyPayload::LobbyPayload_ServerListAck:
@@ -170,6 +172,8 @@ namespace GenericBoson
                     }
                 }
 
+                flatbuffers::FlatBufferBuilder userFbb;
+
 				flatbuffers::Offset<flatbuffers::String> tokenOffset = 0, ipOffset = 0, portOffset = 0;
                 if (resultCode == Zozo::ResultCode::ResultCode_Success || 
                     resultCode == Zozo::ResultCode::ResultCode_NewAccount)
@@ -182,6 +186,8 @@ namespace GenericBoson
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
 
                 userFbb.Finish(lobbyMsg);
+
+                m_pSocket->EnqueueMessage(userFbb.GetBufferPointer(), userFbb.GetSize());
             }
             break;
         default:
@@ -191,8 +197,6 @@ namespace GenericBoson
             }
             co_return;
         }
-
-        m_pSocket->EnqueueMessage(userFbb.GetBufferPointer(), userFbb.GetSize());
     }
 
     void LobbyUser::SendLoginAck()
