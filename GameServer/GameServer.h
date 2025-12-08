@@ -30,6 +30,9 @@ namespace GenericBoson
 	public:
 		static auto CreateGameServer(int32_t port = 8001) -> std::shared_ptr<GameServer>;
 
+	private:
+		void InitializeSingletons();
+
 	protected:
 		std::optional<pt::ptree> ReadIni() override;
 

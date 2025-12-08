@@ -22,6 +22,8 @@ namespace GenericBoson
 		void RegiterToken(UserId userId, const std::string& token);
 		bool IsValidUser(UserId userId, const std::string& token);
 
+		bool Initialize();
+
 	private:
 		auto _Get(CharacterId id) -> std::shared_ptr<Character>;
 

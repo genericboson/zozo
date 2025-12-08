@@ -42,26 +42,26 @@ namespace GenericBoson
 			co_return;
 
 		auto message = Zozo::GetLobbyGameMessage(pData);
-		NULL_CO_RETURN(message);
+		NULL_CO_VOID_RETURN(message);
 
 		switch (message->payload_type())
 		{
 		case LobbyGamePayload::LobbyGamePayload_RegisterAck:
 			{
 				auto registerAck = message->payload_as_RegisterAck();
-				NULL_CO_RETURN(registerAck);
+				NULL_CO_VOID_RETURN(registerAck);
 
 				INFO_LOG("RegisterAck received");
 
-				NULL_CO_RETURN(registerAck->db_ip());
-				NULL_CO_RETURN(registerAck->db_acount());
-				NULL_CO_RETURN(registerAck->db_password());
-				NULL_CO_RETURN(registerAck->db_main_schema());
-				NULL_CO_RETURN(registerAck->db_port());
+				NULL_CO_VOID_RETURN(registerAck->db_ip());
+				NULL_CO_VOID_RETURN(registerAck->db_acount());
+				NULL_CO_VOID_RETURN(registerAck->db_password());
+				NULL_CO_VOID_RETURN(registerAck->db_main_schema());
+				NULL_CO_VOID_RETURN(registerAck->db_port());
 
-				NULL_CO_RETURN(registerAck->server_name());
-				NULL_CO_RETURN(registerAck->listen_port());
-				NULL_CO_RETURN(registerAck->db_ip());
+				NULL_CO_VOID_RETURN(registerAck->server_name());
+				NULL_CO_VOID_RETURN(registerAck->listen_port());
+				NULL_CO_VOID_RETURN(registerAck->db_ip());
 
 				m_server.m_dbIp          = registerAck->db_ip()->str();
 				m_server.m_dbAccount     = registerAck->db_acount()->str();
@@ -90,7 +90,7 @@ namespace GenericBoson
 		case LobbyGamePayload::LobbyGamePayload_AuthRelayReq:
 			{
 				auto relayReq = message->payload_as_AuthRelayReq();
-				NULL_CO_RETURN(relayReq);
+				NULL_CO_VOID_RETURN(relayReq);
 
 				INFO_LOG("AuthRelayReq received. UserId - {}, Token - {}",
 					relayReq->user_id(),

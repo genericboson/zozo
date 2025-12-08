@@ -25,7 +25,7 @@ namespace GenericBoson
 		return returnValue;                      \
 	}
 
-#define NULL_CO_RETURN( expression )   \
+#define NULL_CO_VOID_RETURN( expression )   \
 	if (!(expression))                           \
 	{                                            \
 		WARN_LOG("Null = '" #expression "'"); \

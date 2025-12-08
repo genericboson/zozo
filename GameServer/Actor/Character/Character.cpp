@@ -74,14 +74,14 @@ namespace GenericBoson
             co_return;
 
         auto message = Zozo::GetGameMessage(pData);
-        NULL_CO_RETURN(message);
+        NULL_CO_VOID_RETURN(message);
 
         switch (message->payload_type())
         {
         case GamePayload::GamePayload_CharacterListReq:
             {
                 auto req = message->payload_as_CharacterListReq();
-                NULL_CO_RETURN(req);
+                NULL_CO_VOID_RETURN(req);
 
                 const auto userId   = req->user_id();
                 const auto tokenStr = req->token()->c_str();
@@ -149,14 +149,14 @@ namespace GenericBoson
         case GamePayload::GamePayload_CharacterSelectReq:
             {
                 auto selectReq = message->payload_as_CharacterSelectReq();
-				NULL_CO_RETURN(selectReq);
+                NULL_CO_VOID_RETURN(selectReq);
 
                 flatbuffers::FlatBufferBuilder fbb;
 
 				const auto characterId = selectReq->id();
 				const auto tokenStr    = selectReq->token()->c_str();
 
-				const auto userId      = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
+				const int64_t userId      = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
                 if (!userId)
                 {
                     WARN_LOG("[Invalid CharacterId]  token : {}, user id : {}", tokenStr, userId);
@@ -166,7 +166,7 @@ namespace GenericBoson
                     break;
                 }
 
-                if (!CharacterManager::GetInstance()->IsValidUser(userId, tokenStr))
+                if (!CharacterManager::GetInstance()->IsValidUser(UserId{ userId }, tokenStr))
                 {
                     WARN_LOG("[Invalid CharacterSelectReq]  token : {}, user id : {}", tokenStr, userId);
                     const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidToken);

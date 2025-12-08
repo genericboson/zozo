@@ -52,7 +52,14 @@ namespace GenericBoson
 			return false;
 		}
 
+		InitializeSingletons();
+
 		return true;
+	}
+
+	void GameServer::InitializeSingletons()
+	{
+
 	}
 
 	std::optional<pt::ptree> GameServer::ReadIni()
