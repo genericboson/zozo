@@ -31,7 +31,7 @@ namespace GenericBoson
 		static auto CreateGameServer(int32_t port = 8001) -> std::shared_ptr<GameServer>;
 
 	private:
-		void InitializeSingletons();
+		asio::awaitable<void> InitializeSingletons();
 
 	protected:
 		std::optional<pt::ptree> ReadIni() override;

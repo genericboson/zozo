@@ -52,14 +52,12 @@ namespace GenericBoson
 			return false;
 		}
 
-		InitializeSingletons();
-
 		return true;
 	}
 
-	void GameServer::InitializeSingletons()
+	asio::awaitable<void> GameServer::InitializeSingletons()
 	{
-
+		co_return;
 	}
 
 	std::optional<pt::ptree> GameServer::ReadIni()

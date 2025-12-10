@@ -1,13 +1,34 @@
 #include "PCH.h"
 
+#include <boost/mysql.hpp>
+#include <boost/mysql/static_results.hpp>
+#include <boost/mysql/pfr.hpp>
+
 #include "Character.h"
 #include "CharacterManager.h"
 
 namespace GenericBoson
 {
+	namespace mysql = boost::mysql;
+
 	void CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter)
 	{
+		std::unique_lock<std::shared_mutex> lock{ m_lock };
+
 		m_characters[CharacterId{ pCharacter->Id() }] = pCharacter;
+	}
+
+	void CharacterManager::SetUserCharacterIds(UserId userId, std::vector<CharacterId> characterIds)
+	{
+		std::unique_lock<std::shared_mutex> lock{ m_lock };
+
+		std::set<CharacterId> characterIdSet;
+		for (const auto characterId : characterIds)
+		{
+			characterIdSet.insert(characterId);
+			m_characterIdUserId[characterId] = userId;
+		}
+		m_userIdCharacterIds[userId] = std::move(characterIdSet);
 	}
 
 	auto CharacterManager::Get(CharacterId id)
@@ -64,40 +85,6 @@ namespace GenericBoson
 				return true;
 		}
 		return false;
-	}
-
-	bool CharacterManager::Initialize()
-	{
-		//auto queryStr = mysql::with_params(
-		//	"SELECT name, level FROM zozo_game.character WHERE id = {};", characterId);
-
-		//// #todo change to CharacterSelect_Select_UserCharacter
-		//mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-		//if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
-		//	queryStr,
-		//	result,
-		//	asio::as_tuple(asio::use_awaitable));
-		//	dbErr)
-		//{
-		//	ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-		//	co_return;
-		//}
-
-		//auto selectResults = result.rows<0>();
-		//if (selectResults.size() <= 0)
-		//{
-		//	WARN_LOG("[CharacterSelectReq] NoData. token : {}, user id : {}", tokenStr, userId);
-		//	const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_NoData);
-		//	const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
-		//	fbb.Finish(msg);
-		//	co_return;
-		//}
-
-		//for (auto& selectResult : selectResults)
-		//{
-		//}
-
-		return true;
 	}
 
 	auto CharacterManager::_Get(CharacterId id) -> std::shared_ptr<Character>

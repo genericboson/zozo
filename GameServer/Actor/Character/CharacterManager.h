@@ -14,6 +14,8 @@ namespace GenericBoson
 	public:
 		void AddCharacter(std::shared_ptr< Character >&& pCharacter);
 
+		void SetUserCharacterIds( UserId userId, std::vector<CharacterId> characterIds);
+
 		auto Get(CharacterId id) -> std::shared_ptr<Character>;
 		auto Get(UserId id) -> std::vector<std::shared_ptr<Character>>;
 
@@ -21,8 +23,6 @@ namespace GenericBoson
 
 		void RegiterToken(UserId userId, const std::string& token);
 		bool IsValidUser(UserId userId, const std::string& token);
-
-		bool Initialize();
 
 	private:
 		auto _Get(CharacterId id) -> std::shared_ptr<Character>;

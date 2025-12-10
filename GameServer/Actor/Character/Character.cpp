@@ -126,8 +126,12 @@ namespace GenericBoson
 
                 std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
+				std::vector<CharacterId> characterIds;
+                characterIds.reserve(selectResults.size());
                 for (auto& selectResult : selectResults)
                 {
+                    characterIds.push_back(CharacterId{ selectResult.id });
+
                     auto name = fbb.CreateString(std::format("{} [Lv.{}]",
                         selectResult.name.value_or(""),
                         selectResult.level.value_or(0)));
@@ -135,6 +139,10 @@ namespace GenericBoson
                     auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
                     pairDatas.emplace_back(std::move(characterDataPair));
                 }
+
+                CharacterManager::GetInstance()->SetUserCharacterIds(
+                    UserId{ userId },
+					std::move(characterIds));
 
                 const auto pairDatasOffset = fbb.CreateVector(pairDatas);
 
@@ -178,7 +186,7 @@ namespace GenericBoson
                 INFO_LOG("[CharacterSelectReq] token : {}", tokenStr);
 
                 auto queryStr = mysql::with_params(
-                    "SELECT name, level FROM zozo_game.character WHERE id = {};", characterId);
+                    "SELECT id, name, level FROM zozo_game.character WHERE id = {};", characterId);
 
 				// #todo change to CharacterSelect_Select_UserCharacter
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
