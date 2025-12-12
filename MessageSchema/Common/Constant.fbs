@@ -12,3 +12,10 @@ enum ResultCode : uint
   InvalidToken       = 7,
   InvalidCharacterId = 8,
 }
+
+enum CharacterState : uint
+{
+  None      = 0,
+  Playing   = 1,
+  LogedOff  = 2,
+}

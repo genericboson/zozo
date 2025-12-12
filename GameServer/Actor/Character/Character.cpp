@@ -164,7 +164,7 @@ namespace GenericBoson
 				const auto characterId = selectReq->id();
 				const auto tokenStr    = selectReq->token()->c_str();
 
-				const int64_t userId      = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
+				const int64_t userId   = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
                 if (!userId)
                 {
                     WARN_LOG("[Invalid CharacterId]  token : {}, user id : {}", tokenStr, userId);

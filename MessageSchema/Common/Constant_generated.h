@@ -67,6 +67,39 @@ inline const char *EnumNameResultCode(ResultCode e) {
   return EnumNamesResultCode()[index];
 }
 
+enum CharacterState : uint32_t {
+  CharacterState_None = 0,
+  CharacterState_Playing = 1,
+  CharacterState_LogedOff = 2,
+  CharacterState_MIN = CharacterState_None,
+  CharacterState_MAX = CharacterState_LogedOff
+};
+
+inline const CharacterState (&EnumValuesCharacterState())[3] {
+  static const CharacterState values[] = {
+    CharacterState_None,
+    CharacterState_Playing,
+    CharacterState_LogedOff
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCharacterState() {
+  static const char * const names[4] = {
+    "None",
+    "Playing",
+    "LogedOff",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCharacterState(CharacterState e) {
+  if (::flatbuffers::IsOutRange(e, CharacterState_None, CharacterState_LogedOff)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCharacterState()[index];
+}
+
 }  // namespace Zozo
 }  // namespace GenericBoson
 
