@@ -24,4 +24,8 @@ namespace GenericBoson
 
 		return true;
 	}
+
+	void Zone::Broadcast()
+	{
+	}
 }

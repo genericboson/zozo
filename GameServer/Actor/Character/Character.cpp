@@ -235,6 +235,8 @@ namespace GenericBoson
             {
 			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
                 INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
+
+
             }
             break;
         case GamePayload::GamePayload_CharacterPositionUpdateAck:
