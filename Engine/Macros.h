@@ -18,6 +18,13 @@ namespace GenericBoson
 		return;                      \
 	}
 
+#define NULL_CONTINUE( expression )   \
+	if (!(expression))                           \
+	{                                            \
+		WARN_LOG("Null = '" #expression "'"); \
+		continue;                      \
+	}
+
 #define NULL_RETURN( expression, returnValue )   \
 	if (!(expression))                           \
 	{                                            \
