@@ -25,7 +25,7 @@ namespace GenericBoson
 		return true;
 	}
 
-	void Zone::Broadcast(const std::vector<BroadCastData>& data)
+	void Zone::Broadcast(const std::vector<BroadCast>& data)
 	{
 		std::shared_lock lock(m_lock);
 
@@ -33,14 +33,14 @@ namespace GenericBoson
 		{
 			for (const auto& [id, wpCharacter] : m_characters)
 			{
-				if (broadcastData.senderCharacterId == id)
+				if (broadcastData.senderCharacterId  == id)
 					continue;
 
 				auto pCharacter = wpCharacter.lock();
 
 				NULL_CONTINUE(pCharacter);
 
-				
+				broadcastData.Cast(pCharacter);
 			}
 		}
 	}

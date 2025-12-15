@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BroadCastData.h"
+#include "BroadCast.h"
 
 namespace GenericBoson
 {
@@ -15,7 +15,7 @@ namespace GenericBoson
 
 		bool Leave(const int64_t id);
 
-		void Broadcast(const std::vector<BroadCastData>& data);
+		void Broadcast(const std::vector<BroadCast>& data);
 
 	private:
 		std::shared_mutex m_lock;

@@ -45,8 +45,9 @@ namespace GenericBoson
         return true;
     }
 
-    void Character::Write()
+    void Character::Write(const uint8_t* pData, const std::size_t size)
     {
+        m_pSocket->EnqueueMessage(pData, size);
     }
 
     void Character::OnDisconnected()
