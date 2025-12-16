@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MessageSchema/Common/Type_generated.h"
+
 namespace GenericBoson
 {
 	class Character;
@@ -15,7 +17,7 @@ namespace GenericBoson
 	class PositionCast : public BroadCast
 	{
 	public:
-		int32_t    x, y;
+		Zozo::Vector2I position;
 
 		void Cast(const std::shared_ptr<Character>& pCharacter) override;
 	};

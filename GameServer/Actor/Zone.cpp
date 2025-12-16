@@ -29,7 +29,7 @@ namespace GenericBoson
 	{
 		std::shared_lock lock(m_lock);
 
-		for (const auto& broadcastData : data)
+		for (auto& broadcastData : data)
 		{
 			for (const auto& [id, wpCharacter] : m_characters)
 			{
