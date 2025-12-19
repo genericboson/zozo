@@ -7,7 +7,7 @@
 
 namespace GenericBoson
 {
-	void PositionCast::Cast(const std::shared_ptr<Character>& pCharacter)
+	void PositionCast::Cast(const std::shared_ptr<Character>& pCharacter) const
 	{
 		flatbuffers::FlatBufferBuilder fbb;
 

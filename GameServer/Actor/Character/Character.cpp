@@ -237,7 +237,11 @@ namespace GenericBoson
 			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
                 INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
 
-
+                if (const auto pZone = m_wpZone.lock())
+                {
+                    PositionCast castData;
+                    pZone->Broadcast({castData});
+                }
             }
             break;
         case GamePayload::GamePayload_CharacterPositionUpdateAck:

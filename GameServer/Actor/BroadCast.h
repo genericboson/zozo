@@ -11,7 +11,7 @@ namespace GenericBoson
 	public:
 		int64_t    senderCharacterId;
 
-		virtual void Cast(const std::shared_ptr<Character>& pCharacter) = 0;
+		virtual void Cast(const std::shared_ptr<Character>& pCharacter) const = 0;
 	};
 
 	class PositionCast : public BroadCast
@@ -19,6 +19,6 @@ namespace GenericBoson
 	public:
 		Zozo::Vector2I position;
 
-		void Cast(const std::shared_ptr<Character>& pCharacter) override;
+		void Cast(const std::shared_ptr<Character>& pCharacter) const override;
 	};
 }
