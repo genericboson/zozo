@@ -6,12 +6,12 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        public void SendCharacterMoveReq(float x, float y)
+        public void SendCharacterPositionUpdateReq(float x, float y)
         {
             m_gameImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
-                var characterMoveReq = CharacterMoveReq.CreateCharacterMoveReq(fbb, x, y);
-                var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterPositionUpdateReq, characterMoveReq.Value);
+                var updateReq = CharacterMoveReq.CreateCharacterMoveReq(fbb, x, y);
+                var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterPositionUpdateReq, updateReq.Value);
                 fbb.Finish(message.Value);
             });
         }

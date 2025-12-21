@@ -5,6 +5,7 @@ namespace GenericBoson.Zozo;
 
 table CharacterPositionUpdateReq
 {
+    id      : int;
     position: Vector2I;
 }
 

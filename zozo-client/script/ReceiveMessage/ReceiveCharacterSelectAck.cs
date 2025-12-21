@@ -19,7 +19,6 @@ namespace Zozo
                 case ResultCode.Success:
                     using (var selectNode = GetNode<Node>("/root/CharacterSelect"))
                     {
-                        GD.Print("test2");
                         CSGlobal.Instance.characterData = ack.Data.Value;
                         selectNode.Call("_select_character", ack.Pos.Value.X, ack.Pos.Value.Y);
                     }

@@ -45,6 +45,9 @@ namespace Zozo
                     case GamePayload.CharacterSelectAck:
                         ReceiveCharacterSelectAck(gameMessage);
                         break;
+                    case GamePayload.CharacterPositionUpdateReq:
+                        ReceiveCharacterPositionUpdateReq(gameMessage);
+                        break;
                     default:
                         GD.PrintErr($"Unknown PayloadType: {gameMessage.PayloadType}");
                         break;
