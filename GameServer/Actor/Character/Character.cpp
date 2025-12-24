@@ -13,6 +13,7 @@
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
+#include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
 #include "GameServer.h"
@@ -218,9 +219,7 @@ namespace GenericBoson
                 }
 
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
-                auto reqOffset = Zozo::CreateCharacterPositionUpdateReq(fbb, &m_position);
-                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset, reqOffset);
-
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset, &m_position);
 				auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
 
                 fbb.Finish(msg);
@@ -240,7 +239,14 @@ namespace GenericBoson
                 if (const auto pZone = m_wpZone.lock())
                 {
                     PositionCast castData;
-                    pZone->Broadcast({castData});
+					castData.senderCharacterId = m_id;
+					castData.position = Vector2I( moveReq->position()->x(), moveReq->position()->y() );
+
+					std::vector<std::unique_ptr<BroadCast>> broadcasts;
+
+					broadcasts.emplace_back(std::make_unique<PositionCast>(castData));
+
+                    pZone->Broadcast(broadcasts);
                 }
             }
             break;

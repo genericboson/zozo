@@ -15,6 +15,7 @@ public enum ResultCode : uint
   NoData = 5,
   NotAllowedServer = 6,
   InvalidToken = 7,
+  InvalidCharacterId = 8,
 };
 
 

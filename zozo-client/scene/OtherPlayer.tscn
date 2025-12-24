@@ -1,7 +1,17 @@
-[gd_scene format=3 uid="uid://dn7wvpo2uxh40"]
+[gd_scene load_steps=3 format=3 uid="uid://dn7wvpo2uxh40"]
+
+[ext_resource type="SpriteFrames" uid="uid://dxxgfkc1owmy6" path="res://art/player_animation.tres" id="1_g1pm2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o7yny"]
+radius = 4.0
 
 [node name="OtherPlayer" type="CharacterBody2D"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -15)
+sprite_frames = ExtResource("1_g1pm2")
+animation = &"idle_front"
+autoplay = "idle_front"
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_o7yny")

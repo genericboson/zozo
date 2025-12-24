@@ -25,22 +25,22 @@ namespace GenericBoson
 		return true;
 	}
 
-	void Zone::Broadcast(const std::vector<BroadCast>& data)
+	void Zone::Broadcast(const std::vector<std::unique_ptr<BroadCast>>& data)
 	{
 		std::shared_lock lock(m_lock);
 
-		for (auto& broadcastData : data)
+		for (auto& pBroadcastData : data)
 		{
 			for (const auto& [id, wpCharacter] : m_characters)
 			{
-				if (broadcastData.senderCharacterId  == id)
+				if (pBroadcastData->senderCharacterId  == id)
 					continue;
 
 				auto pCharacter = wpCharacter.lock();
 
 				NULL_CONTINUE(pCharacter);
 
-				broadcastData.Cast(pCharacter);
+				pBroadcastData->Cast(pCharacter);
 			}
 		}
 	}

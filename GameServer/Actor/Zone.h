@@ -15,7 +15,7 @@ namespace GenericBoson
 
 		bool Leave(const int64_t id);
 
-		void Broadcast(const std::vector<BroadCast>& data);
+		void Broadcast(const std::vector<std::unique_ptr<BroadCast>>& data);
 
 	private:
 		std::shared_mutex m_lock;

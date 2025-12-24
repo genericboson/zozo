@@ -34,7 +34,7 @@ table CharacterSelectAck
     result_code : ResultCode;
     
     data : CharacterInfo;
-    pos : CharacterPositionUpdateReq;
+    position: Vector2I;
 }
 
 union GamePayload

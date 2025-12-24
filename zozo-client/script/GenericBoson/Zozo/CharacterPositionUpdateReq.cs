@@ -19,21 +19,12 @@ public struct CharacterPositionUpdateReq : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CharacterPositionUpdateReq __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public float X { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float Y { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-
-  public static Offset<GenericBoson.Zozo.CharacterPositionUpdateReq> CreateCharacterPositionUpdateReq(FlatBufferBuilder builder,
-      float x = 0.0f,
-      float y = 0.0f) {
-    builder.StartTable(2);
-    CharacterPositionUpdateReq.AddY(builder, y);
-    CharacterPositionUpdateReq.AddX(builder, x);
-    return CharacterPositionUpdateReq.EndCharacterPositionUpdateReq(builder);
-  }
+  public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
   public static void StartCharacterPositionUpdateReq(FlatBufferBuilder builder) { builder.StartTable(2); }
-  public static void AddX(FlatBufferBuilder builder, float x) { builder.AddFloat(0, x, 0.0f); }
-  public static void AddY(FlatBufferBuilder builder, float y) { builder.AddFloat(1, y, 0.0f); }
+  public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(1, positionOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.CharacterPositionUpdateReq> EndCharacterPositionUpdateReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterPositionUpdateReq>(o);
@@ -46,8 +37,8 @@ static public class CharacterPositionUpdateReqVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*X*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 6 /*Y*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 4 /*Id*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 6 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }
