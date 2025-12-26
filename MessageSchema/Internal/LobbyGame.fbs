@@ -19,6 +19,7 @@ table RegisterAck
     server_name    : string;
     db_port        : int;
     listen_port    : int;
+    server_id      : int;
 }
 
 table AuthRelayReq

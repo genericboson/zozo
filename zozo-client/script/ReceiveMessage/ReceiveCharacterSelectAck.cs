@@ -20,8 +20,8 @@ namespace Zozo
                     using (var selectNode = GetNode<Node>("/root/CharacterSelect"))
                     {
                         CSGlobal.Instance.characterData = ack.Data.Value;
-                        var position = ack.Pos.Value.Position;
-                        selectNode.Call("_select_character", position.Value.X, position.Value.Y);
+                        var position = ack.Position.Value;
+                        selectNode.Call("_select_character", position.X, position.Y);
                     }
                     break;
                 default:

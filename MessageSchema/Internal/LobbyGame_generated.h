@@ -247,6 +247,7 @@ struct RegisterAckT : public ::flatbuffers::NativeTable {
   std::string server_name{};
   int32_t db_port = 0;
   int32_t listen_port = 0;
+  int32_t server_id = 0;
 };
 
 struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -260,7 +261,8 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DB_MAIN_SCHEMA = 12,
     VT_SERVER_NAME = 14,
     VT_DB_PORT = 16,
-    VT_LISTEN_PORT = 18
+    VT_LISTEN_PORT = 18,
+    VT_SERVER_ID = 20
   };
   GenericBoson::Zozo::ResultCode result_code() const {
     return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
@@ -286,6 +288,9 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t listen_port() const {
     return GetField<int32_t>(VT_LISTEN_PORT, 0);
   }
+  int32_t server_id() const {
+    return GetField<int32_t>(VT_SERVER_ID, 0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
@@ -301,6 +306,7 @@ struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(server_name()) &&
            VerifyField<int32_t>(verifier, VT_DB_PORT, 4) &&
            VerifyField<int32_t>(verifier, VT_LISTEN_PORT, 4) &&
+           VerifyField<int32_t>(verifier, VT_SERVER_ID, 4) &&
            verifier.EndTable();
   }
   RegisterAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -336,6 +342,9 @@ struct RegisterAckBuilder {
   void add_listen_port(int32_t listen_port) {
     fbb_.AddElement<int32_t>(RegisterAck::VT_LISTEN_PORT, listen_port, 0);
   }
+  void add_server_id(int32_t server_id) {
+    fbb_.AddElement<int32_t>(RegisterAck::VT_SERVER_ID, server_id, 0);
+  }
   explicit RegisterAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -356,8 +365,10 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(
     ::flatbuffers::Offset<::flatbuffers::String> db_main_schema = 0,
     ::flatbuffers::Offset<::flatbuffers::String> server_name = 0,
     int32_t db_port = 0,
-    int32_t listen_port = 0) {
+    int32_t listen_port = 0,
+    int32_t server_id = 0) {
   RegisterAckBuilder builder_(_fbb);
+  builder_.add_server_id(server_id);
   builder_.add_listen_port(listen_port);
   builder_.add_db_port(db_port);
   builder_.add_server_name(server_name);
@@ -378,7 +389,8 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
     const char *db_main_schema = nullptr,
     const char *server_name = nullptr,
     int32_t db_port = 0,
-    int32_t listen_port = 0) {
+    int32_t listen_port = 0,
+    int32_t server_id = 0) {
   auto db_ip__ = db_ip ? _fbb.CreateString(db_ip) : 0;
   auto db_acount__ = db_acount ? _fbb.CreateString(db_acount) : 0;
   auto db_password__ = db_password ? _fbb.CreateString(db_password) : 0;
@@ -393,7 +405,8 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAckDirect(
       db_main_schema__,
       server_name__,
       db_port,
-      listen_port);
+      listen_port,
+      server_id);
 }
 
 ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
@@ -660,6 +673,7 @@ inline void RegisterAck::UnPackTo(RegisterAckT *_o, const ::flatbuffers::resolve
   { auto _e = server_name(); if (_e) _o->server_name = _e->str(); }
   { auto _e = db_port(); _o->db_port = _e; }
   { auto _e = listen_port(); _o->listen_port = _e; }
+  { auto _e = server_id(); _o->server_id = _e; }
 }
 
 inline ::flatbuffers::Offset<RegisterAck> RegisterAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const RegisterAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
@@ -678,6 +692,7 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(::flatbuffers::FlatB
   auto _server_name = _o->server_name.empty() ? 0 : _fbb.CreateString(_o->server_name);
   auto _db_port = _o->db_port;
   auto _listen_port = _o->listen_port;
+  auto _server_id = _o->server_id;
   return GenericBoson::Zozo::CreateRegisterAck(
       _fbb,
       _result_code,
@@ -687,7 +702,8 @@ inline ::flatbuffers::Offset<RegisterAck> CreateRegisterAck(::flatbuffers::FlatB
       _db_main_schema,
       _server_name,
       _db_port,
-      _listen_port);
+      _listen_port,
+      _server_id);
 }
 
 inline AuthRelayReqT *AuthRelayReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {

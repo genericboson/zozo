@@ -110,14 +110,15 @@ namespace GenericBoson
                     auto dbMainSchema = fbb.CreateString(dbInfo.db_main_schema);
                     auto serverName   = fbb.CreateString(dbInfo.server_name);
 
-                    auto ack = Zozo::CreateRegisterAck(fbb, Zozo::ResultCode_Success, 
+                    auto ack = Zozo::CreateRegisterAck(fbb, Zozo::ResultCode_Success,
                         dbIp, dbAccount, dbPassword, dbMainSchema, serverName,
-                        dbInfo.db_port, dbInfo.listen_port);
+                        dbInfo.db_port, dbInfo.listen_port, serverId);
                     auto msg = Zozo::CreateLobbyGameMessage(fbb, Zozo::LobbyGamePayload_RegisterAck, ack.Union());
                     fbb.Finish(msg);
 
                     m_name   = dbInfo.server_name;
 
+					m_id     = serverId;
                     m_ip     = m_pSocket->GetRemoteIp();
                     m_port   = std::to_string( dbInfo.listen_port );
                     m_maxCCU = dbInfo.max_ccu;

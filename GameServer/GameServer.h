@@ -45,6 +45,6 @@ namespace GenericBoson
 
 		std::string                         m_lobbyIp, m_lobbyPort;
 
-		int32_t                             m_id;
+		uint16_t                            m_id;
 	};
 }

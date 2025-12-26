@@ -63,6 +63,8 @@ namespace GenericBoson
 				NULL_CO_VOID_RETURN(registerAck->listen_port());
 				NULL_CO_VOID_RETURN(registerAck->db_ip());
 
+				NULL_CO_VOID_RETURN(registerAck->server_id() == m_server.m_id);
+
 				m_server.m_dbIp          = registerAck->db_ip()->str();
 				m_server.m_dbAccount     = registerAck->db_acount()->str();
 				m_server.m_dbPassword    = registerAck->db_password()->str();

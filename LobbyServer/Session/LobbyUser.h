@@ -16,6 +16,8 @@ namespace GenericBoson
 		public TxExecutor,
 		public std::enable_shared_from_this<LobbyUser>
 	{
+		friend class LobbyUserManager;
+
 	public:
 		LobbyUser(LobbyServer& lobbyServer, const std::shared_ptr<ISocket>& pSocket);
 		virtual ~LobbyUser() = default;

@@ -188,6 +188,8 @@ namespace GenericBoson
 
 			auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
 			auto pActor = CreateActor(pSocket);
+			NULL_CO_RETURN(pActor);
+
 			pSocket->Initialize(pActor);
 
 			if (!pActor->Initialize())

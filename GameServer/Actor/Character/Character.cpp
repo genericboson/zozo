@@ -10,6 +10,7 @@
 
 #include <flatbuffers/flatbuffers.h>
 
+#include <Engine/Numeric/IdGenerator.h>
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
@@ -42,7 +43,6 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
-        CharacterManager::GetInstance()->AddCharacter(shared_from_this());
         return true;
     }
 
@@ -212,6 +212,9 @@ namespace GenericBoson
                     co_return;
                 }
 
+                m_id = characterId;
+                CharacterManager::GetInstance()->AddCharacter(shared_from_this());
+
                 for (auto& selectResult : selectResults)
                 {
 					m_info.level = selectResult.level.value_or(0);
@@ -253,6 +256,19 @@ namespace GenericBoson
         case GamePayload::GamePayload_CharacterPositionUpdateAck:
             {
 			    ERROR_LOG("Logic error");
+            }
+            break;
+        case GamePayload::GamePayload_CharacterCreateReq:
+            {
+                const auto pServer = m_wpServer.lock();
+                NULL_CO_VOID_RETURN(pServer);
+
+                m_id = GenericBoson::IdGenerator::CreateId(pServer->m_id);
+            }
+            break;
+        case GamePayload::GamePayload_CharacterCreateAck:
+            {
+                ERROR_LOG("Logic error");
             }
             break;
         default:
