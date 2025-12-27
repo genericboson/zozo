@@ -46,7 +46,6 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
-        LobbyUserManager::GetInstance()->AddLobbyUser(shared_from_this());
         return true;
     }
 
@@ -178,9 +177,13 @@ namespace GenericBoson
                 if (resultCode == Zozo::ResultCode::ResultCode_Success || 
                     resultCode == Zozo::ResultCode::ResultCode_NewAccount)
                 {
-                    tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
-					ipOffset    = userFbb.CreateString(gameIp);
-					portOffset  = userFbb.CreateString(gamePort);
+                    if (resultCode = co_await LobbyUserManager::GetInstance()->AddLobbyUser(shared_from_this());
+                        resultCode  == Zozo::ResultCode::ResultCode_Success)
+                    {
+                        tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");
+                        ipOffset = userFbb.CreateString(gameIp);
+                        portOffset = userFbb.CreateString(gamePort);
+                    }
                 }
                 auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset, ipOffset, portOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
