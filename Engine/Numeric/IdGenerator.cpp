@@ -30,5 +30,7 @@ namespace GenericBoson
 		uint8_t tmpByte = copiedCount % std::numeric_limits<uint8_t>::max();
 
 		timestamp |= tmpByte;
+
+		return timestamp;
 	}
 }

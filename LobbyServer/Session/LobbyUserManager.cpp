@@ -3,10 +3,13 @@
 #include "LobbyUser.h"
 #include "LobbyUserManager.h"
 
-#include "MessageSchema/Common/Constant_generated.h"
-
 namespace GenericBoson
 {
+	asio::awaitable<void> LobbyUserManager::AddUnauthedUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
+	{
+		return asio::awaitable<void>();
+	}
+
 	asio::awaitable<Zozo::ResultCode> LobbyUserManager::AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
 	{
 		NULL_CO_RETURN(!pLobbyUser->m_id, Zozo::ResultCode::ResultCode_InvalidId);

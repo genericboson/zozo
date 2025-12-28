@@ -46,6 +46,8 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
+        LobbyUserManager::GetInstance()->AddUnauthedUser();
+
         return true;
     }
 
