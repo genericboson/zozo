@@ -46,7 +46,7 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
-        LobbyUserManager::GetInstance()->AddUnauthedUser();
+        LobbyUserManager::GetInstance()->AddUnauthedUser(shared_from_this());
 
         return true;
     }
@@ -179,7 +179,7 @@ namespace GenericBoson
                 if (resultCode == Zozo::ResultCode::ResultCode_Success || 
                     resultCode == Zozo::ResultCode::ResultCode_NewAccount)
                 {
-                    if (resultCode = co_await LobbyUserManager::GetInstance()->AddLobbyUser(shared_from_this());
+                    if (resultCode = co_await LobbyUserManager::GetInstance()->AddLobbyUser(shared_from_this(), userId);
                         resultCode  == Zozo::ResultCode::ResultCode_Success)
                     {
                         tokenOffset = userFbb.CreateString(resultCode == Zozo::ResultCode::ResultCode_Success ? tmpUuid : "");

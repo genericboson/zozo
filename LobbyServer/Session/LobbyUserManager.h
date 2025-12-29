@@ -16,12 +16,13 @@ namespace GenericBoson
 	public:
 		asio::awaitable<void> AddUnauthedUser(std::shared_ptr< LobbyUser >&& pLobbyUser);
 
-		asio::awaitable<Zozo::ResultCode> AddLobbyUser(std::shared_ptr< LobbyUser >&& pLobbyUser);
+		asio::awaitable<Zozo::ResultCode> AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser, int64_t userId);
 
 	private:
 		IdGenerator m_idGenerator;
 
-		std::shared_mutex m_lobbyUsersMutex;
+		std::shared_mutex m_lock;
+		int64_t m_unauthedCount = 0;
 		std::unordered_map< int64_t, std::shared_ptr< LobbyUser > > m_unauthedLobbyUsers, m_lobbyUsers;
 	};
 }

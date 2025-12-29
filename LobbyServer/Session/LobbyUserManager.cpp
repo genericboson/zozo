@@ -7,17 +7,27 @@ namespace GenericBoson
 {
 	asio::awaitable<void> LobbyUserManager::AddUnauthedUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
 	{
-		return asio::awaitable<void>();
+		std::unique_lock<std::shared_mutex> lock(m_lock);
+
+		pLobbyUser->m_id = m_unauthedCount++;
+		m_unauthedLobbyUsers[m_unauthedCount] = pLobbyUser;
 	}
 
-	asio::awaitable<Zozo::ResultCode> LobbyUserManager::AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
+	asio::awaitable<Zozo::ResultCode> LobbyUserManager::AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser, int64_t userId)
 	{
 		NULL_CO_RETURN(!pLobbyUser->m_id, Zozo::ResultCode::ResultCode_InvalidId);
+
+		std::unique_lock<std::shared_mutex> lock(m_lock);
+
+		const auto oldId = pLobbyUser->Id();
+
+		pLobbyUser->m_id = userId;
 
 		if (m_lobbyUsers.contains(pLobbyUser->Id()))
 			co_return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
 
 		m_lobbyUsers[pLobbyUser->Id()] = pLobbyUser;
+		m_unauthedLobbyUsers.erase(oldId);
 		co_return Zozo::ResultCode::ResultCode_Success;
 	}
 }
