@@ -23,10 +23,10 @@ namespace GenericBoson
 
 		pLobbyUser->m_id = userId;
 
-		if (m_lobbyUsers.contains(pLobbyUser->Id()))
+		if (m_lobbyUsers.contains(userId))
 			co_return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
 
-		m_lobbyUsers[pLobbyUser->Id()] = pLobbyUser;
+		m_lobbyUsers[userId] = pLobbyUser;
 		m_unauthedLobbyUsers.erase(oldId);
 		co_return Zozo::ResultCode::ResultCode_Success;
 	}

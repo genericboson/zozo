@@ -19,6 +19,8 @@ namespace GenericBoson
 		public TxExecutor,
 		public std::enable_shared_from_this<Character>
 	{
+		friend class CharacterManager;
+
 	public:
 		Character(
 			const std::shared_ptr<GameServer>& pServer, 

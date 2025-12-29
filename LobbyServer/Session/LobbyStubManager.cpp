@@ -25,7 +25,7 @@ namespace GenericBoson
 		const auto oldId = pLobbyStub->Id();
 
 		pLobbyStub->m_id = serverId;
-		m_registeredStubs[pLobbyStub->Id()] = pLobbyStub;
+		m_registeredStubs[serverId] = pLobbyStub;
 
 		m_unregisteredStubs.erase(oldId);
 	}

@@ -43,6 +43,8 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
+		CharacterManager::GetInstance()->AddCharacter(shared_from_this());
+
         return true;
     }
 
@@ -212,8 +214,7 @@ namespace GenericBoson
                     co_return;
                 }
 
-                m_id = characterId;
-                CharacterManager::GetInstance()->AddCharacter(shared_from_this());
+                CharacterManager::GetInstance()->AddCharacter(shared_from_this(), characterId);
 
                 for (auto& selectResult : selectResults)
                 {

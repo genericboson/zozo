@@ -12,7 +12,8 @@ namespace GenericBoson
 	class CharacterManager : public Singleton< CharacterManager >
 	{
 	public:
-		void AddCharacter(std::shared_ptr< Character >&& pCharacter);
+		void AddUnselected(std::shared_ptr<Character>&& pCharacter);
+		asio::awaitable<Zozo::ResultCode> AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId);
 
 		void SetUserCharacterIds( UserId userId, std::vector<CharacterId> characterIds);
 
@@ -29,7 +30,8 @@ namespace GenericBoson
 
 	private:
 		std::shared_mutex m_lock;
-		std::unordered_map<CharacterId, std::shared_ptr<Character>> m_characters;
+		int64_t m_unselectedCount = 0;
+		std::unordered_map<CharacterId, std::shared_ptr<Character>> m_unselecteds, m_characters;
 		std::unordered_map<UserId, std::set<CharacterId>>           m_userIdCharacterIds;
 		std::unordered_map<CharacterId, UserId>                     m_characterIdUserId;
 		std::unordered_map<UserId, std::string>                     m_tokens;

@@ -11,11 +11,31 @@ namespace GenericBoson
 {
 	namespace mysql = boost::mysql;
 
-	void CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter)
+	void CharacterManager::AddUnselected(std::shared_ptr<Character>&& pCharacter)
 	{
 		std::unique_lock<std::shared_mutex> lock{ m_lock };
 
-		m_characters[CharacterId{ pCharacter->Id() }] = pCharacter;
+		pCharacter->m_id = m_unselectedCount++;
+		m_unselecteds[CharacterId{ pCharacter->Id() }] = pCharacter;
+	}
+
+	asio::awaitable<Zozo::ResultCode> CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId)
+	{
+		NULL_CO_RETURN(!pCharacter->m_id, Zozo::ResultCode::ResultCode_InvalidId);
+
+		std::unique_lock<std::shared_mutex> lock{ m_lock };
+
+		const auto oldId = CharacterId{ pCharacter->Id() };
+		const auto newId = CharacterId{ characterId };
+
+		pCharacter->m_id = characterId;
+
+		if (m_characters.contains(newId))
+			co_return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
+
+		m_characters[newId] = pCharacter;
+		m_unselecteds.erase(oldId);
+		co_return Zozo::ResultCode::ResultCode_Success;
 	}
 
 	void CharacterManager::SetUserCharacterIds(UserId userId, std::vector<CharacterId> characterIds)
