@@ -14,7 +14,7 @@ namespace GenericBoson
 	class LobbyUserManager : public Singleton< LobbyUserManager >
 	{
 	public:
-		asio::awaitable<void> AddUnauthedUser(std::shared_ptr< LobbyUser >&& pLobbyUser);
+		void AddUnauthedUser(std::shared_ptr< LobbyUser >&& pLobbyUser);
 
 		asio::awaitable<Zozo::ResultCode> AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser, int64_t userId);
 

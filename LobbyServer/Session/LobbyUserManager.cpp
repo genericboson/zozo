@@ -5,7 +5,7 @@
 
 namespace GenericBoson
 {
-	asio::awaitable<void> LobbyUserManager::AddUnauthedUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
+	void LobbyUserManager::AddUnauthedUser(std::shared_ptr<LobbyUser>&& pLobbyUser)
 	{
 		std::unique_lock<std::shared_mutex> lock(m_lock);
 
@@ -15,7 +15,7 @@ namespace GenericBoson
 
 	asio::awaitable<Zozo::ResultCode> LobbyUserManager::AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser, int64_t userId)
 	{
-		NULL_CO_RETURN(!pLobbyUser->m_id, Zozo::ResultCode::ResultCode_InvalidId);
+		NULL_CO_RETURN(!userId, Zozo::ResultCode::ResultCode_InvalidId);
 
 		std::unique_lock<std::shared_mutex> lock(m_lock);
 

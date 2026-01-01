@@ -43,7 +43,7 @@ namespace GenericBoson
         if (!m_pSocket->IsValid())
             return false;
 
-		CharacterManager::GetInstance()->AddCharacter(shared_from_this());
+		CharacterManager::GetInstance()->AddUnselected(shared_from_this());
 
         return true;
     }

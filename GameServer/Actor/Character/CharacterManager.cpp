@@ -21,7 +21,7 @@ namespace GenericBoson
 
 	asio::awaitable<Zozo::ResultCode> CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId)
 	{
-		NULL_CO_RETURN(!pCharacter->m_id, Zozo::ResultCode::ResultCode_InvalidId);
+		NULL_CO_RETURN(!characterId, Zozo::ResultCode::ResultCode_InvalidId);
 
 		std::unique_lock<std::shared_mutex> lock{ m_lock };
 
