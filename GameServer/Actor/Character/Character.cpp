@@ -55,11 +55,12 @@ namespace GenericBoson
 
     void Character::OnDisconnected()
     {
+        CharacterManager::GetInstance()->RemoveCharacter(shared_from_this());
     }
 
     void Character::OnAccepted()
     {
-        INFO_LOG("Client accepted ( ClientId - {} )", m_id);
+        INFO_LOG("Client accepted ( temporary id - {} )", m_id);
     }
 
     asio::awaitable<void> Character::Read(const uint8_t* pData, std::size_t dataSize)

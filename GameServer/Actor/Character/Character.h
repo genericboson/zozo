@@ -38,7 +38,8 @@ namespace GenericBoson
 		void OnDisconnected() override;
 		void OnAccepted() override;
 	private:
-		int64_t                   m_id;
+		uint64_t                  m_temporaryId{};
+		int64_t                   m_id{};
 		std::string               m_token;
 
 		Zozo::CharacterInfoT 	  m_info;

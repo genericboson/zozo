@@ -15,8 +15,9 @@ namespace GenericBoson
 	{
 	public:
 		void AddUnauthedUser(std::shared_ptr< LobbyUser >&& pLobbyUser);
-
 		asio::awaitable<Zozo::ResultCode> AddLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser, int64_t userId);
+
+		void RemoveLobbyUser(std::shared_ptr<LobbyUser>&& pLobbyUser);
 
 	private:
 		IdGenerator m_idGenerator;

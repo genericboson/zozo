@@ -14,6 +14,8 @@ public enum GamePayload : byte
   CharacterSelectAck = 4,
   CharacterPositionUpdateReq = 5,
   CharacterPositionUpdateAck = 6,
+  CharacterCreateReq = 7,
+  CharacterCreateAck = 8,
 };
 
 
@@ -42,6 +44,12 @@ static public class GamePayloadVerify
         break;
       case GamePayload.CharacterPositionUpdateAck:
         result = GenericBoson.Zozo.CharacterPositionUpdateAckVerify.Verify(verifier, tablePos);
+        break;
+      case GamePayload.CharacterCreateReq:
+        result = GenericBoson.Zozo.CharacterCreateReqVerify.Verify(verifier, tablePos);
+        break;
+      case GamePayload.CharacterCreateAck:
+        result = GenericBoson.Zozo.CharacterCreateAckVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

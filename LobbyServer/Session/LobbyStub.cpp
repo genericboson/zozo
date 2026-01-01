@@ -59,7 +59,7 @@ namespace GenericBoson
 
     void LobbyStub::OnAccepted()
     {
-        INFO_LOG("LobbyStub accepted ( LobbyStubId - {} )", m_id);
+        INFO_LOG("LobbyStub accepted ( temporary id - {} )", m_id);
     }
 
     asio::awaitable<void> LobbyStub::Read(const uint8_t* pData, std::size_t dataSize)

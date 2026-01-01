@@ -13,19 +13,44 @@ namespace GenericBoson
 
 	void CharacterManager::AddUnselected(std::shared_ptr<Character>&& pCharacter)
 	{
+		const auto checkAlreadyOccupied = [this]() {
+			if (m_unselecteds.contains(m_unselectedCount) &&
+				m_unselecteds[m_unselectedCount] != nullptr)
+			{
+				ERROR_LOG("Already occupied unselected character map index : {}", m_unselectedCount);
+				return false;
+			}
+			return true;
+			};
+
+		{
+			std::shared_lock<std::shared_mutex> lock(m_lock);
+
+			if (!checkAlreadyOccupied())
+				return;
+		}
+
+
 		std::unique_lock<std::shared_mutex> lock{ m_lock };
 
-		pCharacter->m_id = m_unselectedCount++;
-		m_unselecteds[CharacterId{ pCharacter->Id() }] = pCharacter;
+		if (!checkAlreadyOccupied())
+			return;
+
+		pCharacter->m_temporaryId = m_unselectedCount;
+		m_unselecteds[m_unselectedCount] = pCharacter;
+
+		if (m_unselectedCount == std::numeric_limits<decltype(m_unselectedCount)>::max())
+		{
+			m_unselectedCount = 1;
+			return;
+		}
+		m_unselectedCount++;
 	}
 
 	asio::awaitable<Zozo::ResultCode> CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId)
 	{
-		NULL_CO_RETURN(!characterId, Zozo::ResultCode::ResultCode_InvalidId);
-
 		std::unique_lock<std::shared_mutex> lock{ m_lock };
 
-		const auto oldId = CharacterId{ pCharacter->Id() };
 		const auto newId = CharacterId{ characterId };
 
 		pCharacter->m_id = characterId;
@@ -34,8 +59,16 @@ namespace GenericBoson
 			co_return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
 
 		m_characters[newId] = pCharacter;
-		m_unselecteds.erase(oldId);
+		m_unselecteds.erase(pCharacter->m_temporaryId);
 		co_return Zozo::ResultCode::ResultCode_Success;
+	}
+
+	void CharacterManager::RemoveCharacter(std::shared_ptr<Character>&& pCharacter)
+	{
+		std::unique_lock<std::shared_mutex> lock(m_lock);
+
+		m_characters.erase(CharacterId{ pCharacter->m_id });
+		m_unselecteds.erase(pCharacter->m_temporaryId);
 	}
 
 	void CharacterManager::SetUserCharacterIds(UserId userId, std::vector<CharacterId> characterIds)

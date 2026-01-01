@@ -16,6 +16,8 @@ public enum ResultCode : uint
   NotAllowedServer = 6,
   InvalidToken = 7,
   InvalidCharacterId = 8,
+  AlreadyLoggedIn = 9,
+  InvalidId = 10,
 };
 
 

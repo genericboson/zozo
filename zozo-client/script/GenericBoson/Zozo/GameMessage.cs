@@ -28,6 +28,8 @@ public struct GameMessage : IFlatbufferObject
   public GenericBoson.Zozo.CharacterSelectAck PayloadAsCharacterSelectAck() { return Payload<GenericBoson.Zozo.CharacterSelectAck>().Value; }
   public GenericBoson.Zozo.CharacterPositionUpdateReq PayloadAsCharacterPositionUpdateReq() { return Payload<GenericBoson.Zozo.CharacterPositionUpdateReq>().Value; }
   public GenericBoson.Zozo.CharacterPositionUpdateAck PayloadAsCharacterPositionUpdateAck() { return Payload<GenericBoson.Zozo.CharacterPositionUpdateAck>().Value; }
+  public GenericBoson.Zozo.CharacterCreateReq PayloadAsCharacterCreateReq() { return Payload<GenericBoson.Zozo.CharacterCreateReq>().Value; }
+  public GenericBoson.Zozo.CharacterCreateAck PayloadAsCharacterCreateAck() { return Payload<GenericBoson.Zozo.CharacterCreateAck>().Value; }
 
   public static Offset<GenericBoson.Zozo.GameMessage> CreateGameMessage(FlatBufferBuilder builder,
       GenericBoson.Zozo.GamePayload payload_type = GenericBoson.Zozo.GamePayload.NONE,

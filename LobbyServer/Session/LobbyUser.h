@@ -33,8 +33,9 @@ namespace GenericBoson
 
 		void SendLoginAck();
 	private:
-		int64_t                  m_id;
-		std::shared_ptr<ISocket> m_pSocket;
+		uint64_t                 m_temporaryId{};
+		int64_t                  m_id{};
+		std::shared_ptr<ISocket> m_pSocket{};
 		LobbyServer&             m_server;
 	};
 }

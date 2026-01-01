@@ -24,6 +24,8 @@ namespace Zozo
                             globalNode.Set("user_id", ack.UserId);
                             globalNode.Set("game_server_ip", ack.Ip);
                             globalNode.Set("game_server_port", ack.Port);
+
+                            GD.Print($"[AuthAck] Token : {ack.Token}, UserId : {ack.UserId}, GameServerIp : {ack.Ip}, GameServerPort : {ack.Port}");
                         }
                         break;
                 }
@@ -45,7 +47,15 @@ namespace Zozo
                             globalNode.Call("message_box", "Wrong password");
                         }
                         break;
+                    case ResultCode.AlreadyLoggedIn:
+                        {
+                            globalNode.Call("message_box", "Already logged in");
+                        }
+                        break;
                     default:
+                        {
+                            globalNode.Call("message_box", $"Wrong result code : {ack.ResultCode}");
+                        }
                         break;
                 }
             }

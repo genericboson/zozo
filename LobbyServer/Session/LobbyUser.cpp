@@ -57,11 +57,12 @@ namespace GenericBoson
 
     void LobbyUser::OnDisconnected()
     {
+        LobbyUserManager::GetInstance()->RemoveLobbyUser(shared_from_this());
     }
 
     void LobbyUser::OnAccepted()
     {
-        INFO_LOG("LobbyUser accepted ( LobbyUserId - {} )", m_id);
+        INFO_LOG("LobbyUser accepted ( temporary id - {} )", m_temporaryId);
     }
 
     asio::awaitable<void> LobbyUser::Read(const uint8_t* pData, std::size_t dataSize)
@@ -108,11 +109,11 @@ namespace GenericBoson
 
                 const auto tmpUuid = boost::uuids::to_string(boost::uuids::random_generator()());
 
-                INFO_LOG("[AuthReq] new token : {}", tmpUuid);
-
                 const auto accountStr  = authReq->account()->c_str();
                 const auto passwordStr = authReq->password()->c_str();
                 const auto serverId    = authReq->server_id();
+
+                INFO_LOG("[AuthReq] new token : {}, ( accountStr - {} )", tmpUuid, accountStr);
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
@@ -158,12 +159,13 @@ namespace GenericBoson
                         if (const auto relayResult = LobbyStubManager::GetInstance()->SendAuthRelay(serverId, userId, tmpUuid))
                         {
                             std::tie(gameIp, gamePort) = *relayResult;
-                            INFO_LOG("Auth relay sent to server ( serverId - {}, userId - {} , ip - {}, port - {} )",
-								serverId, userId, gameIp, gamePort);
+                            INFO_LOG("Auth relay sent to server ( "
+                                "accountStr - {}, serverId - {}, userId - {} , ip - {}, port - {} )",
+                                accountStr, serverId, userId, gameIp, gamePort);
                         }
                         else
                         {
-							WARN_LOG("No allowed server suggested by client ( serverId - {} )", serverId);
+							WARN_LOG("No allowed server suggested by client ( accountStr - {}, serverId - {} )", accountStr, serverId);
                             resultCode = Zozo::ResultCode::ResultCode_NotAllowedServer;
                         }
                     }
@@ -189,6 +191,9 @@ namespace GenericBoson
                 }
                 auto authAck = Zozo::CreateAuthAck(userFbb, resultCode, userId, tokenOffset, ipOffset, portOffset);
                 auto lobbyMsg = Zozo::CreateLobbyMessage(userFbb, Zozo::LobbyPayload_AuthAck, authAck.Union());
+
+                INFO_LOG("AuthAck sent to client ( accountStr - {}, serverId - {}, userId - {} , ip - {}, port - {} )",
+                    accountStr, serverId, userId, gameIp, gamePort);
 
                 userFbb.Finish(lobbyMsg);
 

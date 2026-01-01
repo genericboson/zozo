@@ -14,8 +14,8 @@ namespace GenericBoson
 	{
 		std::unique_lock<std::shared_mutex> lock(m_lock);
 
-		pLobbyStub->m_id = m_unregisteredCount++;
-		m_unregisteredStubs[m_unregisteredCount] = pLobbyStub;
+		pLobbyStub->m_id = m_unregisteredCount;
+		m_unregisteredStubs[m_unregisteredCount++] = pLobbyStub;
 	}
 
 	void LobbyStubManager::AddRegisteredLobbyStub(std::shared_ptr<LobbyStub>&& pLobbyStub, int32_t serverId)
