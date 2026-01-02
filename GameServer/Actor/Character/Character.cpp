@@ -17,6 +17,7 @@
 #include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
+#include "Actor/ZoneManager.h"
 #include "GameServer.h"
 #include "Character.h"
 #include "CharacterManager.h"
@@ -214,17 +215,30 @@ namespace GenericBoson
                     fbb.Finish(msg);
                     co_return;
                 }
-
-                CharacterManager::GetInstance()->AddCharacter(shared_from_this(), characterId);
-
-                for (auto& selectResult : selectResults)
+                else if (selectResults.size() > 1)
                 {
-					m_info.level = selectResult.level.value_or(0);
+                    WARN_LOG("[CharacterSelectReq] Wrong db schema. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_WrongDBSchema);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+                    co_return;
+                }
+
+                const auto resultCode = co_await CharacterManager::GetInstance()
+                    ->AddCharacter(shared_from_this(), characterId);
+
+				if (resultCode == Zozo::ResultCode_Success)
+                {
+                    const auto& selectResult = selectResults[0];
+                    m_info.level = selectResult.level.value_or(0);
                     m_info.name = selectResult.name.value_or("");
+
+                    // #todo - temporary test code. (0, 0) zone.
+                    ZoneManager::GetInstance()->EnterZone(shared_from_this(), 0, 0);
                 }
 
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
-                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset, &m_position);
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, resultCode, infoOffset, &m_position);
 				auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
 
                 fbb.Finish(msg);

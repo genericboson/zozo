@@ -18,6 +18,7 @@ public enum ResultCode : uint
   InvalidCharacterId = 8,
   AlreadyLoggedIn = 9,
   InvalidId = 10,
+  WrongDBSchema = 11,
 };
 
 

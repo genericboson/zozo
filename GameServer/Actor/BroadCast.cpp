@@ -1,9 +1,9 @@
 #include "PCH.h"
 
+#include <MessageSchema/External/GameServer_generated.h>
+
 #include "BroadCast.h"
 #include "Character/Character.h"
-
-#include "MessageSchema/External/CharacterPositionUpdate_generated.h"
 
 namespace GenericBoson
 {
@@ -13,9 +13,14 @@ namespace GenericBoson
 
 		const auto req = Zozo::CreateCharacterPositionUpdateReq(
 			fbb,
+			pCharacter->Id(),
 			&position);
 
-		fbb.Finish(req);
+		const auto msg = Zozo::CreateGameMessage(fbb,
+			Zozo::GamePayload_CharacterPositionUpdateReq,
+			req.Union());
+
+		fbb.Finish(msg);
 
 		pCharacter->Write(fbb.GetBufferPointer(), fbb.GetSize());
 	}

@@ -5,6 +5,7 @@
 
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
+#include "Actor/ZoneManager.h"
 #include "GameServer.h"
 
 #include <MessageSchema/Internal/LobbyGame_generated.h>
@@ -57,6 +58,12 @@ namespace GenericBoson
 
 	asio::awaitable<void> GameServer::InitializeSingletons()
 	{
+		if (!co_await ZoneManager::GetInstance()->Initialize())
+		{
+			ERROR_LOG("ZoneManager initilize failed");
+			co_return;
+		}
+
 		co_return;
 	}
 

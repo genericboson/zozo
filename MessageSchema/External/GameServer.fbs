@@ -1,6 +1,5 @@
 include "Constant.fbs";
 include "CharacterInfo.fbs";
-include "CharacterPositionUpdate.fbs";
 
 namespace GenericBoson.Zozo;
 
@@ -47,6 +46,17 @@ table CharacterCreateAck
     result_code : ResultCode;
 }
 
+table CharacterPositionUpdateReq
+{
+    id      : int;
+    position: Vector2I;
+}
+
+table CharacterPositionUpdateAck
+{
+    result_code: ResultCode;
+}
+
 union GamePayload
 {
     CharacterListReq,
@@ -70,4 +80,6 @@ root_type CharacterListReq;
 root_type CharacterListAck;
 root_type CharacterCreateReq;
 root_type CharacterCreateAck;
+root_type CharacterPositionUpdateReq;
+root_type CharacterPositionUpdateAck;
 root_type GameMessage;

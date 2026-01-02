@@ -7,8 +7,8 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        private PackedScene           m_otherPlayerScene;
-        static private Dictionary<int, Node2D> m_otherCharacters;
+        private PackedScene                    m_otherPlayerScene;
+        static private Dictionary<int, Node2D> m_otherCharacters   = new();
 
         public override void _Ready()
         {

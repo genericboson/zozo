@@ -78,7 +78,7 @@ namespace GenericBoson
 				{
 					INFO_LOG("GameServer started ( port - {} )", m_server.m_listeningPort);
 
-					m_server.InitializeSingletons();
+					co_await m_server.InitializeSingletons();
 				}
 				else
 				{

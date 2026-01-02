@@ -16,7 +16,6 @@ public struct CharacterPositionUpdateAck : IFlatbufferObject
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_2_10(); }
   public static CharacterPositionUpdateAck GetRootAsCharacterPositionUpdateAck(ByteBuffer _bb) { return GetRootAsCharacterPositionUpdateAck(_bb, new CharacterPositionUpdateAck()); }
   public static CharacterPositionUpdateAck GetRootAsCharacterPositionUpdateAck(ByteBuffer _bb, CharacterPositionUpdateAck obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static bool VerifyCharacterPositionUpdateAck(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("", false, CharacterPositionUpdateAckVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CharacterPositionUpdateAck __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -35,8 +34,6 @@ public struct CharacterPositionUpdateAck : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterPositionUpdateAck>(o);
   }
-  public static void FinishCharacterPositionUpdateAckBuffer(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterPositionUpdateAck> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedCharacterPositionUpdateAckBuffer(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterPositionUpdateAck> offset) { builder.FinishSizePrefixed(offset.Value); }
 }
 
 

@@ -15,7 +15,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 
 #include "CharacterInfo_generated.h"
 #include "Constant_generated.h"
-#include "CharacterPositionUpdate_generated.h"
 
 namespace GenericBoson {
 namespace Zozo {
@@ -47,6 +46,14 @@ struct CharacterCreateReqT;
 struct CharacterCreateAck;
 struct CharacterCreateAckBuilder;
 struct CharacterCreateAckT;
+
+struct CharacterPositionUpdateReq;
+struct CharacterPositionUpdateReqBuilder;
+struct CharacterPositionUpdateReqT;
+
+struct CharacterPositionUpdateAck;
+struct CharacterPositionUpdateAckBuilder;
+struct CharacterPositionUpdateAckT;
 
 struct GameMessage;
 struct GameMessageBuilder;
@@ -772,6 +779,125 @@ inline ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(
 
 ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterCreateAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 
+struct CharacterPositionUpdateReqT : public ::flatbuffers::NativeTable {
+  typedef CharacterPositionUpdateReq TableType;
+  int32_t id = 0;
+  std::unique_ptr<GenericBoson::Zozo::Vector2I> position{};
+  CharacterPositionUpdateReqT() = default;
+  CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o);
+  CharacterPositionUpdateReqT(CharacterPositionUpdateReqT&&) FLATBUFFERS_NOEXCEPT = default;
+  CharacterPositionUpdateReqT &operator=(CharacterPositionUpdateReqT o) FLATBUFFERS_NOEXCEPT;
+};
+
+struct CharacterPositionUpdateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterPositionUpdateReqT NativeTableType;
+  typedef CharacterPositionUpdateReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_POSITION = 6
+  };
+  int32_t id() const {
+    return GetField<int32_t>(VT_ID, 0);
+  }
+  const GenericBoson::Zozo::Vector2I *position() const {
+    return GetStruct<const GenericBoson::Zozo::Vector2I *>(VT_POSITION);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_ID, 4) &&
+           VerifyField<GenericBoson::Zozo::Vector2I>(verifier, VT_POSITION, 4) &&
+           verifier.EndTable();
+  }
+  CharacterPositionUpdateReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterPositionUpdateReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterPositionUpdateReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct CharacterPositionUpdateReqBuilder {
+  typedef CharacterPositionUpdateReq Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_id(int32_t id) {
+    fbb_.AddElement<int32_t>(CharacterPositionUpdateReq::VT_ID, id, 0);
+  }
+  void add_position(const GenericBoson::Zozo::Vector2I *position) {
+    fbb_.AddStruct(CharacterPositionUpdateReq::VT_POSITION, position);
+  }
+  explicit CharacterPositionUpdateReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CharacterPositionUpdateReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CharacterPositionUpdateReq>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPositionUpdateReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t id = 0,
+    const GenericBoson::Zozo::Vector2I *position = nullptr) {
+  CharacterPositionUpdateReqBuilder builder_(_fbb);
+  builder_.add_position(position);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPositionUpdateReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct CharacterPositionUpdateAckT : public ::flatbuffers::NativeTable {
+  typedef CharacterPositionUpdateAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+};
+
+struct CharacterPositionUpdateAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CharacterPositionUpdateAckT NativeTableType;
+  typedef CharacterPositionUpdateAckBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT_CODE = 4
+  };
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           verifier.EndTable();
+  }
+  CharacterPositionUpdateAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CharacterPositionUpdateAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<CharacterPositionUpdateAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct CharacterPositionUpdateAckBuilder {
+  typedef CharacterPositionUpdateAck Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(CharacterPositionUpdateAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  explicit CharacterPositionUpdateAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CharacterPositionUpdateAck> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CharacterPositionUpdateAck>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPositionUpdateAck(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+  CharacterPositionUpdateAckBuilder builder_(_fbb);
+  builder_.add_result_code(result_code);
+  return builder_.Finish();
+}
+
+::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPositionUpdateAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
 struct GameMessageT : public ::flatbuffers::NativeTable {
   typedef GameMessage TableType;
   GenericBoson::Zozo::GamePayloadUnion payload{};
@@ -1113,6 +1239,72 @@ inline ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(::flat
   struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterCreateAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
   auto _result_code = _o->result_code;
   return GenericBoson::Zozo::CreateCharacterCreateAck(
+      _fbb,
+      _result_code);
+}
+
+inline CharacterPositionUpdateReqT::CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o)
+      : id(o.id),
+        position((o.position) ? new GenericBoson::Zozo::Vector2I(*o.position) : nullptr) {
+}
+
+inline CharacterPositionUpdateReqT &CharacterPositionUpdateReqT::operator=(CharacterPositionUpdateReqT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(id, o.id);
+  std::swap(position, o.position);
+  return *this;
+}
+
+inline CharacterPositionUpdateReqT *CharacterPositionUpdateReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterPositionUpdateReqT>(new CharacterPositionUpdateReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterPositionUpdateReq::UnPackTo(CharacterPositionUpdateReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = id(); _o->id = _e; }
+  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2I>(new GenericBoson::Zozo::Vector2I(*_e)); }
+}
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CharacterPositionUpdateReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterPositionUpdateReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPositionUpdateReq(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterPositionUpdateReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _id = _o->id;
+  auto _position = _o->position ? _o->position.get() : nullptr;
+  return GenericBoson::Zozo::CreateCharacterPositionUpdateReq(
+      _fbb,
+      _id,
+      _position);
+}
+
+inline CharacterPositionUpdateAckT *CharacterPositionUpdateAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CharacterPositionUpdateAckT>(new CharacterPositionUpdateAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void CharacterPositionUpdateAck::UnPackTo(CharacterPositionUpdateAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+}
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateAck> CharacterPositionUpdateAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateCharacterPositionUpdateAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPositionUpdateAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterPositionUpdateAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  return GenericBoson::Zozo::CreateCharacterPositionUpdateAck(
       _fbb,
       _result_code);
 }
