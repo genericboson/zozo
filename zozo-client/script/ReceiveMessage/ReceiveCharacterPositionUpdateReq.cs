@@ -23,6 +23,12 @@ namespace Zozo
 
         private void ConsumePositionUpdateReq(CharacterPositionUpdateReq updateReq)
         {
+            if (updateReq.Position == null)
+            {
+                GD.PrintErr("Position is null in CharacterPositionUpdateReq");
+                return;
+            }
+
             if (m_otherCharacters.TryGetValue(updateReq.Id, out var otherCharacter))
             {
                 otherCharacter.Position = new Vector2(updateReq.Position.Value.X, updateReq.Position.Value.Y);
@@ -31,7 +37,10 @@ namespace Zozo
 
             var newNode = m_otherPlayerScene.Instantiate<Node2D>();
             newNode.Position = new Vector2(updateReq.Position.Value.X, updateReq.Position.Value.Y);
+            newNode.Scale = new Vector2(4.0f, 4.0f);
             AddChild(newNode);
+
+            m_otherCharacters.Add(updateReq.Id, newNode);
         }
     }
 }

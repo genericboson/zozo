@@ -29,6 +29,8 @@ namespace Zozo
                 GD.Print($"Game Server IP: {m_gameServerIp}, Port: {m_gameServerPort}");
             }
 
+            // #todo : Delta check for time interpolation
+
             if (!m_gameImpl.CheckConnect(m_gameServerIp, m_gameServerPort))
                 return;
 

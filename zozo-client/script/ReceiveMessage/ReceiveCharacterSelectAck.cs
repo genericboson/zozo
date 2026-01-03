@@ -7,7 +7,6 @@ namespace Zozo
     {
         public void ReceiveCharacterSelectAck(GameMessage gameMessage)
         {
-            GD.Print("test1");
             var ack = gameMessage.PayloadAsCharacterSelectAck();
             ConsumeCharacterSelectAck(ack);
         }

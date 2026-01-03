@@ -253,13 +253,14 @@ namespace GenericBoson
         case GamePayload::GamePayload_CharacterPositionUpdateReq:
             {
 			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
-                INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
+
+                //INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
 
                 if (const auto pZone = m_wpZone.lock())
                 {
                     PositionCast castData;
 					castData.senderCharacterId = m_id;
-					castData.position = Vector2I( moveReq->position()->x(), moveReq->position()->y() );
+					castData.position = Vector2F( moveReq->position()->x(), moveReq->position()->y() );
 
 					std::vector<std::unique_ptr<BroadCast>> broadcasts;
 

@@ -17,7 +17,7 @@ namespace GenericBoson
 	class PositionCast : public BroadCast
 	{
 	public:
-		Zozo::Vector2I position;
+		Zozo::Vector2F position;
 
 		void Cast(const std::shared_ptr<Character>& pCharacter) const override;
 	};

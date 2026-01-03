@@ -21,12 +21,12 @@ public struct CharacterSelectAck : IFlatbufferObject
 
   public GenericBoson.Zozo.ResultCode ResultCode { get { int o = __p.__offset(4); return o != 0 ? (GenericBoson.Zozo.ResultCode)__p.bb.GetUint(o + __p.bb_pos) : GenericBoson.Zozo.ResultCode.Success; } }
   public GenericBoson.Zozo.CharacterInfo? Data { get { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.CharacterInfo?)(new GenericBoson.Zozo.CharacterInfo()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(8); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public GenericBoson.Zozo.Vector2F? Position { get { int o = __p.__offset(8); return o != 0 ? (GenericBoson.Zozo.Vector2F?)(new GenericBoson.Zozo.Vector2F()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
   public static void StartCharacterSelectAck(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddResultCode(FlatBufferBuilder builder, GenericBoson.Zozo.ResultCode resultCode) { builder.AddUint(0, (uint)resultCode, 0); }
   public static void AddData(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.CharacterInfo> dataOffset) { builder.AddOffset(1, dataOffset.Value, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(2, positionOffset.Value, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2F> positionOffset) { builder.AddStruct(2, positionOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.CharacterSelectAck> EndCharacterSelectAck(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterSelectAck>(o);
@@ -41,7 +41,7 @@ static public class CharacterSelectAckVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*ResultCode*/, 4 /*GenericBoson.Zozo.ResultCode*/, 4, false)
       && verifier.VerifyTable(tablePos, 6 /*Data*/, GenericBoson.Zozo.CharacterInfoVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 8 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*Position*/, 8 /*GenericBoson.Zozo.Vector2F*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

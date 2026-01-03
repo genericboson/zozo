@@ -590,7 +590,7 @@ struct CharacterSelectAckT : public ::flatbuffers::NativeTable {
   typedef CharacterSelectAck TableType;
   GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
   std::unique_ptr<GenericBoson::Zozo::CharacterInfoT> data{};
-  std::unique_ptr<GenericBoson::Zozo::Vector2I> position{};
+  std::unique_ptr<GenericBoson::Zozo::Vector2F> position{};
   CharacterSelectAckT() = default;
   CharacterSelectAckT(const CharacterSelectAckT &o);
   CharacterSelectAckT(CharacterSelectAckT&&) FLATBUFFERS_NOEXCEPT = default;
@@ -611,15 +611,15 @@ struct CharacterSelectAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const GenericBoson::Zozo::CharacterInfo *data() const {
     return GetPointer<const GenericBoson::Zozo::CharacterInfo *>(VT_DATA);
   }
-  const GenericBoson::Zozo::Vector2I *position() const {
-    return GetStruct<const GenericBoson::Zozo::Vector2I *>(VT_POSITION);
+  const GenericBoson::Zozo::Vector2F *position() const {
+    return GetStruct<const GenericBoson::Zozo::Vector2F *>(VT_POSITION);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
            VerifyOffset(verifier, VT_DATA) &&
            verifier.VerifyTable(data()) &&
-           VerifyField<GenericBoson::Zozo::Vector2I>(verifier, VT_POSITION, 4) &&
+           VerifyField<GenericBoson::Zozo::Vector2F>(verifier, VT_POSITION, 4) &&
            verifier.EndTable();
   }
   CharacterSelectAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -637,7 +637,7 @@ struct CharacterSelectAckBuilder {
   void add_data(::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo> data) {
     fbb_.AddOffset(CharacterSelectAck::VT_DATA, data);
   }
-  void add_position(const GenericBoson::Zozo::Vector2I *position) {
+  void add_position(const GenericBoson::Zozo::Vector2F *position) {
     fbb_.AddStruct(CharacterSelectAck::VT_POSITION, position);
   }
   explicit CharacterSelectAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -655,7 +655,7 @@ inline ::flatbuffers::Offset<CharacterSelectAck> CreateCharacterSelectAck(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success,
     ::flatbuffers::Offset<GenericBoson::Zozo::CharacterInfo> data = 0,
-    const GenericBoson::Zozo::Vector2I *position = nullptr) {
+    const GenericBoson::Zozo::Vector2F *position = nullptr) {
   CharacterSelectAckBuilder builder_(_fbb);
   builder_.add_position(position);
   builder_.add_data(data);
@@ -782,7 +782,7 @@ inline ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(
 struct CharacterPositionUpdateReqT : public ::flatbuffers::NativeTable {
   typedef CharacterPositionUpdateReq TableType;
   int32_t id = 0;
-  std::unique_ptr<GenericBoson::Zozo::Vector2I> position{};
+  std::unique_ptr<GenericBoson::Zozo::Vector2F> position{};
   CharacterPositionUpdateReqT() = default;
   CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o);
   CharacterPositionUpdateReqT(CharacterPositionUpdateReqT&&) FLATBUFFERS_NOEXCEPT = default;
@@ -799,13 +799,13 @@ struct CharacterPositionUpdateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffer
   int32_t id() const {
     return GetField<int32_t>(VT_ID, 0);
   }
-  const GenericBoson::Zozo::Vector2I *position() const {
-    return GetStruct<const GenericBoson::Zozo::Vector2I *>(VT_POSITION);
+  const GenericBoson::Zozo::Vector2F *position() const {
+    return GetStruct<const GenericBoson::Zozo::Vector2F *>(VT_POSITION);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_ID, 4) &&
-           VerifyField<GenericBoson::Zozo::Vector2I>(verifier, VT_POSITION, 4) &&
+           VerifyField<GenericBoson::Zozo::Vector2F>(verifier, VT_POSITION, 4) &&
            verifier.EndTable();
   }
   CharacterPositionUpdateReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -820,7 +820,7 @@ struct CharacterPositionUpdateReqBuilder {
   void add_id(int32_t id) {
     fbb_.AddElement<int32_t>(CharacterPositionUpdateReq::VT_ID, id, 0);
   }
-  void add_position(const GenericBoson::Zozo::Vector2I *position) {
+  void add_position(const GenericBoson::Zozo::Vector2F *position) {
     fbb_.AddStruct(CharacterPositionUpdateReq::VT_POSITION, position);
   }
   explicit CharacterPositionUpdateReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -837,7 +837,7 @@ struct CharacterPositionUpdateReqBuilder {
 inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPositionUpdateReq(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
-    const GenericBoson::Zozo::Vector2I *position = nullptr) {
+    const GenericBoson::Zozo::Vector2F *position = nullptr) {
   CharacterPositionUpdateReqBuilder builder_(_fbb);
   builder_.add_position(position);
   builder_.add_id(id);
@@ -1149,7 +1149,7 @@ inline ::flatbuffers::Offset<CharacterSelectReq> CreateCharacterSelectReq(::flat
 inline CharacterSelectAckT::CharacterSelectAckT(const CharacterSelectAckT &o)
       : result_code(o.result_code),
         data((o.data) ? new GenericBoson::Zozo::CharacterInfoT(*o.data) : nullptr),
-        position((o.position) ? new GenericBoson::Zozo::Vector2I(*o.position) : nullptr) {
+        position((o.position) ? new GenericBoson::Zozo::Vector2F(*o.position) : nullptr) {
 }
 
 inline CharacterSelectAckT &CharacterSelectAckT::operator=(CharacterSelectAckT o) FLATBUFFERS_NOEXCEPT {
@@ -1170,7 +1170,7 @@ inline void CharacterSelectAck::UnPackTo(CharacterSelectAckT *_o, const ::flatbu
   (void)_resolver;
   { auto _e = result_code(); _o->result_code = _e; }
   { auto _e = data(); if (_e) { if(_o->data) { _e->UnPackTo(_o->data.get(), _resolver); } else { _o->data = std::unique_ptr<GenericBoson::Zozo::CharacterInfoT>(_e->UnPack(_resolver)); } } else if (_o->data) { _o->data.reset(); } }
-  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2I>(new GenericBoson::Zozo::Vector2I(*_e)); }
+  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2F>(new GenericBoson::Zozo::Vector2F(*_e)); }
 }
 
 inline ::flatbuffers::Offset<CharacterSelectAck> CharacterSelectAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterSelectAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
@@ -1245,7 +1245,7 @@ inline ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(::flat
 
 inline CharacterPositionUpdateReqT::CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o)
       : id(o.id),
-        position((o.position) ? new GenericBoson::Zozo::Vector2I(*o.position) : nullptr) {
+        position((o.position) ? new GenericBoson::Zozo::Vector2F(*o.position) : nullptr) {
 }
 
 inline CharacterPositionUpdateReqT &CharacterPositionUpdateReqT::operator=(CharacterPositionUpdateReqT o) FLATBUFFERS_NOEXCEPT {
@@ -1264,7 +1264,7 @@ inline void CharacterPositionUpdateReq::UnPackTo(CharacterPositionUpdateReqT *_o
   (void)_o;
   (void)_resolver;
   { auto _e = id(); _o->id = _e; }
-  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2I>(new GenericBoson::Zozo::Vector2I(*_e)); }
+  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2F>(new GenericBoson::Zozo::Vector2F(*_e)); }
 }
 
 inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CharacterPositionUpdateReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {

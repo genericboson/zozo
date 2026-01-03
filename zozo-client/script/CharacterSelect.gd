@@ -13,7 +13,7 @@ func _on_select_button_pressed() -> void:
 	var selectedCharacterId = dropDown.get_selected_id()
 	GDGlobal.game_socket_manager.SendCharacterSelectReq(selectedCharacterId, GDGlobal.token)
 
-func _select_character(_x: int, _y: int) -> void:
+func _select_character(_x: float, _y: float) -> void:
 	get_tree().change_scene_to_file("res://scene/main.tscn")
 
 func _add_characters(characters: Dictionary[int,String]) -> void:

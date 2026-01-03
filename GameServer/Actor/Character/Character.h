@@ -44,7 +44,7 @@ namespace GenericBoson
 		std::string               m_token;
 
 		Zozo::CharacterInfoT 	  m_info;
-		Zozo::Vector2I            m_position;
+		Zozo::Vector2F            m_position;
 
 		std::shared_ptr<ISocket>  m_pSocket;
 		std::weak_ptr<Zone>       m_wpZone;

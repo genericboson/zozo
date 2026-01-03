@@ -10,7 +10,7 @@ namespace Zozo
         {
             m_gameImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
-                var position = GenericBoson.Zozo.Vector2I.CreateVector2I(fbb, (int)x, (int)y);
+                var position = GenericBoson.Zozo.Vector2F.CreateVector2F(fbb, x, y);
 
                 fbb.StartTable(2);
                 CharacterPositionUpdateReq.AddId(fbb, (int)CSGlobal.Instance.characterData.Id);

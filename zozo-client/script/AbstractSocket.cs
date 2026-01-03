@@ -72,7 +72,6 @@ namespace Zozo
             while (GetSendQueue().TryDequeue(out var data))
             {
                 var status = GetStream().GetStatus();
-                GD.Print($"Stream Status: {status}");
                 var err = GetStream().PutData(data);
                 if (err != Error.Ok)
                     GD.PrintErr($"PutData error: {err}");

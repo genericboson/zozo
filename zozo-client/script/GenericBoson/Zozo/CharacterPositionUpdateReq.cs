@@ -20,11 +20,11 @@ public struct CharacterPositionUpdateReq : IFlatbufferObject
   public CharacterPositionUpdateReq __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public GenericBoson.Zozo.Vector2F? Position { get { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.Vector2F?)(new GenericBoson.Zozo.Vector2F()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
   public static void StartCharacterPositionUpdateReq(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(1, positionOffset.Value, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2F> positionOffset) { builder.AddStruct(1, positionOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.CharacterPositionUpdateReq> EndCharacterPositionUpdateReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterPositionUpdateReq>(o);
@@ -38,7 +38,7 @@ static public class CharacterPositionUpdateReqVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*Id*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 6 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
+      && verifier.VerifyField(tablePos, 6 /*Position*/, 8 /*GenericBoson.Zozo.Vector2F*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

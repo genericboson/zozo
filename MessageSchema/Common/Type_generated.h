@@ -20,6 +20,10 @@ namespace Zozo {
 
 struct Vector2I;
 
+struct Vector2F;
+
+struct Vector2D;
+
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vector2I FLATBUFFERS_FINAL_CLASS {
  private:
   int32_t x_;
@@ -42,6 +46,52 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vector2I FLATBUFFERS_FINAL_CLASS {
   }
 };
 FLATBUFFERS_STRUCT_END(Vector2I, 8);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vector2F FLATBUFFERS_FINAL_CLASS {
+ private:
+  float x_;
+  float y_;
+
+ public:
+  Vector2F()
+      : x_(0),
+        y_(0) {
+  }
+  Vector2F(float _x, float _y)
+      : x_(::flatbuffers::EndianScalar(_x)),
+        y_(::flatbuffers::EndianScalar(_y)) {
+  }
+  float x() const {
+    return ::flatbuffers::EndianScalar(x_);
+  }
+  float y() const {
+    return ::flatbuffers::EndianScalar(y_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Vector2F, 8);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) Vector2D FLATBUFFERS_FINAL_CLASS {
+ private:
+  double x_;
+  double y_;
+
+ public:
+  Vector2D()
+      : x_(0),
+        y_(0) {
+  }
+  Vector2D(double _x, double _y)
+      : x_(::flatbuffers::EndianScalar(_x)),
+        y_(::flatbuffers::EndianScalar(_y)) {
+  }
+  double x() const {
+    return ::flatbuffers::EndianScalar(x_);
+  }
+  double y() const {
+    return ::flatbuffers::EndianScalar(y_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Vector2D, 16);
 
 }  // namespace Zozo
 }  // namespace GenericBoson

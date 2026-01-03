@@ -7,3 +7,15 @@ struct Vector2I
     x : int;
     y : int;
 }
+
+struct Vector2F
+{
+    x : float;
+    y : float;
+}
+
+struct Vector2D
+{
+    x : double;
+    y : double;
+}
