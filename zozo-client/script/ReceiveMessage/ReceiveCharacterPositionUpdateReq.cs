@@ -29,18 +29,57 @@ namespace Zozo
                 return;
             }
 
-            if (m_otherCharacters.TryGetValue(updateReq.Id, out var otherCharacter))
+            Node2D otherCharacter;
+            if (m_otherCharacters.TryGetValue(updateReq.Id, out otherCharacter))
             {
                 otherCharacter.Position = new Vector2(updateReq.Position.Value.X, updateReq.Position.Value.Y);
+            }
+            else
+            {
+                otherCharacter = m_otherPlayerScene.Instantiate<Node2D>();
+                AddChild(otherCharacter);
+                m_otherCharacters.Add(updateReq.Id, otherCharacter);
+            }
+
+            otherCharacter.Position = new Vector2(updateReq.Position.Value.X, updateReq.Position.Value.Y);
+            otherCharacter.Scale = new Vector2(4.0f, 4.0f);
+
+            var otherAnimation = otherCharacter.GetNode<AnimatedSprite2D>("OtherPlayerAnimation");
+            if ( otherAnimation == null)
+            {
+                GD.PrintErr("OtherPlayerAnimation node not found");
                 return;
             }
 
-            var newNode = m_otherPlayerScene.Instantiate<Node2D>();
-            newNode.Position = new Vector2(updateReq.Position.Value.X, updateReq.Position.Value.Y);
-            newNode.Scale = new Vector2(4.0f, 4.0f);
-            AddChild(newNode);
-
-            m_otherCharacters.Add(updateReq.Id, newNode);
+            switch(updateReq.Direction)
+            {
+                case GenericBoson.Zozo.Direction.Up:
+                    if (updateReq.IsMoved)
+                        otherAnimation.Play("walk_back");
+                    else
+                        otherAnimation.Play("idle_back");
+                    break;
+                case GenericBoson.Zozo.Direction.Down:
+                    if (updateReq.IsMoved)
+                        otherAnimation.Play("walk_front");
+                    else
+                        otherAnimation.Play("idle_front");
+                    break;
+                case GenericBoson.Zozo.Direction.Left:
+                    otherAnimation.FlipH = true;
+                    if (updateReq.IsMoved)
+                        otherAnimation.Play("walk_side");
+                    else
+                        otherAnimation.Play("idle_side");
+                    break;
+                case GenericBoson.Zozo.Direction.Right:
+                    otherAnimation.FlipH = false;
+                    if (updateReq.IsMoved)
+                        otherAnimation.Play("walk_side");
+                    else
+                        otherAnimation.Play("idle_side");
+                    break;
+            }
         }
     }
 }

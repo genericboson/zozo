@@ -12,8 +12,9 @@ var game_server_port = ""
 # frame per second = 33.3
 const SECOND_PER_FRAME = 0.03
 
-func SendCharacterPositionUpdateReq(x:float, y:float, direction:int) -> void:
-	game_socket_manager.SendCharacterPositionUpdateReq(x, y, direction)
+# todo : remove this function by removing all gdscript code
+func SendCharacterPositionUpdateReq(x:float, y:float, direction:int, is_moved:bool) -> void:
+	game_socket_manager.SendCharacterPositionUpdateReq(x, y, direction, is_moved)
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()

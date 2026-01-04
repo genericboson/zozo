@@ -254,7 +254,9 @@ namespace GenericBoson
             {
 			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
 
-                //INFO_LOG("CharacterPos:{},{}", moveReq->position()->x(), moveReq->position()->y());
+                //INFO_LOG("CharacterPos:{},{},{},{}",
+                //    moveReq->position()->x(), moveReq->position()->y(), 
+                //    Zozo::EnumNameDirection(moveReq->direction()), moveReq->is_moved());
 
                 if (const auto pZone = m_wpZone.lock())
                 {
@@ -262,6 +264,7 @@ namespace GenericBoson
 					castData.senderCharacterId = m_id;
 					castData.position = Vector2F( moveReq->position()->x(), moveReq->position()->y() );
 					castData.direction = moveReq->direction();
+					castData.isMoved = moveReq->is_moved();
 
 					std::vector<std::unique_ptr<BroadCast>> broadcasts;
 

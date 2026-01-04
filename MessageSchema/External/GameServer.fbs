@@ -50,6 +50,7 @@ table CharacterPositionUpdateReq
 {
     id        : int;
     direction : Direction;
+    is_moved  : bool;
     position  : Vector2F;
 }
 

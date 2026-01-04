@@ -21,12 +21,14 @@ public struct CharacterPositionUpdateReq : IFlatbufferObject
 
   public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public GenericBoson.Zozo.Direction Direction { get { int o = __p.__offset(6); return o != 0 ? (GenericBoson.Zozo.Direction)__p.bb.GetSbyte(o + __p.bb_pos) : GenericBoson.Zozo.Direction.None; } }
-  public GenericBoson.Zozo.Vector2F? Position { get { int o = __p.__offset(8); return o != 0 ? (GenericBoson.Zozo.Vector2F?)(new GenericBoson.Zozo.Vector2F()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public bool IsMoved { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public GenericBoson.Zozo.Vector2F? Position { get { int o = __p.__offset(10); return o != 0 ? (GenericBoson.Zozo.Vector2F?)(new GenericBoson.Zozo.Vector2F()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-  public static void StartCharacterPositionUpdateReq(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartCharacterPositionUpdateReq(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
   public static void AddDirection(FlatBufferBuilder builder, GenericBoson.Zozo.Direction direction) { builder.AddSbyte(1, (sbyte)direction, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2F> positionOffset) { builder.AddStruct(2, positionOffset.Value, 0); }
+  public static void AddIsMoved(FlatBufferBuilder builder, bool isMoved) { builder.AddBool(2, isMoved, false); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2F> positionOffset) { builder.AddStruct(3, positionOffset.Value, 0); }
   public static Offset<GenericBoson.Zozo.CharacterPositionUpdateReq> EndCharacterPositionUpdateReq(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GenericBoson.Zozo.CharacterPositionUpdateReq>(o);
@@ -41,7 +43,8 @@ static public class CharacterPositionUpdateReqVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*Id*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 6 /*Direction*/, 1 /*GenericBoson.Zozo.Direction*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*Position*/, 8 /*GenericBoson.Zozo.Vector2F*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*IsMoved*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*Position*/, 8 /*GenericBoson.Zozo.Vector2F*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

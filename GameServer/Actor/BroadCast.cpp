@@ -15,6 +15,7 @@ namespace GenericBoson
 			fbb,
 			pCharacter->Id(),
 			direction,
+			isMoved,
 			&position);
 
 		const auto msg = Zozo::CreateGameMessage(fbb,

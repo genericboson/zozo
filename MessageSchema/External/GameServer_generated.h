@@ -783,6 +783,7 @@ struct CharacterPositionUpdateReqT : public ::flatbuffers::NativeTable {
   typedef CharacterPositionUpdateReq TableType;
   int32_t id = 0;
   GenericBoson::Zozo::Direction direction = GenericBoson::Zozo::Direction_None;
+  bool is_moved = false;
   std::unique_ptr<GenericBoson::Zozo::Vector2F> position{};
   CharacterPositionUpdateReqT() = default;
   CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o);
@@ -796,13 +797,17 @@ struct CharacterPositionUpdateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffer
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_DIRECTION = 6,
-    VT_POSITION = 8
+    VT_IS_MOVED = 8,
+    VT_POSITION = 10
   };
   int32_t id() const {
     return GetField<int32_t>(VT_ID, 0);
   }
   GenericBoson::Zozo::Direction direction() const {
     return static_cast<GenericBoson::Zozo::Direction>(GetField<int8_t>(VT_DIRECTION, 0));
+  }
+  bool is_moved() const {
+    return GetField<uint8_t>(VT_IS_MOVED, 0) != 0;
   }
   const GenericBoson::Zozo::Vector2F *position() const {
     return GetStruct<const GenericBoson::Zozo::Vector2F *>(VT_POSITION);
@@ -811,6 +816,7 @@ struct CharacterPositionUpdateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffer
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_ID, 4) &&
            VerifyField<int8_t>(verifier, VT_DIRECTION, 1) &&
+           VerifyField<uint8_t>(verifier, VT_IS_MOVED, 1) &&
            VerifyField<GenericBoson::Zozo::Vector2F>(verifier, VT_POSITION, 4) &&
            verifier.EndTable();
   }
@@ -828,6 +834,9 @@ struct CharacterPositionUpdateReqBuilder {
   }
   void add_direction(GenericBoson::Zozo::Direction direction) {
     fbb_.AddElement<int8_t>(CharacterPositionUpdateReq::VT_DIRECTION, static_cast<int8_t>(direction), 0);
+  }
+  void add_is_moved(bool is_moved) {
+    fbb_.AddElement<uint8_t>(CharacterPositionUpdateReq::VT_IS_MOVED, static_cast<uint8_t>(is_moved), 0);
   }
   void add_position(const GenericBoson::Zozo::Vector2F *position) {
     fbb_.AddStruct(CharacterPositionUpdateReq::VT_POSITION, position);
@@ -847,10 +856,12 @@ inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPosition
     ::flatbuffers::FlatBufferBuilder &_fbb,
     int32_t id = 0,
     GenericBoson::Zozo::Direction direction = GenericBoson::Zozo::Direction_None,
+    bool is_moved = false,
     const GenericBoson::Zozo::Vector2F *position = nullptr) {
   CharacterPositionUpdateReqBuilder builder_(_fbb);
   builder_.add_position(position);
   builder_.add_id(id);
+  builder_.add_is_moved(is_moved);
   builder_.add_direction(direction);
   return builder_.Finish();
 }
@@ -1257,12 +1268,14 @@ inline ::flatbuffers::Offset<CharacterCreateAck> CreateCharacterCreateAck(::flat
 inline CharacterPositionUpdateReqT::CharacterPositionUpdateReqT(const CharacterPositionUpdateReqT &o)
       : id(o.id),
         direction(o.direction),
+        is_moved(o.is_moved),
         position((o.position) ? new GenericBoson::Zozo::Vector2F(*o.position) : nullptr) {
 }
 
 inline CharacterPositionUpdateReqT &CharacterPositionUpdateReqT::operator=(CharacterPositionUpdateReqT o) FLATBUFFERS_NOEXCEPT {
   std::swap(id, o.id);
   std::swap(direction, o.direction);
+  std::swap(is_moved, o.is_moved);
   std::swap(position, o.position);
   return *this;
 }
@@ -1278,6 +1291,7 @@ inline void CharacterPositionUpdateReq::UnPackTo(CharacterPositionUpdateReqT *_o
   (void)_resolver;
   { auto _e = id(); _o->id = _e; }
   { auto _e = direction(); _o->direction = _e; }
+  { auto _e = is_moved(); _o->is_moved = _e; }
   { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2F>(new GenericBoson::Zozo::Vector2F(*_e)); }
 }
 
@@ -1291,11 +1305,13 @@ inline ::flatbuffers::Offset<CharacterPositionUpdateReq> CreateCharacterPosition
   struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CharacterPositionUpdateReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
   auto _id = _o->id;
   auto _direction = _o->direction;
+  auto _is_moved = _o->is_moved;
   auto _position = _o->position ? _o->position.get() : nullptr;
   return GenericBoson::Zozo::CreateCharacterPositionUpdateReq(
       _fbb,
       _id,
       _direction,
+      _is_moved,
       _position);
 }
 

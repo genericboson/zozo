@@ -19,6 +19,7 @@ namespace GenericBoson
 	public:
 		Zozo::Vector2F  position;
 		Zozo::Direction direction;
+		bool            isMoved = false;
 
 		void Cast(const std::shared_ptr<Character>& pCharacter) const override;
 	};
