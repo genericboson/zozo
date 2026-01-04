@@ -12,6 +12,9 @@ var game_server_port = ""
 # frame per second = 33.3
 const SECOND_PER_FRAME = 0.03
 
+func SendCharacterPositionUpdateReq(x:float, y:float, direction:int) -> void:
+	game_socket_manager.SendCharacterPositionUpdateReq(x, y, direction)
+
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()
 	dialog.dialog_text = text

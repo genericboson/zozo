@@ -261,6 +261,7 @@ namespace GenericBoson
                     PositionCast castData;
 					castData.senderCharacterId = m_id;
 					castData.position = Vector2F( moveReq->position()->x(), moveReq->position()->y() );
+					castData.direction = moveReq->direction();
 
 					std::vector<std::unique_ptr<BroadCast>> broadcasts;
 

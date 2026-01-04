@@ -16,9 +16,11 @@ enum ResultCode : uint
   WrongDBSchema      = 11,
 }
 
-enum CharacterState : uint
+enum Direction : byte
 {
-  None      = 0,
-  Playing   = 1,
-  LogedOff  = 2,
+  None  = 0,
+  Up    = 1,
+  Down  = 2,
+  Right = 3,
+  Left  = 4,
 }

@@ -14,6 +14,7 @@ namespace GenericBoson
 		const auto req = Zozo::CreateCharacterPositionUpdateReq(
 			fbb,
 			pCharacter->Id(),
+			direction,
 			&position);
 
 		const auto msg = Zozo::CreateGameMessage(fbb,

@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=4 uid="uid://doli6v5epvvht"]
 
-[ext_resource type="Script" uid="uid://lli6kg40t7ib" path="res://script/Player.gd" id="1_v0l8b"]
 [ext_resource type="SpriteFrames" uid="uid://dxxgfkc1owmy6" path="res://art/player_animation.tres" id="2_v0l8b"]
 [ext_resource type="TileSet" uid="uid://xpt2r37kjiqn" path="res://art/ground_tile.tres" id="3_brvut"]
 [ext_resource type="TileSet" uid="uid://b87bbrgxr0tu4" path="res://art/cliff_tile.tres" id="4_0ha60"]
+[ext_resource type="Script" uid="uid://c7khnisvulf4w" path="res://script/Player.cs" id="4_s5yxy"]
 [ext_resource type="TileSet" uid="uid://dj7qpu6ltwu8l" path="res://art/object_tile.tres" id="5_0ha60"]
 [ext_resource type="PackedScene" uid="uid://bgysjc3ue57wo" path="res://scene/UI.tscn" id="7_p1hux"]
 [ext_resource type="Script" uid="uid://ddcqije0detka" path="res://script/GameSocketManager.cs" id="7_s5yxy"]
@@ -41,12 +41,12 @@ tile_set = ExtResource("5_0ha60")
 y_sort_enabled = true
 position = Vector2(600, 338)
 scale = Vector2(4, 4)
-script = ExtResource("1_v0l8b")
+script = ExtResource("4_s5yxy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ysort/Player"]
 shape = SubResource("CircleShape2D_brvut")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Ysort/Player"]
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="Ysort/Player"]
 position = Vector2(0, -15)
 sprite_frames = ExtResource("2_v0l8b")
 animation = &"idle_front"

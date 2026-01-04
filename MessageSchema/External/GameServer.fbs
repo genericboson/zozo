@@ -48,8 +48,9 @@ table CharacterCreateAck
 
 table CharacterPositionUpdateReq
 {
-    id      : int;
-    position: Vector2F;
+    id        : int;
+    direction : Direction;
+    position  : Vector2F;
 }
 
 table CharacterPositionUpdateAck

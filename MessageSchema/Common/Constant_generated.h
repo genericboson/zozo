@@ -76,37 +76,43 @@ inline const char *EnumNameResultCode(ResultCode e) {
   return EnumNamesResultCode()[index];
 }
 
-enum CharacterState : uint32_t {
-  CharacterState_None = 0,
-  CharacterState_Playing = 1,
-  CharacterState_LogedOff = 2,
-  CharacterState_MIN = CharacterState_None,
-  CharacterState_MAX = CharacterState_LogedOff
+enum Direction : int8_t {
+  Direction_None = 0,
+  Direction_Up = 1,
+  Direction_Down = 2,
+  Direction_Right = 3,
+  Direction_Left = 4,
+  Direction_MIN = Direction_None,
+  Direction_MAX = Direction_Left
 };
 
-inline const CharacterState (&EnumValuesCharacterState())[3] {
-  static const CharacterState values[] = {
-    CharacterState_None,
-    CharacterState_Playing,
-    CharacterState_LogedOff
+inline const Direction (&EnumValuesDirection())[5] {
+  static const Direction values[] = {
+    Direction_None,
+    Direction_Up,
+    Direction_Down,
+    Direction_Right,
+    Direction_Left
   };
   return values;
 }
 
-inline const char * const *EnumNamesCharacterState() {
-  static const char * const names[4] = {
+inline const char * const *EnumNamesDirection() {
+  static const char * const names[6] = {
     "None",
-    "Playing",
-    "LogedOff",
+    "Up",
+    "Down",
+    "Right",
+    "Left",
     nullptr
   };
   return names;
 }
 
-inline const char *EnumNameCharacterState(CharacterState e) {
-  if (::flatbuffers::IsOutRange(e, CharacterState_None, CharacterState_LogedOff)) return "";
+inline const char *EnumNameDirection(Direction e) {
+  if (::flatbuffers::IsOutRange(e, Direction_None, Direction_Left)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesCharacterState()[index];
+  return EnumNamesDirection()[index];
 }
 
 }  // namespace Zozo
