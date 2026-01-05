@@ -37,7 +37,14 @@ namespace Zozo
             else
             {
                 otherCharacter = m_otherPlayerScene.Instantiate<Node2D>();
-                AddChild(otherCharacter);
+                var ysort = GetTree().CurrentScene.GetNode<Control>("Ysort");
+                if (ysort == null)
+                {
+                    GD.PrintErr("Ysort node not found");
+                    return;
+                }
+
+                ysort.AddChild(otherCharacter);
                 m_otherCharacters.Add(updateReq.Id, otherCharacter);
             }
 
