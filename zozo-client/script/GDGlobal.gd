@@ -15,6 +15,12 @@ const SECOND_PER_FRAME = 0.03
 # todo : remove this function by removing all gdscript code
 func SendCharacterPositionUpdateReq(x:float, y:float, direction:int, is_moved:bool) -> void:
 	game_socket_manager.SendCharacterPositionUpdateReq(x, y, direction, is_moved)
+	
+func SendCharacterSelectReq(selectedCharacterId:int) -> void:
+	game_socket_manager.SendCharacterSelectReq(selectedCharacterId, token)
+
+func SendCharacterListReq():
+	game_socket_manager.SendCharacterListReq(user_id, token)
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()

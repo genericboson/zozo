@@ -20,7 +20,8 @@ namespace Zozo
                     {
                         CSGlobal.Instance.characterData = ack.Data.Value;
                         var position = ack.Position.Value;
-                        selectNode.Call("_select_character", position.X, position.Y);
+                        // position.X, position.Y
+                        GetTree().ChangeSceneToFile("res://scene/main.tscn");
                     }
                     break;
                 default:

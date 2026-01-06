@@ -9,4 +9,7 @@
       <HintPath>C:\flatbuffers\net\FlatBuffers\bin\Debug\net8.0\Google.FlatBuffers.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="script\Scene\" />
+  </ItemGroup>
 </Project>
