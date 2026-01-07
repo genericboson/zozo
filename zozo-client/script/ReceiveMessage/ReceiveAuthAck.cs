@@ -34,12 +34,20 @@ namespace Zozo
                 {
                     case ResultCode.Success:
                         {
-                            GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
+                            var changeSceneToSelectResult = GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
+                            if (changeSceneToSelectResult != Error.Ok)
+                            {
+                                GD.PrintErr($"Failed to change scene to CharacterSelect. Error - {changeSceneToSelectResult}");
+                            }
                         }
                         break;
                     case ResultCode.NewAccount:
                         {
-                            GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
+                            var changeSceneToCreateResult = GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
+                            if (changeSceneToCreateResult != Error.Ok)
+                            {
+                                GD.PrintErr($"Failed to change scene to CharacterCreate. Error - {changeSceneToCreateResult}");
+                            }
                         }
                         break;
                     case ResultCode.WrongPassword:

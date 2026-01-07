@@ -14,6 +14,12 @@ public partial class CharacterSelect : Control
         m_characterDropDown = GetNode<OptionButton>("CharacterDropDown");
         m_characterDropDown.AddItem("Choose your character");
 
+        var backButton = GetNode<Button>("BackButton");
+        var selectButton = GetNode<Button>("SelectButton");
+
+        backButton.Pressed += _OnBackButtonPressed;
+        selectButton.Pressed += _OnSelectButtonPressed;
+
         m_globalNode = GetNode<Node>("/root/GDGlobal");
         if (m_globalNode == null)
         {
@@ -25,7 +31,11 @@ public partial class CharacterSelect : Control
 
     public void _OnBackButtonPressed()
     {
-        GetTree().ChangeSceneToFile("res://scene/Lobby.tscn");
+        var result = m_globalNode.GetTree().ChangeSceneToFile("res://scene/Lobby.tscn");
+        if (result != Error.Ok)
+        {
+            GD.PrintErr($"Failed to change scene to Lobby. Error - {result}");
+        }
     }
 
     public void _OnSelectButtonPressed()

@@ -43,5 +43,3 @@ text = "Select"
 script = ExtResource("3_u3aol")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="pressed" from="BackButton" to="." method="_OnBackButtonPressed"]
-[connection signal="pressed" from="SelectButton" to="." method="_OnSelectButtonPressed"]

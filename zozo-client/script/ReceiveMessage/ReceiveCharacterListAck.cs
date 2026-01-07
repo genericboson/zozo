@@ -26,7 +26,7 @@ namespace Zozo
                             characters.Add(pairData.Id, pairData.Name);
                         }
 
-                        GetTree().CurrentScene.Call("_add_characters", characters);
+                        GetTree().CurrentScene.Call("_AddCharacters", characters);
                     }
                     break;
                 default:
