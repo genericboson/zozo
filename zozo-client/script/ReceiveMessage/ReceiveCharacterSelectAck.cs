@@ -19,9 +19,8 @@ namespace Zozo
                     using (var selectNode = GetNode<Node>("/root/CharacterSelect"))
                     {
                         CSGlobal.Instance.characterData = ack.Data.Value;
-                        var position = ack.Position.Value;
-                        // position.X, position.Y
-                        GetTree().ChangeSceneToFile("res://scene/main.tscn");
+
+                        GetTree().ChangeSceneToFile("res://scene/Main.tscn");
                     }
                     break;
                 default:

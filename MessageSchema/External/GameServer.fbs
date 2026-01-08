@@ -33,7 +33,6 @@ table CharacterSelectAck
     result_code : ResultCode;
     
     data : CharacterInfo;
-    position: Vector2F;
 }
 
 table CharacterCreateReq

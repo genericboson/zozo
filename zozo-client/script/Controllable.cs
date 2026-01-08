@@ -2,10 +2,11 @@ using Godot;
 using System;
 using Zozo;
 
-public partial class Player : CharacterBody2D
+public partial class Controllable : Node
 {
     private const int SPEED = 400;
 
+    private CharacterBody2D m_parent;
     private AnimatedSprite2D m_stateAnimation;
     private double m_accumulatedDelta = 0.0;
 
@@ -13,7 +14,20 @@ public partial class Player : CharacterBody2D
     {
         base._Ready();
 
-        m_stateAnimation = GetNode<AnimatedSprite2D>("PlayerAnimation");
+        m_parent = GetParent<CharacterBody2D>();
+        if (m_parent == null)
+        {
+            GD.PrintErr("parent node not found or not CharacterBody2D");
+            return;
+        }
+
+        m_stateAnimation = m_parent.GetNode<AnimatedSprite2D>("PlayerAnimation");
+        if (m_stateAnimation == null)
+        {
+            GD.PrintErr("PlayerAnimation node not found");
+            return;
+        }
+        m_stateAnimation.Play("idle_front");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -25,7 +39,7 @@ public partial class Player : CharacterBody2D
 
         if (Input.IsActionPressed("left"))
         {
-            Position -= new Vector2(SPEED * (float)delta, 0);
+            m_parent.Position -= new Vector2(SPEED * (float)delta, 0);
             direction = GenericBoson.Zozo.Direction.Left;
             isMoved   = true;
 
@@ -34,7 +48,7 @@ public partial class Player : CharacterBody2D
         }
         else if (Input.IsActionPressed("right"))
         {
-            Position += new Vector2(SPEED * (float)delta, 0);
+            m_parent.Position += new Vector2(SPEED * (float)delta, 0);
             direction = GenericBoson.Zozo.Direction.Right;
             isMoved   = true;
 
@@ -60,7 +74,7 @@ public partial class Player : CharacterBody2D
 
         if (Input.IsActionPressed("up"))
         {
-            Position -= new Vector2(0, SPEED * (float)delta);
+            m_parent.Position -= new Vector2(0, SPEED * (float)delta);
             direction = GenericBoson.Zozo.Direction.Up;
             isMoved   = true;
 
@@ -68,7 +82,7 @@ public partial class Player : CharacterBody2D
         }
         else if (Input.IsActionPressed("down"))
         {
-            Position += new Vector2(0, SPEED * (float)delta);
+            m_parent.Position += new Vector2(0, SPEED * (float)delta);
             direction = GenericBoson.Zozo.Direction.Down;
             isMoved   = true;
 
@@ -87,7 +101,7 @@ public partial class Player : CharacterBody2D
             m_stateAnimation.Play("idle_front");
         }
 
-        MoveAndSlide();
+        m_parent.MoveAndSlide();
 
         m_accumulatedDelta += delta;
         if (!isMoved || CSGlobal.SECOND_PER_FRAME < m_accumulatedDelta)
@@ -108,7 +122,7 @@ public partial class Player : CharacterBody2D
     {
         using (var globalNode = GetNode<Node>("/root/GDGlobal"))
         {
-            globalNode.Call("SendCharacterPositionUpdateReq", Position.X, Position.Y, (int)direction, isMoved);
+            globalNode.Call("SendCharacterPositionUpdateReq", m_parent.Position.X, m_parent.Position.Y, (int)direction, isMoved);
         }
     }
 }

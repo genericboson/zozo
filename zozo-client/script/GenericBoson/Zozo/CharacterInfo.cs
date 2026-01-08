@@ -33,7 +33,7 @@ public struct CharacterInfo : IFlatbufferObject
   public int HpMax { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public int Mp { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public int MpMax { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public GenericBoson.Zozo.Vector2I? Position { get { int o = __p.__offset(20); return o != 0 ? (GenericBoson.Zozo.Vector2I?)(new GenericBoson.Zozo.Vector2I()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public GenericBoson.Zozo.Vector2F? Position { get { int o = __p.__offset(20); return o != 0 ? (GenericBoson.Zozo.Vector2F?)(new GenericBoson.Zozo.Vector2F()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public GenericBoson.Zozo.StatPair? Stats(int j) { int o = __p.__offset(22); return o != 0 ? (GenericBoson.Zozo.StatPair?)(new GenericBoson.Zozo.StatPair()).__assign(__p.__vector(o) + j * 16, __p.bb) : null; }
   public int StatsLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   public GenericBoson.Zozo.TicketPair? Tickets(int j) { int o = __p.__offset(24); return o != 0 ? (GenericBoson.Zozo.TicketPair?)(new GenericBoson.Zozo.TicketPair()).__assign(__p.__vector(o) + j * 16, __p.bb) : null; }
@@ -53,7 +53,7 @@ public struct CharacterInfo : IFlatbufferObject
   public static void AddHpMax(FlatBufferBuilder builder, int hpMax) { builder.AddInt(5, hpMax, 0); }
   public static void AddMp(FlatBufferBuilder builder, int mp) { builder.AddInt(6, mp, 0); }
   public static void AddMpMax(FlatBufferBuilder builder, int mpMax) { builder.AddInt(7, mpMax, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2I> positionOffset) { builder.AddStruct(8, positionOffset.Value, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Vector2F> positionOffset) { builder.AddStruct(8, positionOffset.Value, 0); }
   public static void AddStats(FlatBufferBuilder builder, VectorOffset statsOffset) { builder.AddOffset(9, statsOffset.Value, 0); }
   public static void StartStatsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(16, numElems, 8); }
   public static void AddTickets(FlatBufferBuilder builder, VectorOffset ticketsOffset) { builder.AddOffset(10, ticketsOffset.Value, 0); }
@@ -87,7 +87,7 @@ static public class CharacterInfoVerify
       && verifier.VerifyField(tablePos, 14 /*HpMax*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 16 /*Mp*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 18 /*MpMax*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 20 /*Position*/, 8 /*GenericBoson.Zozo.Vector2I*/, 4, false)
+      && verifier.VerifyField(tablePos, 20 /*Position*/, 8 /*GenericBoson.Zozo.Vector2F*/, 4, false)
       && verifier.VerifyVectorOfData(tablePos, 22 /*Stats*/, 16 /*GenericBoson.Zozo.StatPair*/, false)
       && verifier.VerifyVectorOfData(tablePos, 24 /*Tickets*/, 16 /*GenericBoson.Zozo.TicketPair*/, false)
       && verifier.VerifyField(tablePos, 26 /*AppearanceId*/, 8 /*long*/, 8, false)

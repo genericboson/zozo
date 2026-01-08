@@ -51,7 +51,7 @@ table CharacterInfo
     mp      : int;
     mp_max  : int;
 
-    position : Vector2I;
+    position : Vector2F;
 
     stats            : [StatPair];
     tickets          : [TicketPair];

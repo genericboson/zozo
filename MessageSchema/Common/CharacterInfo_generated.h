@@ -181,7 +181,7 @@ struct CharacterInfoT : public ::flatbuffers::NativeTable {
   int32_t hp_max = 0;
   int32_t mp = 0;
   int32_t mp_max = 0;
-  std::unique_ptr<GenericBoson::Zozo::Vector2I> position{};
+  std::unique_ptr<GenericBoson::Zozo::Vector2F> position{};
   std::vector<GenericBoson::Zozo::StatPair> stats{};
   std::vector<GenericBoson::Zozo::TicketPair> tickets{};
   int64_t appearance_id = 0;
@@ -238,8 +238,8 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t mp_max() const {
     return GetField<int32_t>(VT_MP_MAX, 0);
   }
-  const GenericBoson::Zozo::Vector2I *position() const {
-    return GetStruct<const GenericBoson::Zozo::Vector2I *>(VT_POSITION);
+  const GenericBoson::Zozo::Vector2F *position() const {
+    return GetStruct<const GenericBoson::Zozo::Vector2F *>(VT_POSITION);
   }
   const ::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *> *stats() const {
     return GetPointer<const ::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *> *>(VT_STATS);
@@ -270,7 +270,7 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_HP_MAX, 4) &&
            VerifyField<int32_t>(verifier, VT_MP, 4) &&
            VerifyField<int32_t>(verifier, VT_MP_MAX, 4) &&
-           VerifyField<GenericBoson::Zozo::Vector2I>(verifier, VT_POSITION, 4) &&
+           VerifyField<GenericBoson::Zozo::Vector2F>(verifier, VT_POSITION, 4) &&
            VerifyOffset(verifier, VT_STATS) &&
            verifier.VerifyVector(stats()) &&
            VerifyOffset(verifier, VT_TICKETS) &&
@@ -316,7 +316,7 @@ struct CharacterInfoBuilder {
   void add_mp_max(int32_t mp_max) {
     fbb_.AddElement<int32_t>(CharacterInfo::VT_MP_MAX, mp_max, 0);
   }
-  void add_position(const GenericBoson::Zozo::Vector2I *position) {
+  void add_position(const GenericBoson::Zozo::Vector2F *position) {
     fbb_.AddStruct(CharacterInfo::VT_POSITION, position);
   }
   void add_stats(::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *>> stats) {
@@ -358,7 +358,7 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(
     int32_t hp_max = 0,
     int32_t mp = 0,
     int32_t mp_max = 0,
-    const GenericBoson::Zozo::Vector2I *position = nullptr,
+    const GenericBoson::Zozo::Vector2F *position = nullptr,
     ::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::StatPair *>> stats = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::TicketPair *>> tickets = 0,
     int64_t appearance_id = 0,
@@ -394,7 +394,7 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
     int32_t hp_max = 0,
     int32_t mp = 0,
     int32_t mp_max = 0,
-    const GenericBoson::Zozo::Vector2I *position = nullptr,
+    const GenericBoson::Zozo::Vector2F *position = nullptr,
     const std::vector<GenericBoson::Zozo::StatPair> *stats = nullptr,
     const std::vector<GenericBoson::Zozo::TicketPair> *tickets = nullptr,
     int64_t appearance_id = 0,
@@ -435,7 +435,7 @@ inline CharacterInfoT::CharacterInfoT(const CharacterInfoT &o)
         hp_max(o.hp_max),
         mp(o.mp),
         mp_max(o.mp_max),
-        position((o.position) ? new GenericBoson::Zozo::Vector2I(*o.position) : nullptr),
+        position((o.position) ? new GenericBoson::Zozo::Vector2F(*o.position) : nullptr),
         stats(o.stats),
         tickets(o.tickets),
         appearance_id(o.appearance_id),
@@ -481,7 +481,7 @@ inline void CharacterInfo::UnPackTo(CharacterInfoT *_o, const ::flatbuffers::res
   { auto _e = hp_max(); _o->hp_max = _e; }
   { auto _e = mp(); _o->mp = _e; }
   { auto _e = mp_max(); _o->mp_max = _e; }
-  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2I>(new GenericBoson::Zozo::Vector2I(*_e)); }
+  { auto _e = position(); if (_e) _o->position = std::unique_ptr<GenericBoson::Zozo::Vector2F>(new GenericBoson::Zozo::Vector2F(*_e)); }
   { auto _e = stats(); if (_e) { _o->stats.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->stats[_i] = *_e->Get(_i); } } else { _o->stats.resize(0); } }
   { auto _e = tickets(); if (_e) { _o->tickets.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->tickets[_i] = *_e->Get(_i); } } else { _o->tickets.resize(0); } }
   { auto _e = appearance_id(); _o->appearance_id = _e; }

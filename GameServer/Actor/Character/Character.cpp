@@ -232,13 +232,14 @@ namespace GenericBoson
                     const auto& selectResult = selectResults[0];
                     m_info.level = selectResult.level.value_or(0);
                     m_info.name = selectResult.name.value_or("");
+                    m_info.position = std::make_unique<Vector2F>(m_position);
 
                     // #todo - temporary test code. (0, 0) zone.
                     ZoneManager::GetInstance()->EnterZone(shared_from_this(), 0, 0);
                 }
 
                 auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
-                auto ack = Zozo::CreateCharacterSelectAck(fbb, resultCode, infoOffset, &m_position);
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, resultCode, infoOffset);
 				auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
 
                 fbb.Finish(msg);

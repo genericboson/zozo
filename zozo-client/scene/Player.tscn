@@ -1,16 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://dn7wvpo2uxh40"]
 
-[ext_resource type="SpriteFrames" uid="uid://dxxgfkc1owmy6" path="res://art/player_animation.tres" id="1_g1pm2"]
+[ext_resource type="SpriteFrames" uid="uid://dxxgfkc1owmy6" path="res://art/player_animation.tres" id="1_si3wx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o7yny"]
 radius = 4.0
 
-[node name="OtherPlayer" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
 
-[node name="OtherPlayerAnimation" type="AnimatedSprite2D" parent="."]
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -15)
-sprite_frames = ExtResource("1_g1pm2")
+sprite_frames = ExtResource("1_si3wx")
 animation = &"idle_front"
 autoplay = "idle_front"
 

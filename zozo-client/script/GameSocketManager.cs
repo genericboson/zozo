@@ -1,5 +1,6 @@
 using GenericBoson.Zozo;
 using Godot;
+using System.Collections.Generic;
 
 namespace Zozo
 {
@@ -9,6 +10,14 @@ namespace Zozo
 
         private string m_gameServerIp   = "";
         private string m_gameServerPort = "";
+
+        static private PackedScene m_playerScene;
+        static private Dictionary<int, CharacterBody2D> m_otherCharacters = new();
+
+        public override void _Ready()
+        {
+            m_playerScene = ResourceLoader.Load<PackedScene>("res://scene/Player.tscn");
+        }
 
         public override void _Process(double delta)
         {
