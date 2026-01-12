@@ -25,6 +25,10 @@ public partial class Lobby : Control
     public void _OnStartButtonPressed()
     {
         m_globalNode.Set("account", m_accountInput.Text);
+        m_globalNode.Call("SendAuthReq", 
+            m_serverSelect.GetSelectedId(), 
+            m_accountInput.Text, 
+            m_passwordInput.Text );
     }
     public void _OnSettingButtonPressed()
     {

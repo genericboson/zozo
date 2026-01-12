@@ -20,7 +20,10 @@ func SendCharacterSelectReq(selectedCharacterId:int) -> void:
 	game_socket_manager.SendCharacterSelectReq(selectedCharacterId, token)
 
 func SendCharacterListReq():
-	game_socket_manager.SendCharacterListReq(user_id, token)
+	game_socket_manager.SendCharacterListReq(user_id, token);
+	
+func SendAuthReq(selectedId:int, accountStr:String, passwordStr:String):
+	lobby_socket_manager.SendAuthReq(selectedId, accountStr, passwordStr);	
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()
