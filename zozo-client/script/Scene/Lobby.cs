@@ -28,7 +28,7 @@ public partial class Lobby : Control
 
         startButton.Pressed += _OnStartButtonPressed;
         settingButton.Pressed += _OnSettingButtonPressed;
-        exitButton.Pressed += () => GetTree().Quit();
+        exitButton.Pressed += () => m_globalNode.GetTree().Quit();
 
         m_serverSelect.AddItem("Choose server");
 
