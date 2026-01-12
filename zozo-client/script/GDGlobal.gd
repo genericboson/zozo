@@ -24,6 +24,9 @@ func SendCharacterListReq():
 	
 func SendAuthReq(selectedId:int, accountStr:String, passwordStr:String):
 	lobby_socket_manager.SendAuthReq(selectedId, accountStr, passwordStr);	
+	
+func SendServerListReq():
+	lobby_socket_manager.SendServerListReq();
 
 func message_box(text: String, title: String='Message') -> void:
 	var dialog = AcceptDialog.new()

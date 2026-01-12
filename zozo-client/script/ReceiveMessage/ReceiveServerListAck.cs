@@ -25,7 +25,7 @@ namespace Zozo
                             servers.Add(serverInfo.Id, serverInfo.Name);
                         }
 
-                        lobbyNode.Call("_add_servers", servers);
+                        lobbyNode.Call("_AddServers", servers);
                     }
                     break;
                 default:

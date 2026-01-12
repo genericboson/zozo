@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ijdh8our3m0s"]
 
 [ext_resource type="Texture2D" uid="uid://diusotvjg160h" path="res://art/lobby.bmp" id="1_ix0g6"]
-[ext_resource type="Script" uid="uid://cxcj24bm2rprq" path="res://script/Lobby.gd" id="1_qng6a"]
+[ext_resource type="Script" uid="uid://cbmyy02eqwamw" path="res://script/Scene/Lobby.cs" id="1_tinju"]
 [ext_resource type="Script" uid="uid://druu25jgc1s8w" path="res://script/LobbySocketManager.cs" id="3_tinju"]
 
 [sub_resource type="SystemFont" id="SystemFont_ix0g6"]
@@ -21,7 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_qng6a")
+script = ExtResource("1_tinju")
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 0
