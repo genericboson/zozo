@@ -25,15 +25,8 @@ namespace Zozo
 
             if (string.IsNullOrEmpty(m_gameServerIp) || string.IsNullOrEmpty(m_gameServerPort))
             {
-                var globalNode = GetNode<Node>("/root/GDGlobal");
-                if (globalNode == null)
-                {
-                    GD.PrintErr("Global node not found");
-                    return;
-                }
-
-                m_gameServerIp = globalNode.Get("game_server_ip").AsString();
-                m_gameServerPort = globalNode.Get("game_server_port").AsString();
+                m_gameServerIp   = CSGlobal.Instance.game_server_ip;
+                m_gameServerPort = CSGlobal.Instance.game_server_port;
 
                 GD.Print($"Game Server IP: {m_gameServerIp}, Port: {m_gameServerPort}");
             }

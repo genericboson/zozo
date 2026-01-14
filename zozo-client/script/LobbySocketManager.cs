@@ -6,6 +6,16 @@ namespace Zozo
     public partial class LobbySocketManager : Node
     {
         public LobbySocketImpl m_lobbyImpl = new();
+        public Node m_globalNode;
+
+        public override void _Ready()
+        {
+            m_globalNode = GetNode<Node>("/root/GDGlobal");
+            if (m_globalNode == null)
+            {
+                GD.PrintErr("Global node is null");
+            }
+        }
 
         public override void _Process(double delta)
         {

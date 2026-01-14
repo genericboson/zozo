@@ -13,59 +13,56 @@ namespace Zozo
 
         private void ConsumeAuthAck(AuthAck ack)
         {
-            using (var globalNode = GetNode<Node>("/root/GDGlobal"))
+            switch (ack.ResultCode)
             {
-                switch (ack.ResultCode)
-                {
-                    case ResultCode.Success:
-                    case ResultCode.NewAccount:
-                        {
-                            globalNode.Set("token", ack.Token);
-                            globalNode.Set("user_id", ack.UserId);
-                            globalNode.Set("game_server_ip", ack.Ip);
-                            globalNode.Set("game_server_port", ack.Port);
+                case ResultCode.Success:
+                case ResultCode.NewAccount:
+                    {
+                        CSGlobal.Instance.token            = ack.Token;
+                        CSGlobal.Instance.user_id          = ack.UserId;
+                        CSGlobal.Instance.game_server_ip   = ack.Ip;
+                        CSGlobal.Instance.game_server_port = ack.Port;
 
-                            GD.Print($"[AuthAck] Token : {ack.Token}, UserId : {ack.UserId}, GameServerIp : {ack.Ip}, GameServerPort : {ack.Port}");
-                        }
-                        break;
-                }
+                        GD.Print($"[AuthAck] Token : {ack.Token}, UserId : {ack.UserId}, GameServerIp : {ack.Ip}, GameServerPort : {ack.Port}");
+                    }
+                    break;
+            }
 
-                switch (ack.ResultCode)
-                {
-                    case ResultCode.Success:
+            switch (ack.ResultCode)
+            {
+                case ResultCode.Success:
+                    {
+                        var changeSceneToSelectResult = GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
+                        if (changeSceneToSelectResult != Error.Ok)
                         {
-                            var changeSceneToSelectResult = GetTree().ChangeSceneToFile("res://scene/CharacterSelect.tscn");
-                            if (changeSceneToSelectResult != Error.Ok)
-                            {
-                                GD.PrintErr($"Failed to change scene to CharacterSelect. Error - {changeSceneToSelectResult}");
-                            }
+                            GD.PrintErr($"Failed to change scene to CharacterSelect. Error - {changeSceneToSelectResult}");
                         }
-                        break;
-                    case ResultCode.NewAccount:
+                    }
+                    break;
+                case ResultCode.NewAccount:
+                    {
+                        var changeSceneToCreateResult = GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
+                        if (changeSceneToCreateResult != Error.Ok)
                         {
-                            var changeSceneToCreateResult = GetTree().ChangeSceneToFile("res://scene/CharacterCreate.tscn");
-                            if (changeSceneToCreateResult != Error.Ok)
-                            {
-                                GD.PrintErr($"Failed to change scene to CharacterCreate. Error - {changeSceneToCreateResult}");
-                            }
+                            GD.PrintErr($"Failed to change scene to CharacterCreate. Error - {changeSceneToCreateResult}");
                         }
-                        break;
-                    case ResultCode.WrongPassword:
-                        {
-                            globalNode.Call("message_box", "Wrong password");
-                        }
-                        break;
-                    case ResultCode.AlreadyLoggedIn:
-                        {
-                            globalNode.Call("message_box", "Already logged in");
-                        }
-                        break;
-                    default:
-                        {
-                            globalNode.Call("message_box", $"Wrong result code : {ack.ResultCode}");
-                        }
-                        break;
-                }
+                    }
+                    break;
+                case ResultCode.WrongPassword:
+                    {
+                        m_globalNode.Call("message_box", "Wrong password");
+                    }
+                    break;
+                case ResultCode.AlreadyLoggedIn:
+                    {
+                        m_globalNode.Call("message_box", "Already logged in");
+                    }
+                    break;
+                default:
+                    {
+                        m_globalNode.Call("message_box", $"Wrong result code : {ack.ResultCode}");
+                    }
+                    break;
             }
         }
     }

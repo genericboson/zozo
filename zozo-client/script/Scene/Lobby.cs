@@ -32,16 +32,16 @@ public partial class Lobby : Control
 
         m_serverSelect.AddItem("Choose server");
 
-        m_globalNode.Call("SendServerListReq");
+        CSGlobal.Instance.lobbySocketManager.SendServerListReq();
     }
 
     public void _OnStartButtonPressed()
     {
-        m_globalNode.Set("account", m_accountInput.Text);
-        m_globalNode.Call("SendAuthReq", 
-            m_serverSelect.GetSelectedId(), 
-            m_accountInput.Text, 
-            m_passwordInput.Text );
+        CSGlobal.Instance.account =  m_accountInput.Text;
+        CSGlobal.Instance.lobbySocketManager.SendAuthReq(
+            m_serverSelect.GetSelectedId(),
+            m_accountInput.Text,
+            m_passwordInput.Text);
     }
     public void _OnSettingButtonPressed()
     {

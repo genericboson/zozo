@@ -8,12 +8,12 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        public void SendCharacterListReq(int user_id, string token)
+        public void SendCharacterListReq()
         {
             m_gameImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
-                var tokenStr = fbb.CreateString(token);
-                var req = CharacterListReq.CreateCharacterListReq(fbb, user_id, tokenStr);
+                var tokenStr = fbb.CreateString(CSGlobal.Instance.token);
+                var req = CharacterListReq.CreateCharacterListReq(fbb, CSGlobal.Instance.user_id, tokenStr);
                 var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterListReq, req.Value);
                 fbb.Finish(message.Value);
             });

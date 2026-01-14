@@ -6,11 +6,11 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        public void SendCharacterSelectReq(long characterId, string token)
+        public void SendCharacterSelectReq(long characterId)
         {
             m_gameImpl.SendCommonLogic((FlatBufferBuilder fbb) =>
             {
-                var tokenOffset = fbb.CreateString(token);
+                var tokenOffset = fbb.CreateString(CSGlobal.Instance.token);
                 var characterSelectReq = CharacterSelectReq.CreateCharacterSelectReq(fbb, characterId, tokenOffset);
                 var message = GameMessage.CreateGameMessage(fbb, GamePayload.CharacterSelectReq, characterSelectReq.Value);
                 fbb.Finish(message.Value);

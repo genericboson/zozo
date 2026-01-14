@@ -120,9 +120,6 @@ public partial class Controllable : Node
 
     private void AfterMove(GenericBoson.Zozo.Direction direction, bool isMoved)
     {
-        using (var globalNode = GetNode<Node>("/root/GDGlobal"))
-        {
-            globalNode.Call("SendCharacterPositionUpdateReq", m_parent.Position.X, m_parent.Position.Y, (int)direction, isMoved);
-        }
+        CSGlobal.Instance.gameSocketManager.SendCharacterPositionUpdateReq(m_parent.Position.X, m_parent.Position.Y, direction, isMoved);
     }
 }

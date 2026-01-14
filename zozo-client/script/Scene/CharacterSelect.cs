@@ -26,7 +26,7 @@ public partial class CharacterSelect : Control
             GD.PrintErr("Global node is null");
         }
 
-        m_globalNode.Call("SendCharacterListReq");
+        CSGlobal.Instance.gameSocketManager.SendCharacterListReq();
     }
 
     public void _OnBackButtonPressed()
@@ -40,7 +40,7 @@ public partial class CharacterSelect : Control
 
     public void _OnSelectButtonPressed()
     {
-        m_globalNode.Call("SendCharacterSelectReq", m_characterDropDown.GetSelectedId());
+        CSGlobal.Instance.gameSocketManager.SendCharacterSelectReq(m_characterDropDown.GetSelectedId());
     }
 
     public void _AddCharacters(Godot.Collections.Dictionary<long, string> characters)
