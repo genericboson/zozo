@@ -24,4 +24,19 @@ public partial class CSGlobal : Node
     {
         Instance = this;
     }
+
+    public void MessageBox(string msg, string title = "Message")
+    {
+        var dialog = new AcceptDialog();
+        dialog.DialogText = msg;
+        dialog.Title = title;
+        dialog.GetLabel().HorizontalAlignment = HorizontalAlignment.Center;
+
+        var screenSize = DisplayServer.ScreenGetSize();
+        dialog.SetSize(new Godot.Vector2I(screenSize.X / 4, 0));
+
+        var scene_tree = Engine.GetMainLoop() as SceneTree;
+        scene_tree.CurrentScene.AddChild(dialog);
+        dialog.PopupCentered();
+    }
 }

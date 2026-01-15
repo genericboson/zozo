@@ -45,7 +45,7 @@ public partial class Lobby : Control
     }
     public void _OnSettingButtonPressed()
     {
-        m_globalNode.Call("message_box", "개발 예정...");
+        CSGlobal.Instance.MessageBox("message_box", "개발 예정...");
     }
 
     public void _AddServers(Godot.Collections.Dictionary<int, string> servers)

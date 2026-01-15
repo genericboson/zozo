@@ -50,17 +50,17 @@ namespace Zozo
                     break;
                 case ResultCode.WrongPassword:
                     {
-                        m_globalNode.Call("message_box", "Wrong password");
+                        CSGlobal.Instance.MessageBox("message_box", "Wrong password");
                     }
                     break;
                 case ResultCode.AlreadyLoggedIn:
                     {
-                        m_globalNode.Call("message_box", "Already logged in");
+                        CSGlobal.Instance.MessageBox("message_box", "Already logged in");
                     }
                     break;
                 default:
                     {
-                        m_globalNode.Call("message_box", $"Wrong result code : {ack.ResultCode}");
+                        CSGlobal.Instance.MessageBox("message_box", $"Wrong result code : {ack.ResultCode}");
                     }
                     break;
             }
