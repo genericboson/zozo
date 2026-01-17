@@ -5,7 +5,7 @@ namespace Zozo
 {
     public partial class LobbySocketManager : Node
     {
-        public void ReceiveServerListAck(LobbyMessage gameMessage)
+        public void RecvServerListAck(LobbyMessage gameMessage)
         {
             var ack = gameMessage.PayloadAsServerListAck();
             ConsumeServerListAck(ack);

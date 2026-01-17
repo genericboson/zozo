@@ -5,6 +5,7 @@
 
 #include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/Common/CharacterInfo_generated.h>
+#include <MessageSchema/External/GameServer_generated.h>
 
 namespace GenericBoson
 {
@@ -13,7 +14,7 @@ namespace GenericBoson
 	class Zone;
 
 	namespace asio  = boost::asio;
-
+	
 	class Character : 
 		public IActor, 
 		public TxExecutor,
@@ -35,9 +36,14 @@ namespace GenericBoson
 
 		void Write(const uint8_t* pData, const std::size_t size);
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
+
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
+
+	private:
+		asio::awaitable<void> RecvCharacterListReq(const Zozo::GameMessage* message);
+
 	private:
 		uint64_t                  m_temporaryId{};
 		int64_t                   m_id{};
@@ -49,6 +55,6 @@ namespace GenericBoson
 		std::shared_ptr<ISocket>  m_pSocket;
 		std::weak_ptr<Zone>       m_wpZone;
 
-		std::weak_ptr<GameServer> m_wpServer;
+		GameServer&               m_server;
 	};
 }

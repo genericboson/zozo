@@ -31,10 +31,10 @@ namespace Zozo
                 switch (lobbyMessage.PayloadType)
                 {
                     case LobbyPayload.AuthAck:
-                        ReceiveAuthAck(lobbyMessage);
+                        RecvAuthAck(lobbyMessage);
                         break;
                     case LobbyPayload.ServerListAck:
-                        ReceiveServerListAck(lobbyMessage);
+                        RecvServerListAck(lobbyMessage);
                         break;
                     default:
                         GD.PrintErr($"Unknown PayloadType: {lobbyMessage.PayloadType}");

@@ -6,7 +6,7 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        public void ReceiveCharacterListAck(GameMessage gameMessage)
+        public void RecvCharacterListAck(GameMessage gameMessage)
         {
             var ack = gameMessage.PayloadAsCharacterListAck();
             ConsumeCharacterListAck(ack);

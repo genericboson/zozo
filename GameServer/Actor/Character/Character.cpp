@@ -30,7 +30,7 @@ namespace GenericBoson
     Character::Character(
         const std::shared_ptr<GameServer>& pServer,
         const std::shared_ptr<ISocket>&    pSocket)
-		: m_id(0), m_wpServer(pServer), m_pSocket(pSocket)
+		: m_id(0), m_server(*pServer), m_pSocket(pSocket)
     {
     }
 
@@ -68,13 +68,6 @@ namespace GenericBoson
     {
         using namespace Zozo;
 
-        const auto pServer = m_wpServer.lock();
-        if (!pServer)
-        {
-            WARN_LOG( "owner server weak ptr is nullptr. character id - {}", m_id );
-            co_return;
-        }
-
         auto verifier = flatbuffers::Verifier(pData, dataSize);
         if (!VerifyGameMessageBuffer(verifier))
             co_return;
@@ -85,80 +78,7 @@ namespace GenericBoson
         switch (message->payload_type())
         {
         case GamePayload::GamePayload_CharacterListReq:
-            {
-                auto req = message->payload_as_CharacterListReq();
-                NULL_CO_VOID_RETURN(req);
-
-                const auto userId   = req->user_id();
-                const auto tokenStr = req->token()->c_str();
-
-                flatbuffers::FlatBufferBuilder fbb;
-
-                if (!CharacterManager::GetInstance()->IsValidUser(UserId{ userId }, tokenStr))
-                {
-                    WARN_LOG("[Invalid CharacterListReq]  token : {}, user id : {}", tokenStr, userId);
-                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_InvalidToken);
-                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-                    fbb.Finish(msg);
-					break;
-                }
-
-                INFO_LOG("[CharacterListReq] token : {}", tokenStr);
-
-                auto queryStr = mysql::with_params(
-                    "SELECT id, name, level FROM zozo_game.character WHERE user_id = {};",
-                    userId);
-
-                mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-                if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
-                    queryStr,
-                    result,
-                    asio::as_tuple(asio::use_awaitable));
-                    dbErr)
-                {
-                    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-                    co_return;
-                }
-
-                auto selectResults = result.rows<0>();
-                if (selectResults.size() <= 0)
-                {
-                    WARN_LOG("[CharacterListReq] NoData. token : {}, user id : {}", tokenStr, userId);
-                    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_NoData);
-                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-                    fbb.Finish(msg);
-                    co_return;
-                }
-
-                std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
-
-				std::vector<CharacterId> characterIds;
-                characterIds.reserve(selectResults.size());
-                for (auto& selectResult : selectResults)
-                {
-                    characterIds.push_back(CharacterId{ selectResult.id });
-
-                    auto name = fbb.CreateString(std::format("{} [Lv.{}]",
-                        selectResult.name.value_or(""),
-                        selectResult.level.value_or(0)));
-
-                    auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
-                    pairDatas.emplace_back(std::move(characterDataPair));
-                }
-
-                CharacterManager::GetInstance()->SetUserCharacterIds(
-                    UserId{ userId },
-					std::move(characterIds));
-
-                const auto pairDatasOffset = fbb.CreateVector(pairDatas);
-
-                const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
-                const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-
-                fbb.Finish(msg);
-
-                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-            }
+			co_await RecvCharacterListReq(message);
             break;
         case GamePayload::GamePayload_CharacterSelectReq:
             {
@@ -196,7 +116,7 @@ namespace GenericBoson
 
 				// #todo change to CharacterSelect_Select_UserCharacter
                 mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-                if (auto [dbErr] = co_await pServer->m_pDbConn->async_execute(
+                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
                     queryStr,
                     result,
                     asio::as_tuple(asio::use_awaitable));
@@ -282,10 +202,7 @@ namespace GenericBoson
             break;
         case GamePayload::GamePayload_CharacterCreateReq:
             {
-                const auto pServer = m_wpServer.lock();
-                NULL_CO_VOID_RETURN(pServer);
-
-                m_id = GenericBoson::IdGenerator::CreateId(pServer->m_id);
+                m_id = GenericBoson::IdGenerator::CreateId(m_server.m_id);
             }
             break;
         case GamePayload::GamePayload_CharacterCreateAck:

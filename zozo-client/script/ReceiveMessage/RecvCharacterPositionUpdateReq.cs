@@ -7,7 +7,7 @@ namespace Zozo
 {
     public partial class GameSocketManager : Node
     {
-        public void ReceiveCharacterPositionUpdateReq(GameMessage gameMessage)
+        public void RecvCharacterPositionUpdateReq(GameMessage gameMessage)
         {
             var updateReq = gameMessage.PayloadAsCharacterPositionUpdateReq();
             ConsumePositionUpdateReq(updateReq);
