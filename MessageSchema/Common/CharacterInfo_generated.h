@@ -28,6 +28,12 @@ struct CharacterInfo;
 struct CharacterInfoBuilder;
 struct CharacterInfoT;
 
+inline const ::flatbuffers::TypeTable *StatPairTypeTable();
+
+inline const ::flatbuffers::TypeTable *TicketPairTypeTable();
+
+inline const ::flatbuffers::TypeTable *CharacterInfoTypeTable();
+
 enum Stat : int32_t {
   Stat_None = 0,
   Stat_MeleeAttack = 1,
@@ -122,6 +128,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) StatPair FLATBUFFERS_FINAL_CLASS {
   int64_t value_;
 
  public:
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return StatPairTypeTable();
+  }
   StatPair()
       : key_(0),
         padding0__(0),
@@ -150,6 +159,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) TicketPair FLATBUFFERS_FINAL_CLASS {
   int64_t value_;
 
  public:
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return TicketPairTypeTable();
+  }
   TicketPair()
       : key_(0),
         padding0__(0),
@@ -197,6 +209,9 @@ struct CharacterInfoT : public ::flatbuffers::NativeTable {
 struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterInfoT NativeTableType;
   typedef CharacterInfoBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return CharacterInfoTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_USER_ID = 6,
@@ -530,6 +545,145 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(::flatbuffers::F
       _current_quest_id,
       _inventory,
       _inventory_size);
+}
+
+inline const ::flatbuffers::TypeTable *StatTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::StatTypeTable
+  };
+  static const char * const names[] = {
+    "None",
+    "MeleeAttack",
+    "MeleeDefence",
+    "RangeAttack",
+    "RangeDefence",
+    "MagicAttack",
+    "MagicDefence",
+    "Agility",
+    "Accuracy",
+    "Speed"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 10, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *TicketTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::TicketTypeTable
+  };
+  static const char * const names[] = {
+    "None",
+    "CaveDungeon",
+    "IslandDungeon"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 3, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *StatPairTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_LONG, 0, -1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::StatTypeTable
+  };
+  static const int64_t values[] = { 0, 8, 16 };
+  static const char * const names[] = {
+    "key",
+    "value"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_STRUCT, 2, type_codes, type_refs, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *TicketPairTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_LONG, 0, -1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::TicketTypeTable
+  };
+  static const int64_t values[] = { 0, 8, 16 };
+  static const char * const names[] = {
+    "key",
+    "value"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_STRUCT, 2, type_codes, type_refs, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *CharacterInfoTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 0 },
+    { ::flatbuffers::ET_SEQUENCE, 1, 1 },
+    { ::flatbuffers::ET_SEQUENCE, 1, 2 },
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_SEQUENCE, 1, 3 },
+    { ::flatbuffers::ET_INT, 0, -1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::Vector2FTypeTable,
+    GenericBoson::Zozo::StatPairTypeTable,
+    GenericBoson::Zozo::TicketPairTypeTable,
+    GenericBoson::Zozo::ItemInfoTypeTable
+  };
+  static const char * const names[] = {
+    "id",
+    "user_id",
+    "name",
+    "level",
+    "hp",
+    "hp_max",
+    "mp",
+    "mp_max",
+    "position",
+    "stats",
+    "tickets",
+    "appearance_id",
+    "current_quest_id",
+    "inventory",
+    "inventory_size"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 15, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
 }
 
 }  // namespace Zozo

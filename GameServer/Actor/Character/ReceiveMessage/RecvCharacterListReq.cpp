@@ -17,6 +17,9 @@ namespace GenericBoson
 
     asio::awaitable<void> Character::RecvCharacterListReq(const Zozo::GameMessage* message)
 	{
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // [1] validation
+
         auto req = message->payload_as_CharacterListReq();
         NULL_CO_VOID_RETURN(req);
 
@@ -35,6 +38,9 @@ namespace GenericBoson
         }
 
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // [2] db
 
         auto queryStr = mysql::with_params(
             "SELECT id, name, level FROM zozo_game.character WHERE user_id = {};",
@@ -60,6 +66,9 @@ namespace GenericBoson
             fbb.Finish(msg);
             co_return;
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // [3] serialization
 
         std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
@@ -87,6 +96,8 @@ namespace GenericBoson
         const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
 
         fbb.Finish(msg);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 
