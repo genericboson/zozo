@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "vnn5+qK5Y1w=",
+  "success": true,
+  "projectFilePath": "D:\\projects\\zozo\\FlatCacheGenerator\\FlatCacheGenerator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ljhoo\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512"
+  ],
+  "logs": []
+}
