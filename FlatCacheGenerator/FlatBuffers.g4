@@ -2,10 +2,11 @@ grammar FlatBuffers;
 
 // --- Parser Rules ---
 
-schema
-    : include* ( 
-        namespace_decl 
-        | type_decl 
+schema returns [ FlatCacheGenerator.FlatBufferTree output ]
+@init { $output = new FlatCacheGenerator.FlatBufferTree(); }
+    : (includeOne = include { $output = $includeOne.output; } )* ( 
+        namespaceOne = namespace_decl { $output.m_namespaces.Add($namespaceOne.output); }
+        | typeOne = type_decl { $output.m_types.Add($typeOne.output); }
         | enum_decl 
         | root_decl 
         | file_extension_decl 
@@ -16,20 +17,26 @@ schema
     )* EOF
     ;
 
-include
-    : 'include' StringConstant ';'
+include returns [ string output ]
+@init { $output = ""; }
+    : 'include' stringConstantOne = StringConstant { $output += $stringConstantOne.text; } ';'
     ;
 
-namespace_decl
-    : 'namespace' Ident ( '.' Ident )* ';'
+namespace_decl returns [ string output ]
+@init { $output = ""; }
+    : 'namespace' identFirst = Ident { $output += $identFirst.text; } 
+    ( '.' identLeft = Ident { $output += $identLeft.text; } )* ';'
     ;
 
 attribute_decl
     : 'attribute' ( Ident | StringConstant ) ';'
     ;
 
-type_decl
-    : ( 'table' | 'struct' ) Ident metadata '{' field_decl+ '}'
+type_decl returns [ FlatCacheGenerator.FlatBufferType output ]
+@init { $output = new FlatCacheGenerator.FlatBufferType(); }
+    : ( 'table' { $output.m_kind = TypeKind.Table; } | 'struct' { $output.m_kind = TypeKind.Struct; } ) 
+    identOne = Ident {  $output.m_name = $identOne.text; } 
+    metadata '{' ( fieldOne = field_decl { $output.m_fields.Add($fieldOne.output); } )+ '}'
     ;
 
 enum_decl
@@ -40,8 +47,14 @@ root_decl
     : 'root_type' Ident ';'
     ;
 
-field_decl
-    : Ident ':' type_ ( '=' scalar )? metadata ';'
+field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
+@init { $output = new FlatCacheGenerator.FlatBufferField(); }
+    : identOne = Ident { $output.m_name = $identOne.text; } 
+    ':' 
+    typeOne = type_ { $output.m_type = $typeOne.text; }
+    ( '=' scalarOne = scalar { $output.m_defaultValue = $scalarOne.text; } )? 
+    metadata 
+    ';'
     ;
 
 rpc_decl
