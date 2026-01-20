@@ -203,7 +203,7 @@ public class FlatBuffersParser extends Parser {
 				{
 				setState(46);
 				((SchemaContext)_localctx).includeOne = include();
-				 ((SchemaContext)_localctx).output =  ((SchemaContext)_localctx).includeOne.output; 
+				 _localctx.output.m_includes.Add(((SchemaContext)_localctx).includeOne.output); 
 				}
 				}
 				setState(53);
@@ -477,14 +477,14 @@ public class FlatBuffersParser extends Parser {
 				{
 				setState(96);
 				match(T__5);
-				 _localctx.output.m_kind = TypeKind.Table; 
+				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Table; 
 				}
 				break;
 			case T__6:
 				{
 				setState(98);
 				match(T__6);
-				 _localctx.output.m_kind = TypeKind.Struct; 
+				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Struct; 
 				}
 				break;
 			default:

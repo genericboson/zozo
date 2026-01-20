@@ -25,6 +25,8 @@ class Program
         var schema = parser.schema();
         m_tree = schema.output;
 
+        ///////////////////////////////////////////////////////////////////////////
+
         foreach(var typeOne in m_tree.m_types)
         {
             Console.WriteLine($"Type: {typeOne.m_name}");

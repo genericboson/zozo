@@ -1,0 +1,9 @@
+namespace GenericBoson.Zozo;
+
+table Character
+{
+    id : long;
+    user_id : long;
+    name : string;
+    level : int;
+}

@@ -207,7 +207,7 @@ public partial class FlatBuffersParser : Parser {
 				{
 				State = 46;
 				_localctx.includeOne = include();
-				 _localctx.output =  _localctx.includeOne.output; 
+				 _localctx.output.m_includes.Add(_localctx.includeOne.output); 
 				}
 				}
 				State = 53;
@@ -524,14 +524,14 @@ public partial class FlatBuffersParser : Parser {
 				{
 				State = 96;
 				Match(T__5);
-				 _localctx.output.m_kind = TypeKind.Table; 
+				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Table; 
 				}
 				break;
 			case T__6:
 				{
 				State = 98;
 				Match(T__6);
-				 _localctx.output.m_kind = TypeKind.Struct; 
+				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Struct; 
 				}
 				break;
 			default:

@@ -4,7 +4,7 @@ grammar FlatBuffers;
 
 schema returns [ FlatCacheGenerator.FlatBufferTree output ]
 @init { $output = new FlatCacheGenerator.FlatBufferTree(); }
-    : (includeOne = include { $output = $includeOne.output; } )* ( 
+    : (includeOne = include { $output.m_includes.Add($includeOne.output); } )* ( 
         namespaceOne = namespace_decl { $output.m_namespaces.Add($namespaceOne.output); }
         | typeOne = type_decl { $output.m_types.Add($typeOne.output); }
         | enum_decl 
@@ -34,7 +34,7 @@ attribute_decl
 
 type_decl returns [ FlatCacheGenerator.FlatBufferType output ]
 @init { $output = new FlatCacheGenerator.FlatBufferType(); }
-    : ( 'table' { $output.m_kind = TypeKind.Table; } | 'struct' { $output.m_kind = TypeKind.Struct; } ) 
+    : ( 'table' { $output.m_kind = FlatCacheGenerator.TypeKind.Table; } | 'struct' { $output.m_kind = FlatCacheGenerator.TypeKind.Struct; } ) 
     identOne = Ident {  $output.m_name = $identOne.text; } 
     metadata '{' ( fieldOne = field_decl { $output.m_fields.Add($fieldOne.output); } )+ '}'
     ;
