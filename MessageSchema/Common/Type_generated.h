@@ -24,12 +24,21 @@ struct Vector2F;
 
 struct Vector2D;
 
+inline const ::flatbuffers::TypeTable *Vector2ITypeTable();
+
+inline const ::flatbuffers::TypeTable *Vector2FTypeTable();
+
+inline const ::flatbuffers::TypeTable *Vector2DTypeTable();
+
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vector2I FLATBUFFERS_FINAL_CLASS {
  private:
   int32_t x_;
   int32_t y_;
 
  public:
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return Vector2ITypeTable();
+  }
   Vector2I()
       : x_(0),
         y_(0) {
@@ -53,6 +62,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Vector2F FLATBUFFERS_FINAL_CLASS {
   float y_;
 
  public:
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return Vector2FTypeTable();
+  }
   Vector2F()
       : x_(0),
         y_(0) {
@@ -76,6 +88,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) Vector2D FLATBUFFERS_FINAL_CLASS {
   double y_;
 
  public:
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return Vector2DTypeTable();
+  }
   Vector2D()
       : x_(0),
         y_(0) {
@@ -92,6 +107,54 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) Vector2D FLATBUFFERS_FINAL_CLASS {
   }
 };
 FLATBUFFERS_STRUCT_END(Vector2D, 16);
+
+inline const ::flatbuffers::TypeTable *Vector2ITypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 }
+  };
+  static const int64_t values[] = { 0, 4, 8 };
+  static const char * const names[] = {
+    "x",
+    "y"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_STRUCT, 2, type_codes, nullptr, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *Vector2FTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_FLOAT, 0, -1 },
+    { ::flatbuffers::ET_FLOAT, 0, -1 }
+  };
+  static const int64_t values[] = { 0, 4, 8 };
+  static const char * const names[] = {
+    "x",
+    "y"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_STRUCT, 2, type_codes, nullptr, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *Vector2DTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_DOUBLE, 0, -1 },
+    { ::flatbuffers::ET_DOUBLE, 0, -1 }
+  };
+  static const int64_t values[] = { 0, 8, 16 };
+  static const char * const names[] = {
+    "x",
+    "y"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_STRUCT, 2, type_codes, nullptr, nullptr, values, names
+  };
+  return &tt;
+}
 
 }  // namespace Zozo
 }  // namespace GenericBoson

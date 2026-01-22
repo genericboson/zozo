@@ -40,6 +40,16 @@ struct LobbyMessage;
 struct LobbyMessageBuilder;
 struct LobbyMessageT;
 
+inline const ::flatbuffers::TypeTable *AuthReqTypeTable();
+
+inline const ::flatbuffers::TypeTable *AuthAckTypeTable();
+
+inline const ::flatbuffers::TypeTable *ServerListReqTypeTable();
+
+inline const ::flatbuffers::TypeTable *ServerListAckTypeTable();
+
+inline const ::flatbuffers::TypeTable *LobbyMessageTypeTable();
+
 enum LobbyPayload : uint8_t {
   LobbyPayload_NONE = 0,
   LobbyPayload_AuthReq = 1,
@@ -196,6 +206,9 @@ struct AuthReqT : public ::flatbuffers::NativeTable {
 struct AuthReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthReqT NativeTableType;
   typedef AuthReqBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return AuthReqTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ACCOUNT = 4,
     VT_PASSWORD = 6,
@@ -288,6 +301,9 @@ struct AuthAckT : public ::flatbuffers::NativeTable {
 struct AuthAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthAckT NativeTableType;
   typedef AuthAckBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return AuthAckTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_USER_ID = 6,
@@ -401,6 +417,9 @@ struct ServerListReqT : public ::flatbuffers::NativeTable {
 struct ServerListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerListReqT NativeTableType;
   typedef ServerListReqBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return ServerListReqTypeTable();
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            verifier.EndTable();
@@ -446,6 +465,9 @@ struct ServerListAckT : public ::flatbuffers::NativeTable {
 struct ServerListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerListAckT NativeTableType;
   typedef ServerListAckBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return ServerListAckTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_SERVER_INFOS = 6
@@ -521,6 +543,9 @@ struct LobbyMessageT : public ::flatbuffers::NativeTable {
 struct LobbyMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LobbyMessageT NativeTableType;
   typedef LobbyMessageBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return LobbyMessageTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
     VT_PAYLOAD = 6
@@ -900,6 +925,118 @@ inline void LobbyPayloadUnion::Reset() {
   }
   value = nullptr;
   type = LobbyPayload_NONE;
+}
+
+inline const ::flatbuffers::TypeTable *LobbyPayloadTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_SEQUENCE, 0, -1 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 0 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 1 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 2 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 3 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::AuthReqTypeTable,
+    GenericBoson::Zozo::AuthAckTypeTable,
+    GenericBoson::Zozo::ServerListReqTypeTable,
+    GenericBoson::Zozo::ServerListAckTypeTable
+  };
+  static const char * const names[] = {
+    "NONE",
+    "AuthReq",
+    "AuthAck",
+    "ServerListReq",
+    "ServerListAck"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_UNION, 5, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *AuthReqTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 }
+  };
+  static const char * const names[] = {
+    "account",
+    "password",
+    "server_id"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 3, type_codes, nullptr, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *AuthAckTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ResultCodeTypeTable
+  };
+  static const char * const names[] = {
+    "result_code",
+    "user_id",
+    "token",
+    "ip",
+    "port"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 5, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *ServerListReqTypeTable() {
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 0, nullptr, nullptr, nullptr, nullptr, nullptr
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *ServerListAckTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_SEQUENCE, 1, 1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ResultCodeTypeTable,
+    GenericBoson::Zozo::ServerInfoTypeTable
+  };
+  static const char * const names[] = {
+    "result_code",
+    "server_infos"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *LobbyMessageTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_UTYPE, 0, 0 },
+    { ::flatbuffers::ET_SEQUENCE, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::LobbyPayloadTypeTable
+  };
+  static const char * const names[] = {
+    "payload_type",
+    "payload"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
 }
 
 inline const GenericBoson::Zozo::LobbyMessage *GetLobbyMessage(const void *buf) {

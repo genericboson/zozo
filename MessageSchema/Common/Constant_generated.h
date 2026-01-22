@@ -115,6 +115,68 @@ inline const char *EnumNameDirection(Direction e) {
   return EnumNamesDirection()[index];
 }
 
+inline const ::flatbuffers::TypeTable *ResultCodeTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 },
+    { ::flatbuffers::ET_UINT, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ResultCodeTypeTable
+  };
+  static const char * const names[] = {
+    "Success",
+    "InvalidPacket",
+    "WrongPassword",
+    "NewAccount",
+    "LogicError",
+    "NoData",
+    "NotAllowedServer",
+    "InvalidToken",
+    "InvalidCharacterId",
+    "AlreadyLoggedIn",
+    "InvalidId",
+    "WrongDBSchema"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 12, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *DirectionTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_CHAR, 0, 0 },
+    { ::flatbuffers::ET_CHAR, 0, 0 },
+    { ::flatbuffers::ET_CHAR, 0, 0 },
+    { ::flatbuffers::ET_CHAR, 0, 0 },
+    { ::flatbuffers::ET_CHAR, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::DirectionTypeTable
+  };
+  static const char * const names[] = {
+    "None",
+    "Up",
+    "Down",
+    "Right",
+    "Left"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 5, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
 }  // namespace Zozo
 }  // namespace GenericBoson
 

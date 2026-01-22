@@ -22,6 +22,8 @@ struct ServerInfo;
 struct ServerInfoBuilder;
 struct ServerInfoT;
 
+inline const ::flatbuffers::TypeTable *ServerInfoTypeTable();
+
 struct ServerInfoT : public ::flatbuffers::NativeTable {
   typedef ServerInfo TableType;
   int32_t id = 0;
@@ -35,6 +37,9 @@ struct ServerInfoT : public ::flatbuffers::NativeTable {
 struct ServerInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ServerInfoT NativeTableType;
   typedef ServerInfoBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return ServerInfoTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
@@ -192,6 +197,29 @@ inline ::flatbuffers::Offset<ServerInfo> CreateServerInfo(::flatbuffers::FlatBuf
       _port,
       _current_ccu,
       _max_ccu);
+}
+
+inline const ::flatbuffers::TypeTable *ServerInfoTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 },
+    { ::flatbuffers::ET_INT, 0, -1 }
+  };
+  static const char * const names[] = {
+    "id",
+    "name",
+    "ip",
+    "port",
+    "current_ccu",
+    "max_ccu"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 6, type_codes, nullptr, nullptr, nullptr, names
+  };
+  return &tt;
 }
 
 }  // namespace Zozo

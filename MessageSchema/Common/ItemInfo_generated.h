@@ -22,6 +22,8 @@ struct ItemInfo;
 struct ItemInfoBuilder;
 struct ItemInfoT;
 
+inline const ::flatbuffers::TypeTable *ItemInfoTypeTable();
+
 enum ItemType : int32_t {
   ItemType_None = 0,
   ItemType_Currency = 1,
@@ -106,6 +108,9 @@ struct ItemInfoT : public ::flatbuffers::NativeTable {
 struct ItemInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ItemInfoT NativeTableType;
   typedef ItemInfoBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return ItemInfoTypeTable();
+  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6,
@@ -246,6 +251,76 @@ inline ::flatbuffers::Offset<ItemInfo> CreateItemInfo(::flatbuffers::FlatBufferB
       _effect_id,
       _attribute,
       _type);
+}
+
+inline const ::flatbuffers::TypeTable *ItemTypeTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ItemTypeTypeTable
+  };
+  static const char * const names[] = {
+    "None",
+    "Currency",
+    "Consumable",
+    "Weapon",
+    "Armor",
+    "Accessory"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 6, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *ItemAttributeTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_INT, 0, 0 },
+    { ::flatbuffers::ET_INT, 0, 0 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ItemAttributeTypeTable
+  };
+  static const int64_t values[] = { 1, 2 };
+  static const char * const names[] = {
+    "NonStackable",
+    "Expairation"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_ENUM, 2, type_codes, type_refs, nullptr, values, names
+  };
+  return &tt;
+}
+
+inline const ::flatbuffers::TypeTable *ItemInfoTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_LONG, 0, -1 },
+    { ::flatbuffers::ET_INT, 1, 0 },
+    { ::flatbuffers::ET_INT, 0, 1 }
+  };
+  static const ::flatbuffers::TypeFunction type_refs[] = {
+    GenericBoson::Zozo::ItemAttributeTypeTable,
+    GenericBoson::Zozo::ItemTypeTypeTable
+  };
+  static const char * const names[] = {
+    "id",
+    "name",
+    "effect_id",
+    "attribute",
+    "type"
+  };
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 5, type_codes, type_refs, nullptr, nullptr, names
+  };
+  return &tt;
 }
 
 }  // namespace Zozo
