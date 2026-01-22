@@ -41,6 +41,28 @@ class Program
 
         var fileNameOnly = Path.GetFileNameWithoutExtension(args[0]);
 
+        var splitteds = fileNameOnly.Split('_');
+        if ( splitteds.Length != 2 )
+        {
+            Console.WriteLine("Wrong fbs file name. file name must be splitted by '_'. example - DB_ServerName.fbs");
+            return;
+        }
+
+        if (splitteds[0] != "DB")
+        {
+            Console.WriteLine("Wrong fbs file name. file name must be started with 'DB_'. example - DB_ServerName.fbs");
+            return;
+        }
+
+        var serverName = splitteds[1];
+        var pathOnly = Path.GetDirectoryName(args[0]) ?? "";
+
+        var serverCacheDir = Path.Combine(pathOnly, $"{serverName}Cache");
+        if ( !Directory.Exists(serverCacheDir) )
+        {
+            Directory.CreateDirectory(serverCacheDir);
+        }
+
         var fileContent = File.ReadAllText(args[0]);
         var antlrStream = new AntlrInputStream(fileContent);
         var lexer = new FlatBuffersLexer(antlrStream);
@@ -62,18 +84,18 @@ class Program
             cppContent.AppendLine();
             cppContent.AppendLine($"#include \"{fileNameOnly}.h\"");
             cppContent.AppendLine();
-            cppContent.AppendLine( "namespace GenericBoson");
+            cppContent.AppendLine($"namespace {string.Join("::", m_tree.m_namespaces)}");
             cppContent.AppendLine( "{");
 
             foreach (var typeOne in m_tree.m_types)
             {
                 foreach (var field in typeOne.m_fields)
                 {
-                    cppContent.AppendLine($"    void {typeOne.m_name}::Set{GetFunctionName(field.m_name)}()");
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::Set{GetFunctionName(field.m_name)}()");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( "    }");
 
-                    cppContent.AppendLine($"    void {typeOne.m_name}::Get{GetFunctionName(field.m_name)}()");
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::Get{GetFunctionName(field.m_name)}()");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( "    }");
                 }
@@ -81,7 +103,7 @@ class Program
 
             cppContent.AppendLine("}");
 
-            File.WriteAllText($"{fileNameOnly}.cpp", cppContent.ToString());
+            File.WriteAllText(Path.Combine(serverCacheDir, $"{fileNameOnly}.cpp"), cppContent.ToString());
         }
 
         // make h file
@@ -90,7 +112,9 @@ class Program
 
             hContent.AppendLine($"#pragma once");
             hContent.AppendLine();
-            hContent.AppendLine("namespace GenericBoson");
+            hContent.AppendLine($"#include \"{Path.Combine(pathOnly,$"{fileNameOnly}_generated.h")}\"");
+            hContent.AppendLine();
+            hContent.AppendLine($"namespace {string.Join("::", m_tree.m_namespaces)}");
             hContent.AppendLine("{");
 
             foreach (var typeOne in m_tree.m_types)
@@ -109,12 +133,12 @@ class Program
                 {
                     hContent.AppendLine($"        {ChangeToCppType(field.m_type)} m_{field.m_name};");
                 }
-                hContent.AppendLine( "    }");
+                hContent.AppendLine( "    };");
             }
 
             hContent.AppendLine("}");
 
-            File.WriteAllText($"{fileNameOnly}.h", hContent.ToString());
+            File.WriteAllText(Path.Combine(serverCacheDir, $"{fileNameOnly}.h"), hContent.ToString());
         }
     }
 }

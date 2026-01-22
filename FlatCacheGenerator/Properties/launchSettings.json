@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlatCacheGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\projects\\zozo\\MessageSchema\\External\\DB_GameServer.fbs"
+    }
+  }
+}

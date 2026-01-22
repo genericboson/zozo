@@ -1,12 +1,14 @@
 file(GLOB_RECURSE GAME_SOURCE *.cpp)
 file(GLOB_RECURSE GAME_HEADER *.h)
+file(GLOB_RECURSE GAME_CACHE_SOURCE ../MessageSchema/External/GameServerCache/*.cpp)
+file(GLOB_RECURSE GAME_CACHE_HEADER ../MessageSchema/External/GameServerCache/*.h)
 
 find_package(Boost REQUIRED COMPONENTS charconv)
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_executable(GAME_SERVER 
-	${GAME_SOURCE} ${GAME_HEADER}
+	${GAME_SOURCE} ${GAME_HEADER} ${GAME_CACHE_SOURCE} ${GAME_CACHE_HEADER}
 )
 
 target_link_directories(GAME_SERVER PRIVATE $ENV{BOOST_ROOT}/stage/lib)

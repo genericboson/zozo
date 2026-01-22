@@ -226,7 +226,7 @@ public partial class FlatBuffersParser : Parser {
 					{
 					State = 54;
 					_localctx.namespaceOne = namespace_decl();
-					 _localctx.output.m_namespaces.Add(_localctx.namespaceOne.output); 
+					 _localctx.output.m_namespaces.AddRange(_localctx.namespaceOne.output); 
 					}
 					break;
 				case T__5:
@@ -353,7 +353,7 @@ public partial class FlatBuffersParser : Parser {
 	}
 
 	public partial class Namespace_declContext : ParserRuleContext {
-		public string output;
+		public List<string> output;
 		public IToken identFirst;
 		public IToken identLeft;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Ident() { return GetTokens(FlatBuffersParser.Ident); }
@@ -381,7 +381,7 @@ public partial class FlatBuffersParser : Parser {
 	public Namespace_declContext namespace_decl() {
 		Namespace_declContext _localctx = new Namespace_declContext(Context, State);
 		EnterRule(_localctx, 4, RULE_namespace_decl);
-		 _localctx.output =  ""; 
+		 _localctx.output =  new List<string>(); 
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -390,7 +390,7 @@ public partial class FlatBuffersParser : Parser {
 			Match(T__2);
 			State = 80;
 			_localctx.identFirst = Match(Ident);
-			 _localctx.output += (_localctx.identFirst!=null?_localctx.identFirst.Text:null); 
+			 _localctx.output.Add((_localctx.identFirst!=null?_localctx.identFirst.Text:null)); 
 			State = 87;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
@@ -401,7 +401,7 @@ public partial class FlatBuffersParser : Parser {
 				Match(T__3);
 				State = 83;
 				_localctx.identLeft = Match(Ident);
-				 _localctx.output += (_localctx.identLeft!=null?_localctx.identLeft.Text:null); 
+				 _localctx.output.Add((_localctx.identLeft!=null?_localctx.identLeft.Text:null)); 
 				}
 				}
 				State = 89;

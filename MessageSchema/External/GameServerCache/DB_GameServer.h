@@ -1,6 +1,8 @@
 #pragma once
 
-namespace GenericBoson
+#include "D:\projects\zozo\MessageSchema\External\DB_GameServer_generated.h"
+
+namespace GenericBoson::Zozo
 {
     class CharacterCache : private CharacterT
     {
@@ -19,5 +21,5 @@ namespace GenericBoson
         long m_user_id;
         std::string m_name;
         int32_t m_level;
-    }
+    };
 }

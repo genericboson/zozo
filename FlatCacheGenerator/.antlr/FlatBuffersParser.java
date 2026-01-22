@@ -222,7 +222,7 @@ public class FlatBuffersParser extends Parser {
 					{
 					setState(54);
 					((SchemaContext)_localctx).namespaceOne = namespace_decl();
-					 _localctx.output.m_namespaces.Add(((SchemaContext)_localctx).namespaceOne.output); 
+					 _localctx.output.m_namespaces.AddRange(((SchemaContext)_localctx).namespaceOne.output); 
 					}
 					break;
 				case T__5:
@@ -339,7 +339,7 @@ public class FlatBuffersParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Namespace_declContext extends ParserRuleContext {
-		public string output;
+		public List<string> output;
 		public Token identFirst;
 		public Token identLeft;
 		public List<TerminalNode> Ident() { return getTokens(FlatBuffersParser.Ident); }
@@ -355,7 +355,7 @@ public class FlatBuffersParser extends Parser {
 	public final Namespace_declContext namespace_decl() throws RecognitionException {
 		Namespace_declContext _localctx = new Namespace_declContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_namespace_decl);
-		 ((Namespace_declContext)_localctx).output =  ""; 
+		 ((Namespace_declContext)_localctx).output =  new List<string>(); 
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -364,7 +364,7 @@ public class FlatBuffersParser extends Parser {
 			match(T__2);
 			setState(80);
 			((Namespace_declContext)_localctx).identFirst = match(Ident);
-			 _localctx.output += (((Namespace_declContext)_localctx).identFirst!=null?((Namespace_declContext)_localctx).identFirst.getText():null); 
+			 _localctx.output.Add((((Namespace_declContext)_localctx).identFirst!=null?((Namespace_declContext)_localctx).identFirst.getText():null)); 
 			setState(87);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -375,7 +375,7 @@ public class FlatBuffersParser extends Parser {
 				match(T__3);
 				setState(83);
 				((Namespace_declContext)_localctx).identLeft = match(Ident);
-				 _localctx.output += (((Namespace_declContext)_localctx).identLeft!=null?((Namespace_declContext)_localctx).identLeft.getText():null); 
+				 _localctx.output.Add((((Namespace_declContext)_localctx).identLeft!=null?((Namespace_declContext)_localctx).identLeft.getText():null)); 
 				}
 				}
 				setState(89);

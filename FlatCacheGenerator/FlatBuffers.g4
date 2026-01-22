@@ -5,7 +5,7 @@ grammar FlatBuffers;
 schema returns [ FlatCacheGenerator.FlatBufferTree output ]
 @init { $output = new FlatCacheGenerator.FlatBufferTree(); }
     : (includeOne = include { $output.m_includes.Add($includeOne.output); } )* ( 
-        namespaceOne = namespace_decl { $output.m_namespaces.Add($namespaceOne.output); }
+        namespaceOne = namespace_decl { $output.m_namespaces.AddRange($namespaceOne.output); }
         | typeOne = type_decl { $output.m_types.Add($typeOne.output); }
         | enum_decl 
         | root_decl 
@@ -22,10 +22,10 @@ include returns [ string output ]
     : 'include' stringConstantOne = StringConstant { $output += $stringConstantOne.text; } ';'
     ;
 
-namespace_decl returns [ string output ]
-@init { $output = ""; }
-    : 'namespace' identFirst = Ident { $output += $identFirst.text; } 
-    ( '.' identLeft = Ident { $output += $identLeft.text; } )* ';'
+namespace_decl returns [ List<string> output ]
+@init { $output = new List<string>(); }
+    : 'namespace' identFirst = Ident { $output.Add($identFirst.text); } 
+    ( '.' identLeft = Ident { $output.Add($identLeft.text); } )* ';'
     ;
 
 attribute_decl
