@@ -12,8 +12,25 @@ class Program
         return flatBufferType switch
         {
             "int"    => "int32_t",
-            "float"  => "float",
             "string" => "std::string",
+            "byte"   => "int8_t",
+            "ubyte"  => "uint8_t",
+            "long"   => "int64_t",
+            "ulong"  => "uint64_t",
+            _ => flatBufferType,
+        };
+    }
+    static string ChangeToSqlType(string flatBufferType)
+    {
+        return flatBufferType switch
+        {
+            "int"    => "INT",
+            "float"  => "FLOAT",
+            "double" => "DOUBLE",
+            "string" => "VARCHAR(1024)",
+            "bool"   => "TINYINT",
+            "long"   => "BIGINT",
+            "ulong"  => "BIGINT UNSIGNED",
             _ => flatBufferType,
         };
     }
@@ -139,6 +156,30 @@ class Program
             hContent.AppendLine("}");
 
             File.WriteAllText(Path.Combine(serverCacheDir, $"{fileNameOnly}.h"), hContent.ToString());
+        }
+
+        // make sql file
+        {
+            var sqlContent = new StringBuilder();
+
+            foreach (var typeOne in m_tree.m_types)
+            {
+                var primaryKey = "";
+                var indexes = new List<string>();
+
+                sqlContent.AppendLine($"CREATE TABLE {typeOne.m_name.ToLower()} (");
+                foreach (var field in typeOne.m_fields)
+                {
+                    sqlContent.AppendLine($"    {field.m_name} {ChangeToSqlType(field.m_type)}");
+                }
+
+                sqlContent.AppendLine($"");
+
+                sqlContent.AppendLine(")");
+                sqlContent.AppendLine();
+            }
+
+            File.WriteAllText(Path.Combine(serverCacheDir, $"{fileNameOnly}.sql"), sqlContent.ToString());
         }
     }
 }
