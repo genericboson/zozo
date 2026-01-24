@@ -41,38 +41,41 @@ public partial class FlatBuffersParser : Parser {
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
 		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, BooleanConstant=45, 
-		Ident=46, IntegerConstant=47, FloatConstant=48, StringConstant=49, WS=50;
+		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
+		BooleanConstant=46, Ident=47, IntegerConstant=48, FloatConstant=49, StringConstant=50, 
+		WS=51;
 	public const int
-		RULE_schema = 0, RULE_include = 1, RULE_namespace_decl = 2, RULE_attribute_decl = 3, 
-		RULE_type_decl = 4, RULE_enum_decl = 5, RULE_root_decl = 6, RULE_field_decl = 7, 
-		RULE_rpc_decl = 8, RULE_rpc_method = 9, RULE_type_ = 10, RULE_enumval_decl = 11, 
-		RULE_metadata = 12, RULE_scalar = 13, RULE_object = 14, RULE_single_value = 15, 
-		RULE_value = 16, RULE_file_extension_decl = 17, RULE_file_identifier_decl = 18, 
-		RULE_commasep_enumval_decl = 19, RULE_commasep_metadata_item = 20, RULE_commasep_object_item = 21, 
-		RULE_commasep_value = 22;
+		RULE_schema = 0, RULE_include = 1, RULE_namespace_decl = 2, RULE_type_decl = 3, 
+		RULE_enum_decl = 4, RULE_root_decl = 5, RULE_file_extension_decl = 6, 
+		RULE_file_identifier_decl = 7, RULE_attribute_decl = 8, RULE_rpc_decl = 9, 
+		RULE_annotation_decl = 10, RULE_object = 11, RULE_commasep_enumval_decl = 12, 
+		RULE_commasep_metadata_item = 13, RULE_commasep_object_item = 14, RULE_commasep_value = 15, 
+		RULE_commasep_annotation_decl = 16, RULE_field_decl = 17, RULE_rpc_method = 18, 
+		RULE_type_ = 19, RULE_enumval_decl = 20, RULE_metadata = 21, RULE_scalar = 22, 
+		RULE_single_value = 23, RULE_value = 24;
 	public static readonly string[] ruleNames = {
-		"schema", "include", "namespace_decl", "attribute_decl", "type_decl", 
-		"enum_decl", "root_decl", "field_decl", "rpc_decl", "rpc_method", "type_", 
-		"enumval_decl", "metadata", "scalar", "object", "single_value", "value", 
-		"file_extension_decl", "file_identifier_decl", "commasep_enumval_decl", 
-		"commasep_metadata_item", "commasep_object_item", "commasep_value"
+		"schema", "include", "namespace_decl", "type_decl", "enum_decl", "root_decl", 
+		"file_extension_decl", "file_identifier_decl", "attribute_decl", "rpc_decl", 
+		"annotation_decl", "object", "commasep_enumval_decl", "commasep_metadata_item", 
+		"commasep_object_item", "commasep_value", "commasep_annotation_decl", 
+		"field_decl", "rpc_method", "type_", "enumval_decl", "metadata", "scalar", 
+		"single_value", "value"
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'include'", "';'", "'namespace'", "'.'", "'attribute'", "'table'", 
-		"'struct'", "'{'", "'}'", "'enum'", "':'", "'union'", "'root_type'", "'='", 
-		"'rpc_service'", "'('", "')'", "'bool'", "'byte'", "'ubyte'", "'short'", 
-		"'ushort'", "'int'", "'uint'", "'float'", "'long'", "'ulong'", "'double'", 
-		"'int8'", "'uint8'", "'int16'", "'uint16'", "'int32'", "'uint32'", "'int64'", 
-		"'uint64'", "'float32'", "'float64'", "'string'", "'['", "']'", "'file_extension'", 
-		"'file_identifier'", "','"
+		null, "'include'", "';'", "'namespace'", "'.'", "'table'", "'struct'", 
+		"'{'", "'}'", "'enum'", "':'", "'union'", "'root_type'", "'file_extension'", 
+		"'file_identifier'", "'attribute'", "'rpc_service'", "'//'", "','", "'='", 
+		"'('", "')'", "'bool'", "'byte'", "'ubyte'", "'short'", "'ushort'", "'int'", 
+		"'uint'", "'float'", "'long'", "'ulong'", "'double'", "'int8'", "'uint8'", 
+		"'int16'", "'uint16'", "'int32'", "'uint32'", "'int64'", "'uint64'", "'float32'", 
+		"'float64'", "'string'", "'['", "']'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, "BooleanConstant", 
+		null, null, null, null, null, null, null, null, null, null, "BooleanConstant", 
 		"Ident", "IntegerConstant", "FloatConstant", "StringConstant", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
@@ -199,84 +202,84 @@ public partial class FlatBuffersParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 51;
+			State = 55;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__0) {
 				{
 				{
-				State = 46;
+				State = 50;
 				_localctx.includeOne = include();
 				 _localctx.output.m_includes.Add(_localctx.includeOne.output); 
 				}
 				}
-				State = 53;
+				State = 57;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 69;
+			State = 73;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 13194139579880L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 129768L) != 0)) {
 				{
-				State = 67;
+				State = 71;
 				ErrorHandler.Sync(this);
 				switch (TokenStream.LA(1)) {
 				case T__2:
 					{
-					State = 54;
+					State = 58;
 					_localctx.namespaceOne = namespace_decl();
 					 _localctx.output.m_namespaces.AddRange(_localctx.namespaceOne.output); 
 					}
 					break;
+				case T__4:
 				case T__5:
-				case T__6:
 					{
-					State = 57;
+					State = 61;
 					_localctx.typeOne = type_decl();
 					 _localctx.output.m_types.Add(_localctx.typeOne.output); 
 					}
 					break;
-				case T__9:
+				case T__8:
+				case T__10:
+					{
+					State = 64;
+					enum_decl();
+					}
+					break;
 				case T__11:
 					{
-					State = 60;
-					enum_decl();
+					State = 65;
+					root_decl();
 					}
 					break;
 				case T__12:
 					{
-					State = 61;
-					root_decl();
-					}
-					break;
-				case T__41:
-					{
-					State = 62;
+					State = 66;
 					file_extension_decl();
 					}
 					break;
-				case T__42:
+				case T__13:
 					{
-					State = 63;
+					State = 67;
 					file_identifier_decl();
-					}
-					break;
-				case T__4:
-					{
-					State = 64;
-					attribute_decl();
 					}
 					break;
 				case T__14:
 					{
-					State = 65;
+					State = 68;
+					attribute_decl();
+					}
+					break;
+				case T__15:
+					{
+					State = 69;
 					rpc_decl();
 					}
 					break;
-				case T__7:
+				case T__6:
 					{
-					State = 66;
+					State = 70;
 					@object();
 					}
 					break;
@@ -284,11 +287,11 @@ public partial class FlatBuffersParser : Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				State = 71;
+				State = 75;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 72;
+			State = 76;
 			Match(Eof);
 			}
 		}
@@ -332,12 +335,12 @@ public partial class FlatBuffersParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 74;
+			State = 78;
 			Match(T__0);
-			State = 75;
+			State = 79;
 			_localctx.stringConstantOne = Match(StringConstant);
 			 _localctx.output += (_localctx.stringConstantOne!=null?_localctx.stringConstantOne.Text:null); 
-			State = 77;
+			State = 81;
 			Match(T__1);
 			}
 		}
@@ -386,81 +389,27 @@ public partial class FlatBuffersParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 79;
+			State = 83;
 			Match(T__2);
-			State = 80;
+			State = 84;
 			_localctx.identFirst = Match(Ident);
 			 _localctx.output.Add((_localctx.identFirst!=null?_localctx.identFirst.Text:null)); 
-			State = 87;
+			State = 91;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__3) {
 				{
 				{
-				State = 82;
+				State = 86;
 				Match(T__3);
-				State = 83;
+				State = 87;
 				_localctx.identLeft = Match(Ident);
 				 _localctx.output.Add((_localctx.identLeft!=null?_localctx.identLeft.Text:null)); 
 				}
 				}
-				State = 89;
+				State = 93;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-			}
-			State = 90;
-			Match(T__1);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Attribute_declContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
-		public Attribute_declContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_attribute_decl; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterAttribute_decl(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitAttribute_decl(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public Attribute_declContext attribute_decl() {
-		Attribute_declContext _localctx = new Attribute_declContext(Context, State);
-		EnterRule(_localctx, 6, RULE_attribute_decl);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 92;
-			Match(T__4);
-			State = 93;
-			_la = TokenStream.LA(1);
-			if ( !(_la==Ident || _la==StringConstant) ) {
-			ErrorHandler.RecoverInline(this);
-			}
-			else {
-				ErrorHandler.ReportMatch(this);
-			    Consume();
 			}
 			State = 94;
 			Match(T__1);
@@ -480,11 +429,15 @@ public partial class FlatBuffersParser : Parser {
 	public partial class Type_declContext : ParserRuleContext {
 		public FlatCacheGenerator.FlatBufferType output;
 		public IToken identOne;
+		public Annotation_declContext annotationOne;
 		public Field_declContext fieldOne;
 		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
 			return GetRuleContext<MetadataContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public Annotation_declContext annotation_decl() {
+			return GetRuleContext<Annotation_declContext>(0);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public Field_declContext[] field_decl() {
 			return GetRuleContexts<Field_declContext>();
 		}
@@ -511,7 +464,7 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Type_declContext type_decl() {
 		Type_declContext _localctx = new Type_declContext(Context, State);
-		EnterRule(_localctx, 8, RULE_type_decl);
+		EnterRule(_localctx, 6, RULE_type_decl);
 		 _localctx.output =  new FlatCacheGenerator.FlatBufferType(); 
 		int _la;
 		try {
@@ -520,17 +473,17 @@ public partial class FlatBuffersParser : Parser {
 			State = 100;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
-			case T__5:
+			case T__4:
 				{
 				State = 96;
-				Match(T__5);
+				Match(T__4);
 				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Table; 
 				}
 				break;
-			case T__6:
+			case T__5:
 				{
 				State = 98;
-				Match(T__6);
+				Match(T__5);
 				 _localctx.output.m_kind = FlatCacheGenerator.TypeKind.Struct; 
 				}
 				break;
@@ -542,25 +495,36 @@ public partial class FlatBuffersParser : Parser {
 			  _localctx.output.m_name = (_localctx.identOne!=null?_localctx.identOne.Text:null); 
 			State = 104;
 			metadata();
-			State = 105;
-			Match(T__7);
-			State = 109;
+			State = 108;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__16) {
+				{
+				State = 105;
+				_localctx.annotationOne = annotation_decl();
+				 _localctx.output.m_annotatedAttributes = _localctx.annotationOne.output; 
+				}
+			}
+
+			State = 110;
+			Match(T__6);
+			State = 114;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 106;
+				State = 111;
 				_localctx.fieldOne = field_decl();
 				 _localctx.output.m_fields.Add(_localctx.fieldOne.output); 
 				}
 				}
-				State = 111;
+				State = 116;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( _la==Ident );
-			State = 113;
-			Match(T__8);
+			State = 118;
+			Match(T__7);
 			}
 		}
 		catch (RecognitionException re) {
@@ -605,44 +569,44 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Enum_declContext enum_decl() {
 		Enum_declContext _localctx = new Enum_declContext(Context, State);
-		EnterRule(_localctx, 10, RULE_enum_decl);
+		EnterRule(_localctx, 8, RULE_enum_decl);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 121;
+			State = 126;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
-			case T__9:
+			case T__8:
 				{
-				State = 115;
-				Match(T__9);
-				State = 116;
+				State = 120;
+				Match(T__8);
+				State = 121;
 				Match(Ident);
-				State = 117;
-				Match(T__10);
-				State = 118;
+				State = 122;
+				Match(T__9);
+				State = 123;
 				type_();
 				}
 				break;
-			case T__11:
+			case T__10:
 				{
-				State = 119;
-				Match(T__11);
-				State = 120;
+				State = 124;
+				Match(T__10);
+				State = 125;
 				Match(Ident);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 123;
+			State = 128;
 			metadata();
-			State = 124;
-			Match(T__7);
-			State = 125;
+			State = 129;
+			Match(T__6);
+			State = 130;
 			commasep_enumval_decl();
-			State = 126;
-			Match(T__8);
+			State = 131;
+			Match(T__7);
 			}
 		}
 		catch (RecognitionException re) {
@@ -678,15 +642,15 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Root_declContext root_decl() {
 		Root_declContext _localctx = new Root_declContext(Context, State);
-		EnterRule(_localctx, 12, RULE_root_decl);
+		EnterRule(_localctx, 10, RULE_root_decl);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 128;
-			Match(T__12);
-			State = 129;
+			State = 133;
+			Match(T__11);
+			State = 134;
 			Match(Ident);
-			State = 130;
+			State = 135;
 			Match(T__1);
 			}
 		}
@@ -701,71 +665,136 @@ public partial class FlatBuffersParser : Parser {
 		return _localctx;
 	}
 
-	public partial class Field_declContext : ParserRuleContext {
-		public FlatCacheGenerator.FlatBufferField output;
-		public IToken identOne;
-		public Type_Context typeOne;
-		public ScalarContext scalarOne;
-		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
-			return GetRuleContext<MetadataContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public Type_Context type_() {
-			return GetRuleContext<Type_Context>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ScalarContext scalar() {
-			return GetRuleContext<ScalarContext>(0);
-		}
-		public Field_declContext(ParserRuleContext parent, int invokingState)
+	public partial class File_extension_declContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
+		public File_extension_declContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_field_decl; } }
+		public override int RuleIndex { get { return RULE_file_extension_decl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterField_decl(this);
+			if (typedListener != null) typedListener.EnterFile_extension_decl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitField_decl(this);
+			if (typedListener != null) typedListener.ExitFile_extension_decl(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public Field_declContext field_decl() {
-		Field_declContext _localctx = new Field_declContext(Context, State);
-		EnterRule(_localctx, 14, RULE_field_decl);
-		 _localctx.output =  new FlatCacheGenerator.FlatBufferField(); 
+	public File_extension_declContext file_extension_decl() {
+		File_extension_declContext _localctx = new File_extension_declContext(Context, State);
+		EnterRule(_localctx, 12, RULE_file_extension_decl);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 137;
+			Match(T__12);
+			State = 138;
+			Match(StringConstant);
+			State = 139;
+			Match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class File_identifier_declContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
+		public File_identifier_declContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_file_identifier_decl; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterFile_identifier_decl(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitFile_identifier_decl(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public File_identifier_declContext file_identifier_decl() {
+		File_identifier_declContext _localctx = new File_identifier_declContext(Context, State);
+		EnterRule(_localctx, 14, RULE_file_identifier_decl);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 141;
+			Match(T__13);
+			State = 142;
+			Match(StringConstant);
+			State = 143;
+			Match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Attribute_declContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
+		public Attribute_declContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_attribute_decl; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterAttribute_decl(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitAttribute_decl(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Attribute_declContext attribute_decl() {
+		Attribute_declContext _localctx = new Attribute_declContext(Context, State);
+		EnterRule(_localctx, 16, RULE_attribute_decl);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 132;
-			_localctx.identOne = Match(Ident);
-			 _localctx.output.m_name = (_localctx.identOne!=null?_localctx.identOne.Text:null); 
-			State = 134;
-			Match(T__10);
-			State = 135;
-			_localctx.typeOne = type_();
-			 _localctx.output.m_type = (_localctx.typeOne!=null?TokenStream.GetText(_localctx.typeOne.Start,_localctx.typeOne.Stop):null); 
-			State = 141;
-			ErrorHandler.Sync(this);
+			State = 145;
+			Match(T__14);
+			State = 146;
 			_la = TokenStream.LA(1);
-			if (_la==T__13) {
-				{
-				State = 137;
-				Match(T__13);
-				State = 138;
-				_localctx.scalarOne = scalar();
-				 _localctx.output.m_defaultValue = (_localctx.scalarOne!=null?TokenStream.GetText(_localctx.scalarOne.Start,_localctx.scalarOne.Stop):null); 
-				}
+			if ( !(_la==Ident || _la==StringConstant) ) {
+			ErrorHandler.RecoverInline(this);
 			}
-
-			State = 143;
-			metadata();
-			State = 144;
+			else {
+				ErrorHandler.ReportMatch(this);
+			    Consume();
+			}
+			State = 147;
 			Match(T__1);
 			}
 		}
@@ -808,33 +837,33 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Rpc_declContext rpc_decl() {
 		Rpc_declContext _localctx = new Rpc_declContext(Context, State);
-		EnterRule(_localctx, 16, RULE_rpc_decl);
+		EnterRule(_localctx, 18, RULE_rpc_decl);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 146;
-			Match(T__14);
-			State = 147;
-			Match(Ident);
-			State = 148;
-			Match(T__7);
+			State = 149;
+			Match(T__15);
 			State = 150;
+			Match(Ident);
+			State = 151;
+			Match(T__6);
+			State = 153;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 149;
+				State = 152;
 				rpc_method();
 				}
 				}
-				State = 152;
+				State = 155;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( _la==Ident );
-			State = 154;
-			Match(T__8);
+			State = 157;
+			Match(T__7);
 			}
 		}
 		catch (RecognitionException re) {
@@ -848,438 +877,41 @@ public partial class FlatBuffersParser : Parser {
 		return _localctx;
 	}
 
-	public partial class Rpc_methodContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Ident() { return GetTokens(FlatBuffersParser.Ident); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident(int i) {
-			return GetToken(FlatBuffersParser.Ident, i);
+	public partial class Annotation_declContext : ParserRuleContext {
+		public List<string> output;
+		public Commasep_annotation_declContext commasepOne;
+		[System.Diagnostics.DebuggerNonUserCode] public Commasep_annotation_declContext commasep_annotation_decl() {
+			return GetRuleContext<Commasep_annotation_declContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
-			return GetRuleContext<MetadataContext>(0);
-		}
-		public Rpc_methodContext(ParserRuleContext parent, int invokingState)
+		public Annotation_declContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_rpc_method; } }
+		public override int RuleIndex { get { return RULE_annotation_decl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterRpc_method(this);
+			if (typedListener != null) typedListener.EnterAnnotation_decl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitRpc_method(this);
+			if (typedListener != null) typedListener.ExitAnnotation_decl(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public Rpc_methodContext rpc_method() {
-		Rpc_methodContext _localctx = new Rpc_methodContext(Context, State);
-		EnterRule(_localctx, 18, RULE_rpc_method);
+	public Annotation_declContext annotation_decl() {
+		Annotation_declContext _localctx = new Annotation_declContext(Context, State);
+		EnterRule(_localctx, 20, RULE_annotation_decl);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 156;
-			Match(Ident);
-			State = 157;
-			Match(T__15);
-			State = 158;
-			Match(Ident);
 			State = 159;
 			Match(T__16);
 			State = 160;
-			Match(T__10);
-			State = 161;
-			Match(Ident);
-			State = 162;
-			metadata();
-			State = 163;
-			Match(T__1);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Type_Context : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public Type_Context type_() {
-			return GetRuleContext<Type_Context>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
-		public Type_Context(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_type_; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterType_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitType_(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public Type_Context type_() {
-		Type_Context _localctx = new Type_Context(Context, State);
-		EnterRule(_localctx, 20, RULE_type_);
-		try {
-			State = 192;
-			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case T__17:
-				EnterOuterAlt(_localctx, 1);
-				{
-				State = 165;
-				Match(T__17);
-				}
-				break;
-			case T__18:
-				EnterOuterAlt(_localctx, 2);
-				{
-				State = 166;
-				Match(T__18);
-				}
-				break;
-			case T__19:
-				EnterOuterAlt(_localctx, 3);
-				{
-				State = 167;
-				Match(T__19);
-				}
-				break;
-			case T__20:
-				EnterOuterAlt(_localctx, 4);
-				{
-				State = 168;
-				Match(T__20);
-				}
-				break;
-			case T__21:
-				EnterOuterAlt(_localctx, 5);
-				{
-				State = 169;
-				Match(T__21);
-				}
-				break;
-			case T__22:
-				EnterOuterAlt(_localctx, 6);
-				{
-				State = 170;
-				Match(T__22);
-				}
-				break;
-			case T__23:
-				EnterOuterAlt(_localctx, 7);
-				{
-				State = 171;
-				Match(T__23);
-				}
-				break;
-			case T__24:
-				EnterOuterAlt(_localctx, 8);
-				{
-				State = 172;
-				Match(T__24);
-				}
-				break;
-			case T__25:
-				EnterOuterAlt(_localctx, 9);
-				{
-				State = 173;
-				Match(T__25);
-				}
-				break;
-			case T__26:
-				EnterOuterAlt(_localctx, 10);
-				{
-				State = 174;
-				Match(T__26);
-				}
-				break;
-			case T__27:
-				EnterOuterAlt(_localctx, 11);
-				{
-				State = 175;
-				Match(T__27);
-				}
-				break;
-			case T__28:
-				EnterOuterAlt(_localctx, 12);
-				{
-				State = 176;
-				Match(T__28);
-				}
-				break;
-			case T__29:
-				EnterOuterAlt(_localctx, 13);
-				{
-				State = 177;
-				Match(T__29);
-				}
-				break;
-			case T__30:
-				EnterOuterAlt(_localctx, 14);
-				{
-				State = 178;
-				Match(T__30);
-				}
-				break;
-			case T__31:
-				EnterOuterAlt(_localctx, 15);
-				{
-				State = 179;
-				Match(T__31);
-				}
-				break;
-			case T__32:
-				EnterOuterAlt(_localctx, 16);
-				{
-				State = 180;
-				Match(T__32);
-				}
-				break;
-			case T__33:
-				EnterOuterAlt(_localctx, 17);
-				{
-				State = 181;
-				Match(T__33);
-				}
-				break;
-			case T__34:
-				EnterOuterAlt(_localctx, 18);
-				{
-				State = 182;
-				Match(T__34);
-				}
-				break;
-			case T__35:
-				EnterOuterAlt(_localctx, 19);
-				{
-				State = 183;
-				Match(T__35);
-				}
-				break;
-			case T__36:
-				EnterOuterAlt(_localctx, 20);
-				{
-				State = 184;
-				Match(T__36);
-				}
-				break;
-			case T__37:
-				EnterOuterAlt(_localctx, 21);
-				{
-				State = 185;
-				Match(T__37);
-				}
-				break;
-			case T__38:
-				EnterOuterAlt(_localctx, 22);
-				{
-				State = 186;
-				Match(T__38);
-				}
-				break;
-			case T__39:
-				EnterOuterAlt(_localctx, 23);
-				{
-				State = 187;
-				Match(T__39);
-				State = 188;
-				type_();
-				State = 189;
-				Match(T__40);
-				}
-				break;
-			case Ident:
-				EnterOuterAlt(_localctx, 24);
-				{
-				State = 191;
-				Match(Ident);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Enumval_declContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
-			return GetRuleContext<MetadataContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IntegerConstant() { return GetToken(FlatBuffersParser.IntegerConstant, 0); }
-		public Enumval_declContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_enumval_decl; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterEnumval_decl(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitEnumval_decl(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public Enumval_declContext enumval_decl() {
-		Enumval_declContext _localctx = new Enumval_declContext(Context, State);
-		EnterRule(_localctx, 22, RULE_enumval_decl);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 194;
-			Match(Ident);
-			State = 197;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if (_la==T__13) {
-				{
-				State = 195;
-				Match(T__13);
-				State = 196;
-				Match(IntegerConstant);
-				}
-			}
-
-			State = 199;
-			metadata();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class MetadataContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public Commasep_metadata_itemContext commasep_metadata_item() {
-			return GetRuleContext<Commasep_metadata_itemContext>(0);
-		}
-		public MetadataContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_metadata; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterMetadata(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitMetadata(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public MetadataContext metadata() {
-		MetadataContext _localctx = new MetadataContext(Context, State);
-		EnterRule(_localctx, 24, RULE_metadata);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 205;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			if (_la==T__15) {
-				{
-				State = 201;
-				Match(T__15);
-				State = 202;
-				commasep_metadata_item();
-				State = 203;
-				Match(T__16);
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class ScalarContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BooleanConstant() { return GetToken(FlatBuffersParser.BooleanConstant, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IntegerConstant() { return GetToken(FlatBuffersParser.IntegerConstant, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FloatConstant() { return GetToken(FlatBuffersParser.FloatConstant, 0); }
-		public ScalarContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_scalar; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterScalar(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitScalar(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public ScalarContext scalar() {
-		ScalarContext _localctx = new ScalarContext(Context, State);
-		EnterRule(_localctx, 26, RULE_scalar);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 207;
-			_la = TokenStream.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 457396837154816L) != 0)) ) {
-			ErrorHandler.RecoverInline(this);
-			}
-			else {
-				ErrorHandler.ReportMatch(this);
-			    Consume();
-			}
+			_localctx.commasepOne = commasep_annotation_decl();
+			 _localctx.output =  _localctx.commasepOne.output; 
 			}
 		}
 		catch (RecognitionException re) {
@@ -1317,245 +949,16 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public ObjectContext @object() {
 		ObjectContext _localctx = new ObjectContext(Context, State);
-		EnterRule(_localctx, 28, RULE_object);
+		EnterRule(_localctx, 22, RULE_object);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 209;
-			Match(T__7);
-			State = 210;
+			State = 163;
+			Match(T__6);
+			State = 164;
 			commasep_object_item();
-			State = 211;
-			Match(T__8);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class Single_valueContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ScalarContext scalar() {
-			return GetRuleContext<ScalarContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
-		public Single_valueContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_single_value; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterSingle_value(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitSingle_value(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public Single_valueContext single_value() {
-		Single_valueContext _localctx = new Single_valueContext(Context, State);
-		EnterRule(_localctx, 30, RULE_single_value);
-		try {
-			State = 215;
-			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case BooleanConstant:
-			case IntegerConstant:
-			case FloatConstant:
-				EnterOuterAlt(_localctx, 1);
-				{
-				State = 213;
-				scalar();
-				}
-				break;
-			case StringConstant:
-				EnterOuterAlt(_localctx, 2);
-				{
-				State = 214;
-				Match(StringConstant);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class ValueContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public Single_valueContext single_value() {
-			return GetRuleContext<Single_valueContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ObjectContext @object() {
-			return GetRuleContext<ObjectContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public Commasep_valueContext commasep_value() {
-			return GetRuleContext<Commasep_valueContext>(0);
-		}
-		public ValueContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_value; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterValue(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitValue(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public ValueContext value() {
-		ValueContext _localctx = new ValueContext(Context, State);
-		EnterRule(_localctx, 32, RULE_value);
-		try {
-			State = 223;
-			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case BooleanConstant:
-			case IntegerConstant:
-			case FloatConstant:
-			case StringConstant:
-				EnterOuterAlt(_localctx, 1);
-				{
-				State = 217;
-				single_value();
-				}
-				break;
-			case T__7:
-				EnterOuterAlt(_localctx, 2);
-				{
-				State = 218;
-				@object();
-				}
-				break;
-			case T__39:
-				EnterOuterAlt(_localctx, 3);
-				{
-				State = 219;
-				Match(T__39);
-				State = 220;
-				commasep_value();
-				State = 221;
-				Match(T__40);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class File_extension_declContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
-		public File_extension_declContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_file_extension_decl; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterFile_extension_decl(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitFile_extension_decl(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public File_extension_declContext file_extension_decl() {
-		File_extension_declContext _localctx = new File_extension_declContext(Context, State);
-		EnterRule(_localctx, 34, RULE_file_extension_decl);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 225;
-			Match(T__41);
-			State = 226;
-			Match(StringConstant);
-			State = 227;
-			Match(T__1);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class File_identifier_declContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
-		public File_identifier_declContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_file_identifier_decl; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.EnterFile_identifier_decl(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
-			if (typedListener != null) typedListener.ExitFile_identifier_decl(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public File_identifier_declContext file_identifier_decl() {
-		File_identifier_declContext _localctx = new File_identifier_declContext(Context, State);
-		EnterRule(_localctx, 36, RULE_file_identifier_decl);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 229;
-			Match(T__42);
-			State = 230;
-			Match(StringConstant);
-			State = 231;
-			Match(T__1);
+			State = 165;
+			Match(T__7);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1596,31 +999,31 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Commasep_enumval_declContext commasep_enumval_decl() {
 		Commasep_enumval_declContext _localctx = new Commasep_enumval_declContext(Context, State);
-		EnterRule(_localctx, 38, RULE_commasep_enumval_decl);
+		EnterRule(_localctx, 24, RULE_commasep_enumval_decl);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 241;
+			State = 175;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Ident) {
 				{
-				State = 233;
+				State = 167;
 				enumval_decl();
-				State = 238;
+				State = 172;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				while (_la==T__43) {
+				while (_la==T__17) {
 					{
 					{
-					State = 234;
-					Match(T__43);
-					State = 235;
+					State = 168;
+					Match(T__17);
+					State = 169;
 					enumval_decl();
 					}
 					}
-					State = 240;
+					State = 174;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
@@ -1671,55 +1074,55 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Commasep_metadata_itemContext commasep_metadata_item() {
 		Commasep_metadata_itemContext _localctx = new Commasep_metadata_itemContext(Context, State);
-		EnterRule(_localctx, 40, RULE_commasep_metadata_item);
+		EnterRule(_localctx, 26, RULE_commasep_metadata_item);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 259;
+			State = 193;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Ident) {
 				{
-				State = 243;
+				State = 177;
 				Match(Ident);
-				State = 246;
+				State = 180;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				if (_la==T__10) {
+				if (_la==T__9) {
 					{
-					State = 244;
-					Match(T__10);
-					State = 245;
+					State = 178;
+					Match(T__9);
+					State = 179;
 					single_value();
 					}
 				}
 
-				State = 256;
+				State = 190;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				while (_la==T__43) {
+				while (_la==T__17) {
 					{
 					{
-					State = 248;
-					Match(T__43);
-					State = 249;
+					State = 182;
+					Match(T__17);
+					State = 183;
 					Match(Ident);
-					State = 252;
+					State = 186;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
-					if (_la==T__10) {
+					if (_la==T__9) {
 						{
-						State = 250;
-						Match(T__10);
-						State = 251;
+						State = 184;
+						Match(T__9);
+						State = 185;
 						single_value();
 						}
 					}
 
 					}
 					}
-					State = 258;
+					State = 192;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
@@ -1770,39 +1173,39 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Commasep_object_itemContext commasep_object_item() {
 		Commasep_object_itemContext _localctx = new Commasep_object_itemContext(Context, State);
-		EnterRule(_localctx, 42, RULE_commasep_object_item);
+		EnterRule(_localctx, 28, RULE_commasep_object_item);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 273;
+			State = 207;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==Ident) {
 				{
-				State = 261;
+				State = 195;
 				Match(Ident);
-				State = 262;
-				Match(T__10);
-				State = 263;
+				State = 196;
+				Match(T__9);
+				State = 197;
 				value();
-				State = 270;
+				State = 204;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				while (_la==T__43) {
+				while (_la==T__17) {
 					{
 					{
-					State = 264;
-					Match(T__43);
-					State = 265;
+					State = 198;
+					Match(T__17);
+					State = 199;
 					Match(Ident);
-					State = 266;
-					Match(T__10);
-					State = 267;
+					State = 200;
+					Match(T__9);
+					State = 201;
 					value();
 					}
 					}
-					State = 272;
+					State = 206;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
@@ -1849,31 +1252,31 @@ public partial class FlatBuffersParser : Parser {
 	[RuleVersion(0)]
 	public Commasep_valueContext commasep_value() {
 		Commasep_valueContext _localctx = new Commasep_valueContext(Context, State);
-		EnterRule(_localctx, 44, RULE_commasep_value);
+		EnterRule(_localctx, 30, RULE_commasep_value);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 283;
+			State = 217;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1021446302204160L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 2058285767196800L) != 0)) {
 				{
-				State = 275;
+				State = 209;
 				value();
-				State = 280;
+				State = 214;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				while (_la==T__43) {
+				while (_la==T__17) {
 					{
 					{
-					State = 276;
-					Match(T__43);
-					State = 277;
+					State = 210;
+					Match(T__17);
+					State = 211;
 					value();
 					}
 					}
-					State = 282;
+					State = 216;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
@@ -1893,101 +1296,865 @@ public partial class FlatBuffersParser : Parser {
 		return _localctx;
 	}
 
+	public partial class Commasep_annotation_declContext : ParserRuleContext {
+		public List<string> output;
+		public IToken identFirst;
+		public IToken identOther;
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Ident() { return GetTokens(FlatBuffersParser.Ident); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident(int i) {
+			return GetToken(FlatBuffersParser.Ident, i);
+		}
+		public Commasep_annotation_declContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_commasep_annotation_decl; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterCommasep_annotation_decl(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitCommasep_annotation_decl(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Commasep_annotation_declContext commasep_annotation_decl() {
+		Commasep_annotation_declContext _localctx = new Commasep_annotation_declContext(Context, State);
+		EnterRule(_localctx, 32, RULE_commasep_annotation_decl);
+		 _localctx.output =  new List<string>(); 
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 229;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,20,Context) ) {
+			case 1:
+				{
+				State = 219;
+				_localctx.identFirst = Match(Ident);
+				 _localctx.output.Add( (_localctx.identFirst!=null?_localctx.identFirst.Text:null) ); 
+				State = 226;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+				while (_la==T__17) {
+					{
+					{
+					State = 221;
+					Match(T__17);
+					State = 222;
+					_localctx.identOther = Match(Ident);
+					 _localctx.output.Add( (_localctx.identOther!=null?_localctx.identOther.Text:null) ); 
+					}
+					}
+					State = 228;
+					ErrorHandler.Sync(this);
+					_la = TokenStream.LA(1);
+				}
+				}
+				break;
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Field_declContext : ParserRuleContext {
+		public FlatCacheGenerator.FlatBufferField output;
+		public IToken identOne;
+		public Type_Context typeOne;
+		public ScalarContext scalarOne;
+		public Annotation_declContext annotationOne;
+		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
+			return GetRuleContext<MetadataContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public Type_Context type_() {
+			return GetRuleContext<Type_Context>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ScalarContext scalar() {
+			return GetRuleContext<ScalarContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public Annotation_declContext annotation_decl() {
+			return GetRuleContext<Annotation_declContext>(0);
+		}
+		public Field_declContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_field_decl; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterField_decl(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitField_decl(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Field_declContext field_decl() {
+		Field_declContext _localctx = new Field_declContext(Context, State);
+		EnterRule(_localctx, 34, RULE_field_decl);
+		 _localctx.output =  new FlatCacheGenerator.FlatBufferField(); 
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 231;
+			_localctx.identOne = Match(Ident);
+			 _localctx.output.m_name = (_localctx.identOne!=null?_localctx.identOne.Text:null); 
+			State = 233;
+			Match(T__9);
+			State = 234;
+			_localctx.typeOne = type_();
+			 _localctx.output.m_type = (_localctx.typeOne!=null?TokenStream.GetText(_localctx.typeOne.Start,_localctx.typeOne.Stop):null); 
+			State = 240;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__18) {
+				{
+				State = 236;
+				Match(T__18);
+				State = 237;
+				_localctx.scalarOne = scalar();
+				 _localctx.output.m_defaultValue = (_localctx.scalarOne!=null?TokenStream.GetText(_localctx.scalarOne.Start,_localctx.scalarOne.Stop):null); 
+				}
+			}
+
+			State = 242;
+			metadata();
+			State = 243;
+			Match(T__1);
+			State = 247;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__16) {
+				{
+				State = 244;
+				_localctx.annotationOne = annotation_decl();
+				 _localctx.output.m_annotatedAttributes = _localctx.annotationOne.output; 
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Rpc_methodContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Ident() { return GetTokens(FlatBuffersParser.Ident); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident(int i) {
+			return GetToken(FlatBuffersParser.Ident, i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
+			return GetRuleContext<MetadataContext>(0);
+		}
+		public Rpc_methodContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_rpc_method; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterRpc_method(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitRpc_method(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Rpc_methodContext rpc_method() {
+		Rpc_methodContext _localctx = new Rpc_methodContext(Context, State);
+		EnterRule(_localctx, 36, RULE_rpc_method);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 249;
+			Match(Ident);
+			State = 250;
+			Match(T__19);
+			State = 251;
+			Match(Ident);
+			State = 252;
+			Match(T__20);
+			State = 253;
+			Match(T__9);
+			State = 254;
+			Match(Ident);
+			State = 255;
+			metadata();
+			State = 256;
+			Match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Type_Context : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public Type_Context type_() {
+			return GetRuleContext<Type_Context>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
+		public Type_Context(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_type_; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterType_(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitType_(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Type_Context type_() {
+		Type_Context _localctx = new Type_Context(Context, State);
+		EnterRule(_localctx, 38, RULE_type_);
+		try {
+			State = 285;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case T__21:
+				EnterOuterAlt(_localctx, 1);
+				{
+				State = 258;
+				Match(T__21);
+				}
+				break;
+			case T__22:
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 259;
+				Match(T__22);
+				}
+				break;
+			case T__23:
+				EnterOuterAlt(_localctx, 3);
+				{
+				State = 260;
+				Match(T__23);
+				}
+				break;
+			case T__24:
+				EnterOuterAlt(_localctx, 4);
+				{
+				State = 261;
+				Match(T__24);
+				}
+				break;
+			case T__25:
+				EnterOuterAlt(_localctx, 5);
+				{
+				State = 262;
+				Match(T__25);
+				}
+				break;
+			case T__26:
+				EnterOuterAlt(_localctx, 6);
+				{
+				State = 263;
+				Match(T__26);
+				}
+				break;
+			case T__27:
+				EnterOuterAlt(_localctx, 7);
+				{
+				State = 264;
+				Match(T__27);
+				}
+				break;
+			case T__28:
+				EnterOuterAlt(_localctx, 8);
+				{
+				State = 265;
+				Match(T__28);
+				}
+				break;
+			case T__29:
+				EnterOuterAlt(_localctx, 9);
+				{
+				State = 266;
+				Match(T__29);
+				}
+				break;
+			case T__30:
+				EnterOuterAlt(_localctx, 10);
+				{
+				State = 267;
+				Match(T__30);
+				}
+				break;
+			case T__31:
+				EnterOuterAlt(_localctx, 11);
+				{
+				State = 268;
+				Match(T__31);
+				}
+				break;
+			case T__32:
+				EnterOuterAlt(_localctx, 12);
+				{
+				State = 269;
+				Match(T__32);
+				}
+				break;
+			case T__33:
+				EnterOuterAlt(_localctx, 13);
+				{
+				State = 270;
+				Match(T__33);
+				}
+				break;
+			case T__34:
+				EnterOuterAlt(_localctx, 14);
+				{
+				State = 271;
+				Match(T__34);
+				}
+				break;
+			case T__35:
+				EnterOuterAlt(_localctx, 15);
+				{
+				State = 272;
+				Match(T__35);
+				}
+				break;
+			case T__36:
+				EnterOuterAlt(_localctx, 16);
+				{
+				State = 273;
+				Match(T__36);
+				}
+				break;
+			case T__37:
+				EnterOuterAlt(_localctx, 17);
+				{
+				State = 274;
+				Match(T__37);
+				}
+				break;
+			case T__38:
+				EnterOuterAlt(_localctx, 18);
+				{
+				State = 275;
+				Match(T__38);
+				}
+				break;
+			case T__39:
+				EnterOuterAlt(_localctx, 19);
+				{
+				State = 276;
+				Match(T__39);
+				}
+				break;
+			case T__40:
+				EnterOuterAlt(_localctx, 20);
+				{
+				State = 277;
+				Match(T__40);
+				}
+				break;
+			case T__41:
+				EnterOuterAlt(_localctx, 21);
+				{
+				State = 278;
+				Match(T__41);
+				}
+				break;
+			case T__42:
+				EnterOuterAlt(_localctx, 22);
+				{
+				State = 279;
+				Match(T__42);
+				}
+				break;
+			case T__43:
+				EnterOuterAlt(_localctx, 23);
+				{
+				State = 280;
+				Match(T__43);
+				State = 281;
+				type_();
+				State = 282;
+				Match(T__44);
+				}
+				break;
+			case Ident:
+				EnterOuterAlt(_localctx, 24);
+				{
+				State = 284;
+				Match(Ident);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Enumval_declContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public MetadataContext metadata() {
+			return GetRuleContext<MetadataContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IntegerConstant() { return GetToken(FlatBuffersParser.IntegerConstant, 0); }
+		public Enumval_declContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_enumval_decl; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterEnumval_decl(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitEnumval_decl(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Enumval_declContext enumval_decl() {
+		Enumval_declContext _localctx = new Enumval_declContext(Context, State);
+		EnterRule(_localctx, 40, RULE_enumval_decl);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 287;
+			Match(Ident);
+			State = 290;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__18) {
+				{
+				State = 288;
+				Match(T__18);
+				State = 289;
+				Match(IntegerConstant);
+				}
+			}
+
+			State = 292;
+			metadata();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class MetadataContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public Commasep_metadata_itemContext commasep_metadata_item() {
+			return GetRuleContext<Commasep_metadata_itemContext>(0);
+		}
+		public MetadataContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_metadata; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterMetadata(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitMetadata(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public MetadataContext metadata() {
+		MetadataContext _localctx = new MetadataContext(Context, State);
+		EnterRule(_localctx, 42, RULE_metadata);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 298;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==T__19) {
+				{
+				State = 294;
+				Match(T__19);
+				State = 295;
+				commasep_metadata_item();
+				State = 296;
+				Match(T__20);
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ScalarContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BooleanConstant() { return GetToken(FlatBuffersParser.BooleanConstant, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IntegerConstant() { return GetToken(FlatBuffersParser.IntegerConstant, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FloatConstant() { return GetToken(FlatBuffersParser.FloatConstant, 0); }
+		public ScalarContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_scalar; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterScalar(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitScalar(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ScalarContext scalar() {
+		ScalarContext _localctx = new ScalarContext(Context, State);
+		EnterRule(_localctx, 44, RULE_scalar);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 300;
+			_la = TokenStream.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 914793674309632L) != 0)) ) {
+			ErrorHandler.RecoverInline(this);
+			}
+			else {
+				ErrorHandler.ReportMatch(this);
+			    Consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class Single_valueContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ScalarContext scalar() {
+			return GetRuleContext<ScalarContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringConstant() { return GetToken(FlatBuffersParser.StringConstant, 0); }
+		public Single_valueContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_single_value; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterSingle_value(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitSingle_value(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public Single_valueContext single_value() {
+		Single_valueContext _localctx = new Single_valueContext(Context, State);
+		EnterRule(_localctx, 46, RULE_single_value);
+		try {
+			State = 304;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case BooleanConstant:
+			case IntegerConstant:
+			case FloatConstant:
+				EnterOuterAlt(_localctx, 1);
+				{
+				State = 302;
+				scalar();
+				}
+				break;
+			case StringConstant:
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 303;
+				Match(StringConstant);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ValueContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public Single_valueContext single_value() {
+			return GetRuleContext<Single_valueContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ObjectContext @object() {
+			return GetRuleContext<ObjectContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public Commasep_valueContext commasep_value() {
+			return GetRuleContext<Commasep_valueContext>(0);
+		}
+		public ValueContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_value; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.EnterValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IFlatBuffersListener typedListener = listener as IFlatBuffersListener;
+			if (typedListener != null) typedListener.ExitValue(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ValueContext value() {
+		ValueContext _localctx = new ValueContext(Context, State);
+		EnterRule(_localctx, 48, RULE_value);
+		try {
+			State = 312;
+			ErrorHandler.Sync(this);
+			switch (TokenStream.LA(1)) {
+			case BooleanConstant:
+			case IntegerConstant:
+			case FloatConstant:
+			case StringConstant:
+				EnterOuterAlt(_localctx, 1);
+				{
+				State = 306;
+				single_value();
+				}
+				break;
+			case T__6:
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 307;
+				@object();
+				}
+				break;
+			case T__43:
+				EnterOuterAlt(_localctx, 3);
+				{
+				State = 308;
+				Match(T__43);
+				State = 309;
+				commasep_value();
+				State = 310;
+				Match(T__44);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
 	private static int[] _serializedATN = {
-		4,1,50,286,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,51,315,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,21,
-		2,22,7,22,1,0,1,0,1,0,5,0,50,8,0,10,0,12,0,53,9,0,1,0,1,0,1,0,1,0,1,0,
-		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,5,0,68,8,0,10,0,12,0,71,9,0,1,0,1,0,1,
-		1,1,1,1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,5,2,86,8,2,10,2,12,2,89,9,2,
-		1,2,1,2,1,3,1,3,1,3,1,3,1,4,1,4,1,4,1,4,3,4,101,8,4,1,4,1,4,1,4,1,4,1,
-		4,1,4,1,4,4,4,110,8,4,11,4,12,4,111,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,3,
-		5,122,8,5,1,5,1,5,1,5,1,5,1,5,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,7,1,7,
-		1,7,1,7,1,7,3,7,142,8,7,1,7,1,7,1,7,1,8,1,8,1,8,1,8,4,8,151,8,8,11,8,12,
-		8,152,1,8,1,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,10,1,10,1,10,1,10,
-		1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
-		1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,3,10,193,8,10,1,11,1,11,1,
-		11,3,11,198,8,11,1,11,1,11,1,12,1,12,1,12,1,12,3,12,206,8,12,1,13,1,13,
-		1,14,1,14,1,14,1,14,1,15,1,15,3,15,216,8,15,1,16,1,16,1,16,1,16,1,16,1,
-		16,3,16,224,8,16,1,17,1,17,1,17,1,17,1,18,1,18,1,18,1,18,1,19,1,19,1,19,
-		5,19,237,8,19,10,19,12,19,240,9,19,3,19,242,8,19,1,20,1,20,1,20,3,20,247,
-		8,20,1,20,1,20,1,20,1,20,3,20,253,8,20,5,20,255,8,20,10,20,12,20,258,9,
-		20,3,20,260,8,20,1,21,1,21,1,21,1,21,1,21,1,21,1,21,5,21,269,8,21,10,21,
-		12,21,272,9,21,3,21,274,8,21,1,22,1,22,1,22,5,22,279,8,22,10,22,12,22,
-		282,9,22,3,22,284,8,22,1,22,0,0,23,0,2,4,6,8,10,12,14,16,18,20,22,24,26,
-		28,30,32,34,36,38,40,42,44,0,2,2,0,46,46,49,49,2,0,45,45,47,48,316,0,51,
-		1,0,0,0,2,74,1,0,0,0,4,79,1,0,0,0,6,92,1,0,0,0,8,100,1,0,0,0,10,121,1,
-		0,0,0,12,128,1,0,0,0,14,132,1,0,0,0,16,146,1,0,0,0,18,156,1,0,0,0,20,192,
-		1,0,0,0,22,194,1,0,0,0,24,205,1,0,0,0,26,207,1,0,0,0,28,209,1,0,0,0,30,
-		215,1,0,0,0,32,223,1,0,0,0,34,225,1,0,0,0,36,229,1,0,0,0,38,241,1,0,0,
-		0,40,259,1,0,0,0,42,273,1,0,0,0,44,283,1,0,0,0,46,47,3,2,1,0,47,48,6,0,
-		-1,0,48,50,1,0,0,0,49,46,1,0,0,0,50,53,1,0,0,0,51,49,1,0,0,0,51,52,1,0,
-		0,0,52,69,1,0,0,0,53,51,1,0,0,0,54,55,3,4,2,0,55,56,6,0,-1,0,56,68,1,0,
-		0,0,57,58,3,8,4,0,58,59,6,0,-1,0,59,68,1,0,0,0,60,68,3,10,5,0,61,68,3,
-		12,6,0,62,68,3,34,17,0,63,68,3,36,18,0,64,68,3,6,3,0,65,68,3,16,8,0,66,
-		68,3,28,14,0,67,54,1,0,0,0,67,57,1,0,0,0,67,60,1,0,0,0,67,61,1,0,0,0,67,
-		62,1,0,0,0,67,63,1,0,0,0,67,64,1,0,0,0,67,65,1,0,0,0,67,66,1,0,0,0,68,
-		71,1,0,0,0,69,67,1,0,0,0,69,70,1,0,0,0,70,72,1,0,0,0,71,69,1,0,0,0,72,
-		73,5,0,0,1,73,1,1,0,0,0,74,75,5,1,0,0,75,76,5,49,0,0,76,77,6,1,-1,0,77,
-		78,5,2,0,0,78,3,1,0,0,0,79,80,5,3,0,0,80,81,5,46,0,0,81,87,6,2,-1,0,82,
-		83,5,4,0,0,83,84,5,46,0,0,84,86,6,2,-1,0,85,82,1,0,0,0,86,89,1,0,0,0,87,
-		85,1,0,0,0,87,88,1,0,0,0,88,90,1,0,0,0,89,87,1,0,0,0,90,91,5,2,0,0,91,
-		5,1,0,0,0,92,93,5,5,0,0,93,94,7,0,0,0,94,95,5,2,0,0,95,7,1,0,0,0,96,97,
-		5,6,0,0,97,101,6,4,-1,0,98,99,5,7,0,0,99,101,6,4,-1,0,100,96,1,0,0,0,100,
-		98,1,0,0,0,101,102,1,0,0,0,102,103,5,46,0,0,103,104,6,4,-1,0,104,105,3,
-		24,12,0,105,109,5,8,0,0,106,107,3,14,7,0,107,108,6,4,-1,0,108,110,1,0,
-		0,0,109,106,1,0,0,0,110,111,1,0,0,0,111,109,1,0,0,0,111,112,1,0,0,0,112,
-		113,1,0,0,0,113,114,5,9,0,0,114,9,1,0,0,0,115,116,5,10,0,0,116,117,5,46,
-		0,0,117,118,5,11,0,0,118,122,3,20,10,0,119,120,5,12,0,0,120,122,5,46,0,
-		0,121,115,1,0,0,0,121,119,1,0,0,0,122,123,1,0,0,0,123,124,3,24,12,0,124,
-		125,5,8,0,0,125,126,3,38,19,0,126,127,5,9,0,0,127,11,1,0,0,0,128,129,5,
-		13,0,0,129,130,5,46,0,0,130,131,5,2,0,0,131,13,1,0,0,0,132,133,5,46,0,
-		0,133,134,6,7,-1,0,134,135,5,11,0,0,135,136,3,20,10,0,136,141,6,7,-1,0,
-		137,138,5,14,0,0,138,139,3,26,13,0,139,140,6,7,-1,0,140,142,1,0,0,0,141,
-		137,1,0,0,0,141,142,1,0,0,0,142,143,1,0,0,0,143,144,3,24,12,0,144,145,
-		5,2,0,0,145,15,1,0,0,0,146,147,5,15,0,0,147,148,5,46,0,0,148,150,5,8,0,
-		0,149,151,3,18,9,0,150,149,1,0,0,0,151,152,1,0,0,0,152,150,1,0,0,0,152,
-		153,1,0,0,0,153,154,1,0,0,0,154,155,5,9,0,0,155,17,1,0,0,0,156,157,5,46,
-		0,0,157,158,5,16,0,0,158,159,5,46,0,0,159,160,5,17,0,0,160,161,5,11,0,
-		0,161,162,5,46,0,0,162,163,3,24,12,0,163,164,5,2,0,0,164,19,1,0,0,0,165,
-		193,5,18,0,0,166,193,5,19,0,0,167,193,5,20,0,0,168,193,5,21,0,0,169,193,
-		5,22,0,0,170,193,5,23,0,0,171,193,5,24,0,0,172,193,5,25,0,0,173,193,5,
-		26,0,0,174,193,5,27,0,0,175,193,5,28,0,0,176,193,5,29,0,0,177,193,5,30,
-		0,0,178,193,5,31,0,0,179,193,5,32,0,0,180,193,5,33,0,0,181,193,5,34,0,
-		0,182,193,5,35,0,0,183,193,5,36,0,0,184,193,5,37,0,0,185,193,5,38,0,0,
-		186,193,5,39,0,0,187,188,5,40,0,0,188,189,3,20,10,0,189,190,5,41,0,0,190,
-		193,1,0,0,0,191,193,5,46,0,0,192,165,1,0,0,0,192,166,1,0,0,0,192,167,1,
-		0,0,0,192,168,1,0,0,0,192,169,1,0,0,0,192,170,1,0,0,0,192,171,1,0,0,0,
-		192,172,1,0,0,0,192,173,1,0,0,0,192,174,1,0,0,0,192,175,1,0,0,0,192,176,
-		1,0,0,0,192,177,1,0,0,0,192,178,1,0,0,0,192,179,1,0,0,0,192,180,1,0,0,
-		0,192,181,1,0,0,0,192,182,1,0,0,0,192,183,1,0,0,0,192,184,1,0,0,0,192,
-		185,1,0,0,0,192,186,1,0,0,0,192,187,1,0,0,0,192,191,1,0,0,0,193,21,1,0,
-		0,0,194,197,5,46,0,0,195,196,5,14,0,0,196,198,5,47,0,0,197,195,1,0,0,0,
-		197,198,1,0,0,0,198,199,1,0,0,0,199,200,3,24,12,0,200,23,1,0,0,0,201,202,
-		5,16,0,0,202,203,3,40,20,0,203,204,5,17,0,0,204,206,1,0,0,0,205,201,1,
-		0,0,0,205,206,1,0,0,0,206,25,1,0,0,0,207,208,7,1,0,0,208,27,1,0,0,0,209,
-		210,5,8,0,0,210,211,3,42,21,0,211,212,5,9,0,0,212,29,1,0,0,0,213,216,3,
-		26,13,0,214,216,5,49,0,0,215,213,1,0,0,0,215,214,1,0,0,0,216,31,1,0,0,
-		0,217,224,3,30,15,0,218,224,3,28,14,0,219,220,5,40,0,0,220,221,3,44,22,
-		0,221,222,5,41,0,0,222,224,1,0,0,0,223,217,1,0,0,0,223,218,1,0,0,0,223,
-		219,1,0,0,0,224,33,1,0,0,0,225,226,5,42,0,0,226,227,5,49,0,0,227,228,5,
-		2,0,0,228,35,1,0,0,0,229,230,5,43,0,0,230,231,5,49,0,0,231,232,5,2,0,0,
-		232,37,1,0,0,0,233,238,3,22,11,0,234,235,5,44,0,0,235,237,3,22,11,0,236,
-		234,1,0,0,0,237,240,1,0,0,0,238,236,1,0,0,0,238,239,1,0,0,0,239,242,1,
-		0,0,0,240,238,1,0,0,0,241,233,1,0,0,0,241,242,1,0,0,0,242,39,1,0,0,0,243,
-		246,5,46,0,0,244,245,5,11,0,0,245,247,3,30,15,0,246,244,1,0,0,0,246,247,
-		1,0,0,0,247,256,1,0,0,0,248,249,5,44,0,0,249,252,5,46,0,0,250,251,5,11,
-		0,0,251,253,3,30,15,0,252,250,1,0,0,0,252,253,1,0,0,0,253,255,1,0,0,0,
-		254,248,1,0,0,0,255,258,1,0,0,0,256,254,1,0,0,0,256,257,1,0,0,0,257,260,
-		1,0,0,0,258,256,1,0,0,0,259,243,1,0,0,0,259,260,1,0,0,0,260,41,1,0,0,0,
-		261,262,5,46,0,0,262,263,5,11,0,0,263,270,3,32,16,0,264,265,5,44,0,0,265,
-		266,5,46,0,0,266,267,5,11,0,0,267,269,3,32,16,0,268,264,1,0,0,0,269,272,
-		1,0,0,0,270,268,1,0,0,0,270,271,1,0,0,0,271,274,1,0,0,0,272,270,1,0,0,
-		0,273,261,1,0,0,0,273,274,1,0,0,0,274,43,1,0,0,0,275,280,3,32,16,0,276,
-		277,5,44,0,0,277,279,3,32,16,0,278,276,1,0,0,0,279,282,1,0,0,0,280,278,
-		1,0,0,0,280,281,1,0,0,0,281,284,1,0,0,0,282,280,1,0,0,0,283,275,1,0,0,
-		0,283,284,1,0,0,0,284,45,1,0,0,0,24,51,67,69,87,100,111,121,141,152,192,
-		197,205,215,223,238,241,246,252,256,259,270,273,280,283
+		2,22,7,22,2,23,7,23,2,24,7,24,1,0,1,0,1,0,5,0,54,8,0,10,0,12,0,57,9,0,
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,5,0,72,8,0,10,0,12,
+		0,75,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,5,2,90,8,
+		2,10,2,12,2,93,9,2,1,2,1,2,1,3,1,3,1,3,1,3,3,3,101,8,3,1,3,1,3,1,3,1,3,
+		1,3,1,3,3,3,109,8,3,1,3,1,3,1,3,1,3,4,3,115,8,3,11,3,12,3,116,1,3,1,3,
+		1,4,1,4,1,4,1,4,1,4,1,4,3,4,127,8,4,1,4,1,4,1,4,1,4,1,4,1,5,1,5,1,5,1,
+		5,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,8,1,8,1,8,1,8,1,9,1,9,1,9,1,9,4,9,
+		154,8,9,11,9,12,9,155,1,9,1,9,1,10,1,10,1,10,1,10,1,11,1,11,1,11,1,11,
+		1,12,1,12,1,12,5,12,171,8,12,10,12,12,12,174,9,12,3,12,176,8,12,1,13,1,
+		13,1,13,3,13,181,8,13,1,13,1,13,1,13,1,13,3,13,187,8,13,5,13,189,8,13,
+		10,13,12,13,192,9,13,3,13,194,8,13,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
+		5,14,203,8,14,10,14,12,14,206,9,14,3,14,208,8,14,1,15,1,15,1,15,5,15,213,
+		8,15,10,15,12,15,216,9,15,3,15,218,8,15,1,16,1,16,1,16,1,16,1,16,5,16,
+		225,8,16,10,16,12,16,228,9,16,3,16,230,8,16,1,17,1,17,1,17,1,17,1,17,1,
+		17,1,17,1,17,1,17,3,17,241,8,17,1,17,1,17,1,17,1,17,1,17,3,17,248,8,17,
+		1,18,1,18,1,18,1,18,1,18,1,18,1,18,1,18,1,18,1,19,1,19,1,19,1,19,1,19,
+		1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,
+		1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,3,19,286,8,19,1,20,1,20,1,20,3,
+		20,291,8,20,1,20,1,20,1,21,1,21,1,21,1,21,3,21,299,8,21,1,22,1,22,1,23,
+		1,23,3,23,305,8,23,1,24,1,24,1,24,1,24,1,24,1,24,3,24,313,8,24,1,24,0,
+		0,25,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,
+		48,0,2,2,0,47,47,50,50,2,0,46,46,48,49,347,0,55,1,0,0,0,2,78,1,0,0,0,4,
+		83,1,0,0,0,6,100,1,0,0,0,8,126,1,0,0,0,10,133,1,0,0,0,12,137,1,0,0,0,14,
+		141,1,0,0,0,16,145,1,0,0,0,18,149,1,0,0,0,20,159,1,0,0,0,22,163,1,0,0,
+		0,24,175,1,0,0,0,26,193,1,0,0,0,28,207,1,0,0,0,30,217,1,0,0,0,32,229,1,
+		0,0,0,34,231,1,0,0,0,36,249,1,0,0,0,38,285,1,0,0,0,40,287,1,0,0,0,42,298,
+		1,0,0,0,44,300,1,0,0,0,46,304,1,0,0,0,48,312,1,0,0,0,50,51,3,2,1,0,51,
+		52,6,0,-1,0,52,54,1,0,0,0,53,50,1,0,0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,
+		56,1,0,0,0,56,73,1,0,0,0,57,55,1,0,0,0,58,59,3,4,2,0,59,60,6,0,-1,0,60,
+		72,1,0,0,0,61,62,3,6,3,0,62,63,6,0,-1,0,63,72,1,0,0,0,64,72,3,8,4,0,65,
+		72,3,10,5,0,66,72,3,12,6,0,67,72,3,14,7,0,68,72,3,16,8,0,69,72,3,18,9,
+		0,70,72,3,22,11,0,71,58,1,0,0,0,71,61,1,0,0,0,71,64,1,0,0,0,71,65,1,0,
+		0,0,71,66,1,0,0,0,71,67,1,0,0,0,71,68,1,0,0,0,71,69,1,0,0,0,71,70,1,0,
+		0,0,72,75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,0,0,74,76,1,0,0,0,75,73,1,0,
+		0,0,76,77,5,0,0,1,77,1,1,0,0,0,78,79,5,1,0,0,79,80,5,50,0,0,80,81,6,1,
+		-1,0,81,82,5,2,0,0,82,3,1,0,0,0,83,84,5,3,0,0,84,85,5,47,0,0,85,91,6,2,
+		-1,0,86,87,5,4,0,0,87,88,5,47,0,0,88,90,6,2,-1,0,89,86,1,0,0,0,90,93,1,
+		0,0,0,91,89,1,0,0,0,91,92,1,0,0,0,92,94,1,0,0,0,93,91,1,0,0,0,94,95,5,
+		2,0,0,95,5,1,0,0,0,96,97,5,5,0,0,97,101,6,3,-1,0,98,99,5,6,0,0,99,101,
+		6,3,-1,0,100,96,1,0,0,0,100,98,1,0,0,0,101,102,1,0,0,0,102,103,5,47,0,
+		0,103,104,6,3,-1,0,104,108,3,42,21,0,105,106,3,20,10,0,106,107,6,3,-1,
+		0,107,109,1,0,0,0,108,105,1,0,0,0,108,109,1,0,0,0,109,110,1,0,0,0,110,
+		114,5,7,0,0,111,112,3,34,17,0,112,113,6,3,-1,0,113,115,1,0,0,0,114,111,
+		1,0,0,0,115,116,1,0,0,0,116,114,1,0,0,0,116,117,1,0,0,0,117,118,1,0,0,
+		0,118,119,5,8,0,0,119,7,1,0,0,0,120,121,5,9,0,0,121,122,5,47,0,0,122,123,
+		5,10,0,0,123,127,3,38,19,0,124,125,5,11,0,0,125,127,5,47,0,0,126,120,1,
+		0,0,0,126,124,1,0,0,0,127,128,1,0,0,0,128,129,3,42,21,0,129,130,5,7,0,
+		0,130,131,3,24,12,0,131,132,5,8,0,0,132,9,1,0,0,0,133,134,5,12,0,0,134,
+		135,5,47,0,0,135,136,5,2,0,0,136,11,1,0,0,0,137,138,5,13,0,0,138,139,5,
+		50,0,0,139,140,5,2,0,0,140,13,1,0,0,0,141,142,5,14,0,0,142,143,5,50,0,
+		0,143,144,5,2,0,0,144,15,1,0,0,0,145,146,5,15,0,0,146,147,7,0,0,0,147,
+		148,5,2,0,0,148,17,1,0,0,0,149,150,5,16,0,0,150,151,5,47,0,0,151,153,5,
+		7,0,0,152,154,3,36,18,0,153,152,1,0,0,0,154,155,1,0,0,0,155,153,1,0,0,
+		0,155,156,1,0,0,0,156,157,1,0,0,0,157,158,5,8,0,0,158,19,1,0,0,0,159,160,
+		5,17,0,0,160,161,3,32,16,0,161,162,6,10,-1,0,162,21,1,0,0,0,163,164,5,
+		7,0,0,164,165,3,28,14,0,165,166,5,8,0,0,166,23,1,0,0,0,167,172,3,40,20,
+		0,168,169,5,18,0,0,169,171,3,40,20,0,170,168,1,0,0,0,171,174,1,0,0,0,172,
+		170,1,0,0,0,172,173,1,0,0,0,173,176,1,0,0,0,174,172,1,0,0,0,175,167,1,
+		0,0,0,175,176,1,0,0,0,176,25,1,0,0,0,177,180,5,47,0,0,178,179,5,10,0,0,
+		179,181,3,46,23,0,180,178,1,0,0,0,180,181,1,0,0,0,181,190,1,0,0,0,182,
+		183,5,18,0,0,183,186,5,47,0,0,184,185,5,10,0,0,185,187,3,46,23,0,186,184,
+		1,0,0,0,186,187,1,0,0,0,187,189,1,0,0,0,188,182,1,0,0,0,189,192,1,0,0,
+		0,190,188,1,0,0,0,190,191,1,0,0,0,191,194,1,0,0,0,192,190,1,0,0,0,193,
+		177,1,0,0,0,193,194,1,0,0,0,194,27,1,0,0,0,195,196,5,47,0,0,196,197,5,
+		10,0,0,197,204,3,48,24,0,198,199,5,18,0,0,199,200,5,47,0,0,200,201,5,10,
+		0,0,201,203,3,48,24,0,202,198,1,0,0,0,203,206,1,0,0,0,204,202,1,0,0,0,
+		204,205,1,0,0,0,205,208,1,0,0,0,206,204,1,0,0,0,207,195,1,0,0,0,207,208,
+		1,0,0,0,208,29,1,0,0,0,209,214,3,48,24,0,210,211,5,18,0,0,211,213,3,48,
+		24,0,212,210,1,0,0,0,213,216,1,0,0,0,214,212,1,0,0,0,214,215,1,0,0,0,215,
+		218,1,0,0,0,216,214,1,0,0,0,217,209,1,0,0,0,217,218,1,0,0,0,218,31,1,0,
+		0,0,219,220,5,47,0,0,220,226,6,16,-1,0,221,222,5,18,0,0,222,223,5,47,0,
+		0,223,225,6,16,-1,0,224,221,1,0,0,0,225,228,1,0,0,0,226,224,1,0,0,0,226,
+		227,1,0,0,0,227,230,1,0,0,0,228,226,1,0,0,0,229,219,1,0,0,0,229,230,1,
+		0,0,0,230,33,1,0,0,0,231,232,5,47,0,0,232,233,6,17,-1,0,233,234,5,10,0,
+		0,234,235,3,38,19,0,235,240,6,17,-1,0,236,237,5,19,0,0,237,238,3,44,22,
+		0,238,239,6,17,-1,0,239,241,1,0,0,0,240,236,1,0,0,0,240,241,1,0,0,0,241,
+		242,1,0,0,0,242,243,3,42,21,0,243,247,5,2,0,0,244,245,3,20,10,0,245,246,
+		6,17,-1,0,246,248,1,0,0,0,247,244,1,0,0,0,247,248,1,0,0,0,248,35,1,0,0,
+		0,249,250,5,47,0,0,250,251,5,20,0,0,251,252,5,47,0,0,252,253,5,21,0,0,
+		253,254,5,10,0,0,254,255,5,47,0,0,255,256,3,42,21,0,256,257,5,2,0,0,257,
+		37,1,0,0,0,258,286,5,22,0,0,259,286,5,23,0,0,260,286,5,24,0,0,261,286,
+		5,25,0,0,262,286,5,26,0,0,263,286,5,27,0,0,264,286,5,28,0,0,265,286,5,
+		29,0,0,266,286,5,30,0,0,267,286,5,31,0,0,268,286,5,32,0,0,269,286,5,33,
+		0,0,270,286,5,34,0,0,271,286,5,35,0,0,272,286,5,36,0,0,273,286,5,37,0,
+		0,274,286,5,38,0,0,275,286,5,39,0,0,276,286,5,40,0,0,277,286,5,41,0,0,
+		278,286,5,42,0,0,279,286,5,43,0,0,280,281,5,44,0,0,281,282,3,38,19,0,282,
+		283,5,45,0,0,283,286,1,0,0,0,284,286,5,47,0,0,285,258,1,0,0,0,285,259,
+		1,0,0,0,285,260,1,0,0,0,285,261,1,0,0,0,285,262,1,0,0,0,285,263,1,0,0,
+		0,285,264,1,0,0,0,285,265,1,0,0,0,285,266,1,0,0,0,285,267,1,0,0,0,285,
+		268,1,0,0,0,285,269,1,0,0,0,285,270,1,0,0,0,285,271,1,0,0,0,285,272,1,
+		0,0,0,285,273,1,0,0,0,285,274,1,0,0,0,285,275,1,0,0,0,285,276,1,0,0,0,
+		285,277,1,0,0,0,285,278,1,0,0,0,285,279,1,0,0,0,285,280,1,0,0,0,285,284,
+		1,0,0,0,286,39,1,0,0,0,287,290,5,47,0,0,288,289,5,19,0,0,289,291,5,48,
+		0,0,290,288,1,0,0,0,290,291,1,0,0,0,291,292,1,0,0,0,292,293,3,42,21,0,
+		293,41,1,0,0,0,294,295,5,20,0,0,295,296,3,26,13,0,296,297,5,21,0,0,297,
+		299,1,0,0,0,298,294,1,0,0,0,298,299,1,0,0,0,299,43,1,0,0,0,300,301,7,1,
+		0,0,301,45,1,0,0,0,302,305,3,44,22,0,303,305,5,50,0,0,304,302,1,0,0,0,
+		304,303,1,0,0,0,305,47,1,0,0,0,306,313,3,46,23,0,307,313,3,22,11,0,308,
+		309,5,44,0,0,309,310,3,30,15,0,310,311,5,45,0,0,311,313,1,0,0,0,312,306,
+		1,0,0,0,312,307,1,0,0,0,312,308,1,0,0,0,313,49,1,0,0,0,28,55,71,73,91,
+		100,108,116,126,155,172,175,180,186,190,193,204,207,214,217,226,229,240,
+		247,285,290,298,304,312
 	};
 
 	public static readonly ATN _ATN =

@@ -11,5 +11,6 @@ namespace FlatCacheGenerator
         public string m_name = "";
         public string m_type = "";
         public string m_defaultValue = "";
+        public List<string> m_annotatedAttributes = new();
     }
 }

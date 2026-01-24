@@ -1,8 +1,8 @@
 namespace GenericBoson.Zozo;
 
-table Character
+table Character // test
 {
-    id : long;
+    id : long; // PK, NotNull
     user_id : long;
     name : string;
     level : int;

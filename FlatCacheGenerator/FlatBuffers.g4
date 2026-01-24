@@ -22,21 +22,21 @@ include returns [ string output ]
     : 'include' stringConstantOne = StringConstant { $output += $stringConstantOne.text; } ';'
     ;
 
+//-------------------------------------
+
 namespace_decl returns [ List<string> output ]
 @init { $output = new List<string>(); }
     : 'namespace' identFirst = Ident { $output.Add($identFirst.text); } 
     ( '.' identLeft = Ident { $output.Add($identLeft.text); } )* ';'
     ;
 
-attribute_decl
-    : 'attribute' ( Ident | StringConstant ) ';'
-    ;
-
 type_decl returns [ FlatCacheGenerator.FlatBufferType output ]
 @init { $output = new FlatCacheGenerator.FlatBufferType(); }
     : ( 'table' { $output.m_kind = FlatCacheGenerator.TypeKind.Table; } | 'struct' { $output.m_kind = FlatCacheGenerator.TypeKind.Struct; } ) 
     identOne = Ident {  $output.m_name = $identOne.text; } 
-    metadata '{' ( fieldOne = field_decl { $output.m_fields.Add($fieldOne.output); } )+ '}'
+    metadata 
+    ( annotationOne = annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
+    '{' ( fieldOne = field_decl { $output.m_fields.Add($fieldOne.output); } )+ '}'
     ;
 
 enum_decl
@@ -47,6 +47,56 @@ root_decl
     : 'root_type' Ident ';'
     ;
 
+file_extension_decl
+    : 'file_extension' StringConstant ';'
+    ;
+
+file_identifier_decl
+    : 'file_identifier' StringConstant ';'
+    ;
+
+attribute_decl
+    : 'attribute' ( Ident | StringConstant ) ';'
+    ;
+
+rpc_decl
+    : 'rpc_service' Ident '{' rpc_method+ '}'
+    ;
+
+annotation_decl returns [ List<string> output ]
+    : '//' commasepOne = commasep_annotation_decl { $output = $commasepOne.output; }
+    ;
+
+object
+    : '{' commasep_object_item '}'
+    ;
+
+// --- Helper Parser Rules (Handling commasep) ---
+
+commasep_enumval_decl
+    : (enumval_decl ( ',' enumval_decl )*)?
+    ;
+
+commasep_metadata_item
+    : (Ident ( ':' single_value )? ( ',' Ident ( ':' single_value )? )*)?
+    ;
+
+commasep_object_item
+    : (Ident ':' value ( ',' Ident ':' value )*)?
+    ;
+
+commasep_value
+    : (value ( ',' value )*)?
+    ;
+
+commasep_annotation_decl returns [ List<string> output ]
+@init { $output = new List<string>(); }
+    : ( identFirst = Ident { $output.Add( $identFirst.text ); } 
+    ( ',' identOther = Ident { $output.Add( $identOther.text ); } )*)?
+    ;
+
+//-------------------------------------
+
 field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
 @init { $output = new FlatCacheGenerator.FlatBufferField(); }
     : identOne = Ident { $output.m_name = $identOne.text; } 
@@ -54,11 +104,8 @@ field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
     typeOne = type_ { $output.m_type = $typeOne.text; }
     ( '=' scalarOne = scalar { $output.m_defaultValue = $scalarOne.text; } )? 
     metadata 
-    ';'
-    ;
-
-rpc_decl
-    : 'rpc_service' Ident '{' rpc_method+ '}'
+    ';' 
+    ( annotationOne = annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
     ;
 
 rpc_method
@@ -86,10 +133,6 @@ scalar
     : BooleanConstant | IntegerConstant | FloatConstant
     ;
 
-object
-    : '{' commasep_object_item '}'
-    ;
-
 single_value
     : scalar | StringConstant
     ;
@@ -99,33 +142,6 @@ value
     | object 
     | '[' commasep_value ']'
     ;
-
-file_extension_decl
-    : 'file_extension' StringConstant ';'
-    ;
-
-file_identifier_decl
-    : 'file_identifier' StringConstant ';'
-    ;
-
-// --- Helper Parser Rules (Handling commasep) ---
-
-commasep_enumval_decl
-    : (enumval_decl ( ',' enumval_decl )*)?
-    ;
-
-commasep_metadata_item
-    : (Ident ( ':' single_value )? ( ',' Ident ( ':' single_value )? )*)?
-    ;
-
-commasep_object_item
-    : (Ident ':' value ( ',' Ident ':' value )*)?
-    ;
-
-commasep_value
-    : (value ( ',' value )*)?
-    ;
-
 
 // --- Lexer Rules ---
 
