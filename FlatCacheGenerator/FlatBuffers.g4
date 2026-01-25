@@ -63,10 +63,6 @@ rpc_decl
     : 'rpc_service' Ident '{' rpc_method+ '}'
     ;
 
-annotation_decl returns [ List<string> output ]
-    : '//' commasepOne = commasep_annotation_decl { $output = $commasepOne.output; }
-    ;
-
 object
     : '{' commasep_object_item '}'
     ;
@@ -89,13 +85,31 @@ commasep_value
     : (value ( ',' value )*)?
     ;
 
-commasep_annotation_decl returns [ List<string> output ]
+commasep_field_annotation_decl returns [ List<string> output ]
 @init { $output = new List<string>(); }
     : ( identFirst = Ident { $output.Add( $identFirst.text ); } 
     ( ',' identOther = Ident { $output.Add( $identOther.text ); } )*)?
     ;
 
+commasep_type_annotation_decl returns [ List<Dictionary<string,List<string>>> output ]
+@init { $output = new List<Dictionary<string,List<string>>>(); }
+    : ( elementFirst = annotation_element_decl { $output.Add( $elementFirst.text ); } 
+    ( ',' elementOther = annotation_element_decl { $output.Add( $elementOther.text ); } )*)?
+    ;
+
+commasep_db_index__decl returns []
+    :
+    ;
+
 //-------------------------------------
+
+annotation_element_decl returns []
+    : Ident '('  ')'
+    ;
+
+type_annotation_decl returns [ List<string> output ]
+    : '//' commasepOne = commasep_type_annotation_decl { $output = $commasepOne.output; }
+    ;
 
 field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
 @init { $output = new FlatCacheGenerator.FlatBufferField(); }
@@ -105,7 +119,11 @@ field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
     ( '=' scalarOne = scalar { $output.m_defaultValue = $scalarOne.text; } )? 
     metadata 
     ';' 
-    ( annotationOne = annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
+    ( annotationOne = field_annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
+    ;
+
+field_annotation_decl returns [ List<string> output ]
+    : '//' commasepOne = commasep_field_annotation_decl { $output = $commasepOne.output; }
     ;
 
 rpc_method

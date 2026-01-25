@@ -171,9 +171,14 @@ class Program
                 foreach (var field in typeOne.m_fields)
                 {
                     sqlContent.AppendLine($"    {field.m_name} {ChangeToSqlType(field.m_type)}");
+
+                    if (field.m_annotatedAttributes.Contains("PK"))
+                    {
+                        primaryKey = field.m_name;
+                    }
                 }
 
-                sqlContent.AppendLine($"");
+                sqlContent.AppendLine($"    PRIMARY KEY('{primaryKey}')");
 
                 sqlContent.AppendLine(")");
                 sqlContent.AppendLine();

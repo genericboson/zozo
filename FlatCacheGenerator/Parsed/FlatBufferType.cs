@@ -18,6 +18,6 @@ namespace FlatCacheGenerator
         public string m_name = "";
         public TypeKind m_kind = TypeKind.None;
         public List<FlatBufferField> m_fields = new();
-        public List<string> m_annotatedAttributes = new();
+        public List<Dictionary<string,List<string>>> m_indexes = new();
     }
 }
