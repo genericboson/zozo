@@ -35,7 +35,7 @@ type_decl returns [ FlatCacheGenerator.FlatBufferType output ]
     : ( 'table' { $output.m_kind = FlatCacheGenerator.TypeKind.Table; } | 'struct' { $output.m_kind = FlatCacheGenerator.TypeKind.Struct; } ) 
     identOne = Ident {  $output.m_name = $identOne.text; } 
     metadata 
-    ( annotationOne = annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
+    ( typeAnnotationOne = type_annotation_decl { $output.m_indexes = $typeAnnotationOne.output; } )?
     '{' ( fieldOne = field_decl { $output.m_fields.Add($fieldOne.output); } )+ '}'
     ;
 
@@ -85,7 +85,7 @@ commasep_value
     : (value ( ',' value )*)?
     ;
 
-commasep_field_annotation_decl returns [ List<string> output ]
+commasep_annotation_decl returns [ List<string> output ]
 @init { $output = new List<string>(); }
     : ( identFirst = Ident { $output.Add( $identFirst.text ); } 
     ( ',' identOther = Ident { $output.Add( $identOther.text ); } )*)?
@@ -93,22 +93,23 @@ commasep_field_annotation_decl returns [ List<string> output ]
 
 commasep_type_annotation_decl returns [ List<Dictionary<string,List<string>>> output ]
 @init { $output = new List<Dictionary<string,List<string>>>(); }
-    : ( elementFirst = annotation_element_decl { $output.Add( $elementFirst.text ); } 
-    ( ',' elementOther = annotation_element_decl { $output.Add( $elementOther.text ); } )*)?
-    ;
-
-commasep_db_index__decl returns []
-    :
+    : ( elementFirst = annotation_element_decl { $output.Add( $elementFirst.output ); } 
+    ( ',' elementOther = annotation_element_decl { $output.Add( $elementOther.output ); } )*)?
     ;
 
 //-------------------------------------
 
-annotation_element_decl returns []
-    : Ident '('  ')'
+annotation_element_decl returns [ Dictionary<string,List<string>> output ]
+@init { $output = new Dictionary<string,List<string>>(); }
+    : identOne = Ident '(' commasepElemOne = commasep_annotation_decl
+    { 
+        $output[$identOne.text] = $commasepElemOne.output;
+    } 
+    ')'
     ;
 
-type_annotation_decl returns [ List<string> output ]
-    : '//' commasepOne = commasep_type_annotation_decl { $output = $commasepOne.output; }
+type_annotation_decl returns [ List<Dictionary<string,List<string>>> output ]
+    : '//' commasepTypeOne = commasep_type_annotation_decl { $output = $commasepTypeOne.output; }
     ;
 
 field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
@@ -119,11 +120,11 @@ field_decl returns [ FlatCacheGenerator.FlatBufferField output ]
     ( '=' scalarOne = scalar { $output.m_defaultValue = $scalarOne.text; } )? 
     metadata 
     ';' 
-    ( annotationOne = field_annotation_decl { $output.m_annotatedAttributes = $annotationOne.output; } )?
+    ( fieldAnnotationOne = field_annotation_decl { $output.m_annotatedAttributes = $fieldAnnotationOne.output; } )?
     ;
 
 field_annotation_decl returns [ List<string> output ]
-    : '//' commasepOne = commasep_field_annotation_decl { $output = $commasepOne.output; }
+    : '//' commasepFieldOne = commasep_annotation_decl { $output = $commasepFieldOne.output; }
     ;
 
 rpc_method

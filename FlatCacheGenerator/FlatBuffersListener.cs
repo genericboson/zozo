@@ -131,16 +131,6 @@ public interface IFlatBuffersListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitRpc_decl([NotNull] FlatBuffersParser.Rpc_declContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="FlatBuffersParser.annotation_decl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAnnotation_decl([NotNull] FlatBuffersParser.Annotation_declContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="FlatBuffersParser.annotation_decl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAnnotation_decl([NotNull] FlatBuffersParser.Annotation_declContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.object"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -201,6 +191,36 @@ public interface IFlatBuffersListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitCommasep_annotation_decl([NotNull] FlatBuffersParser.Commasep_annotation_declContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.commasep_type_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterCommasep_type_annotation_decl([NotNull] FlatBuffersParser.Commasep_type_annotation_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.commasep_type_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitCommasep_type_annotation_decl([NotNull] FlatBuffersParser.Commasep_type_annotation_declContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.annotation_element_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAnnotation_element_decl([NotNull] FlatBuffersParser.Annotation_element_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.annotation_element_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAnnotation_element_decl([NotNull] FlatBuffersParser.Annotation_element_declContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.type_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterType_annotation_decl([NotNull] FlatBuffersParser.Type_annotation_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.type_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitType_annotation_decl([NotNull] FlatBuffersParser.Type_annotation_declContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.field_decl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -210,6 +230,16 @@ public interface IFlatBuffersListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitField_decl([NotNull] FlatBuffersParser.Field_declContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.field_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterField_annotation_decl([NotNull] FlatBuffersParser.Field_annotation_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.field_annotation_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitField_annotation_decl([NotNull] FlatBuffersParser.Field_annotation_declContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.rpc_method"/>.
 	/// </summary>

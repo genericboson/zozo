@@ -156,18 +156,6 @@ public partial class FlatBuffersBaseListener : IFlatBuffersListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRpc_decl([NotNull] FlatBuffersParser.Rpc_declContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="FlatBuffersParser.annotation_decl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAnnotation_decl([NotNull] FlatBuffersParser.Annotation_declContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="FlatBuffersParser.annotation_decl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAnnotation_decl([NotNull] FlatBuffersParser.Annotation_declContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.object"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -240,6 +228,42 @@ public partial class FlatBuffersBaseListener : IFlatBuffersListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCommasep_annotation_decl([NotNull] FlatBuffersParser.Commasep_annotation_declContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.commasep_type_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCommasep_type_annotation_decl([NotNull] FlatBuffersParser.Commasep_type_annotation_declContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.commasep_type_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCommasep_type_annotation_decl([NotNull] FlatBuffersParser.Commasep_type_annotation_declContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.annotation_element_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAnnotation_element_decl([NotNull] FlatBuffersParser.Annotation_element_declContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.annotation_element_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAnnotation_element_decl([NotNull] FlatBuffersParser.Annotation_element_declContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.type_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterType_annotation_decl([NotNull] FlatBuffersParser.Type_annotation_declContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.type_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitType_annotation_decl([NotNull] FlatBuffersParser.Type_annotation_declContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.field_decl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -251,6 +275,18 @@ public partial class FlatBuffersBaseListener : IFlatBuffersListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitField_decl([NotNull] FlatBuffersParser.Field_declContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FlatBuffersParser.field_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterField_annotation_decl([NotNull] FlatBuffersParser.Field_annotation_declContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FlatBuffersParser.field_annotation_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitField_annotation_decl([NotNull] FlatBuffersParser.Field_annotation_declContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="FlatBuffersParser.rpc_method"/>.
 	/// <para>The default implementation does nothing.</para>
