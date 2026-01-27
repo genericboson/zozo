@@ -1,6 +1,6 @@
 namespace GenericBoson.Zozo;
 
-table Character // idx_user_id_name(user_id)
+table Character // idx_user_id(user_id)
 {
     id : long; // PK, NotNull
     user_id : long;

@@ -1159,7 +1159,7 @@ public class FlatBuffersParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Commasep_type_annotation_declContext extends ParserRuleContext {
-		public List<Dictionary<string,List<string>>> output;
+		public Dictionary<string,List<string>> output;
 		public Annotation_element_declContext elementFirst;
 		public Annotation_element_declContext elementOther;
 		public List<Annotation_element_declContext> annotation_element_decl() {
@@ -1177,7 +1177,7 @@ public class FlatBuffersParser extends Parser {
 	public final Commasep_type_annotation_declContext commasep_type_annotation_decl() throws RecognitionException {
 		Commasep_type_annotation_declContext _localctx = new Commasep_type_annotation_declContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_commasep_type_annotation_decl);
-		 ((Commasep_type_annotation_declContext)_localctx).output =  new List<Dictionary<string,List<string>>>(); 
+		 ((Commasep_type_annotation_declContext)_localctx).output =  new Dictionary<string,List<string>>(); 
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1189,7 +1189,7 @@ public class FlatBuffersParser extends Parser {
 				{
 				setState(233);
 				((Commasep_type_annotation_declContext)_localctx).elementFirst = annotation_element_decl();
-				 _localctx.output.Add( ((Commasep_type_annotation_declContext)_localctx).elementFirst.output ); 
+				 _localctx.output.Add(((Commasep_type_annotation_declContext)_localctx).elementFirst.keyOutput,((Commasep_type_annotation_declContext)_localctx).elementFirst.valueOutput); 
 				setState(241);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -1200,7 +1200,7 @@ public class FlatBuffersParser extends Parser {
 					match(T__16);
 					setState(236);
 					((Commasep_type_annotation_declContext)_localctx).elementOther = annotation_element_decl();
-					 _localctx.output.Add( ((Commasep_type_annotation_declContext)_localctx).elementOther.output ); 
+					 _localctx.output.Add(((Commasep_type_annotation_declContext)_localctx).elementFirst.keyOutput,((Commasep_type_annotation_declContext)_localctx).elementFirst.valueOutput); 
 					}
 					}
 					setState(243);
@@ -1225,7 +1225,8 @@ public class FlatBuffersParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Annotation_element_declContext extends ParserRuleContext {
-		public Dictionary<string,List<string>> output;
+		public string keyOutput;
+		public List<string> valueOutput;
 		public Token identOne;
 		public Commasep_annotation_declContext commasepElemOne;
 		public TerminalNode Ident() { return getToken(FlatBuffersParser.Ident, 0); }
@@ -1241,7 +1242,7 @@ public class FlatBuffersParser extends Parser {
 	public final Annotation_element_declContext annotation_element_decl() throws RecognitionException {
 		Annotation_element_declContext _localctx = new Annotation_element_declContext(_ctx, getState());
 		enterRule(_localctx, 34, RULE_annotation_element_decl);
-		 ((Annotation_element_declContext)_localctx).output =  new Dictionary<string,List<string>>(); 
+		 ((Annotation_element_declContext)_localctx).valueOutput =  new List<string>(); 
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1252,7 +1253,8 @@ public class FlatBuffersParser extends Parser {
 			setState(248);
 			((Annotation_element_declContext)_localctx).commasepElemOne = commasep_annotation_decl();
 			 
-			        _localctx.output[(((Annotation_element_declContext)_localctx).identOne!=null?((Annotation_element_declContext)_localctx).identOne.getText():null)] = ((Annotation_element_declContext)_localctx).commasepElemOne.output;
+			        ((Annotation_element_declContext)_localctx).keyOutput =  (((Annotation_element_declContext)_localctx).identOne!=null?((Annotation_element_declContext)_localctx).identOne.getText():null);
+			        ((Annotation_element_declContext)_localctx).valueOutput =  ((Annotation_element_declContext)_localctx).commasepElemOne.output;
 			    
 			setState(250);
 			match(T__18);
@@ -1271,7 +1273,7 @@ public class FlatBuffersParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Type_annotation_declContext extends ParserRuleContext {
-		public List<Dictionary<string,List<string>>> output;
+		public Dictionary<string,List<string>> output;
 		public Commasep_type_annotation_declContext commasepTypeOne;
 		public Commasep_type_annotation_declContext commasep_type_annotation_decl() {
 			return getRuleContext(Commasep_type_annotation_declContext.class,0);

@@ -1326,7 +1326,7 @@ public partial class FlatBuffersParser : Parser {
 	}
 
 	public partial class Commasep_type_annotation_declContext : ParserRuleContext {
-		public List<Dictionary<string,List<string>>> output;
+		public Dictionary<string,List<string>> output;
 		public Annotation_element_declContext elementFirst;
 		public Annotation_element_declContext elementOther;
 		[System.Diagnostics.DebuggerNonUserCode] public Annotation_element_declContext[] annotation_element_decl() {
@@ -1356,7 +1356,7 @@ public partial class FlatBuffersParser : Parser {
 	public Commasep_type_annotation_declContext commasep_type_annotation_decl() {
 		Commasep_type_annotation_declContext _localctx = new Commasep_type_annotation_declContext(Context, State);
 		EnterRule(_localctx, 32, RULE_commasep_type_annotation_decl);
-		 _localctx.output =  new List<Dictionary<string,List<string>>>(); 
+		 _localctx.output =  new Dictionary<string,List<string>>(); 
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -1368,7 +1368,7 @@ public partial class FlatBuffersParser : Parser {
 				{
 				State = 233;
 				_localctx.elementFirst = annotation_element_decl();
-				 _localctx.output.Add( _localctx.elementFirst.output ); 
+				 _localctx.output.Add(_localctx.elementFirst.keyOutput,_localctx.elementFirst.valueOutput); 
 				State = 241;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
@@ -1379,7 +1379,7 @@ public partial class FlatBuffersParser : Parser {
 					Match(T__16);
 					State = 236;
 					_localctx.elementOther = annotation_element_decl();
-					 _localctx.output.Add( _localctx.elementOther.output ); 
+					 _localctx.output.Add(_localctx.elementFirst.keyOutput,_localctx.elementFirst.valueOutput); 
 					}
 					}
 					State = 243;
@@ -1403,7 +1403,8 @@ public partial class FlatBuffersParser : Parser {
 	}
 
 	public partial class Annotation_element_declContext : ParserRuleContext {
-		public Dictionary<string,List<string>> output;
+		public string keyOutput;
+		public List<string> valueOutput;
 		public IToken identOne;
 		public Commasep_annotation_declContext commasepElemOne;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Ident() { return GetToken(FlatBuffersParser.Ident, 0); }
@@ -1431,7 +1432,7 @@ public partial class FlatBuffersParser : Parser {
 	public Annotation_element_declContext annotation_element_decl() {
 		Annotation_element_declContext _localctx = new Annotation_element_declContext(Context, State);
 		EnterRule(_localctx, 34, RULE_annotation_element_decl);
-		 _localctx.output =  new Dictionary<string,List<string>>(); 
+		 _localctx.valueOutput =  new List<string>(); 
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
@@ -1442,7 +1443,8 @@ public partial class FlatBuffersParser : Parser {
 			State = 248;
 			_localctx.commasepElemOne = commasep_annotation_decl();
 			 
-			        _localctx.output[(_localctx.identOne!=null?_localctx.identOne.Text:null)] = _localctx.commasepElemOne.output;
+			        _localctx.keyOutput =  (_localctx.identOne!=null?_localctx.identOne.Text:null);
+			        _localctx.valueOutput =  _localctx.commasepElemOne.output;
 			    
 			State = 250;
 			Match(T__18);
@@ -1460,7 +1462,7 @@ public partial class FlatBuffersParser : Parser {
 	}
 
 	public partial class Type_annotation_declContext : ParserRuleContext {
-		public List<Dictionary<string,List<string>>> output;
+		public Dictionary<string,List<string>> output;
 		public Commasep_type_annotation_declContext commasepTypeOne;
 		[System.Diagnostics.DebuggerNonUserCode] public Commasep_type_annotation_declContext commasep_type_annotation_decl() {
 			return GetRuleContext<Commasep_type_annotation_declContext>(0);

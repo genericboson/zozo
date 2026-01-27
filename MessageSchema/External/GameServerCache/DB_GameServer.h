@@ -17,8 +17,8 @@ namespace GenericBoson::Zozo
         void GetLevel();
 
     private:
-        long m_id;
-        long m_user_id;
+        int64_t m_id;
+        int64_t m_user_id;
         std::string m_name;
         int32_t m_level;
     };

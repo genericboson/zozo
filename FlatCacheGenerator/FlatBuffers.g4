@@ -91,24 +91,25 @@ commasep_annotation_decl returns [ List<string> output ]
     ( ',' identOther = Ident { $output.Add( $identOther.text ); } )*)?
     ;
 
-commasep_type_annotation_decl returns [ List<Dictionary<string,List<string>>> output ]
-@init { $output = new List<Dictionary<string,List<string>>>(); }
-    : ( elementFirst = annotation_element_decl { $output.Add( $elementFirst.output ); } 
-    ( ',' elementOther = annotation_element_decl { $output.Add( $elementOther.output ); } )*)?
+commasep_type_annotation_decl returns [ Dictionary<string,List<string>> output ]
+@init { $output = new Dictionary<string,List<string>>(); }
+    : ( elementFirst = annotation_element_decl { $output.Add($elementFirst.keyOutput,$elementFirst.valueOutput); } 
+    ( ',' elementOther = annotation_element_decl { $output.Add($elementFirst.keyOutput,$elementFirst.valueOutput); } )*)?
     ;
 
 //-------------------------------------
 
-annotation_element_decl returns [ Dictionary<string,List<string>> output ]
-@init { $output = new Dictionary<string,List<string>>(); }
+annotation_element_decl returns [ string keyOutput, List<string> valueOutput ]
+@init { $valueOutput = new List<string>(); }
     : identOne = Ident '(' commasepElemOne = commasep_annotation_decl
     { 
-        $output[$identOne.text] = $commasepElemOne.output;
+        $keyOutput = $identOne.text;
+        $valueOutput = $commasepElemOne.output;
     } 
     ')'
     ;
 
-type_annotation_decl returns [ List<Dictionary<string,List<string>>> output ]
+type_annotation_decl returns [ Dictionary<string,List<string>> output ]
     : '//' commasepTypeOne = commasep_type_annotation_decl { $output = $commasepTypeOne.output; }
     ;
 

@@ -1,6 +1,7 @@
 using Antlr4.Runtime;
 using FlatCacheGenerator;
 using System;
+using System.Linq;
 using System.Text;
 
 class Program
@@ -166,11 +167,22 @@ class Program
             {
                 var primaryKey = "";
                 var indexes = new List<string>();
+                var indexQueryElements = new List<string>();
+                foreach (var index in typeOne.m_indexes)
+                {
+                    var keyOne = $"    KEY `{index.Key}` (";
+                    var keyElements = new List<string>();
+                    foreach(var keyElement in index.Value)
+                    {
+                        keyElements.Add($"`{keyElement}`");
+                    }
+                    indexQueryElements.Add($"{keyOne}{string.Join(',',keyElements)})");
+                }
 
-                sqlContent.AppendLine($"CREATE TABLE {typeOne.m_name.ToLower()} (");
+                var createQueryElements = new List<string>();
                 foreach (var field in typeOne.m_fields)
                 {
-                    sqlContent.AppendLine($"    {field.m_name} {ChangeToSqlType(field.m_type)}");
+                    createQueryElements.Add($"    `{field.m_name}` {ChangeToSqlType(field.m_type)}");
 
                     if (field.m_annotatedAttributes.Contains("PK"))
                     {
@@ -178,9 +190,15 @@ class Program
                     }
                 }
 
-                sqlContent.AppendLine($"    PRIMARY KEY('{primaryKey}')");
+                if (!string.IsNullOrEmpty(primaryKey))
+                    createQueryElements.Add($"    PRIMARY KEY(`{primaryKey}`)");
 
-                sqlContent.AppendLine(")");
+                if ( indexQueryElements.Any() )
+                    createQueryElements.AddRange(indexQueryElements);
+
+                sqlContent.AppendLine($"CREATE TABLE `{typeOne.m_name.ToLower()}` (");
+                sqlContent.AppendLine(string.Join(",\n", createQueryElements));
+                sqlContent.AppendLine(");");
                 sqlContent.AppendLine();
             }
 
