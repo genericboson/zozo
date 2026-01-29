@@ -4,6 +4,15 @@
 
 namespace GenericBoson::Zozo
 {
+    enum class CHARACTER
+    {
+        ID = 0,
+        USER_ID = 1,
+        NAME = 2,
+        LEVEL = 3,
+        MAX
+    };
+
     class CharacterCache : private CharacterT
     {
     public:
@@ -21,5 +30,15 @@ namespace GenericBoson::Zozo
         int64_t m_user_id;
         std::string m_name;
         int32_t m_level;
+
+        std::vector<std::string> m_names = 
+        {
+            "id",
+            "user_id",
+            "name",
+            "level"
+        };
+
+        bool m_flags[4] = { false, };
     };
 }

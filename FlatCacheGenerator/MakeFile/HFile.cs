@@ -22,6 +22,20 @@ namespace FlatCacheGenerator
 
             foreach (var typeOne in SC.tree.m_types)
             {
+                hContent.AppendLine($"    enum class {typeOne.m_name.ToUpper()}");
+                hContent.AppendLine("    {");
+                int count = 0;
+                foreach (var field in typeOne.m_fields)
+                {
+                    hContent.AppendLine($"        {field.m_name.ToUpper()} = {count++},");
+                }
+                hContent.AppendLine($"        MAX");
+                hContent.AppendLine("    };");
+                hContent.AppendLine();
+            }
+
+            foreach (var typeOne in SC.tree.m_types)
+            {
                 hContent.AppendLine($"    class {typeOne.m_name}Cache : private {typeOne.m_name}T");
                 hContent.AppendLine("    {");
                 hContent.AppendLine("    public:");
@@ -36,6 +50,21 @@ namespace FlatCacheGenerator
                 {
                     hContent.AppendLine($"        {SC.ChangeToCppType(field.m_type)} m_{field.m_name};");
                 }
+
+                var names = new List<string>();
+                foreach (var field in typeOne.m_fields)
+                {
+                    names.Add($"\"{field.m_name}\"");
+                }
+
+                hContent.AppendLine();
+                hContent.AppendLine("        std::vector<std::string> m_names = ");
+                hContent.AppendLine("        {");
+                hContent.AppendLine($"            {string.Join(",\n            ", names)}");
+                hContent.AppendLine("        };");
+                hContent.AppendLine();
+                hContent.AppendLine($"        bool m_flags[{typeOne.m_fields.Count}] = {{ false, }};");
+
                 hContent.AppendLine("    };");
             }
 

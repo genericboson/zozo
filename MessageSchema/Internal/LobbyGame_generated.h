@@ -39,16 +39,6 @@ struct LobbyGameMessage;
 struct LobbyGameMessageBuilder;
 struct LobbyGameMessageT;
 
-inline const ::flatbuffers::TypeTable *RegisterReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *RegisterAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *AuthRelayReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *AuthRelayAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *LobbyGameMessageTypeTable();
-
 enum LobbyGamePayload : uint8_t {
   LobbyGamePayload_NONE = 0,
   LobbyGamePayload_RegisterReq = 1,
@@ -203,9 +193,6 @@ struct RegisterReqT : public ::flatbuffers::NativeTable {
 struct RegisterReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RegisterReqT NativeTableType;
   typedef RegisterReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return RegisterReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_SERVER_ID = 4
   };
@@ -266,9 +253,6 @@ struct RegisterAckT : public ::flatbuffers::NativeTable {
 struct RegisterAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RegisterAckT NativeTableType;
   typedef RegisterAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return RegisterAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_DB_IP = 6,
@@ -436,9 +420,6 @@ struct AuthRelayReqT : public ::flatbuffers::NativeTable {
 struct AuthRelayReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthRelayReqT NativeTableType;
   typedef AuthRelayReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return AuthRelayReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_USER_ID = 4,
     VT_TOKEN = 6
@@ -513,9 +494,6 @@ struct AuthRelayAckT : public ::flatbuffers::NativeTable {
 struct AuthRelayAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AuthRelayAckT NativeTableType;
   typedef AuthRelayAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return AuthRelayAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4
   };
@@ -568,9 +546,6 @@ struct LobbyGameMessageT : public ::flatbuffers::NativeTable {
 struct LobbyGameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LobbyGameMessageT NativeTableType;
   typedef LobbyGameMessageBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return LobbyGameMessageTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
     VT_PAYLOAD = 6
@@ -947,127 +922,6 @@ inline void LobbyGamePayloadUnion::Reset() {
   }
   value = nullptr;
   type = LobbyGamePayload_NONE;
-}
-
-inline const ::flatbuffers::TypeTable *LobbyGamePayloadTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_SEQUENCE, 0, -1 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 1 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 2 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 3 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::RegisterReqTypeTable,
-    GenericBoson::Zozo::RegisterAckTypeTable,
-    GenericBoson::Zozo::AuthRelayReqTypeTable,
-    GenericBoson::Zozo::AuthRelayAckTypeTable
-  };
-  static const char * const names[] = {
-    "NONE",
-    "RegisterReq",
-    "RegisterAck",
-    "AuthRelayReq",
-    "AuthRelayAck"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_UNION, 5, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *RegisterReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_INT, 0, -1 }
-  };
-  static const char * const names[] = {
-    "server_id"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 1, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *RegisterAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_INT, 0, -1 },
-    { ::flatbuffers::ET_INT, 0, -1 },
-    { ::flatbuffers::ET_INT, 0, -1 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable
-  };
-  static const char * const names[] = {
-    "result_code",
-    "db_ip",
-    "db_acount",
-    "db_password",
-    "db_main_schema",
-    "server_name",
-    "db_port",
-    "listen_port",
-    "server_id"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 9, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *AuthRelayReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_INT, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 }
-  };
-  static const char * const names[] = {
-    "user_id",
-    "token"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *AuthRelayAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable
-  };
-  static const char * const names[] = {
-    "result_code"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *LobbyGameMessageTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UTYPE, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 0 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::LobbyGamePayloadTypeTable
-  };
-  static const char * const names[] = {
-    "payload_type",
-    "payload"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
 }
 
 inline const GenericBoson::Zozo::LobbyGameMessage *GetLobbyGameMessage(const void *buf) {

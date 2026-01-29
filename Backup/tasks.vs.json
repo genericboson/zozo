@@ -7,9 +7,9 @@
       "type": "launch",
       "contextType": "custom",
       "command": "flatc.exe",
-      "args": [ "--cpp", "-o ${fileDirname}", "${file}", "--gen-object-api", "--reflect-names" ]
+      "args": [ "--cpp", "-o ${fileDirname}", "-I ${fileDirname}/../Common", "${file}", "--gen-object-api" ]
     },
-	{
+    {
       "taskLabel": "execute-batch",
       "appliesTo": "*.bat",
       "type": "launch",

@@ -5,5 +5,5 @@ CREATE TABLE `character` (
     `level` INT,
     PRIMARY KEY(`id`),
     KEY `idx_user_id` (`user_id`)
-)
+);
 

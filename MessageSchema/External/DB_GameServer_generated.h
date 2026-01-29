@@ -20,8 +20,6 @@ struct Character;
 struct CharacterBuilder;
 struct CharacterT;
 
-inline const ::flatbuffers::TypeTable *CharacterTypeTable();
-
 struct CharacterT : public ::flatbuffers::NativeTable {
   typedef Character TableType;
   int64_t id = 0;
@@ -33,9 +31,6 @@ struct CharacterT : public ::flatbuffers::NativeTable {
 struct Character FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterT NativeTableType;
   typedef CharacterBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_USER_ID = 6,
@@ -159,25 +154,6 @@ inline ::flatbuffers::Offset<Character> CreateCharacter(::flatbuffers::FlatBuffe
       _user_id,
       _name,
       _level);
-}
-
-inline const ::flatbuffers::TypeTable *CharacterTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_LONG, 0, -1 },
-    { ::flatbuffers::ET_LONG, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 },
-    { ::flatbuffers::ET_INT, 0, -1 }
-  };
-  static const char * const names[] = {
-    "id",
-    "user_id",
-    "name",
-    "level"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 4, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
 }
 
 }  // namespace Zozo

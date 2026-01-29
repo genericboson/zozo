@@ -59,26 +59,6 @@ struct GameMessage;
 struct GameMessageBuilder;
 struct GameMessageT;
 
-inline const ::flatbuffers::TypeTable *CharacterListReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterPairDataTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterListAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterSelectReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterSelectAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterCreateReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterCreateAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterPositionUpdateReqTypeTable();
-
-inline const ::flatbuffers::TypeTable *CharacterPositionUpdateAckTypeTable();
-
-inline const ::flatbuffers::TypeTable *GameMessageTypeTable();
-
 enum GamePayload : uint8_t {
   GamePayload_NONE = 0,
   GamePayload_CharacterListReq = 1,
@@ -310,9 +290,6 @@ struct CharacterListReqT : public ::flatbuffers::NativeTable {
 struct CharacterListReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterListReqT NativeTableType;
   typedef CharacterListReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterListReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_USER_ID = 4,
     VT_TOKEN = 6
@@ -388,9 +365,6 @@ struct CharacterPairDataT : public ::flatbuffers::NativeTable {
 struct CharacterPairData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterPairDataT NativeTableType;
   typedef CharacterPairDataBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterPairDataTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_NAME = 6
@@ -470,9 +444,6 @@ struct CharacterListAckT : public ::flatbuffers::NativeTable {
 struct CharacterListAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterListAckT NativeTableType;
   typedef CharacterListAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterListAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_CHARACTER_PAIR_DATAS = 6
@@ -549,9 +520,6 @@ struct CharacterSelectReqT : public ::flatbuffers::NativeTable {
 struct CharacterSelectReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterSelectReqT NativeTableType;
   typedef CharacterSelectReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterSelectReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_TOKEN = 6
@@ -631,9 +599,6 @@ struct CharacterSelectAckT : public ::flatbuffers::NativeTable {
 struct CharacterSelectAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterSelectAckT NativeTableType;
   typedef CharacterSelectAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterSelectAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4,
     VT_DATA = 6
@@ -697,9 +662,6 @@ struct CharacterCreateReqT : public ::flatbuffers::NativeTable {
 struct CharacterCreateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterCreateReqT NativeTableType;
   typedef CharacterCreateReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterCreateReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4
   };
@@ -762,9 +724,6 @@ struct CharacterCreateAckT : public ::flatbuffers::NativeTable {
 struct CharacterCreateAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterCreateAckT NativeTableType;
   typedef CharacterCreateAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterCreateAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4
   };
@@ -824,9 +783,6 @@ struct CharacterPositionUpdateReqT : public ::flatbuffers::NativeTable {
 struct CharacterPositionUpdateReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterPositionUpdateReqT NativeTableType;
   typedef CharacterPositionUpdateReqBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterPositionUpdateReqTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_DIRECTION = 6,
@@ -909,9 +865,6 @@ struct CharacterPositionUpdateAckT : public ::flatbuffers::NativeTable {
 struct CharacterPositionUpdateAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CharacterPositionUpdateAckT NativeTableType;
   typedef CharacterPositionUpdateAckBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CharacterPositionUpdateAckTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT_CODE = 4
   };
@@ -964,9 +917,6 @@ struct GameMessageT : public ::flatbuffers::NativeTable {
 struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GameMessageT NativeTableType;
   typedef GameMessageBuilder Builder;
-  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return GameMessageTypeTable();
-  }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_PAYLOAD_TYPE = 4,
     VT_PAYLOAD = 6
@@ -1620,214 +1570,6 @@ inline void GamePayloadUnion::Reset() {
   }
   value = nullptr;
   type = GamePayload_NONE;
-}
-
-inline const ::flatbuffers::TypeTable *GamePayloadTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_SEQUENCE, 0, -1 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 1 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 2 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 3 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 4 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 5 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 6 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 7 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::CharacterListReqTypeTable,
-    GenericBoson::Zozo::CharacterListAckTypeTable,
-    GenericBoson::Zozo::CharacterSelectReqTypeTable,
-    GenericBoson::Zozo::CharacterSelectAckTypeTable,
-    GenericBoson::Zozo::CharacterPositionUpdateReqTypeTable,
-    GenericBoson::Zozo::CharacterPositionUpdateAckTypeTable,
-    GenericBoson::Zozo::CharacterCreateReqTypeTable,
-    GenericBoson::Zozo::CharacterCreateAckTypeTable
-  };
-  static const char * const names[] = {
-    "NONE",
-    "CharacterListReq",
-    "CharacterListAck",
-    "CharacterSelectReq",
-    "CharacterSelectAck",
-    "CharacterPositionUpdateReq",
-    "CharacterPositionUpdateAck",
-    "CharacterCreateReq",
-    "CharacterCreateAck"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_UNION, 9, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterListReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_LONG, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 }
-  };
-  static const char * const names[] = {
-    "user_id",
-    "token"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterPairDataTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_LONG, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 }
-  };
-  static const char * const names[] = {
-    "id",
-    "name"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterListAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 1, 1 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable,
-    GenericBoson::Zozo::CharacterPairDataTypeTable
-  };
-  static const char * const names[] = {
-    "result_code",
-    "character_pair_datas"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterSelectReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_LONG, 0, -1 },
-    { ::flatbuffers::ET_STRING, 0, -1 }
-  };
-  static const char * const names[] = {
-    "id",
-    "token"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterSelectAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 1 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable,
-    GenericBoson::Zozo::CharacterInfoTypeTable
-  };
-  static const char * const names[] = {
-    "result_code",
-    "data"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterCreateReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_STRING, 0, -1 }
-  };
-  static const char * const names[] = {
-    "name"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 1, type_codes, nullptr, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterCreateAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable
-  };
-  static const char * const names[] = {
-    "result_code"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterPositionUpdateReqTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_INT, 0, -1 },
-    { ::flatbuffers::ET_CHAR, 0, 0 },
-    { ::flatbuffers::ET_BOOL, 0, -1 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 1 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::DirectionTypeTable,
-    GenericBoson::Zozo::Vector2FTypeTable
-  };
-  static const char * const names[] = {
-    "id",
-    "direction",
-    "is_moved",
-    "position"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 4, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *CharacterPositionUpdateAckTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UINT, 0, 0 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::ResultCodeTypeTable
-  };
-  static const char * const names[] = {
-    "result_code"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
-}
-
-inline const ::flatbuffers::TypeTable *GameMessageTypeTable() {
-  static const ::flatbuffers::TypeCode type_codes[] = {
-    { ::flatbuffers::ET_UTYPE, 0, 0 },
-    { ::flatbuffers::ET_SEQUENCE, 0, 0 }
-  };
-  static const ::flatbuffers::TypeFunction type_refs[] = {
-    GenericBoson::Zozo::GamePayloadTypeTable
-  };
-  static const char * const names[] = {
-    "payload_type",
-    "payload"
-  };
-  static const ::flatbuffers::TypeTable tt = {
-    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
-  };
-  return &tt;
 }
 
 inline const GenericBoson::Zozo::GameMessage *GetGameMessage(const void *buf) {
