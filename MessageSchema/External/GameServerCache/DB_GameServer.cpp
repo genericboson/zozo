@@ -4,28 +4,40 @@
 
 namespace GenericBoson::Zozo
 {
-    void CharacterCache::SetId()
+    void CharacterCache::SetId(const int64_t& param)
     {
+        m_id = param;
+        m_flags[CHARACTER::ID] = true;
     }
-    void CharacterCache::GetId()
+    const int64_t& CharacterCache::GetId()
     {
+        return m_id;
     }
-    void CharacterCache::SetUser_id()
+    void CharacterCache::SetUser_id(const int64_t& param)
     {
+        m_user_id = param;
+        m_flags[CHARACTER::USER_ID] = true;
     }
-    void CharacterCache::GetUser_id()
+    const int64_t& CharacterCache::GetUser_id()
     {
+        return m_user_id;
     }
-    void CharacterCache::SetName()
+    void CharacterCache::SetName(const std::string& param)
     {
+        m_name = param;
+        m_flags[CHARACTER::NAME] = true;
     }
-    void CharacterCache::GetName()
+    const std::string& CharacterCache::GetName()
     {
+        return m_name;
     }
-    void CharacterCache::SetLevel()
+    void CharacterCache::SetLevel(const int32_t& param)
     {
+        m_level = param;
+        m_flags[CHARACTER::LEVEL] = true;
     }
-    void CharacterCache::GetLevel()
+    const int32_t& CharacterCache::GetLevel()
     {
+        return m_level;
     }
 }

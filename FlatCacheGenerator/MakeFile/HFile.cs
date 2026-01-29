@@ -22,7 +22,7 @@ namespace FlatCacheGenerator
 
             foreach (var typeOne in SC.tree.m_types)
             {
-                hContent.AppendLine($"    enum class {typeOne.m_name.ToUpper()}");
+                hContent.AppendLine($"    enum {typeOne.m_name.ToUpper()}");
                 hContent.AppendLine("    {");
                 int count = 0;
                 foreach (var field in typeOne.m_fields)
@@ -41,10 +41,10 @@ namespace FlatCacheGenerator
                 hContent.AppendLine("    public:");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        void Set{SC.GetFunctionName(field.m_name)}();");
-                    hContent.AppendLine($"        void Get{SC.GetFunctionName(field.m_name)}();");
+                    hContent.AppendLine($"        void Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param);");
+                    hContent.AppendLine($"        const {SC.ChangeToCppType(field.m_type)}& Get{SC.GetFunctionName(field.m_name)}();");
+                    hContent.AppendLine();
                 }
-                hContent.AppendLine();
                 hContent.AppendLine("    private:");
                 foreach (var field in typeOne.m_fields)
                 {

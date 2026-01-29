@@ -4,7 +4,7 @@
 
 namespace GenericBoson::Zozo
 {
-    enum class CHARACTER
+    enum CHARACTER
     {
         ID = 0,
         USER_ID = 1,
@@ -16,14 +16,17 @@ namespace GenericBoson::Zozo
     class CharacterCache : private CharacterT
     {
     public:
-        void SetId();
-        void GetId();
-        void SetUser_id();
-        void GetUser_id();
-        void SetName();
-        void GetName();
-        void SetLevel();
-        void GetLevel();
+        void SetId(const int64_t& param);
+        const int64_t& GetId();
+
+        void SetUser_id(const int64_t& param);
+        const int64_t& GetUser_id();
+
+        void SetName(const std::string& param);
+        const std::string& GetName();
+
+        void SetLevel(const int32_t& param);
+        const int32_t& GetLevel();
 
     private:
         int64_t m_id;
