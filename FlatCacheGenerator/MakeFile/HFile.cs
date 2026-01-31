@@ -17,6 +17,8 @@ namespace FlatCacheGenerator
             hContent.AppendLine();
             hContent.AppendLine($"#include \"{Path.Combine(SC.pathOnly, $"{SC.fileNameOnly}_generated.h")}\"");
             hContent.AppendLine();
+            hContent.AppendLine("#include <Engine/Tx/CacheObject.h>");
+            hContent.AppendLine();
             hContent.AppendLine($"namespace {string.Join("::", SC.tree.m_namespaces)}");
             hContent.AppendLine("{");
 
@@ -36,7 +38,9 @@ namespace FlatCacheGenerator
 
             foreach (var typeOne in SC.tree.m_types)
             {
-                hContent.AppendLine($"    class {typeOne.m_name}Cache : private {typeOne.m_name}T");
+                hContent.AppendLine($"    class {typeOne.m_name}Cache : ");
+                hContent.AppendLine($"        public CacheObject,");
+                hContent.AppendLine($"        private {typeOne.m_name}T");
                 hContent.AppendLine("    {");
                 hContent.AppendLine("    public:");
                 foreach (var field in typeOne.m_fields)
@@ -46,10 +50,6 @@ namespace FlatCacheGenerator
                     hContent.AppendLine();
                 }
                 hContent.AppendLine("    private:");
-                foreach (var field in typeOne.m_fields)
-                {
-                    hContent.AppendLine($"        {SC.ChangeToCppType(field.m_type)} m_{field.m_name};");
-                }
 
                 var names = new List<string>();
                 foreach (var field in typeOne.m_fields)

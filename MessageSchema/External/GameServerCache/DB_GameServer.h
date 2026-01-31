@@ -2,6 +2,8 @@
 
 #include "D:\projects\zozo\MessageSchema\External\DB_GameServer_generated.h"
 
+#include <Engine/Tx/CacheObject.h>
+
 namespace GenericBoson::Zozo
 {
     enum CHARACTER
@@ -13,7 +15,9 @@ namespace GenericBoson::Zozo
         MAX
     };
 
-    class CharacterCache : private CharacterT
+    class CharacterCache : 
+        public CacheObject,
+        private CharacterT
     {
     public:
         void SetId(const int64_t& param);
@@ -29,10 +33,6 @@ namespace GenericBoson::Zozo
         const int32_t& GetLevel();
 
     private:
-        int64_t m_id;
-        int64_t m_user_id;
-        std::string m_name;
-        int32_t m_level;
 
         std::vector<std::string> m_names = 
         {
