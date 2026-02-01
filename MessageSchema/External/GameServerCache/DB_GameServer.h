@@ -32,6 +32,8 @@ namespace GenericBoson::Zozo
         void SetLevel(const int32_t& param);
         const int32_t& GetLevel();
 
+    protected:
+        auto GetNames() -> const std::vector<std::string>& override;
     private:
 
         std::vector<std::string> m_names = 

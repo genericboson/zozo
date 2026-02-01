@@ -26,14 +26,19 @@ namespace FlatCacheGenerator
                 {
                     cppContent.AppendLine($"    void {typeOne.m_name}Cache::Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param)");
                     cppContent.AppendLine("    {");
-                    cppContent.AppendLine($"        m_{field.m_name} = param;");
+                    cppContent.AppendLine($"        {typeOne.m_name}T::{field.m_name} = param;");
                     cppContent.AppendLine($"        m_flags[{typeOne.m_name.ToUpper()}::{field.m_name.ToUpper()}] = true;");
                     cppContent.AppendLine("    }");
 
                     cppContent.AppendLine($"    const {SC.ChangeToCppType(field.m_type)}& {typeOne.m_name}Cache::Get{SC.GetFunctionName(field.m_name)}()");
                     cppContent.AppendLine("    {");
-                    cppContent.AppendLine($"        return m_{field.m_name};");
+                    cppContent.AppendLine($"        return {typeOne.m_name}T::{field.m_name};");
                     cppContent.AppendLine("    }");
+
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetNames() -> const std::vector<std::string>&");
+                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine("        return m_names;");
+                    cppContent.AppendLine("    };");
                 }
             }
 

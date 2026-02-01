@@ -6,38 +6,54 @@ namespace GenericBoson::Zozo
 {
     void CharacterCache::SetId(const int64_t& param)
     {
-        m_id = param;
+        CharacterT::id = param;
         m_flags[CHARACTER::ID] = true;
     }
     const int64_t& CharacterCache::GetId()
     {
-        return m_id;
+        return CharacterT::id;
     }
+    auto CharacterCache::GetNames() -> const std::vector<std::string>&
+    {
+        return m_names;
+    };
     void CharacterCache::SetUser_id(const int64_t& param)
     {
-        m_user_id = param;
+        CharacterT::user_id = param;
         m_flags[CHARACTER::USER_ID] = true;
     }
     const int64_t& CharacterCache::GetUser_id()
     {
-        return m_user_id;
+        return CharacterT::user_id;
     }
+    auto CharacterCache::GetNames() -> const std::vector<std::string>&
+    {
+        return m_names;
+    };
     void CharacterCache::SetName(const std::string& param)
     {
-        m_name = param;
+        CharacterT::name = param;
         m_flags[CHARACTER::NAME] = true;
     }
     const std::string& CharacterCache::GetName()
     {
-        return m_name;
+        return CharacterT::name;
     }
+    auto CharacterCache::GetNames() -> const std::vector<std::string>&
+    {
+        return m_names;
+    };
     void CharacterCache::SetLevel(const int32_t& param)
     {
-        m_level = param;
+        CharacterT::level = param;
         m_flags[CHARACTER::LEVEL] = true;
     }
     const int32_t& CharacterCache::GetLevel()
     {
-        return m_level;
+        return CharacterT::level;
     }
+    auto CharacterCache::GetNames() -> const std::vector<std::string>&
+    {
+        return m_names;
+    };
 }

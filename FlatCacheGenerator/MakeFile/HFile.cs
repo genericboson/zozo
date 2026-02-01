@@ -49,6 +49,8 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"        const {SC.ChangeToCppType(field.m_type)}& Get{SC.GetFunctionName(field.m_name)}();");
                     hContent.AppendLine();
                 }
+                hContent.AppendLine("    protected:");
+                hContent.AppendLine("        auto GetNames() -> const std::vector<std::string>& override;");
                 hContent.AppendLine("    private:");
 
                 var names = new List<string>();
