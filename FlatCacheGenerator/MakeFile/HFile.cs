@@ -50,7 +50,8 @@ namespace FlatCacheGenerator
                     hContent.AppendLine();
                 }
                 hContent.AppendLine("    protected:");
-                hContent.AppendLine("        auto GetNames() -> const std::vector<std::string>& override;");
+                hContent.AppendLine("        auto GetObjectName() -> const std::string& override;");
+                hContent.AppendLine("        auto GetFieldNames() -> const std::vector<std::string>& override;");
                 hContent.AppendLine("    private:");
 
                 var names = new List<string>();

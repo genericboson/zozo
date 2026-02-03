@@ -15,6 +15,7 @@ namespace GenericBoson
 		std::string GetQuery( const QueryType queryType );
 
 	protected:
-		virtual auto GetNames() -> const std::vector<std::string> & = 0;
+		virtual auto GetObjectName() -> const std::string & override     = 0;
+		virtual auto GetFieldNames() -> const std::vector<std::string> & = 0;
 	};
 }
