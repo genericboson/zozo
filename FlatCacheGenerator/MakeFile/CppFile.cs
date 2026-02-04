@@ -29,16 +29,31 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine($"        {typeOne.m_name}T::{field.m_name} = param;");
                     cppContent.AppendLine($"        m_flags[{typeOne.m_name.ToUpper()}::{field.m_name.ToUpper()}] = true;");
                     cppContent.AppendLine("    }");
+                    cppContent.AppendLine();
 
                     cppContent.AppendLine($"    const {SC.ChangeToCppType(field.m_type)}& {typeOne.m_name}Cache::Get{SC.GetFunctionName(field.m_name)}()");
                     cppContent.AppendLine("    {");
                     cppContent.AppendLine($"        return {typeOne.m_name}T::{field.m_name};");
                     cppContent.AppendLine("    }");
+                    cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetNames() -> const std::vector<std::string>&");
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetFieldNames() -> const std::vector<std::string>&");
                     cppContent.AppendLine("    {");
                     cppContent.AppendLine("        return m_names;");
                     cppContent.AppendLine("    };");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetObjectName() -> const std::vector<std::string>&");
+                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine($"        return {typeOne.m_name};");
+                    cppContent.AppendLine("    };");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::IsFlagged() -> bool");
+                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine($"        return m_flags;");
+                    cppContent.AppendLine("    };");
+                    cppContent.AppendLine();
                 }
             }
 
