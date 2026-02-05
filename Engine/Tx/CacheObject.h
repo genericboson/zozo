@@ -17,6 +17,6 @@ namespace GenericBoson
 	protected:
 		virtual auto GetObjectName() -> const std::string &              = 0;
 		virtual auto GetFieldNames() -> const std::vector<std::string> & = 0;
-		virtual auto IsFlagged()      -> bool                             = 0;
+		virtual auto IsFlagged()     -> bool                             = 0;
 	};
 }
