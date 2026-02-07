@@ -33,7 +33,9 @@ namespace GenericBoson::Zozo
         const int32_t& GetLevel();
 
     protected:
-        auto GetNames() -> const std::vector<std::string>& override;
+        auto GetObjectName() -> const std::string&              override;
+        auto GetFieldNames() -> const std::vector<std::string>& override;
+        bool IsFlagged(const int64_t field)  override;
     private:
 
         std::vector<std::string> m_names = 

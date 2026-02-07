@@ -49,7 +49,7 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine("    };");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::IsFlagged(const {typeOne.m_name.ToUpper()} field)");
+                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::IsFlagged(const int64_t field)");
                     cppContent.AppendLine("    {");
                     cppContent.AppendLine($"        return m_flags[field];");
                     cppContent.AppendLine("    };");
