@@ -45,14 +45,20 @@ namespace FlatCacheGenerator
                 hContent.AppendLine("    public:");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        void Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param);");
-                    hContent.AppendLine($"        const {SC.ChangeToCppType(field.m_type)}& Get{SC.GetFunctionName(field.m_name)}();");
+                    hContent.AppendLine($"        class {SC.GetFunctionName(field.m_name)} : public CacheField");
+                    hContent.AppendLine( "        {");
+                    hContent.AppendLine( "        public:");
+                    hContent.AppendLine($"            void Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param);");
+                    hContent.AppendLine($"            const {SC.ChangeToCppType(field.m_type)}& Get{SC.GetFunctionName(field.m_name)}();");
+                    hContent.AppendLine( "            bool IsFlagged()  override;");
+                    hContent.AppendLine( "        private:");
+                    hContent.AppendLine( "            bool m_flag = false;");
+                    hContent.AppendLine( "        }");
                     hContent.AppendLine();
                 }
                 hContent.AppendLine("    protected:");
                 hContent.AppendLine( "        auto GetObjectName() -> const std::string&              override;");
                 hContent.AppendLine( "        auto GetFieldNames() -> const std::vector<std::string>& override;");
-                hContent.AppendLine($"        bool IsFlagged(const int64_t field)  override;");
                 hContent.AppendLine("    private:");
 
                 var names = new List<string>();
@@ -67,7 +73,7 @@ namespace FlatCacheGenerator
                 hContent.AppendLine($"            {string.Join(",\n            ", names)}");
                 hContent.AppendLine("        };");
                 hContent.AppendLine();
-                hContent.AppendLine($"        bool m_flags[{typeOne.m_fields.Count}] = {{ false, }};");
+                hContent.AppendLine( $"        std::unordered_map<int64_t, std::shared_ptr<CacheField>> m_fields;");
 
                 hContent.AppendLine("    };");
             }

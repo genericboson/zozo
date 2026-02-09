@@ -1,5 +1,7 @@
 #include "PCH.h"
 
+#include <format>
+
 #include "boost/algorithm/string/join.hpp"
 
 #include "CacheObject.h"
@@ -13,24 +15,14 @@ namespace GenericBoson
 		{
 		case QueryType::INSERT:
 		{
-			std::vector<std::string> names;
-			names.reserve(GetFieldNames().size());
+			const auto& flaggeds = boost::algorithm::join_if(GetFieldNames(), ",", []() {
+					return 
+				});
 
-			query = "INSERT INTO TableName (";
-			for (const auto& name : GetFieldNames())
-			{
-				if(name.)
-
-				query += name + ", ";
-			}
-			query = query.substr(0, query.size() - 2); // Remove last comma
-			query += ") VALUES (";
-			for (size_t i = 0; i < GetNames().size(); ++i)
-			{
-				query += "?, ";
-			}
-			query = query.substr(0, query.size() - 2); // Remove last comma
-			query += ");";
+			query = std::format("INSERT INTO {} ({}) VALUES ({});", 
+				GetObjectName(), 
+				flaggeds, ","), 
+				"");
 		}
 			break;
 		case QueryType::UPDATE:

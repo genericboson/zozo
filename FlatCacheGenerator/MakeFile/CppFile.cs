@@ -25,34 +25,34 @@ namespace FlatCacheGenerator
                 foreach (var field in typeOne.m_fields)
                 {
                     cppContent.AppendLine($"    void {typeOne.m_name}Cache::Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param)");
-                    cppContent.AppendLine("    {");
-                    cppContent.AppendLine($"        {typeOne.m_name}T::{field.m_name} = param;");
-                    cppContent.AppendLine($"        m_flags[{typeOne.m_name.ToUpper()}::{field.m_name.ToUpper()}] = true;");
-                    cppContent.AppendLine("    }");
+                    cppContent.AppendLine( "    {");
+                    cppContent.AppendLine( $"        {typeOne.m_name}T::{field.m_name} = param;");
+                    cppContent.AppendLine( $"        m_flags = true;");
+                    cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
                     cppContent.AppendLine($"    const {SC.ChangeToCppType(field.m_type)}& {typeOne.m_name}Cache::Get{SC.GetFunctionName(field.m_name)}()");
-                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return {typeOne.m_name}T::{field.m_name};");
-                    cppContent.AppendLine("    }");
+                    cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
                     cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetFieldNames() -> const std::vector<std::string>&");
-                    cppContent.AppendLine("    {");
-                    cppContent.AppendLine("        return m_names;");
-                    cppContent.AppendLine("    };");
+                    cppContent.AppendLine( "    {");
+                    cppContent.AppendLine( "        return m_names;");
+                    cppContent.AppendLine( "    };");
                     cppContent.AppendLine();
 
                     cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetObjectName() -> const std::vector<std::string>&");
-                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return {typeOne.m_name};");
-                    cppContent.AppendLine("    };");
+                    cppContent.AppendLine( "    };");
                     cppContent.AppendLine();
 
                     cppContent.AppendLine($"    bool {typeOne.m_name}Cache::IsFlagged(const int64_t field)");
-                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return m_flags[field];");
-                    cppContent.AppendLine("    };");
+                    cppContent.AppendLine( "    };");
                     cppContent.AppendLine();
                 }
             }
