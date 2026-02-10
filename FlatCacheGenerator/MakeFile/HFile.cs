@@ -58,6 +58,7 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"            {SC.GetFunctionName(field.m_name)}({typeOne.m_name}Cache& owner);");
                     hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
+                    hContent.AppendLine( "            std::string GetName() const;");
                     hContent.AppendLine( "            bool IsFlagged() const override;");
                     hContent.AppendLine( "        private:");
                     hContent.AppendLine($"            {typeOne.m_name}Cache& m_owner;");

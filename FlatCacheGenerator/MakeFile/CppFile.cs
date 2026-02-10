@@ -53,6 +53,13 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::GetName() const");
+                    cppContent.AppendLine($"        -> std::string");
+                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine($"        return \"{field.m_name}\";");
+                    cppContent.AppendLine("    }");
+                    cppContent.AppendLine();
+
                     cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::IsFlagged() const");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return m_flag;");

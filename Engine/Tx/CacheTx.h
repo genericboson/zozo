@@ -14,12 +14,12 @@ namespace GenericBoson
 	public:
 		static std::shared_ptr<CacheTx> Create();
 	private:
-		int32_t                      m_id;
-		CacheTxOption                m_option;
-		std::list< CacheObject >     m_objects;
-		CacheTxState                 m_state;
+		int32_t                               m_id;
+		CacheTxOption                         m_option;
+		std::list<std::weak_ptr<CacheObject>> m_objects;
+		CacheTxState                          m_state;
 
-		std::list< CacheTxCallback > m_callbacks;
-		std::weak_ptr< TxExecutor >  m_wpExecutor;
+		std::list< CacheTxCallback >          m_callbacks;
+		std::weak_ptr< TxExecutor >           m_wpExecutor;
 	};
 }

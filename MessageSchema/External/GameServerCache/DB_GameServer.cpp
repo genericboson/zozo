@@ -29,6 +29,12 @@ namespace GenericBoson::Zozo
         return m_owner.CharacterT::id;
     }
 
+    auto CharacterCache::Id::GetName() const
+        -> std::string
+    {
+        return "id";
+    }
+
     bool CharacterCache::Id::IsFlagged() const
     {
         return m_flag;
@@ -49,6 +55,12 @@ namespace GenericBoson::Zozo
         -> const int64_t&
     {
         return m_owner.CharacterT::user_id;
+    }
+
+    auto CharacterCache::User_id::GetName() const
+        -> std::string
+    {
+        return "user_id";
     }
 
     bool CharacterCache::User_id::IsFlagged() const
@@ -73,6 +85,12 @@ namespace GenericBoson::Zozo
         return m_owner.CharacterT::name;
     }
 
+    auto CharacterCache::Name::GetName() const
+        -> std::string
+    {
+        return "name";
+    }
+
     bool CharacterCache::Name::IsFlagged() const
     {
         return m_flag;
@@ -93,6 +111,12 @@ namespace GenericBoson::Zozo
         -> const int32_t&
     {
         return m_owner.CharacterT::level;
+    }
+
+    auto CharacterCache::Level::GetName() const
+        -> std::string
+    {
+        return "level";
     }
 
     bool CharacterCache::Level::IsFlagged() const

@@ -33,6 +33,7 @@ namespace GenericBoson::Zozo
             Id(CharacterCache& owner);
             void Set(const int64_t& param);
             auto Get() const -> const int64_t&;
+            std::string GetName() const;
             bool IsFlagged() const override;
         private:
             CharacterCache& m_owner;
@@ -45,6 +46,7 @@ namespace GenericBoson::Zozo
             User_id(CharacterCache& owner);
             void Set(const int64_t& param);
             auto Get() const -> const int64_t&;
+            std::string GetName() const;
             bool IsFlagged() const override;
         private:
             CharacterCache& m_owner;
@@ -57,6 +59,7 @@ namespace GenericBoson::Zozo
             Name(CharacterCache& owner);
             void Set(const std::string& param);
             auto Get() const -> const std::string&;
+            std::string GetName() const;
             bool IsFlagged() const override;
         private:
             CharacterCache& m_owner;
@@ -69,6 +72,7 @@ namespace GenericBoson::Zozo
             Level(CharacterCache& owner);
             void Set(const int32_t& param);
             auto Get() const -> const int32_t&;
+            std::string GetName() const;
             bool IsFlagged() const override;
         private:
             CharacterCache& m_owner;

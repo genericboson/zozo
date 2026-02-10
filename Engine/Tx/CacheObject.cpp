@@ -15,19 +15,18 @@ namespace GenericBoson
 		{
 		case QueryType::INSERT:
 		{
-			const auto& flaggeds = boost::algorithm::join_if(GetFieldNames(), ",", []() {
-					return 
+			const auto& flaggeds = boost::algorithm::join_if(GetFieldNames(), ",", [](const std::string&) {
+					return true;
 				});
 
-			query = std::format("INSERT INTO {} ({}) VALUES ({});", 
-				GetObjectName(), 
-				flaggeds, ","), 
-				"");
+			query = std::format("INSERT INTO {} ({}) VALUES ({});",
+				GetObjectName(),
+				flaggeds, "");
 		}
 			break;
 		case QueryType::UPDATE:
 			query = "UPDATE TableName SET ";
-			for ( const auto & name : GetNames() )
+			for ( const auto & name : GetFieldNames() )
 			{
 				query += name + " = ?, ";
 			}
