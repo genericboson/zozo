@@ -2,6 +2,7 @@
 
 #include "D:\projects\zozo\MessageSchema\External\DB_GameServer_generated.h"
 
+#include <Engine/Tx/CacheField.h>
 #include <Engine/Tx/CacheObject.h>
 
 namespace GenericBoson::Zozo
@@ -17,25 +18,66 @@ namespace GenericBoson::Zozo
 
     class CharacterCache : 
         public CacheObject,
-        private CharacterT
+        private CharacterT,
+        std::enable_shared_from_this<CharacterCache>
     {
+        friend class Id;
+        friend class User_id;
+        friend class Name;
+        friend class Level;
     public:
-        void SetId(const int64_t& param);
-        const int64_t& GetId();
+       CharacterCache();
+        class Id : public CacheField
+        {
+        public:
+            Id(CharacterCache& owner);
+            void Set(const int64_t& param);
+            auto Get() const -> const int64_t&;
+            bool IsFlagged() const override;
+        private:
+            CharacterCache& m_owner;
+            bool m_flag = false;
+        };
 
-        void SetUser_id(const int64_t& param);
-        const int64_t& GetUser_id();
+        class User_id : public CacheField
+        {
+        public:
+            User_id(CharacterCache& owner);
+            void Set(const int64_t& param);
+            auto Get() const -> const int64_t&;
+            bool IsFlagged() const override;
+        private:
+            CharacterCache& m_owner;
+            bool m_flag = false;
+        };
 
-        void SetName(const std::string& param);
-        const std::string& GetName();
+        class Name : public CacheField
+        {
+        public:
+            Name(CharacterCache& owner);
+            void Set(const std::string& param);
+            auto Get() const -> const std::string&;
+            bool IsFlagged() const override;
+        private:
+            CharacterCache& m_owner;
+            bool m_flag = false;
+        };
 
-        void SetLevel(const int32_t& param);
-        const int32_t& GetLevel();
+        class Level : public CacheField
+        {
+        public:
+            Level(CharacterCache& owner);
+            void Set(const int32_t& param);
+            auto Get() const -> const int32_t&;
+            bool IsFlagged() const override;
+        private:
+            CharacterCache& m_owner;
+            bool m_flag = false;
+        };
 
     protected:
-        auto GetObjectName() -> const std::string&              override;
+        auto GetObjectName() -> std::string                     override;
         auto GetFieldNames() -> const std::vector<std::string>& override;
-        bool IsFlagged(const int64_t field)  override;
     private:
 
         std::vector<std::string> m_names = 
@@ -46,6 +88,6 @@ namespace GenericBoson::Zozo
             "level"
         };
 
-        bool m_flags[4] = { false, };
+        std::unordered_map<int64_t, std::shared_ptr<CacheField>> m_fields;
     };
 }

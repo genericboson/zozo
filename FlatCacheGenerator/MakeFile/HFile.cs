@@ -17,6 +17,7 @@ namespace FlatCacheGenerator
             hContent.AppendLine();
             hContent.AppendLine($"#include \"{Path.Combine(SC.pathOnly, $"{SC.fileNameOnly}_generated.h")}\"");
             hContent.AppendLine();
+            hContent.AppendLine("#include <Engine/Tx/CacheField.h>");
             hContent.AppendLine("#include <Engine/Tx/CacheObject.h>");
             hContent.AppendLine();
             hContent.AppendLine($"namespace {string.Join("::", SC.tree.m_namespaces)}");
@@ -40,24 +41,32 @@ namespace FlatCacheGenerator
             {
                 hContent.AppendLine($"    class {typeOne.m_name}Cache : ");
                 hContent.AppendLine($"        public CacheObject,");
-                hContent.AppendLine($"        private {typeOne.m_name}T");
+                hContent.AppendLine($"        private {typeOne.m_name}T,");
+                hContent.AppendLine($"        std::enable_shared_from_this<{typeOne.m_name}Cache>");
                 hContent.AppendLine("    {");
+                foreach (var field in typeOne.m_fields)
+                {
+                    hContent.AppendLine($"        friend class {SC.GetFunctionName(field.m_name)};");
+                }
                 hContent.AppendLine("    public:");
+                hContent.AppendLine($"       {typeOne.m_name}Cache();");
                 foreach (var field in typeOne.m_fields)
                 {
                     hContent.AppendLine($"        class {SC.GetFunctionName(field.m_name)} : public CacheField");
                     hContent.AppendLine( "        {");
                     hContent.AppendLine( "        public:");
-                    hContent.AppendLine($"            void Set{SC.GetFunctionName(field.m_name)}(const {SC.ChangeToCppType(field.m_type)}& param);");
-                    hContent.AppendLine($"            const {SC.ChangeToCppType(field.m_type)}& Get{SC.GetFunctionName(field.m_name)}();");
-                    hContent.AppendLine( "            bool IsFlagged()  override;");
+                    hContent.AppendLine($"            {SC.GetFunctionName(field.m_name)}({typeOne.m_name}Cache& owner);");
+                    hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
+                    hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
+                    hContent.AppendLine( "            bool IsFlagged() const override;");
                     hContent.AppendLine( "        private:");
+                    hContent.AppendLine($"            {typeOne.m_name}Cache& m_owner;");
                     hContent.AppendLine( "            bool m_flag = false;");
-                    hContent.AppendLine( "        }");
+                    hContent.AppendLine( "        };");
                     hContent.AppendLine();
                 }
                 hContent.AppendLine("    protected:");
-                hContent.AppendLine( "        auto GetObjectName() -> const std::string&              override;");
+                hContent.AppendLine( "        auto GetObjectName() -> std::string                     override;");
                 hContent.AppendLine( "        auto GetFieldNames() -> const std::vector<std::string>& override;");
                 hContent.AppendLine("    private:");
 

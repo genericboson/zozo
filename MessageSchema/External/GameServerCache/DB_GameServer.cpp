@@ -4,108 +4,110 @@
 
 namespace GenericBoson::Zozo
 {
-    void CharacterCache::SetId(const int64_t& param)
+    CharacterCache::CharacterCache()
     {
-        CharacterT::id = param;
-        m_flags[CHARACTER::ID] = true;
+        m_fields[ID] = std::make_shared<Id>(*this);
+        m_fields[USER_ID] = std::make_shared<User_id>(*this);
+        m_fields[NAME] = std::make_shared<Name>(*this);
+        m_fields[LEVEL] = std::make_shared<Level>(*this);
+    };
+
+    CharacterCache::Id::Id(CharacterCache& owner)
+        : m_owner(owner)
+    {
     }
 
-    const int64_t& CharacterCache::GetId()
+    void CharacterCache::Id::Set(const int64_t& param)
     {
-        return CharacterT::id;
+        m_owner.CharacterT::id = param;
+        m_flag = true;
     }
+
+    auto CharacterCache::Id::Get() const
+        -> const int64_t&
+    {
+        return m_owner.CharacterT::id;
+    }
+
+    bool CharacterCache::Id::IsFlagged() const
+    {
+        return m_flag;
+    };
+
+    CharacterCache::User_id::User_id(CharacterCache& owner)
+        : m_owner(owner)
+    {
+    }
+
+    void CharacterCache::User_id::Set(const int64_t& param)
+    {
+        m_owner.CharacterT::user_id = param;
+        m_flag = true;
+    }
+
+    auto CharacterCache::User_id::Get() const
+        -> const int64_t&
+    {
+        return m_owner.CharacterT::user_id;
+    }
+
+    bool CharacterCache::User_id::IsFlagged() const
+    {
+        return m_flag;
+    };
+
+    CharacterCache::Name::Name(CharacterCache& owner)
+        : m_owner(owner)
+    {
+    }
+
+    void CharacterCache::Name::Set(const std::string& param)
+    {
+        m_owner.CharacterT::name = param;
+        m_flag = true;
+    }
+
+    auto CharacterCache::Name::Get() const
+        -> const std::string&
+    {
+        return m_owner.CharacterT::name;
+    }
+
+    bool CharacterCache::Name::IsFlagged() const
+    {
+        return m_flag;
+    };
+
+    CharacterCache::Level::Level(CharacterCache& owner)
+        : m_owner(owner)
+    {
+    }
+
+    void CharacterCache::Level::Set(const int32_t& param)
+    {
+        m_owner.CharacterT::level = param;
+        m_flag = true;
+    }
+
+    auto CharacterCache::Level::Get() const
+        -> const int32_t&
+    {
+        return m_owner.CharacterT::level;
+    }
+
+    bool CharacterCache::Level::IsFlagged() const
+    {
+        return m_flag;
+    };
 
     auto CharacterCache::GetFieldNames() -> const std::vector<std::string>&
     {
         return m_names;
     };
 
-    auto CharacterCache::GetObjectName() -> const std::vector<std::string>&
+    auto CharacterCache::GetObjectName() -> std::string
     {
-        return Character;
-    };
-
-    bool CharacterCache::IsFlagged(const int64_t field)
-    {
-        return m_flags[field];
-    };
-
-    void CharacterCache::SetUser_id(const int64_t& param)
-    {
-        CharacterT::user_id = param;
-        m_flags[CHARACTER::USER_ID] = true;
-    }
-
-    const int64_t& CharacterCache::GetUser_id()
-    {
-        return CharacterT::user_id;
-    }
-
-    auto CharacterCache::GetFieldNames() -> const std::vector<std::string>&
-    {
-        return m_names;
-    };
-
-    auto CharacterCache::GetObjectName() -> const std::vector<std::string>&
-    {
-        return Character;
-    };
-
-    bool CharacterCache::IsFlagged(const int64_t field)
-    {
-        return m_flags[field];
-    };
-
-    void CharacterCache::SetName(const std::string& param)
-    {
-        CharacterT::name = param;
-        m_flags[CHARACTER::NAME] = true;
-    }
-
-    const std::string& CharacterCache::GetName()
-    {
-        return CharacterT::name;
-    }
-
-    auto CharacterCache::GetFieldNames() -> const std::vector<std::string>&
-    {
-        return m_names;
-    };
-
-    auto CharacterCache::GetObjectName() -> const std::vector<std::string>&
-    {
-        return Character;
-    };
-
-    bool CharacterCache::IsFlagged(const int64_t field)
-    {
-        return m_flags[field];
-    };
-
-    void CharacterCache::SetLevel(const int32_t& param)
-    {
-        CharacterT::level = param;
-        m_flags[CHARACTER::LEVEL] = true;
-    }
-
-    const int32_t& CharacterCache::GetLevel()
-    {
-        return CharacterT::level;
-    }
-
-    auto CharacterCache::GetFieldNames() -> const std::vector<std::string>&
-    {
-        return m_names;
-    };
-
-    auto CharacterCache::GetObjectName() -> const std::vector<std::string>&
-    {
-        return Character;
-    };
-
-    bool CharacterCache::IsFlagged(const int64_t field)
-    {
-        return m_flags[field];
+        return "Character";
     };
 
 }
