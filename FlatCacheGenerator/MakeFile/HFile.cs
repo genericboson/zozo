@@ -46,16 +46,16 @@ namespace FlatCacheGenerator
                 hContent.AppendLine("    {");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        friend class {SC.GetFunctionName(field.m_name)};");
+                    hContent.AppendLine($"        friend class {SC.SnakeToPascal(field.m_name)};");
                 }
                 hContent.AppendLine("    public:");
                 hContent.AppendLine($"       {typeOne.m_name}Cache();");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        class {SC.GetFunctionName(field.m_name)} : public CacheField");
+                    hContent.AppendLine($"        class {SC.SnakeToPascal(field.m_name)} : public CacheField");
                     hContent.AppendLine( "        {");
                     hContent.AppendLine( "        public:");
-                    hContent.AppendLine($"            {SC.GetFunctionName(field.m_name)}({typeOne.m_name}Cache& owner);");
+                    hContent.AppendLine($"            {SC.SnakeToPascal(field.m_name)}({typeOne.m_name}Cache& owner);");
                     hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
                     hContent.AppendLine( "            std::string GetName() const;");

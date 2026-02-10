@@ -22,7 +22,7 @@ namespace GenericBoson::Zozo
         std::enable_shared_from_this<CharacterCache>
     {
         friend class Id;
-        friend class User_id;
+        friend class UserId;
         friend class Name;
         friend class Level;
     public:
@@ -40,10 +40,10 @@ namespace GenericBoson::Zozo
             bool m_flag = false;
         };
 
-        class User_id : public CacheField
+        class UserId : public CacheField
         {
         public:
-            User_id(CharacterCache& owner);
+            UserId(CharacterCache& owner);
             void Set(const int64_t& param);
             auto Get() const -> const int64_t&;
             std::string GetName() const;

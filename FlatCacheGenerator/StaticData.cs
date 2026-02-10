@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlatCacheGenerator
@@ -41,17 +42,20 @@ namespace FlatCacheGenerator
             };
         }
 
-        public static string GetFunctionName(string fieldName)
+        public static string SnakeToPascal(string name)
         {
-            if (fieldName.Length <= 1)
+            if (name.Length <= 1)
             {
-                Console.WriteLine($"Too short length. field name - {fieldName}");
+                Console.WriteLine($"Too short length. field name - {name}");
                 return "";
             }
 
-            var upperFirstChar = char.ToUpper(fieldName[0]);
+            var upperFirstChar = char.ToUpper(name[0]);
+            var functionName = $"{upperFirstChar}{name.Substring(1)}";
 
-            return $"{upperFirstChar}{fieldName.Substring(1)}";
+            functionName = Regex.Replace(functionName, @"_([a-zA-Z])", m => { return m.Groups[1].Value.ToUpper(); });
+
+            return functionName;
         }
     }
 }

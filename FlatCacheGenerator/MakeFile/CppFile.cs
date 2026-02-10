@@ -26,41 +26,41 @@ namespace FlatCacheGenerator
                 cppContent.AppendLine( "    {");
                 foreach (var field in typeOne.m_fields)
                 {
-                    cppContent.AppendLine($"        m_fields[{field.m_name.ToUpper()}] = std::make_shared<{SC.GetFunctionName(field.m_name)}>(*this);");
+                    cppContent.AppendLine($"        m_fields[{field.m_name.ToUpper()}] = std::make_shared<{SC.SnakeToPascal(field.m_name)}>(*this);");
                 }
                 cppContent.AppendLine( "    };");
                 cppContent.AppendLine();
 
                 foreach (var field in typeOne.m_fields)
                 {
-                    cppContent.AppendLine($"    {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::{SC.GetFunctionName(field.m_name)}({typeOne.m_name}Cache& owner)");
+                    cppContent.AppendLine($"    {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::{SC.SnakeToPascal(field.m_name)}({typeOne.m_name}Cache& owner)");
                     cppContent.AppendLine( "        : m_owner(owner)");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( $"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
                     cppContent.AppendLine( $"        m_flag = true;");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::Get() const");
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::Get() const");
                     cppContent.AppendLine($"        -> const {SC.ChangeToCppType(field.m_type)}&");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return m_owner.{typeOne.m_name}T::{field.m_name};");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::GetName() const");
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::GetName() const");
                     cppContent.AppendLine($"        -> std::string");
                     cppContent.AppendLine("    {");
                     cppContent.AppendLine($"        return \"{field.m_name}\";");
                     cppContent.AppendLine("    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.GetFunctionName(field.m_name)}::IsFlagged() const");
+                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::IsFlagged() const");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return m_flag;");
                     cppContent.AppendLine( "    };");

@@ -7,7 +7,7 @@ namespace GenericBoson::Zozo
     CharacterCache::CharacterCache()
     {
         m_fields[ID] = std::make_shared<Id>(*this);
-        m_fields[USER_ID] = std::make_shared<User_id>(*this);
+        m_fields[USER_ID] = std::make_shared<UserId>(*this);
         m_fields[NAME] = std::make_shared<Name>(*this);
         m_fields[LEVEL] = std::make_shared<Level>(*this);
     };
@@ -40,30 +40,30 @@ namespace GenericBoson::Zozo
         return m_flag;
     };
 
-    CharacterCache::User_id::User_id(CharacterCache& owner)
+    CharacterCache::UserId::UserId(CharacterCache& owner)
         : m_owner(owner)
     {
     }
 
-    void CharacterCache::User_id::Set(const int64_t& param)
+    void CharacterCache::UserId::Set(const int64_t& param)
     {
         m_owner.CharacterT::user_id = param;
         m_flag = true;
     }
 
-    auto CharacterCache::User_id::Get() const
+    auto CharacterCache::UserId::Get() const
         -> const int64_t&
     {
         return m_owner.CharacterT::user_id;
     }
 
-    auto CharacterCache::User_id::GetName() const
+    auto CharacterCache::UserId::GetName() const
         -> std::string
     {
         return "user_id";
     }
 
-    bool CharacterCache::User_id::IsFlagged() const
+    bool CharacterCache::UserId::IsFlagged() const
     {
         return m_flag;
     };
