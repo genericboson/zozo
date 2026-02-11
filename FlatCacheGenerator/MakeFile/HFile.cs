@@ -46,35 +46,41 @@ namespace FlatCacheGenerator
                 hContent.AppendLine("    {");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        friend class {SC.SnakeToPascal(field.m_name)};");
+                    hContent.AppendLine($"        friend class {SC.SnakeToPascalOrCamel(field.m_name)};");
                 }
                 hContent.AppendLine("    public:");
                 hContent.AppendLine($"       {typeOne.m_name}Cache();");
                 foreach (var field in typeOne.m_fields)
                 {
-                    hContent.AppendLine($"        class {SC.SnakeToPascal(field.m_name)} : public CacheField");
+                    hContent.AppendLine($"        class {SC.SnakeToPascalOrCamel(field.m_name)} : public CacheField");
                     hContent.AppendLine( "        {");
                     hContent.AppendLine( "        public:");
-                    hContent.AppendLine($"            {SC.SnakeToPascal(field.m_name)}({typeOne.m_name}Cache& owner);");
+                    hContent.AppendLine($"            {SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner);");
                     hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
-                    hContent.AppendLine( "            std::string GetName() const;");
-                    hContent.AppendLine( "            bool IsFlagged() const override;");
+                    hContent.AppendLine( "            std::string GetName() const override;");
+                    hContent.AppendLine($"            std::string GetValueString() const override;");
+                    hContent.AppendLine( "            bool IsBound() const override;");
                     hContent.AppendLine( "        private:");
                     hContent.AppendLine($"            {typeOne.m_name}Cache& m_owner;");
-                    hContent.AppendLine( "            bool m_flag = false;");
+                    hContent.AppendLine( "            bool m_isBound = false;");
                     hContent.AppendLine( "        };");
                     hContent.AppendLine();
                 }
                 hContent.AppendLine("    protected:");
-                hContent.AppendLine( "        auto GetObjectName() -> std::string                     override;");
-                hContent.AppendLine( "        auto GetFieldNames() -> const std::vector<std::string>& override;");
+                hContent.AppendLine( "        auto GetObjectName() const                            -> std::string                        override;");
+                hContent.AppendLine( "        auto GetFieldNames() const                            -> const std::vector<std::string>&    override;");
+                hContent.AppendLine( "        auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                        override;");
+                hContent.AppendLine($"        auto GetField(const std::string& fieldName) const     -> const std::shared_ptr<CacheField>& override;");
+                hContent.AppendLine($"        auto GetField(const int32_t fieldEnumValue) const     -> const std::shared_ptr<CacheField>& override;");
                 hContent.AppendLine("    private:");
 
                 var names = new List<string>();
                 foreach (var field in typeOne.m_fields)
                 {
                     names.Add($"\"{field.m_name}\"");
+                    hContent.AppendLine($"        CacheField* m_p{SC.SnakeToPascalOrCamel(field.m_name)} = nullptr;");
+                    hContent.AppendLine($"        {SC.SnakeToPascalOrCamel(field.m_name)}& Get{SC.SnakeToPascalOrCamel(field.m_name)}();");
                 }
 
                 hContent.AppendLine();
@@ -83,7 +89,7 @@ namespace FlatCacheGenerator
                 hContent.AppendLine($"            {string.Join(",\n            ", names)}");
                 hContent.AppendLine("        };");
                 hContent.AppendLine();
-                hContent.AppendLine( $"        std::unordered_map<int64_t, std::shared_ptr<CacheField>> m_fields;");
+                hContent.AppendLine( $"        std::unordered_map<std::string, std::shared_ptr<CacheField>> m_fields;");
 
                 hContent.AppendLine("    };");
             }

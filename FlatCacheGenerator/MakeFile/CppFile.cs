@@ -17,6 +17,8 @@ namespace FlatCacheGenerator
             cppContent.AppendLine();
             cppContent.AppendLine($"#include \"{SC.fileNameOnly}.h\"");
             cppContent.AppendLine();
+            cppContent.AppendLine($"#include <Engine/Concepts.h>");
+            cppContent.AppendLine();
             cppContent.AppendLine($"namespace {string.Join("::", SC.tree.m_namespaces)}");
             cppContent.AppendLine("{");
 
@@ -26,56 +28,98 @@ namespace FlatCacheGenerator
                 cppContent.AppendLine( "    {");
                 foreach (var field in typeOne.m_fields)
                 {
-                    cppContent.AppendLine($"        m_fields[{field.m_name.ToUpper()}] = std::make_shared<{SC.SnakeToPascal(field.m_name)}>(*this);");
+                    cppContent.AppendLine($"        m_fields[\"{field.m_name}\"] = std::make_shared<{SC.SnakeToPascalOrCamel(field.m_name)}>(*this);");
+                    cppContent.AppendLine($"        m_p{SC.SnakeToPascalOrCamel(field.m_name)} = m_fields[\"{field.m_name}\"].get();");
                 }
                 cppContent.AppendLine( "    };");
                 cppContent.AppendLine();
 
                 foreach (var field in typeOne.m_fields)
                 {
-                    cppContent.AppendLine($"    {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::{SC.SnakeToPascal(field.m_name)}({typeOne.m_name}Cache& owner)");
+                    cppContent.AppendLine($"    {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::{SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner)");
                     cppContent.AppendLine( "        : m_owner(owner)");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine( $"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
-                    cppContent.AppendLine( $"        m_flag = true;");
+                    cppContent.AppendLine( $"        m_isBound = true;");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::Get() const");
+                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::Get() const");
                     cppContent.AppendLine($"        -> const {SC.ChangeToCppType(field.m_type)}&");
                     cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return m_owner.{typeOne.m_name}T::{field.m_name};");
                     cppContent.AppendLine( "    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    auto {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::GetName() const");
-                    cppContent.AppendLine($"        -> std::string");
-                    cppContent.AppendLine("    {");
+                    cppContent.AppendLine($"    std::string {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::GetName() const");
+                    cppContent.AppendLine( "    {");
                     cppContent.AppendLine($"        return \"{field.m_name}\";");
+                    cppContent.AppendLine( "    }");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    std::string {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::GetValueString() const");
+                    cppContent.AppendLine( "    {");
+                    if (SC.IsString(field.m_type))
+                    {
+                        cppContent.AppendLine($"        return m_owner.{typeOne.m_name}T::{field.m_name};");
+                    }
+                    else
+                    {
+                        cppContent.AppendLine($"        return std::to_string(m_owner.{typeOne.m_name}T::{field.m_name});");
+                    }
                     cppContent.AppendLine("    }");
                     cppContent.AppendLine();
 
-                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.SnakeToPascal(field.m_name)}::IsFlagged() const");
+                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::IsBound() const");
                     cppContent.AppendLine( "    {");
-                    cppContent.AppendLine($"        return m_flag;");
+                    cppContent.AppendLine($"        return m_isBound;");
+                    cppContent.AppendLine( "    };");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}& {typeOne.m_name}Cache::Get{SC.SnakeToPascalOrCamel(field.m_name)}()");
+                    cppContent.AppendLine( "    {");
+                    cppContent.AppendLine($"        return *static_cast<{typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}*>(m_p{SC.SnakeToPascalOrCamel(field.m_name)});");
                     cppContent.AppendLine( "    };");
                     cppContent.AppendLine();
                 }
 
-                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetFieldNames() -> const std::vector<std::string>&");
+                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetObjectName() const -> std::string");
+                cppContent.AppendLine( "    {");
+                cppContent.AppendLine($"        return \"{typeOne.m_name}\";");
+                cppContent.AppendLine( "    };");
+                cppContent.AppendLine();
+
+                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetFieldNames() const -> const std::vector<std::string>&");
                 cppContent.AppendLine( "    {");
                 cppContent.AppendLine( "        return m_names;");
                 cppContent.AppendLine( "    };");
                 cppContent.AppendLine();
 
-                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetObjectName() -> std::string");
+                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetFieldName(const int32_t fieldEnumValue) const -> std::string");
                 cppContent.AppendLine( "    {");
-                cppContent.AppendLine($"        return \"{typeOne.m_name}\";");
+                cppContent.AppendLine($"        NULL_RETURN(0 <= fieldEnumValue && fieldEnumValue < {typeOne.m_name.ToUpper()}::MAX, std::string{{}});");
+                cppContent.AppendLine( "        return m_names[fieldEnumValue];");
+                cppContent.AppendLine( "    };");
+                cppContent.AppendLine();
+
+                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetField(const std::string& fieldName) const -> const std::shared_ptr<CacheField>&");
+                cppContent.AppendLine( "    {");
+                cppContent.AppendLine( "        if (const auto found = m_fields.find(fieldName);");
+                cppContent.AppendLine( "            found == m_fields.end())");
+                cppContent.AppendLine( "            return nullptr;");
+                cppContent.AppendLine("         else");
+                cppContent.AppendLine( "            return found->second;");
+                cppContent.AppendLine( "    };");
+                cppContent.AppendLine();
+
+                cppContent.AppendLine($"    auto {typeOne.m_name}Cache::GetField(const int32_t fieldEnumValue) const -> const std::shared_ptr<CacheField>&");
+                cppContent.AppendLine( "    {");
+                cppContent.AppendLine($"        return GetField(GetFieldName(fieldEnumValue));");
                 cppContent.AppendLine( "    };");
                 cppContent.AppendLine();
             }

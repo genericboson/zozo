@@ -33,11 +33,12 @@ namespace GenericBoson::Zozo
             Id(CharacterCache& owner);
             void Set(const int64_t& param);
             auto Get() const -> const int64_t&;
-            std::string GetName() const;
-            bool IsFlagged() const override;
+            std::string GetName() const override;
+            std::string GetValueString() const override;
+            bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_flag = false;
+            bool m_isBound = false;
         };
 
         class UserId : public CacheField
@@ -46,11 +47,12 @@ namespace GenericBoson::Zozo
             UserId(CharacterCache& owner);
             void Set(const int64_t& param);
             auto Get() const -> const int64_t&;
-            std::string GetName() const;
-            bool IsFlagged() const override;
+            std::string GetName() const override;
+            std::string GetValueString() const override;
+            bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_flag = false;
+            bool m_isBound = false;
         };
 
         class Name : public CacheField
@@ -59,11 +61,12 @@ namespace GenericBoson::Zozo
             Name(CharacterCache& owner);
             void Set(const std::string& param);
             auto Get() const -> const std::string&;
-            std::string GetName() const;
-            bool IsFlagged() const override;
+            std::string GetName() const override;
+            std::string GetValueString() const override;
+            bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_flag = false;
+            bool m_isBound = false;
         };
 
         class Level : public CacheField
@@ -72,17 +75,29 @@ namespace GenericBoson::Zozo
             Level(CharacterCache& owner);
             void Set(const int32_t& param);
             auto Get() const -> const int32_t&;
-            std::string GetName() const;
-            bool IsFlagged() const override;
+            std::string GetName() const override;
+            std::string GetValueString() const override;
+            bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_flag = false;
+            bool m_isBound = false;
         };
 
     protected:
-        auto GetObjectName() -> std::string                     override;
-        auto GetFieldNames() -> const std::vector<std::string>& override;
+        auto GetObjectName() const                            -> std::string                        override;
+        auto GetFieldNames() const                            -> const std::vector<std::string>&    override;
+        auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                        override;
+        auto GetField(const std::string& fieldName) const     -> const std::shared_ptr<CacheField>& override;
+        auto GetField(const int32_t fieldEnumValue) const     -> const std::shared_ptr<CacheField>& override;
     private:
+        CacheField* m_pId = nullptr;
+        Id& GetId();
+        CacheField* m_pUserId = nullptr;
+        UserId& GetUserId();
+        CacheField* m_pName = nullptr;
+        Name& GetName();
+        CacheField* m_pLevel = nullptr;
+        Level& GetLevel();
 
         std::vector<std::string> m_names = 
         {
@@ -92,6 +107,6 @@ namespace GenericBoson::Zozo
             "level"
         };
 
-        std::unordered_map<int64_t, std::shared_ptr<CacheField>> m_fields;
+        std::unordered_map<std::string, std::shared_ptr<CacheField>> m_fields;
     };
 }

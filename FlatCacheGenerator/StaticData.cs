@@ -42,7 +42,7 @@ namespace FlatCacheGenerator
             };
         }
 
-        public static string SnakeToPascal(string name)
+        public static string SnakeToPascalOrCamel(string name, bool isPascal = true)
         {
             if (name.Length <= 1)
             {
@@ -50,12 +50,22 @@ namespace FlatCacheGenerator
                 return "";
             }
 
-            var upperFirstChar = char.ToUpper(name[0]);
-            var functionName = $"{upperFirstChar}{name.Substring(1)}";
+            var functionName = name;
+
+            if (isPascal)
+            {
+                var upperFirstChar = char.ToUpper(name[0]);
+                functionName = $"{upperFirstChar}{name.Substring(1)}";
+            }
 
             functionName = Regex.Replace(functionName, @"_([a-zA-Z])", m => { return m.Groups[1].Value.ToUpper(); });
 
             return functionName;
+        }
+
+        public static bool IsString(string name)
+        {
+            return name == "string";
         }
     }
 }
