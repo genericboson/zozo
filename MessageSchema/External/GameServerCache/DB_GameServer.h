@@ -84,11 +84,12 @@ namespace GenericBoson::Zozo
         };
 
     protected:
-        auto GetObjectName() const                            -> std::string                        override;
-        auto GetFieldNames() const                            -> const std::vector<std::string>&    override;
-        auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                        override;
-        auto GetField(const std::string& fieldName) const     -> const std::shared_ptr<CacheField>& override;
-        auto GetField(const int32_t fieldEnumValue) const     -> const std::shared_ptr<CacheField>& override;
+        auto GetObjectName() const                            -> std::string                           override;
+        auto GetFieldNames() const                            -> const std::vector<std::string>&       override;
+        auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                           override;
+        auto GetField(const std::string& fieldName) const     -> const CacheField*                     override;
+        auto GetField(const int32_t fieldEnumValue) const     -> const CacheField*                     override;
+        auto GetFields() const                                -> const std::vector<const CacheField*>& override;
     private:
         CacheField* m_pId = nullptr;
         Id& GetId();
@@ -107,6 +108,7 @@ namespace GenericBoson::Zozo
             "level"
         };
 
-        std::unordered_map<std::string, std::shared_ptr<CacheField>> m_fields;
+        std::unordered_map<std::string, std::shared_ptr<CacheField>> m_fieldMap;
+        std::vector<const CacheField*>                               m_fieldVector;
     };
 }

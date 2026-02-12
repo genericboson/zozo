@@ -14,13 +14,18 @@ namespace GenericBoson
 	class CacheObject
 	{
 	public:
-		std::string GetQuery( const QueryType queryType );
+		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
 
 	protected:
-		virtual auto GetObjectName() const                            -> std::string                        = 0;
-		virtual auto GetFieldNames() const                            -> const std::vector<std::string> &   = 0;
-		virtual auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                        = 0;
-		virtual auto GetField(const std::string& fieldName) const     -> const std::shared_ptr<CacheField>& = 0;
-		virtual auto GetField(const int32_t fieldEnumValue) const     -> const std::shared_ptr<CacheField>& = 0;
+		virtual auto GetObjectName() const                            -> std::string                           = 0;
+		virtual auto GetFieldNames() const                            -> const std::vector<std::string> &      = 0;
+		virtual auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                           = 0;
+		virtual auto GetField(const std::string& fieldName) const     -> const CacheField*                     = 0;
+		virtual auto GetField(const int32_t fieldEnumValue) const     -> const CacheField*                     = 0;
+		virtual auto GetFields() const                                -> const std::vector<const CacheField*>& = 0;
+
+	private:
+		template<typename CALLABLE>
+		std::vector<std::string> GetFormattedBoundFieldStrings(const CALLABLE& callable);
 	};
 }

@@ -8,14 +8,19 @@ namespace GenericBoson::Zozo
 {
     CharacterCache::CharacterCache()
     {
-        m_fields["id"] = std::make_shared<Id>(*this);
-        m_pId = m_fields["id"].get();
-        m_fields["user_id"] = std::make_shared<UserId>(*this);
-        m_pUserId = m_fields["user_id"].get();
-        m_fields["name"] = std::make_shared<Name>(*this);
-        m_pName = m_fields["name"].get();
-        m_fields["level"] = std::make_shared<Level>(*this);
-        m_pLevel = m_fields["level"].get();
+        m_fieldVector.reserve(4);
+        m_fieldMap["id"] = std::make_shared<Id>(*this);
+        m_pId = m_fieldMap["id"].get();
+        m_fieldVector.push_back(m_pId);
+        m_fieldMap["user_id"] = std::make_shared<UserId>(*this);
+        m_pUserId = m_fieldMap["user_id"].get();
+        m_fieldVector.push_back(m_pUserId);
+        m_fieldMap["name"] = std::make_shared<Name>(*this);
+        m_pName = m_fieldMap["name"].get();
+        m_fieldVector.push_back(m_pName);
+        m_fieldMap["level"] = std::make_shared<Level>(*this);
+        m_pLevel = m_fieldMap["level"].get();
+        m_fieldVector.push_back(m_pLevel);
     };
 
     CharacterCache::Id::Id(CharacterCache& owner)
@@ -182,18 +187,23 @@ namespace GenericBoson::Zozo
         return m_names[fieldEnumValue];
     };
 
-    auto CharacterCache::GetField(const std::string& fieldName) const -> const std::shared_ptr<CacheField>&
+    auto CharacterCache::GetField(const std::string& fieldName) const -> const CacheField*
     {
-        if (const auto found = m_fields.find(fieldName);
-            found == m_fields.end())
+        if (const auto found = m_fieldMap.find(fieldName);
+            found == m_fieldMap.end())
             return nullptr;
          else
-            return found->second;
+            return found->second.get();
     };
 
-    auto CharacterCache::GetField(const int32_t fieldEnumValue) const -> const std::shared_ptr<CacheField>&
+    auto CharacterCache::GetField(const int32_t fieldEnumValue) const -> const CacheField*
     {
         return GetField(GetFieldName(fieldEnumValue));
+    };
+
+    auto CharacterCache::GetFields() const -> const std::vector<const CacheField*>&
+    {
+        return m_fieldVector;
     };
 
 }

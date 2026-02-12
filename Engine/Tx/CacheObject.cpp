@@ -9,52 +9,88 @@
 
 namespace GenericBoson
 {
-	std::string CacheObject::GetQuery( const QueryType queryType )
+	template<typename CALLABLE>
+	std::vector<std::string> CacheObject::GetFormattedBoundFieldStrings(const CALLABLE& callable)
 	{
-		std::string query;
+		const auto& fields = GetFields();
+
+		std::vector<std::string> formattedFields;
+		formattedFields.reserve(fields.size());
+		for (const auto pField : fields)
+		{
+			NULL_CONTINUE(pField);
+			if (!pField->IsBound())
+				continue;
+			
+			callable(*pField);
+		}
+
+		return formattedFields;
+	}
+
+	std::string CacheObject::GetQuery( const QueryType queryType, const std::string& wherePhrase /*= ""*/)
+	{
 		switch ( queryType )
 		{
 		case QueryType::INSERT:
 		{
-			auto valuesSize = 0;
-			const auto flaggeds = boost::algorithm::join_if(GetFieldNames(), ",", [this, &valuesSize](const std::string& fieldName) {
-					if (GetField(fieldName)->IsBound())
-					{
-						++valuesSize;
-						return true;
-					}
-					return false;
-				});
-
-			std::vector<std::string> values;
-			values.reserve(valuesSize);
-			std::ranges::transform(GetFieldNames(), std::back_inserter(values), 
-				[this](const std::string& fieldName) { 
-					const auto pField = GetField(fieldName);
-					NULL_RETURN(pField, std::string{});
-					return pField->GetValueString();
-				});
-
-			const auto valuesStr = boost::algorithm::join(values, ",");
-
-			query = std::format("INSERT INTO {} ({}) VALUES ({});",
-				GetObjectName(),
-				flaggeds, valuesStr);
-		}
-			break;
-		case QueryType::UPDATE:
-			query = "UPDATE TableName SET ";
-			for ( const auto & name : GetFieldNames() )
+			if (!wherePhrase.empty())
 			{
-				query += name + " = ?, ";
+				ERROR_LOG("WHERE phrase is not applicable for INSERT queries.");
+				return "";
 			}
-			query = query.substr( 0, query.size() - 2 ); // Remove last comma
-			query += " WHERE id = ?;";
-			break;
-		case QueryType::DELETE:
-			query = "DELETE FROM TableName WHERE id = ?;";
-			break;
+
+			const auto flaggeds = GetFormattedBoundFieldStrings(
+				[](const CacheField& pField)
+				{
+					return pField.GetName();
+				});
+
+			const auto values = GetFormattedBoundFieldStrings(
+				[](const CacheField& pField)
+				{
+					return pField.GetValueString();
+				});
+
+			const auto flaggedsStr = boost::algorithm::join(flaggeds, ",");
+			const auto valuesStr   = boost::algorithm::join(values, ",");
+			
+			return std::format("INSERT INTO {} ({}) VALUES {};",
+				GetObjectName(),
+				flaggedsStr, valuesStr);
 		}
-		return query;
+		break;
+		case QueryType::UPDATE:
+		{
+			const auto pairs = GetFormattedBoundFieldStrings(
+				[](const CacheField& pField)
+				{
+					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+				});
+
+			auto query = std::format("UPDATE {} SET {}",
+				GetObjectName(), boost::algorithm::join(pairs, ","));
+
+			if (wherePhrase.empty())
+			{
+				return std::format("{};", query);
+			}
+
+			return std::format("{} WHERE {};", query, wherePhrase);
+		}
+		break;
+		case QueryType::DELETE:
+		{
+			const auto pairs = GetFormattedBoundFieldStrings(
+				[](const CacheField& pField)
+				{
+					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+				});
+
+			return std::format("DELETE FROM {} WHERE {};", 
+				GetObjectName(), boost::algorithm::join(pairs, ","));
+		}
+		break;
+		}
 	}
 }
