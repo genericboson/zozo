@@ -13,4 +13,9 @@ namespace GenericBoson
 	{
 		return std::make_shared<CacheTx>();
 	}
+
+	bool CacheTx::RunTx(CacheTxCallback&& callback)
+	{
+
+	}
 }
