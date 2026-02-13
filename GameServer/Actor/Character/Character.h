@@ -34,6 +34,8 @@ namespace GenericBoson
 
 		bool Initialize() override;
 
+		asio::awaitable<void> Execute() override;
+
 		void Write(const uint8_t* pData, const std::size_t size);
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 

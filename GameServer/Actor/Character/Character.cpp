@@ -49,6 +49,11 @@ namespace GenericBoson
         return true;
     }
 
+    asio::awaitable<void> Character::Execute()
+    {
+        co_await CO_SLEEP_MS(1);
+    }
+
     void Character::Write(const uint8_t* pData, const std::size_t size)
     {
         m_pSocket->EnqueueMessage(pData, size);

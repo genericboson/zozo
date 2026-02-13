@@ -5,7 +5,7 @@ namespace Zozo
 {
     public partial class LobbySocketManager : Node
     {
-        public void ReceiveAuthAck(LobbyMessage lobbyMessage)
+        public void RecvAuthAck(LobbyMessage lobbyMessage)
         {
             var authAck = lobbyMessage.PayloadAsAuthAck();
             ConsumeAuthAck(authAck);

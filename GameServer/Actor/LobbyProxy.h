@@ -19,6 +19,8 @@ namespace GenericBoson
 		void OnAccepted() override;
 		bool Initialize() override;
 
+		asio::awaitable<void> Execute() override { co_await CO_SLEEP_MS(1); };
+
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 
 	private:

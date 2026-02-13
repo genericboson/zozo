@@ -45,4 +45,7 @@ namespace GenericBoson
 		WARN_LOG("Null = '" #expression "'"); \
 		co_return returnValue;                      \
 	}
+
+#define CO_SLEEP_MS(time_value) \
+	asio::steady_timer(co_await asio::this_coro::executor, std::chrono::milliseconds(time_value)).async_wait(asio::use_awaitable)
 }

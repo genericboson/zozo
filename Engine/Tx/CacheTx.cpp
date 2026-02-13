@@ -16,6 +16,6 @@ namespace GenericBoson
 
 	bool CacheTx::RunTx(CacheTxCallback&& callback)
 	{
-
+		return true;
 	}
 }

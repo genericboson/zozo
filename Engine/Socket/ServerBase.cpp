@@ -47,10 +47,10 @@ namespace GenericBoson
 
 	ServerBase::ServerBase(int32_t port)
 		: 
-		m_networkThreadPool{ std::thread::hardware_concurrency() * 2 },
+		m_networkThreadPoolSize{ std::thread::hardware_concurrency() * 2 },
+		m_threads{ m_networkThreadPoolSize },
 		m_listeningPort{ port },
-		m_workGuard{ m_ioContext.get_executor() },
-		m_strand{ make_strand(m_networkThreadPool.get_executor()) }
+		m_workGuard{ m_ioContext.get_executor() }
 	{
 	}
 
@@ -145,7 +145,12 @@ namespace GenericBoson
 		if (!ReadIni())
 			return false;
 
-		m_pIoThread = std::make_unique<std::jthread>([&]() { m_ioContext.run(); });
+		for (int32_t i = 0; i < m_networkThreadPoolSize; ++i)
+		{
+			boost::asio::post(m_threads, [this]() {
+					m_ioContext.run();
+				});
+		}
 
 		return AfterReadIni();
 	}
@@ -154,6 +159,8 @@ namespace GenericBoson
 	{
 		m_isRunning = false;
 		m_ioContext.stop();
+		m_workGuard.reset();
+		m_threads.join();
 	}
 
 	bool ServerBase::IsRunning() const
@@ -165,20 +172,29 @@ namespace GenericBoson
 	{
 		auto ReadLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
 			{
-				auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
-					{
-						while (m_isRunning)
-						{
-							if (!co_await pSocket->Write())
-								break;
-						}
-					};
-
-				asio::co_spawn(co_await asio::this_coro::executor, WriteLoop(pSocket), asio::detached);
 				while (m_isRunning)
 				{
 					if (!co_await pSocket->Read())
 						break;
+				}
+			};
+
+		auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
+			{
+				while (m_isRunning)
+				{
+					if (!co_await pSocket->Write())
+						break;
+				}
+			};
+
+		auto LogicLoop = [this](std::shared_ptr<IActor> pActor) -> asio::awaitable<void>
+			{
+				while (m_isRunning)
+				{
+					asio::co_spawn(m_threads, 
+						[&pActor]() -> asio::awaitable<void> { co_await pActor->Execute(); }, 
+						asio::detached);
 				}
 			};
 
@@ -199,7 +215,9 @@ namespace GenericBoson
 
 			pActor->OnAccepted();
 
-			asio::co_spawn(m_strand, ReadLoop(pSocket), asio::detached);
+			asio::co_spawn(m_threads, ReadLoop(pSocket),  asio::detached);
+			asio::co_spawn(m_threads, WriteLoop(pSocket), asio::detached);
+			asio::co_spawn(m_threads, LogicLoop(pActor),  asio::detached);
 		}
 	}
 
