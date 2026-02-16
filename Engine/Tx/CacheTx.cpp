@@ -14,8 +14,25 @@ namespace GenericBoson
 		return std::make_shared<CacheTx>();
 	}
 
-	bool CacheTx::RunTx(CacheTxCallback&& callback)
+	asio::awaitable<bool> CacheTx::RunTx()
 	{
-		return true;
+		for (const auto& callback : m_preCallbacks)
+		{
+			if (!co_await callback())
+				co_return false;
+		}
+
+		DBResult result{ .resultCode = Zozo::ResultCode::ResultCode_Success };
+		{
+
+		}
+
+		for (const auto& callback : m_postCallbacks)
+		{
+			if (!co_await callback(result))
+				co_return false;
+		}
+
+		co_return true;
 	}
 }

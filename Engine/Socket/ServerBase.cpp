@@ -177,6 +177,8 @@ namespace GenericBoson
 					if (!co_await pSocket->Read())
 						break;
 				}
+
+				co_return;
 			};
 
 		auto WriteLoop = [this](std::shared_ptr<BoostTcpSocket> pSocket) -> asio::awaitable<void>
@@ -186,6 +188,8 @@ namespace GenericBoson
 					if (!co_await pSocket->Write())
 						break;
 				}
+
+				co_return;
 			};
 
 		auto LogicLoop = [this](std::shared_ptr<IActor> pActor) -> asio::awaitable<void>
@@ -193,9 +197,11 @@ namespace GenericBoson
 				while (m_isRunning)
 				{
 					asio::co_spawn(m_threads, 
-						[&pActor]() -> asio::awaitable<void> { co_await pActor->Execute(); }, 
+						[&pActor]() -> asio::awaitable<void> { co_await pActor->Update(); }, 
 						asio::detached);
 				}
+
+				co_return;
 			};
 
 		while (m_isRunning)
@@ -204,7 +210,7 @@ namespace GenericBoson
 
 			auto pSocket = std::make_shared<BoostTcpSocket>(std::move(socket));
 			auto pActor = CreateActor(pSocket);
-			NULL_CO_RETURN(pActor);
+			NULL_CO_VOID_RETURN(pActor);
 
 			pSocket->Initialize(pActor);
 
@@ -215,8 +221,10 @@ namespace GenericBoson
 
 			pActor->OnAccepted();
 
+			// Boost Asio TCP socket provides full duplex communication, so we can read and write at the same time.
 			asio::co_spawn(m_threads, ReadLoop(pSocket),  asio::detached);
 			asio::co_spawn(m_threads, WriteLoop(pSocket), asio::detached);
+
 			asio::co_spawn(m_threads, LogicLoop(pActor),  asio::detached);
 		}
 	}

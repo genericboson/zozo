@@ -43,7 +43,7 @@ namespace GenericBoson
         // [2] db
 
         auto queryStr = mysql::with_params(
-            "SELECT id, name, level FROM zozo_game.character WHERE user_id = {};",
+            "SELECT id, name FROM zozo_game.character WHERE user_id = {};",
             userId);
 
         mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
@@ -80,7 +80,7 @@ namespace GenericBoson
 
             auto name = fbb.CreateString(std::format("{} [Lv.{}]",
                 selectResult.name.value_or(""),
-                selectResult.level.value_or(0)));
+                "11"));//selectResult.level.value_or(0)));
 
             auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
             pairDatas.emplace_back(std::move(characterDataPair));

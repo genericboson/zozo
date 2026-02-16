@@ -10,9 +10,11 @@
 
 #include <flatbuffers/flatbuffers.h>
 
+#include <Engine/EnvironmentVariable.h>
 #include <Engine/Numeric/IdGenerator.h>
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
+#include <Engine/Util/StopWatch.h>
 
 #include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/External/GameServer_generated.h>
@@ -49,9 +51,25 @@ namespace GenericBoson
         return true;
     }
 
-    asio::awaitable<void> Character::Execute()
+    asio::awaitable<void> Character::Update()
     {
-        co_await CO_SLEEP_MS(1);
+        using namespace std::chrono;
+		using namespace std::chrono_literals;
+
+		const auto startTime = steady_clock::now();
+        {
+
+        }
+        const auto endTime   = steady_clock::now();
+
+        const auto elapsedTimeMs = duration_cast<milliseconds>(endTime - startTime).count();
+        const auto leftTimeMs = Environment::GetCharacterUpdatePeriodMs() - elapsedTimeMs;
+        if (leftTimeMs > 0)
+        {
+            co_await asio::steady_timer(
+                co_await asio::this_coro::executor,
+                std::chrono::milliseconds(leftTimeMs)).async_wait(asio::use_awaitable);
+        }
     }
 
     void Character::Write(const uint8_t* pData, const std::size_t size)

@@ -4,17 +4,19 @@ namespace GenericBoson
 {
 	class CacheField;
 
-	enum class QueryType
-	{
-		INSERT,
-		UPDATE,
-		DELETE
-	};
-
 	class CacheObject
 	{
+		enum class QueryType
+		{
+			Insert,
+			Update,
+			Delete
+		};
+
 	public:
-		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
+		bool Insert();
+		bool Update();
+		bool Delete();
 
 	protected:
 		virtual auto GetObjectName() const                            -> std::string                           = 0;
@@ -27,5 +29,10 @@ namespace GenericBoson
 	private:
 		template<typename CALLABLE>
 		std::vector<std::string> GetFormattedBoundFieldStrings(const CALLABLE& callable);
+
+		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
+
+	private:
+		std::list<std::string> m_queries;
 	};
 }

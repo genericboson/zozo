@@ -1,13 +1,20 @@
 #include "PCH.h"
 
 #include "CacheTx.h"
-#include "ResultCode.h"
 #include "TxExecutor.h"
 
 namespace GenericBoson
 {
-    EResultCode TxExecutor::RunTx(CacheTxCallback&& callback)
+    void TxExecutor::Consume(const CacheTx* tx)
     {
-        return EResultCode();
+    }
+
+    void TxExecutor::ConsumeAll()
+    {
+        CacheTx* tx;
+        while (m_txQueue.pop(tx))
+        {
+            Consume(tx);
+        }
     }
 }

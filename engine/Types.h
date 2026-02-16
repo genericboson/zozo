@@ -1,6 +1,18 @@
 #pragma once
 
+#include <boost/asio.hpp>
+
+#include <MessageSchema/Common/Constant_generated.h>
+
 namespace GenericBoson
 {
-	using CacheTxCallback = std::function< bool(void) >;
+	namespace asio = boost::asio;
+
+	struct DBResult
+	{
+		Zozo::ResultCode resultCode;
+	};
+
+	using CacheTxPreCallback = std::function<asio::awaitable<bool>(void)>;
+	using CacheTxPostCallback = std::function<asio::awaitable<bool>(DBResult)>;
 }

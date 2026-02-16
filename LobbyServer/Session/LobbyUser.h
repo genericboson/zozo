@@ -25,7 +25,7 @@ namespace GenericBoson
 		int64_t Id() const override;
 		bool Initialize() override;
 
-		asio::awaitable<void> Execute() override { co_await CO_SLEEP_MS(1); };
+		asio::awaitable<void> Update() override { co_await CO_SLEEP_MS(1); };
 
 		void Write();
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;

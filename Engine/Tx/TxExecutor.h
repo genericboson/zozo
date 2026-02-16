@@ -1,20 +1,21 @@
 #pragma once
 
-//#include <boost/asio.hpp>
+#include <boost/lockfree/queue.hpp>
 
+#include "CacheTx.h"
 #include "Engine/Types.h"
 
 namespace GenericBoson
 {
-	class CacheTx;
-	enum class EResultCode;
+	namespace lockfree = boost::lockfree;
 
 	class TxExecutor
 	{
 	public:
-		EResultCode RunTx(CacheTxCallback&& callback);
+		void Consume(const CacheTx* tx);
+		void ConsumeAll();
 
 	private:
-		//boost::asio::execution_context* context;
+		lockfree::queue<CacheTx*, lockfree::capacity<128>, lockfree::fixed_sized<false>> m_txQueue;
 	};
 }

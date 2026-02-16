@@ -32,7 +32,7 @@ namespace GenericBoson
 	{
 		switch ( queryType )
 		{
-		case QueryType::INSERT:
+		case QueryType::Insert:
 		{
 			if (!wherePhrase.empty())
 			{
@@ -60,7 +60,7 @@ namespace GenericBoson
 				flaggedsStr, valuesStr);
 		}
 		break;
-		case QueryType::UPDATE:
+		case QueryType::Update:
 		{
 			const auto pairs = GetFormattedBoundFieldStrings(
 				[](const CacheField& pField)
@@ -79,7 +79,7 @@ namespace GenericBoson
 			return std::format("{} WHERE {};", query, wherePhrase);
 		}
 		break;
-		case QueryType::DELETE:
+		case QueryType::Delete:
 		{
 			const auto pairs = GetFormattedBoundFieldStrings(
 				[](const CacheField& pField)
@@ -92,5 +92,23 @@ namespace GenericBoson
 		}
 		break;
 		}
+	}
+
+	bool CacheObject::Insert()
+	{
+		m_queries.push_back(GetQuery(QueryType::Insert));
+		return true;
+	}
+
+	bool CacheObject::Update()
+	{
+		m_queries.push_back(GetQuery(QueryType::Update));
+		return true;
+	}
+
+	bool CacheObject::Delete()
+	{
+		m_queries.push_back(GetQuery(QueryType::Delete));
+		return true;
 	}
 }

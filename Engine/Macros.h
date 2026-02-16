@@ -2,6 +2,8 @@
 
 namespace GenericBoson
 {
+#define IS_DEV 1
+
 #define ERROR_LOG( formatString, ... )         \
     std::cout <<"\033[1;31m"<<std::format( formatString, __VA_ARGS__ )<<"\033[0m"<<'\n';
 
@@ -45,6 +47,18 @@ namespace GenericBoson
 		WARN_LOG("Null = '" #expression "'"); \
 		co_return returnValue;                      \
 	}
+
+#if (IS_DEV == 1)
+#define DEV_ERROR_LOG( formatString, ... )         ERROR_LOG( formatString, ... )
+#define DEV_WARN_LOG( formatString, ... )          WARN_LOG( formatString, ... )
+#define DEV_INFO_LOG( formatString, ... )          INFO_LOG( formatString, ... )
+#define DEV_NULL_RETURN( expression, returnValue ) NULL_RETURN( expression, returnValue )
+#else
+#define DEV_ERROR_LOG( formatString, ... )
+#define DEV_WARN_LOG( formatString, ... )
+#define DEV_INFO_LOG( formatString, ... )
+#define NULL_RETURN( expression, returnValue )
+#endif
 
 #define CO_SLEEP_MS(time_value) \
 	asio::steady_timer(co_await asio::this_coro::executor, std::chrono::milliseconds(time_value)).async_wait(asio::use_awaitable)
