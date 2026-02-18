@@ -8,6 +8,7 @@
 #include "ServerBase.h"
 
 #include "BoostTcpSocket.h"
+#include "EnvironmentVariable.h"
 
 namespace GenericBoson
 {
@@ -194,11 +195,28 @@ namespace GenericBoson
 
 		auto LogicLoop = [this](std::shared_ptr<IActor> pActor) -> asio::awaitable<void>
 			{
+				const auto updatePeriodMs = pActor->GetUpdatePeriodMs();
 				while (m_isRunning)
 				{
-					asio::co_spawn(m_threads, 
-						[&pActor]() -> asio::awaitable<void> { co_await pActor->Update(); }, 
-						asio::detached);
+					using namespace std::chrono;
+					using namespace std::chrono_literals;
+
+					const auto startTime = steady_clock::now();
+					{
+						asio::co_spawn(m_threads,
+							[&pActor]() -> asio::awaitable<void> { co_await pActor->Update(); },
+							asio::detached);
+					}
+					const auto endTime = steady_clock::now();
+
+					const auto elapsedTimeMs = duration_cast<milliseconds>(endTime - startTime).count();
+					const auto leftTimeMs = updatePeriodMs - elapsedTimeMs;
+					if (leftTimeMs > 0)
+					{
+						co_await asio::steady_timer(
+							co_await asio::this_coro::executor,
+							std::chrono::milliseconds(leftTimeMs)).async_wait(asio::use_awaitable);
+					}
 				}
 
 				co_return;
@@ -225,7 +243,7 @@ namespace GenericBoson
 			asio::co_spawn(m_threads, ReadLoop(pSocket),  asio::detached);
 			asio::co_spawn(m_threads, WriteLoop(pSocket), asio::detached);
 
-			asio::co_spawn(m_threads, LogicLoop(pActor),  asio::detached);
+			//asio::co_spawn(m_threads, LogicLoop(pActor),  asio::detached);
 		}
 	}
 

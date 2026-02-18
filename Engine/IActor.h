@@ -18,6 +18,7 @@ namespace GenericBoson
 		virtual bool Initialize() = 0;
 
 		virtual asio::awaitable<void> Update() = 0;
+		virtual int64_t GetUpdatePeriodMs() const = 0;
 
 		virtual asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
 	};

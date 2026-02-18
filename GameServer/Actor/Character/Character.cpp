@@ -53,23 +53,7 @@ namespace GenericBoson
 
     asio::awaitable<void> Character::Update()
     {
-        using namespace std::chrono;
-		using namespace std::chrono_literals;
-
-		const auto startTime = steady_clock::now();
-        {
-
-        }
-        const auto endTime   = steady_clock::now();
-
-        const auto elapsedTimeMs = duration_cast<milliseconds>(endTime - startTime).count();
-        const auto leftTimeMs = Environment::GetCharacterUpdatePeriodMs() - elapsedTimeMs;
-        if (leftTimeMs > 0)
-        {
-            co_await asio::steady_timer(
-                co_await asio::this_coro::executor,
-                std::chrono::milliseconds(leftTimeMs)).async_wait(asio::use_awaitable);
-        }
+        co_await CO_SLEEP_MS(1);
     }
 
     void Character::Write(const uint8_t* pData, const std::size_t size)
@@ -85,6 +69,11 @@ namespace GenericBoson
     void Character::OnAccepted()
     {
         INFO_LOG("Client accepted ( temporary id - {} )", m_id);
+    }
+
+    int64_t Character::GetUpdatePeriodMs() const
+    {
+        return Environment::GetCharacterUpdatePeriodMs();;
     }
 
     asio::awaitable<void> Character::Read(const uint8_t* pData, std::size_t dataSize)

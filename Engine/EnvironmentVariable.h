@@ -14,6 +14,7 @@ namespace GenericBoson
 	class Environment
 	{
 		ENV_DECL(int64_t, CharacterUpdatePeriodMs, 42);
+		ENV_DECL(int64_t, DefaultUpdatePeriodMs, 42);
 	private:
 		static Environment g_environmentVariable;
 	};

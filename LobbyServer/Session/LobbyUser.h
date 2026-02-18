@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Engine/EnvironmentVariable.h>
 #include <Engine/Tx/TxExecutor.h>
 #include <Engine/IActor.h>
 
@@ -26,6 +27,7 @@ namespace GenericBoson
 		bool Initialize() override;
 
 		asio::awaitable<void> Update() override { co_await CO_SLEEP_MS(1); };
+		int64_t GetUpdatePeriodMs() const override { return Environment::GetDefaultUpdatePeriodMs(); };
 
 		void Write();
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;

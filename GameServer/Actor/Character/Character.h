@@ -39,6 +39,8 @@ namespace GenericBoson
 		void Write(const uint8_t* pData, const std::size_t size);
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 
+		int64_t GetUpdatePeriodMs() const override;
+
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
