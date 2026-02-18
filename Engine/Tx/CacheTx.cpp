@@ -24,7 +24,10 @@ namespace GenericBoson
 
 		DBResult result{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 		{
-
+			for (const auto& obj : m_objects)
+			{
+				obj->Execute();
+			}
 		}
 
 		for (const auto& callback : m_postCallbacks)

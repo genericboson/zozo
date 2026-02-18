@@ -18,6 +18,8 @@ namespace GenericBoson
 		bool Update();
 		bool Delete();
 
+		bool Execute();
+
 	protected:
 		virtual auto GetObjectName() const                            -> std::string                           = 0;
 		virtual auto GetFieldNames() const                            -> const std::vector<std::string> &      = 0;

@@ -111,4 +111,22 @@ namespace GenericBoson
 		m_queries.push_back(GetQuery(QueryType::Delete));
 		return true;
 	}
+
+	bool CacheObject::Execute()
+	{
+		for (const auto& query : m_queries)
+		{
+			INFO_LOG("Executing query : {}", query);
+			
+			if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+				queryStr,
+				result,
+				asio::as_tuple(asio::use_awaitable));
+				dbErr)
+			{
+				ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+				co_return;
+			}
+		}
+	}
 }
