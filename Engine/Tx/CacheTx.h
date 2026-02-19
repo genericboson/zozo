@@ -16,6 +16,13 @@ namespace GenericBoson
 	public:
 		static std::shared_ptr<CacheTx> Create();
 
+		template<typename OBJ>
+		std::shared_ptr<OBJ> New()
+		{
+			auto newObj = std::make_shared<OBJ>(*this);
+			return 
+		}
+
 	private:
 		int32_t                                 m_id;
 		CacheTxOption                           m_option;

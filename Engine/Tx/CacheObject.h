@@ -3,17 +3,22 @@
 namespace GenericBoson
 {
 	class CacheField;
+	class CacheTx;
 
 	class CacheObject
 	{
 		enum class QueryType
 		{
+			Select,
 			Insert,
 			Update,
 			Delete
 		};
 
 	public:
+		CacheObject(CacheTx& tx);
+
+		bool Select();
 		bool Insert();
 		bool Update();
 		bool Delete();
@@ -35,6 +40,8 @@ namespace GenericBoson
 		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
 
 	private:
+		CacheTx& m_tx;
+
 		std::list<std::string> m_queries;
 	};
 }

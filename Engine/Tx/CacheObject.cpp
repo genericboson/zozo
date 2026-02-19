@@ -9,6 +9,11 @@
 
 namespace GenericBoson
 {
+	CacheObject::CacheObject(CacheTx& tx)
+		: m_tx(tx)
+	{
+	}
+
 	template<typename CALLABLE>
 	std::vector<std::string> CacheObject::GetFormattedBoundFieldStrings(const CALLABLE& callable)
 	{
@@ -94,6 +99,12 @@ namespace GenericBoson
 		}
 	}
 
+	bool CacheObject::Select()
+	{
+		m_queries.push_back(GetQuery(QueryType::Select));
+		return true;
+	}
+
 	bool CacheObject::Insert()
 	{
 		m_queries.push_back(GetQuery(QueryType::Insert));
@@ -114,19 +125,15 @@ namespace GenericBoson
 
 	bool CacheObject::Execute()
 	{
-		for (const auto& query : m_queries)
+		const auto joinedQuery = boost::algorithm::join(m_queries, "");
+
+		if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+			joinedQuery,
+			result,
+			asio::as_tuple(asio::use_awaitable));
+			dbErr)
 		{
-			INFO_LOG("Executing query : {}", query);
-			
-			if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-				queryStr,
-				result,
-				asio::as_tuple(asio::use_awaitable));
-				dbErr)
-			{
-				ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-				co_return;
-			}
+			ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
 		}
 	}
 }
