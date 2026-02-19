@@ -5,6 +5,11 @@
 
 namespace GenericBoson
 {
+    TxExecutor::TxExecutor(mysql::any_connection& dbConn)
+		: m_dbConn(dbConn)
+    {
+    }
+
     void TxExecutor::Consume(const CacheTx* tx)
     {
     }

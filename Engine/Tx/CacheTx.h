@@ -12,15 +12,15 @@ namespace GenericBoson
 	class CacheTx
 	{
 	public:
+		CacheTx(TxExecutor& txExecutor);
+
 		asio::awaitable<bool> RunTx();
-	public:
-		static std::shared_ptr<CacheTx> Create();
 
 		template<typename OBJ>
 		std::shared_ptr<OBJ> New()
 		{
 			auto newObj = std::make_shared<OBJ>(*this);
-			return 
+			return
 		}
 
 	private:
@@ -31,6 +31,6 @@ namespace GenericBoson
 
 		std::list< CacheTxPreCallback >         m_preCallbacks;
 		std::list< CacheTxPostCallback >        m_postCallbacks;
-		TxExecutor*                             m_pExecutor = nullptr;
+		TxExecutor&                             m_executor;
 	};
 }

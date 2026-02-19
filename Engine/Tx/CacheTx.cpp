@@ -9,9 +9,9 @@
 
 namespace GenericBoson
 {
-	std::shared_ptr<CacheTx> CacheTx::Create()
+	CacheTx::CacheTx(TxExecutor& txExecutor)
+		: m_executor(txExecutor)
 	{
-		return std::make_shared<CacheTx>();
 	}
 
 	asio::awaitable<bool> CacheTx::RunTx()

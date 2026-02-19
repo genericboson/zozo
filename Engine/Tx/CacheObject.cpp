@@ -6,6 +6,7 @@
 
 #include "CacheField.h"
 #include "CacheObject.h"
+#include "CacheTx.h"
 
 namespace GenericBoson
 {
@@ -123,11 +124,11 @@ namespace GenericBoson
 		return true;
 	}
 
-	bool CacheObject::Execute()
+	asio::awaitable<bool> CacheObject::Execute()
 	{
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
-		if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+		if (auto [dbErr] = co_await m_tx.m_executor.m_dbConn.async_execute(
 			joinedQuery,
 			result,
 			asio::as_tuple(asio::use_awaitable));

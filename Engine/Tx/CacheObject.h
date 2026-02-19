@@ -5,6 +5,8 @@ namespace GenericBoson
 	class CacheField;
 	class CacheTx;
 
+	namespace asio = boost::asio;
+
 	class CacheObject
 	{
 		enum class QueryType
@@ -23,7 +25,7 @@ namespace GenericBoson
 		bool Update();
 		bool Delete();
 
-		bool Execute();
+		asio::awaitable<bool> Execute();
 
 	protected:
 		virtual auto GetObjectName() const                            -> std::string                           = 0;
