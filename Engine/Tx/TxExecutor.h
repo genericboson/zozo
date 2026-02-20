@@ -13,6 +13,8 @@ namespace GenericBoson
 
 	class TxExecutor
 	{
+		friend class CacheObject;
+
 	public:
 		TxExecutor(mysql::any_connection& dbConn);
 

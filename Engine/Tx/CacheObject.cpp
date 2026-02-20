@@ -7,6 +7,7 @@
 #include "CacheField.h"
 #include "CacheObject.h"
 #include "CacheTx.h"
+#include "TxExecutor.h"
 
 namespace GenericBoson
 {

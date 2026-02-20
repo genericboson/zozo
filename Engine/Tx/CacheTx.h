@@ -11,6 +11,8 @@ namespace GenericBoson
 
 	class CacheTx
 	{
+		friend class CacheObject;
+
 	public:
 		CacheTx(TxExecutor& txExecutor);
 
