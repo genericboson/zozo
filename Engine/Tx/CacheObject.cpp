@@ -129,6 +129,7 @@ namespace GenericBoson
 	{
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
+		mysql::results result;
 		if (auto [dbErr] = co_await m_tx.m_executor.m_dbConn.async_execute(
 			joinedQuery,
 			result,
@@ -136,6 +137,9 @@ namespace GenericBoson
 			dbErr)
 		{
 			ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+			co_return false;
 		}
+
+		co_return true;
 	}
 }
