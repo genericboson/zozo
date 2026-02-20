@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/projects/zozo/out/build/x64-release/cmake_install.cmake",
+		"D:/projects/zozo/out/build/x64-release/Engine/cmake_install.cmake",
+		"D:/projects/zozo/out/build/x64-release/GameServer/cmake_install.cmake",
+		"D:/projects/zozo/out/build/x64-release/LobbyServer/cmake_install.cmake",
+		"D:/projects/zozo/out/build/x64-release/TestConsole/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
