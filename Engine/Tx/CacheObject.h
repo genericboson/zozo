@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/asio.hpp>
+
 namespace GenericBoson
 {
 	class CacheField;
