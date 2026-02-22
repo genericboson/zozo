@@ -26,7 +26,7 @@ namespace GenericBoson::Zozo
         friend class Name;
         friend class Level;
     public:
-       CharacterCache();
+       CharacterCache(CacheTx& tx);
         class Id : public CacheField
         {
         public:

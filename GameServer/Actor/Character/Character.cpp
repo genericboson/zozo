@@ -32,7 +32,7 @@ namespace GenericBoson
     Character::Character(
         const std::shared_ptr<GameServer>& pServer,
         const std::shared_ptr<ISocket>&    pSocket)
-		: m_id(0), m_server(*pServer), m_pSocket(pSocket)
+		: TxExecutor(*pServer->m_pDbConn), m_id(0), m_server(*pServer), m_pSocket(pSocket)
     {
     }
 

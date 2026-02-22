@@ -49,7 +49,7 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"        friend class {SC.SnakeToPascalOrCamel(field.m_name)};");
                 }
                 hContent.AppendLine(@"    public:");
-                hContent.AppendLine($"       {typeOne.m_name}Cache();");
+                hContent.AppendLine($"       {typeOne.m_name}Cache(CacheTx& tx);");
                 foreach (var field in typeOne.m_fields)
                 {
                     hContent.AppendLine($"        class {SC.SnakeToPascalOrCamel(field.m_name)} : public CacheField");

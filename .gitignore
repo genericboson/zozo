@@ -5,3 +5,9 @@
 /out/build/x64-debug
 /out/build/x64-release
 *.cxx.pch
+x64-release
+obj
+bin
+*.exe
+*.dll
+*.pdb

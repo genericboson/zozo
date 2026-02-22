@@ -24,7 +24,8 @@ namespace FlatCacheGenerator
 
             foreach (var typeOne in SC.tree.m_types)
             {
-                cppContent.AppendLine($"    {typeOne.m_name}Cache::{typeOne.m_name}Cache()");
+                cppContent.AppendLine($"    {typeOne.m_name}Cache::{typeOne.m_name}Cache(CacheTx& tx)");
+                cppContent.AppendLine(@"        : CacheObject(tx)");
                 cppContent.AppendLine(@"    {");
                 cppContent.AppendLine($"        m_fieldVector.reserve({typeOne.m_fields.Count()});");
                 foreach (var field in typeOne.m_fields)

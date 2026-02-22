@@ -6,7 +6,8 @@
 
 namespace GenericBoson::Zozo
 {
-    CharacterCache::CharacterCache()
+    CharacterCache::CharacterCache(CacheTx& tx)
+        : CacheObject(tx)
     {
         m_fieldVector.reserve(4);
         m_fieldMap["id"] = std::make_shared<Id>(*this);

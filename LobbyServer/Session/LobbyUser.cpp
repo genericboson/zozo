@@ -32,7 +32,7 @@ namespace GenericBoson
     LobbyUser::LobbyUser(
         LobbyServer& lobbyServer, 
         const std::shared_ptr<ISocket>& pSocket)
-        : m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
+        : TxExecutor(*lobbyServer.m_pDbConn), m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
     {
     }
 

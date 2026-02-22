@@ -26,7 +26,8 @@ namespace GenericBoson
 		{
 			for (const auto& obj : m_objects)
 			{
-				obj->Execute();
+				if (!co_await obj->Execute())
+					co_return false;
 			}
 		}
 

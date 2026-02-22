@@ -22,7 +22,7 @@ namespace GenericBoson
 		std::shared_ptr<OBJ> New()
 		{
 			auto newObj = std::make_shared<OBJ>(*this);
-			return
+			return newObj;
 		}
 
 	private:
