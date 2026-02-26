@@ -63,13 +63,16 @@ namespace FlatCacheGenerator
                     hContent.AppendLine(@"        public:");
                     hContent.AppendLine($"            {SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner);");
                     hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
+                    hContent.AppendLine($"            void SetKey(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
                     hContent.AppendLine(@"            std::string GetName() const override;");
                     hContent.AppendLine($"            std::string GetValueString() const override;");
+                    hContent.AppendLine(@"            bool IsKey() const override;");
+                    hContent.AppendLine(@"            void Bind() override;");
                     hContent.AppendLine(@"            bool IsBound() const override;");
                     hContent.AppendLine(@"        private:");
                     hContent.AppendLine($"            {typeOne.m_name}Cache& m_owner;");
-                    hContent.AppendLine(@"            bool m_isBound = false;");
+                    hContent.AppendLine(@"            FieldState m_state = FieldState::None;");
                     hContent.AppendLine(@"        };");
                     hContent.AppendLine($"        {SC.SnakeToPascalOrCamel(field.m_name)}& Get{SC.SnakeToPascalOrCamel(field.m_name)}();");
                     hContent.AppendLine();

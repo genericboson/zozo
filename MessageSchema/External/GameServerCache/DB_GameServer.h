@@ -37,13 +37,16 @@ namespace GenericBoson::Zozo
         public:
             Id(CharacterCache& owner);
             void Set(const int64_t& param);
+            void SetKey(const int64_t& param);
             auto Get() const -> const int64_t&;
             std::string GetName() const override;
             std::string GetValueString() const override;
+            bool IsKey() const override;
+            void Bind() override;
             bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_isBound = false;
+            FieldState m_state = FieldState::None;
         };
         Id& GetId();
 
@@ -52,13 +55,16 @@ namespace GenericBoson::Zozo
         public:
             UserId(CharacterCache& owner);
             void Set(const int64_t& param);
+            void SetKey(const int64_t& param);
             auto Get() const -> const int64_t&;
             std::string GetName() const override;
             std::string GetValueString() const override;
+            bool IsKey() const override;
+            void Bind() override;
             bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_isBound = false;
+            FieldState m_state = FieldState::None;
         };
         UserId& GetUserId();
 
@@ -67,13 +73,16 @@ namespace GenericBoson::Zozo
         public:
             Name(CharacterCache& owner);
             void Set(const std::string& param);
+            void SetKey(const std::string& param);
             auto Get() const -> const std::string&;
             std::string GetName() const override;
             std::string GetValueString() const override;
+            bool IsKey() const override;
+            void Bind() override;
             bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_isBound = false;
+            FieldState m_state = FieldState::None;
         };
         Name& GetName();
 
@@ -82,13 +91,16 @@ namespace GenericBoson::Zozo
         public:
             Level(CharacterCache& owner);
             void Set(const int32_t& param);
+            void SetKey(const int32_t& param);
             auto Get() const -> const int32_t&;
             std::string GetName() const override;
             std::string GetValueString() const override;
+            bool IsKey() const override;
+            void Bind() override;
             bool IsBound() const override;
         private:
             CharacterCache& m_owner;
-            bool m_isBound = false;
+            FieldState m_state = FieldState::None;
         };
         Level& GetLevel();
 

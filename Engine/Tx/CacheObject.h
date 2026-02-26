@@ -39,7 +39,7 @@ namespace GenericBoson
 
 	private:
 		template<typename CALLABLE>
-		std::vector<std::string> GetFormattedBoundFieldStrings(const CALLABLE& callable);
+		std::string GetFormattedFieldsString(bool(CacheField::* FieldFunc)() const, const CALLABLE& callable);
 
 		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
 

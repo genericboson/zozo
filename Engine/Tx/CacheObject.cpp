@@ -17,7 +17,9 @@ namespace GenericBoson
 	}
 
 	template<typename CALLABLE>
-	std::vector<std::string> CacheObject::GetFormattedBoundFieldStrings(const CALLABLE& callable)
+	std::string CacheObject::GetFormattedFieldsString(
+		bool  (CacheField::*FieldFunc)() const, 
+		const CALLABLE& callable)
 	{
 		const auto& fields = GetFields();
 
@@ -26,13 +28,13 @@ namespace GenericBoson
 		for (const auto pField : fields)
 		{
 			NULL_CONTINUE(pField);
-			if (!pField->IsBound())
+			if (!std::invoke(FieldFunc, *pField))
 				continue;
 			
 			callable(*pField);
 		}
 
-		return formattedFields;
+		return boost::algorithm::join(formattedFields, ",");
 	}
 
 	std::string CacheObject::GetQuery( const QueryType queryType, const std::string& wherePhrase /*= ""*/)
@@ -43,14 +45,22 @@ namespace GenericBoson
 		{
 			const auto fieldNames = GetFieldNames();
 			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
+
+			const auto keys = GetFormattedFieldsString(
+				&CacheField::IsKey,
+				[](const CacheField& pField)
+				{
+					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+				});
 			
 			auto query = std::format("SELECT {} FROM {}",
 				fieldNamesStr, GetObjectName());
+
 			if (wherePhrase.empty())
 			{
-				return std::format("{};", query);
+				return std::format("{} WHERE {};", query, keys);
 			}
-			return std::format("{} WHERE {};", query, wherePhrase);
+			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
 		case QueryType::Insert:
 		{
@@ -60,55 +70,63 @@ namespace GenericBoson
 				return "";
 			}
 
-			const auto flaggeds = GetFormattedBoundFieldStrings(
+			const auto flaggeds = GetFormattedFieldsString(
+				&CacheField::IsBound,
 				[](const CacheField& pField)
 				{
 					return pField.GetName();
 				});
 
-			const auto values = GetFormattedBoundFieldStrings(
+			const auto values = GetFormattedFieldsString(
+				&CacheField::IsBound,
 				[](const CacheField& pField)
 				{
 					return pField.GetValueString();
 				});
-
-			const auto flaggedsStr = boost::algorithm::join(flaggeds, ",");
-			const auto valuesStr   = boost::algorithm::join(values, ",");
 			
 			return std::format("INSERT INTO {} ({}) VALUES {};",
 				GetObjectName(),
-				flaggedsStr, valuesStr);
+				flaggeds, values);
 		}
 		break;
 		case QueryType::Update:
 		{
-			const auto pairs = GetFormattedBoundFieldStrings(
+			const auto pairs = GetFormattedFieldsString(
+				&CacheField::IsBound,
+				[](const CacheField& pField)
+				{
+					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+				});
+
+			const auto keys = GetFormattedFieldsString(
+				&CacheField::IsKey,
 				[](const CacheField& pField)
 				{
 					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
 				});
 
 			auto query = std::format("UPDATE {} SET {}",
-				GetObjectName(), boost::algorithm::join(pairs, ","));
+				GetObjectName(), pairs);
 
 			if (wherePhrase.empty())
 			{
-				return std::format("{};", query);
+				return std::format("{} WHERE {};", query, keys);
 			}
 
-			return std::format("{} WHERE {};", query, wherePhrase);
+			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
 		break;
 		case QueryType::Delete:
 		{
-			const auto pairs = GetFormattedBoundFieldStrings(
+			const auto keys = GetFormattedFieldsString(
+				&CacheField::IsKey,
 				[](const CacheField& pField)
 				{
 					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
 				});
 
 			return std::format("DELETE FROM {} WHERE {};", 
-				GetObjectName(), boost::algorithm::join(pairs, ","));
+				GetObjectName(), keys);
 		}
 		break;
 		}

@@ -48,7 +48,14 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
                     cppContent.AppendLine(@"    {");
                     cppContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
-                    cppContent.AppendLine($"        m_isBound = true;");
+                    cppContent.AppendLine($"        m_state = FieldState::Bound;");
+                    cppContent.AppendLine(@"    }");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::SetKey(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    cppContent.AppendLine(@"    {");
+                    cppContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
+                    cppContent.AppendLine($"        m_state = FieldState::Key;");
                     cppContent.AppendLine(@"    }");
                     cppContent.AppendLine();
 
@@ -78,9 +85,21 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine(@"    }");
                     cppContent.AppendLine();
 
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::Bind()");
+                    cppContent.AppendLine(@"    {");
+                    cppContent.AppendLine($"        m_state = FieldState::Bound;");
+                    cppContent.AppendLine(@"    };");
+                    cppContent.AppendLine();
+
                     cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::IsBound() const");
                     cppContent.AppendLine(@"    {");
-                    cppContent.AppendLine($"        return m_isBound;");
+                    cppContent.AppendLine($"        return m_state == FieldState::Bound || m_state == FieldState::Key;");
+                    cppContent.AppendLine(@"    };");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    bool {typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}::IsKey() const");
+                    cppContent.AppendLine(@"    {");
+                    cppContent.AppendLine($"        return m_state == FieldState::Key;");
                     cppContent.AppendLine(@"    };");
                     cppContent.AppendLine();
 

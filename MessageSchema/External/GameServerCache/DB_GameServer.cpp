@@ -32,7 +32,13 @@ namespace GenericBoson::Zozo
     void CharacterCache::Id::Set(const int64_t& param)
     {
         m_owner.CharacterT::id = param;
-        m_isBound = true;
+        m_state = FieldState::Bound;
+    }
+
+    void CharacterCache::Id::SetKey(const int64_t& param)
+    {
+        m_owner.CharacterT::id = param;
+        m_state = FieldState::Key;
     }
 
     auto CharacterCache::Id::Get() const
@@ -51,9 +57,19 @@ namespace GenericBoson::Zozo
         return std::to_string(m_owner.CharacterT::id);
     }
 
+    void CharacterCache::Id::Bind()
+    {
+        m_state = FieldState::Bound;
+    };
+
     bool CharacterCache::Id::IsBound() const
     {
-        return m_isBound;
+        return m_state == FieldState::Bound || m_state == FieldState::Key;
+    };
+
+    bool CharacterCache::Id::IsKey() const
+    {
+        return m_state == FieldState::Key;
     };
 
     CharacterCache::Id& CharacterCache::GetId()
@@ -69,7 +85,13 @@ namespace GenericBoson::Zozo
     void CharacterCache::UserId::Set(const int64_t& param)
     {
         m_owner.CharacterT::user_id = param;
-        m_isBound = true;
+        m_state = FieldState::Bound;
+    }
+
+    void CharacterCache::UserId::SetKey(const int64_t& param)
+    {
+        m_owner.CharacterT::user_id = param;
+        m_state = FieldState::Key;
     }
 
     auto CharacterCache::UserId::Get() const
@@ -88,9 +110,19 @@ namespace GenericBoson::Zozo
         return std::to_string(m_owner.CharacterT::user_id);
     }
 
+    void CharacterCache::UserId::Bind()
+    {
+        m_state = FieldState::Bound;
+    };
+
     bool CharacterCache::UserId::IsBound() const
     {
-        return m_isBound;
+        return m_state == FieldState::Bound || m_state == FieldState::Key;
+    };
+
+    bool CharacterCache::UserId::IsKey() const
+    {
+        return m_state == FieldState::Key;
     };
 
     CharacterCache::UserId& CharacterCache::GetUserId()
@@ -106,7 +138,13 @@ namespace GenericBoson::Zozo
     void CharacterCache::Name::Set(const std::string& param)
     {
         m_owner.CharacterT::name = param;
-        m_isBound = true;
+        m_state = FieldState::Bound;
+    }
+
+    void CharacterCache::Name::SetKey(const std::string& param)
+    {
+        m_owner.CharacterT::name = param;
+        m_state = FieldState::Key;
     }
 
     auto CharacterCache::Name::Get() const
@@ -125,9 +163,19 @@ namespace GenericBoson::Zozo
         return m_owner.CharacterT::name;
     }
 
+    void CharacterCache::Name::Bind()
+    {
+        m_state = FieldState::Bound;
+    };
+
     bool CharacterCache::Name::IsBound() const
     {
-        return m_isBound;
+        return m_state == FieldState::Bound || m_state == FieldState::Key;
+    };
+
+    bool CharacterCache::Name::IsKey() const
+    {
+        return m_state == FieldState::Key;
     };
 
     CharacterCache::Name& CharacterCache::GetName()
@@ -143,7 +191,13 @@ namespace GenericBoson::Zozo
     void CharacterCache::Level::Set(const int32_t& param)
     {
         m_owner.CharacterT::level = param;
-        m_isBound = true;
+        m_state = FieldState::Bound;
+    }
+
+    void CharacterCache::Level::SetKey(const int32_t& param)
+    {
+        m_owner.CharacterT::level = param;
+        m_state = FieldState::Key;
     }
 
     auto CharacterCache::Level::Get() const
@@ -162,9 +216,19 @@ namespace GenericBoson::Zozo
         return std::to_string(m_owner.CharacterT::level);
     }
 
+    void CharacterCache::Level::Bind()
+    {
+        m_state = FieldState::Bound;
+    };
+
     bool CharacterCache::Level::IsBound() const
     {
-        return m_isBound;
+        return m_state == FieldState::Bound || m_state == FieldState::Key;
+    };
+
+    bool CharacterCache::Level::IsKey() const
+    {
+        return m_state == FieldState::Key;
     };
 
     CharacterCache::Level& CharacterCache::GetLevel()

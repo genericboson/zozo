@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FlatCacheGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ad637f0824c9528a199043e7d827b441dab00a9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a772d3302feb62fbd554f415dae321d203c197e")]
 [assembly: System.Reflection.AssemblyProductAttribute("FlatCacheGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FlatCacheGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
