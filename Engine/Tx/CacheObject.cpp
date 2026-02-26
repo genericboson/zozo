@@ -39,6 +39,19 @@ namespace GenericBoson
 	{
 		switch ( queryType )
 		{
+		case QueryType::Select:
+		{
+			const auto fieldNames = GetFieldNames();
+			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
+			
+			auto query = std::format("SELECT {} FROM {}",
+				fieldNamesStr, GetObjectName());
+			if (wherePhrase.empty())
+			{
+				return std::format("{};", query);
+			}
+			return std::format("{} WHERE {};", query, wherePhrase);
+		}
 		case QueryType::Insert:
 		{
 			if (!wherePhrase.empty())
@@ -127,6 +140,7 @@ namespace GenericBoson
 
 	asio::awaitable<bool> CacheObject::Execute()
 	{
+		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
 		mysql::results result;

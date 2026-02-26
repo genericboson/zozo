@@ -16,6 +16,11 @@ namespace GenericBoson::Zozo
         MAX
     };
 
+    class Id;
+    class UserId;
+    class Name;
+    class Level;
+
     class CharacterCache : 
         public CacheObject,
         private CharacterT,
@@ -40,6 +45,7 @@ namespace GenericBoson::Zozo
             CharacterCache& m_owner;
             bool m_isBound = false;
         };
+        Id& GetId();
 
         class UserId : public CacheField
         {
@@ -54,6 +60,7 @@ namespace GenericBoson::Zozo
             CharacterCache& m_owner;
             bool m_isBound = false;
         };
+        UserId& GetUserId();
 
         class Name : public CacheField
         {
@@ -68,6 +75,7 @@ namespace GenericBoson::Zozo
             CharacterCache& m_owner;
             bool m_isBound = false;
         };
+        Name& GetName();
 
         class Level : public CacheField
         {
@@ -82,6 +90,7 @@ namespace GenericBoson::Zozo
             CharacterCache& m_owner;
             bool m_isBound = false;
         };
+        Level& GetLevel();
 
     protected:
         auto GetObjectName() const                            -> std::string                           override;
@@ -92,13 +101,9 @@ namespace GenericBoson::Zozo
         auto GetFields() const                                -> const std::vector<const CacheField*>& override;
     private:
         CacheField* m_pId = nullptr;
-        Id& GetId();
         CacheField* m_pUserId = nullptr;
-        UserId& GetUserId();
         CacheField* m_pName = nullptr;
-        Name& GetName();
         CacheField* m_pLevel = nullptr;
-        Level& GetLevel();
 
         std::vector<std::string> m_names = 
         {

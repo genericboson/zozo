@@ -35,6 +35,12 @@ namespace FlatCacheGenerator
                 hContent.AppendLine($"        MAX");
                 hContent.AppendLine(@"    };");
                 hContent.AppendLine();
+
+                foreach (var field in typeOne.m_fields)
+                {
+                    hContent.AppendLine($"    class {SC.SnakeToPascalOrCamel(field.m_name)};");
+                }
+                hContent.AppendLine();
             }
 
             foreach (var typeOne in SC.tree.m_types)
@@ -65,6 +71,7 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"            {typeOne.m_name}Cache& m_owner;");
                     hContent.AppendLine(@"            bool m_isBound = false;");
                     hContent.AppendLine(@"        };");
+                    hContent.AppendLine($"        {SC.SnakeToPascalOrCamel(field.m_name)}& Get{SC.SnakeToPascalOrCamel(field.m_name)}();");
                     hContent.AppendLine();
                 }
                 hContent.AppendLine(@"    protected:");
@@ -81,7 +88,6 @@ namespace FlatCacheGenerator
                 {
                     names.Add($"\"{field.m_name}\"");
                     hContent.AppendLine($"        CacheField* m_p{SC.SnakeToPascalOrCamel(field.m_name)} = nullptr;");
-                    hContent.AppendLine($"        {SC.SnakeToPascalOrCamel(field.m_name)}& Get{SC.SnakeToPascalOrCamel(field.m_name)}();");
                 }
 
                 hContent.AppendLine();

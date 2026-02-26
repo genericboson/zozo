@@ -4,6 +4,8 @@
 #include <boost/mysql/static_results.hpp>
 #include <boost/mysql/pfr.hpp>
 
+#include <Engine/Tx/CacheTx.h>
+#include <MessageSchema/External/GameServerCache/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
 #include "Actor/Character/Character.h"
@@ -36,6 +38,13 @@ namespace GenericBoson
             fbb.Finish(msg);
             co_return;
         }
+
+        const auto tx = std::make_shared<CacheTx>(*this);
+
+        auto characterCache = tx->New<GenericBoson::Zozo::CharacterCache>();
+
+        characterCache->GetUserId().Set(userId);
+
 
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
