@@ -8,6 +8,7 @@
 #include <MessageSchema/External/GameServerCache/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
+#include "Continuation.h"
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
 #include "GameServer.h"
@@ -39,13 +40,20 @@ namespace GenericBoson
             co_return;
         }
 
-        const auto tx = std::make_shared<CacheTx>(*this);
+        auto tx = std::make_shared<CacheTx>(*this);
 
         auto characterCache = tx->New<GenericBoson::Zozo::CharacterCache>();
 
-        characterCache->GetUserId().Set(userId);
+        characterCache->GetUserId().SetKey(userId);
+        characterCache->GetId().Bind();
+        characterCache->GetName().Bind();
 
+        characterCache->Select();
 
+        tx | [](void) ->asio::awaitable<bool> { co_return true; };
+
+        tx->RunTx();
+        
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////

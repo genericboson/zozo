@@ -16,8 +16,10 @@ namespace GenericBoson
 	public:
 		CacheTx(TxExecutor& txExecutor);
 
+		void ResetAll();
 		asio::awaitable<bool> RunTx();
 
+	public:
 		template<typename OBJ>
 		std::shared_ptr<OBJ> New()
 		{

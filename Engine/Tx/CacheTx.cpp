@@ -14,6 +14,13 @@ namespace GenericBoson
 	{
 	}
 
+	void CacheTx::ResetAll()
+	{
+		m_objects.clear();
+		m_preCallbacks.clear();
+		m_postCallbacks.clear();
+	}
+
 	asio::awaitable<bool> CacheTx::RunTx()
 	{
 		for (const auto& callback : m_preCallbacks)
@@ -36,6 +43,8 @@ namespace GenericBoson
 			if (!co_await callback(result))
 				co_return false;
 		}
+
+		ResetAll();
 
 		co_return true;
 	}
