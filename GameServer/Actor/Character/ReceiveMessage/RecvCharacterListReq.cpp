@@ -5,10 +5,10 @@
 #include <boost/mysql/pfr.hpp>
 
 #include <Engine/Tx/CacheTx.h>
+#include <Engine/Tx/Continuation.h>
 #include <MessageSchema/External/GameServerCache/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
-#include "Continuation.h"
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
 #include "GameServer.h"

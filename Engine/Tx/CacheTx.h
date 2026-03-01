@@ -13,6 +13,12 @@ namespace GenericBoson
 	{
 		friend class CacheObject;
 
+		template<typename CALLABLE>
+		friend std::shared_ptr<CacheTx>& operator|(std::shared_ptr<CacheTx>& pTx, CALLABLE&& rhs);
+
+		template<typename CALLABLE>
+		friend CacheTx& operator|(CacheTx& pTx, CALLABLE&& rhs);
+
 	public:
 		CacheTx(TxExecutor& txExecutor);
 
