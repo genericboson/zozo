@@ -21,14 +21,8 @@ namespace GenericBoson
 		m_postCallbacks.clear();
 	}
 
-	asio::awaitable<bool> CacheTx::RunTx()
+	asio::awaitable<bool> CacheTx::RunOnUpdate()
 	{
-		for (const auto& callback : m_preCallbacks)
-		{
-			if (!co_await callback())
-				co_return false;
-		}
-
 		DBResult result{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 		{
 			for (const auto& obj : m_objects)
@@ -45,6 +39,13 @@ namespace GenericBoson
 		}
 
 		ResetAll();
+
+		co_return true;
+	}
+
+	asio::awaitable<bool> CacheTx::RunTx()
+	{
+		// #todo : push to TxExecutor's lock free queue
 
 		co_return true;
 	}

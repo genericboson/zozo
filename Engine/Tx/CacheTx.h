@@ -12,6 +12,7 @@ namespace GenericBoson
 	class CacheTx
 	{
 		friend class CacheObject;
+		friend class TxExecutor;
 
 		template<typename CALLABLE>
 		friend std::shared_ptr<CacheTx>& operator|(std::shared_ptr<CacheTx>& pTx, CALLABLE&& rhs);
@@ -34,12 +35,14 @@ namespace GenericBoson
 		}
 
 	private:
+		asio::awaitable<bool> RunOnUpdate();
+
+	private:
 		int32_t                                 m_id;
 		CacheTxOption                           m_option;
 		std::list<std::shared_ptr<CacheObject>> m_objects;
 		CacheTxState                            m_state;
 
-		std::list< CacheTxPreCallback >         m_preCallbacks;
 		std::list< CacheTxPostCallback >        m_postCallbacks;
 		TxExecutor&                             m_executor;
 	};

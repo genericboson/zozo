@@ -50,8 +50,6 @@ namespace GenericBoson
 
         characterCache->Select();
 
-        tx | [](void) ->asio::awaitable<bool> { co_return true; };
-
         tx->RunTx();
         
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
