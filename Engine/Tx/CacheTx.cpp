@@ -17,7 +17,6 @@ namespace GenericBoson
 	void CacheTx::ResetAll()
 	{
 		m_objects.clear();
-		m_preCallbacks.clear();
 		m_postCallbacks.clear();
 	}
 
@@ -45,8 +44,6 @@ namespace GenericBoson
 
 	asio::awaitable<bool> CacheTx::RunTx()
 	{
-		// #todo : push to TxExecutor's lock free queue
-
-		co_return true;
+		co_return m_executor.m_txQueue.push(this);
 	}
 }

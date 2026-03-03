@@ -14,11 +14,12 @@ namespace GenericBoson
 	class TxExecutor
 	{
 		friend class CacheObject;
+		friend class CacheTx;
 
 	public:
 		TxExecutor(mysql::any_connection& dbConn);
 
-		void Consume(const CacheTx* tx);
+		void Consume(CacheTx* tx);
 		void ConsumeAll();
 
 	private:

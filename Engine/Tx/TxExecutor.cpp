@@ -10,8 +10,10 @@ namespace GenericBoson
     {
     }
 
-    void TxExecutor::Consume(const CacheTx* tx)
+    void TxExecutor::Consume(CacheTx* tx)
     {
+        NULL_RETURN(tx);
+        tx->RunOnUpdate();
     }
 
     void TxExecutor::ConsumeAll()
