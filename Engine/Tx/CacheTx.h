@@ -24,7 +24,7 @@ namespace GenericBoson
 		CacheTx(TxExecutor& txExecutor);
 
 		void ResetAll();
-		asio::awaitable<bool> RunTx();
+		CacheTx& RunAsync();
 
 	public:
 		template<typename OBJ>

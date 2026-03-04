@@ -42,8 +42,9 @@ namespace GenericBoson
 		co_return true;
 	}
 
-	asio::awaitable<bool> CacheTx::RunTx()
+	CacheTx& CacheTx::RunAsync()
 	{
-		co_return m_executor.m_txQueue.push(this);
+		m_executor.m_txQueue.push(this);
+		return *this;
 	}
 }

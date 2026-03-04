@@ -50,7 +50,9 @@ namespace GenericBoson
 
         characterCache->Select();
 
-        tx->RunTx();
+        tx->RunAsync() | 
+            [](DBResult result) -> asio::awaitable<bool> { co_return true; } |
+            [](DBResult result) -> asio::awaitable<bool> { co_return true; };
         
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
