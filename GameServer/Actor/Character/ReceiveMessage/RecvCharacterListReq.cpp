@@ -42,17 +42,66 @@ namespace GenericBoson
 
         auto tx = std::make_shared<CacheTx>(*this);
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // [1] pre-processing
+
         auto characterCache = tx->New<GenericBoson::Zozo::CharacterCache>();
 
         characterCache->GetUserId().SetKey(userId);
         characterCache->GetId().Bind();
         characterCache->GetName().Bind();
 
-        characterCache->Select();
+        if (!characterCache->Select())
+        {
+            co_return;
+        }
 
         tx->RunAsync() | 
-            [](DBResult result) -> asio::awaitable<bool> { co_return true; } |
-            [](DBResult result) -> asio::awaitable<bool> { co_return true; };
+        [](DBResult result) -> asio::awaitable<bool>
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // [2] apply to cache
+
+            co_return true;
+        } |
+        [](DBResult result) -> asio::awaitable<bool>
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // [3] post-processing
+
+            std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
+
+            std::vector<CharacterId> characterIds;
+            characterIds.reserve(selectResults.size());
+            for (auto& selectResult : selectResults)
+            {
+                characterIds.push_back(CharacterId{ selectResult.id });
+
+                auto name = fbb.CreateString(std::format("{} [Lv.{}]",
+                    selectResult.name.value_or(""),
+                    "11"));//selectResult.level.value_or(0)));
+
+                auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
+                pairDatas.emplace_back(std::move(characterDataPair));
+            }
+
+            CharacterManager::GetInstance()->SetUserCharacterIds(
+                UserId{ userId },
+                std::move(characterIds));
+
+            const auto pairDatasOffset = fbb.CreateVector(pairDatas);
+
+            const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
+            const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
+
+            fbb.Finish(msg);
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+
+            co_return true;
+        };
         
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
@@ -83,40 +132,6 @@ namespace GenericBoson
             fbb.Finish(msg);
             co_return;
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // [3] serialization
-
-        std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
-
-        std::vector<CharacterId> characterIds;
-        characterIds.reserve(selectResults.size());
-        for (auto& selectResult : selectResults)
-        {
-            characterIds.push_back(CharacterId{ selectResult.id });
-
-            auto name = fbb.CreateString(std::format("{} [Lv.{}]",
-                selectResult.name.value_or(""),
-                "11"));//selectResult.level.value_or(0)));
-
-            auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
-            pairDatas.emplace_back(std::move(characterDataPair));
-        }
-
-        CharacterManager::GetInstance()->SetUserCharacterIds(
-            UserId{ userId },
-            std::move(characterIds));
-
-        const auto pairDatasOffset = fbb.CreateVector(pairDatas);
-
-        const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
-        const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-
-        fbb.Finish(msg);
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 
         co_return;
 	}
