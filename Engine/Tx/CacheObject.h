@@ -27,7 +27,7 @@ namespace GenericBoson
 		bool Update();
 		bool Delete();
 
-		asio::awaitable<bool> Execute();
+		asio::awaitable<bool> Execute(DBResult& dbResult);
 
 	protected:
 		virtual auto GetObjectName() const                            -> std::string                           = 0;

@@ -7,6 +7,7 @@
 #include "CacheField.h"
 #include "CacheObject.h"
 #include "CacheTx.h"
+#include "Types.h"
 #include "TxExecutor.h"
 
 namespace GenericBoson
@@ -156,7 +157,7 @@ namespace GenericBoson
 		return true;
 	}
 
-	asio::awaitable<bool> CacheObject::Execute()
+	asio::awaitable<bool> CacheObject::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");

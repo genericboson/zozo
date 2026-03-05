@@ -57,17 +57,26 @@ namespace GenericBoson
         }
 
         tx->RunAsync() | 
-        [](DBResult result) -> asio::awaitable<bool>
+        [](DBResult dbResult) -> asio::awaitable<bool>
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             // [2] apply to cache
 
+            /*const auto& [succeeded, queryResults] = dbResult;
+
+            for (const auto& result : queryResults)
+            {
+
+            }*/
+
             co_return true;
         } |
-        [](DBResult result) -> asio::awaitable<bool>
+        [this](DBResult result) -> asio::awaitable<bool>
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             // [3] post-processing
+
+            flatbuffers::FlatBufferBuilder fbb;
 
             std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 

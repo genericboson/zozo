@@ -22,18 +22,16 @@ namespace GenericBoson
 
 	asio::awaitable<bool> CacheTx::RunOnUpdate()
 	{
-		DBResult result{ .resultCode = Zozo::ResultCode::ResultCode_Success };
+		DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
+		for (const auto& obj : m_objects)
 		{
-			for (const auto& obj : m_objects)
-			{
-				if (!co_await obj->Execute())
-					co_return false;
-			}
+			if (!co_await obj->Execute(dbResult))
+				co_return false;
 		}
 
 		for (const auto& callback : m_postCallbacks)
 		{
-			if (!co_await callback(result))
+			if (!co_await callback(dbResult))
 				co_return false;
 		}
 
