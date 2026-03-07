@@ -28,7 +28,15 @@ namespace GenericBoson
 
 	public:
 		template<typename OBJ>
-		std::shared_ptr<OBJ> New()
+		std::shared_ptr<OBJ> NewRead()
+		{
+			auto newObj = std::make_shared<OBJ>(*this);
+			m_objects.push_back(newObj);
+			return newObj;
+		}
+
+		template<typename OBJ>
+		std::shared_ptr<OBJ> NewWrite()
 		{
 			auto newObj = std::make_shared<OBJ>(*this);
 			m_objects.push_back(newObj);

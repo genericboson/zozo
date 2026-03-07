@@ -11,23 +11,10 @@ namespace GenericBoson
 
 	class CacheObject
 	{
-		enum class QueryType
-		{
-			Select,
-			Insert,
-			Update,
-			Delete
-		};
-
 	public:
 		CacheObject(CacheTx& tx);
 
-		bool Select();
-		bool Insert();
-		bool Update();
-		bool Delete();
-
-		asio::awaitable<bool> Execute(DBResult& dbResult);
+		virtual asio::awaitable<bool> Execute(DBResult& dbResult) = 0;
 
 	protected:
 		virtual auto GetObjectName() const                            -> std::string                           = 0;
@@ -37,13 +24,10 @@ namespace GenericBoson
 		virtual auto GetField(const int32_t fieldEnumValue) const     -> const CacheField*                     = 0;
 		virtual auto GetFields() const                                -> const std::vector<const CacheField*>& = 0;
 
-	private:
 		template<typename CALLABLE>
 		std::string GetFormattedFieldsString(bool(CacheField::* FieldFunc)() const, const CALLABLE& callable);
 
-		std::string GetQuery(const QueryType queryType, const std::string& wherePhrase = "");
-
-	private:
+	protected:
 		CacheTx& m_tx;
 
 		std::list<std::string> m_queries;
