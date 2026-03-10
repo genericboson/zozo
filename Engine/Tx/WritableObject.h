@@ -2,6 +2,8 @@
 
 #include <boost/asio.hpp>
 
+#include "CacheObject.h"
+
 namespace GenericBoson
 {
 	class CacheField;
@@ -9,7 +11,7 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 
-	class WritableObject
+	class WritableObject : public CacheObject
 	{
 		enum class QueryType
 		{
