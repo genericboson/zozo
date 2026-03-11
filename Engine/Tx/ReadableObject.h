@@ -11,7 +11,8 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 
-	class ReadableObject : public CacheObject
+	template<CacheObjectType T>
+	class ReadableObject : T
 	{
 	public:
 		ReadableObject(CacheTx& tx);
