@@ -12,33 +12,14 @@
 
 namespace GenericBoson
 {
-	WritableObject::WritableObject(CacheTx& tx)
+	template<CacheObjectType T>
+	WritableObject<T>::WritableObject(CacheTx& tx)
 		: m_tx(tx)
 	{
 	}
 
-	template<typename CALLABLE>
-	std::string WritableObject::GetFormattedFieldsString(
-		bool  (CacheField::* FieldFunc)() const,
-		const CALLABLE& callable)
-	{
-		const auto& fields = GetFields();
-
-		std::vector<std::string> formattedFields;
-		formattedFields.reserve(fields.size());
-		for (const auto pField : fields)
-		{
-			NULL_CONTINUE(pField);
-			if (!std::invoke(FieldFunc, *pField))
-				continue;
-
-			callable(*pField);
-		}
-
-		return boost::algorithm::join(formattedFields, ",");
-	}
-
-	std::string WritableObject::GetQuery(const QueryType queryType, const std::string& wherePhrase /*= ""*/)
+	template<CacheObjectType T>
+	std::string WritableObject<T>::GetQuery(const QueryType queryType, const std::string& wherePhrase /*= ""*/)
 	{
 		switch (queryType)
 		{
@@ -133,25 +114,29 @@ namespace GenericBoson
 		}
 	}
 
-	bool WritableObject::Insert()
+	template<CacheObjectType T>
+	bool WritableObject<T>::Insert()
 	{
 		m_queries.push_back(GetQuery(QueryType::Insert));
 		return true;
 	}
 
-	bool WritableObject::Update()
+	template<CacheObjectType T>
+	bool WritableObject<T>::Update()
 	{
 		m_queries.push_back(GetQuery(QueryType::Update));
 		return true;
 	}
 
-	bool WritableObject::Delete()
+	template<CacheObjectType T>
+	bool WritableObject<T>::Delete()
 	{
 		m_queries.push_back(GetQuery(QueryType::Delete));
 		return true;
 	}
 
-	asio::awaitable<bool> WritableObject::Execute(DBResult& dbResult)
+	template<CacheObjectType T>
+	asio::awaitable<bool> WritableObject<T>::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");
