@@ -4,6 +4,8 @@
 #include <boost/mysql/static_results.hpp>
 #include <boost/mysql/pfr.hpp>
 
+#include <format>
+
 #include <Engine/Tx/CacheTx.h>
 #include <Engine/Tx/Continuation.h>
 #include <MessageSchema/External/GameServerCache/DB_GameServer.h>
@@ -45,16 +47,16 @@ namespace GenericBoson
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // [1] pre-processing
 
-        auto characterCache = tx->New<GenericBoson::Zozo::CharacterCache>();
+        /*auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache>();
 
         characterCache->GetUserId().SetKey(userId);
         characterCache->GetId().Bind();
-        characterCache->GetName().Bind();
+        characterCache->GetName().Bind();*/
 
-        if (!characterCache->Select())
+        /*if (!characterCache->Select())
         {
             co_return;
-        }
+        }*/
 
         tx->RunAsync() | 
         [](DBResult dbResult) -> asio::awaitable<bool>
@@ -71,7 +73,7 @@ namespace GenericBoson
 
             co_return true;
         } |
-        [this](DBResult result) -> asio::awaitable<bool>
+        [this, userId](DBResult result) -> asio::awaitable<bool>
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             // [3] post-processing
@@ -80,23 +82,23 @@ namespace GenericBoson
 
             std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
-            std::vector<CharacterId> characterIds;
-            characterIds.reserve(selectResults.size());
-            for (auto& selectResult : selectResults)
-            {
-                characterIds.push_back(CharacterId{ selectResult.id });
+            //std::vector<CharacterId> characterIds;
+            //characterIds.reserve(selectResults.size());
+            //for (auto& selectResult : selectResults)
+            //{
+            //    characterIds.push_back(CharacterId{ selectResult.id });
 
-                auto name = fbb.CreateString(std::format("{} [Lv.{}]",
-                    selectResult.name.value_or(""),
-                    "11"));//selectResult.level.value_or(0)));
+            //    auto name = fbb.CreateString(std::format("{} [Lv.{}]",
+            //        selectResult.name.value_or(""),
+            //        "11"));//selectResult.level.value_or(0)));
 
-                auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
-                pairDatas.emplace_back(std::move(characterDataPair));
-            }
+            //    auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
+            //    pairDatas.emplace_back(std::move(characterDataPair));
+            //}
 
-            CharacterManager::GetInstance()->SetUserCharacterIds(
-                UserId{ userId },
-                std::move(characterIds));
+            //CharacterManager::GetInstance()->SetUserCharacterIds(
+            //    UserId{ userId },
+            //    std::move(characterIds));
 
             const auto pairDatasOffset = fbb.CreateVector(pairDatas);
 

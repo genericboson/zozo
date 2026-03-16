@@ -12,38 +12,15 @@
 
 namespace GenericBoson
 {
-	template<CacheObjectType T>
-	WritableObject<T>::WritableObject(CacheTx& tx)
-		: m_tx(tx)
+	WritableObject::WritableObject(CacheTx& tx)
+		: CacheObject(tx)
 	{
 	}
 
-	template<CacheObjectType T>
-	std::string WritableObject<T>::GetQuery(const QueryType queryType, const std::string& wherePhrase /*= ""*/)
+	std::string WritableObject::GetQuery(const QueryType queryType, const std::string& wherePhrase /*= ""*/)
 	{
 		switch (queryType)
 		{
-		case QueryType::Select:
-		{
-			const auto fieldNames = GetFieldNames();
-			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
-
-			const auto keys = GetFormattedFieldsString(
-				&CacheField::IsKey,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
-			auto query = std::format("SELECT {} FROM {}",
-				fieldNamesStr, GetObjectName());
-
-			if (wherePhrase.empty())
-			{
-				return std::format("{} WHERE {};", query, keys);
-			}
-			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
-		}
 		case QueryType::Insert:
 		{
 			if (!wherePhrase.empty())
@@ -114,29 +91,25 @@ namespace GenericBoson
 		}
 	}
 
-	template<CacheObjectType T>
-	bool WritableObject<T>::Insert()
+	bool WritableObject::Insert()
 	{
 		m_queries.push_back(GetQuery(QueryType::Insert));
 		return true;
 	}
 
-	template<CacheObjectType T>
-	bool WritableObject<T>::Update()
+	bool WritableObject::Update()
 	{
 		m_queries.push_back(GetQuery(QueryType::Update));
 		return true;
 	}
 
-	template<CacheObjectType T>
-	bool WritableObject<T>::Delete()
+	bool WritableObject::Delete()
 	{
 		m_queries.push_back(GetQuery(QueryType::Delete));
 		return true;
 	}
 
-	template<CacheObjectType T>
-	asio::awaitable<bool> WritableObject<T>::Execute(DBResult& dbResult)
+	asio::awaitable<bool> WritableObject::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(m_queries, "");

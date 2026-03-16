@@ -13,7 +13,8 @@ namespace GenericBoson
 
 	class TxExecutor
 	{
-		friend class CacheObject;
+		friend class ReadableObject;
+		friend class WritableObject;
 		friend class CacheTx;
 
 	public:

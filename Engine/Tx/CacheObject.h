@@ -6,6 +6,7 @@ namespace GenericBoson
 {
 	class CacheField;
 	class CacheTx;
+	class DBResult;
 
 	namespace asio = boost::asio;
 

@@ -11,8 +11,7 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 
-	template<CacheObjectType T>
-	class WritableObject : T
+	class WritableObject : public CacheObject
 	{
 		enum class QueryType
 		{

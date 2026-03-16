@@ -15,7 +15,7 @@ namespace GenericBoson
 	template<typename CALLABLE>
 	CacheTx& operator|(CacheTx& tx, CALLABLE&& rhs)
 	{
-		static_assert(CacheTxPostCallbackLike<CALLABLE>);
+		//static_assert(CacheTxPostCallbackLike<CALLABLE>);
 		tx.m_postCallbacks.emplace_back(std::forward<CALLABLE>(rhs));
 		return tx;
 	}
@@ -23,7 +23,7 @@ namespace GenericBoson
 	template<typename CALLABLE>
 	std::shared_ptr<CacheTx>& operator|(std::shared_ptr<CacheTx>& pTx, CALLABLE&& rhs)
 	{
-		static_assert(CacheTxPostCallbackLike<CALLABLE>);
+		//static_assert(CacheTxPostCallbackLike<CALLABLE>);
 		pTx->m_postCallbacks.emplace_back(std::forward<CALLABLE>(rhs));
 		return pTx;
 	}

@@ -2,10 +2,11 @@
 
 #include <format>
 
-#include "boost/algorithm/string/join.hpp"
+#include <boost/mysql.hpp>
+#include <boost/algorithm/string/join.hpp>
 
-#include "CacheField.h"
 #include "ReadableObject.h"
+#include "CacheField.h"
 #include "CacheTx.h"
 #include "Types.h"
 #include "TxExecutor.h"
@@ -13,147 +14,35 @@
 namespace GenericBoson
 {
 	ReadableObject::ReadableObject(CacheTx& tx)
-		: m_tx(tx)
+		: CacheObject(tx)
 	{
 	}
 
-	template<typename CALLABLE>
-	std::string ReadableObject::GetFormattedFieldsString(
-		bool  (CacheField::* FieldFunc)() const,
-		const CALLABLE& callable)
+	std::string ReadableObject::GetQuery(const std::string& wherePhrase /*= ""*/)
 	{
-		const auto& fields = GetFields();
+		const auto fieldNames = GetFieldNames();
+		const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
 
-		std::vector<std::string> formattedFields;
-		formattedFields.reserve(fields.size());
-		for (const auto pField : fields)
-		{
-			NULL_CONTINUE(pField);
-			if (!std::invoke(FieldFunc, *pField))
-				continue;
-
-			callable(*pField);
-		}
-
-		return boost::algorithm::join(formattedFields, ",");
-	}
-
-	std::string ReadableObject::GetQuery(const QueryType queryType, const std::string& wherePhrase /*= ""*/)
-	{
-		switch (queryType)
-		{
-		case QueryType::Select:
-		{
-			const auto fieldNames = GetFieldNames();
-			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
-
-			const auto keys = GetFormattedFieldsString(
-				&CacheField::IsKey,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
-			auto query = std::format("SELECT {} FROM {}",
-				fieldNamesStr, GetObjectName());
-
-			if (wherePhrase.empty())
+		const auto keys = GetFormattedFieldsString(
+			&CacheField::IsKey,
+			[](const CacheField& pField)
 			{
-				return std::format("{} WHERE {};", query, keys);
-			}
-			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
-		}
-		case QueryType::Insert:
+				return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+			});
+
+		auto query = std::format("SELECT {} FROM {}",
+			fieldNamesStr, GetObjectName());
+
+		if (wherePhrase.empty())
 		{
-			if (!wherePhrase.empty())
-			{
-				ERROR_LOG("WHERE phrase is not applicable for INSERT queries.");
-				return "";
-			}
-
-			const auto flaggeds = GetFormattedFieldsString(
-				&CacheField::IsBound,
-				[](const CacheField& pField)
-				{
-					return pField.GetName();
-				});
-
-			const auto values = GetFormattedFieldsString(
-				&CacheField::IsBound,
-				[](const CacheField& pField)
-				{
-					return pField.GetValueString();
-				});
-
-			return std::format("INSERT INTO {} ({}) VALUES {};",
-				GetObjectName(),
-				flaggeds, values);
+			return std::format("{} WHERE {};", query, keys);
 		}
-		break;
-		case QueryType::Update:
-		{
-			const auto pairs = GetFormattedFieldsString(
-				&CacheField::IsBound,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
-			const auto keys = GetFormattedFieldsString(
-				&CacheField::IsKey,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
-			auto query = std::format("UPDATE {} SET {}",
-				GetObjectName(), pairs);
-
-			if (wherePhrase.empty())
-			{
-				return std::format("{} WHERE {};", query, keys);
-			}
-
-			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
-		}
-		break;
-		case QueryType::Delete:
-		{
-			const auto keys = GetFormattedFieldsString(
-				&CacheField::IsKey,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
-			return std::format("DELETE FROM {} WHERE {};",
-				GetObjectName(), keys);
-		}
-		break;
-		}
+		return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 	}
 
 	bool ReadableObject::Select()
 	{
-		m_queries.push_back(GetQuery(QueryType::Select));
-		return true;
-	}
-
-	bool ReadableObject::Insert()
-	{
-		m_queries.push_back(GetQuery(QueryType::Insert));
-		return true;
-	}
-
-	bool ReadableObject::Update()
-	{
-		m_queries.push_back(GetQuery(QueryType::Update));
-		return true;
-	}
-
-	bool ReadableObject::Delete()
-	{
-		m_queries.push_back(GetQuery(QueryType::Delete));
+		m_queries.push_back(GetQuery());
 		return true;
 	}
 

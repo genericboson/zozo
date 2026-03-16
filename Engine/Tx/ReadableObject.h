@@ -10,9 +10,9 @@ namespace GenericBoson
 	class CacheTx;
 
 	namespace asio = boost::asio;
+	namespace mysql = boost::mysql;
 
-	template<CacheObjectType T>
-	class ReadableObject : T
+	class ReadableObject : public CacheObject
 	{
 	public:
 		ReadableObject(CacheTx& tx);

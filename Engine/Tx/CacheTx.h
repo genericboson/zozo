@@ -11,7 +11,8 @@ namespace GenericBoson
 
 	class CacheTx
 	{
-		friend class CacheObject;
+		friend class ReadableObject;
+		friend class WritableObject;
 		friend class TxExecutor;
 
 		template<typename CALLABLE>
