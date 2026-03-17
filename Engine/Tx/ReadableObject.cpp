@@ -13,14 +13,14 @@
 
 namespace GenericBoson
 {
-	template<CacheObjectType T>
-	ReadableObject<T>::ReadableObject(CacheTx& tx)
+	template<typename T>
+	Readable<T>::Readable(CacheTx& tx)
 		: T(tx)
 	{
 	}
 
-	template<CacheObjectType T>
-	std::string ReadableObject<T>::GetQuery(const std::string& wherePhrase /*= ""*/)
+	template<typename T>
+	std::string Readable<T>::GetQuery(const std::string& wherePhrase /*= ""*/)
 	{
 		const auto fieldNames = T::GetFieldNames();
 		const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
@@ -42,15 +42,15 @@ namespace GenericBoson
 		return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 	}
 
-	template<CacheObjectType T>
-	bool ReadableObject<T>::Select()
+	template<typename T>
+	bool Readable<T>::Select()
 	{
 		T::m_queries.push_back(GetQuery());
 		return true;
 	}
 
-	template<CacheObjectType T>
-	asio::awaitable<bool> ReadableObject<T>::Execute(DBResult& dbResult)
+	template<typename T>
+	asio::awaitable<bool> Readable<T>::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(T::m_queries, "");

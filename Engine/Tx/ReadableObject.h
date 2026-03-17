@@ -12,11 +12,11 @@ namespace GenericBoson
 	namespace asio = boost::asio;
 	namespace mysql = boost::mysql;
 
-	template<CacheObjectType T>
-	class ReadableObject : T
+	template<typename T>
+	class Readable : public T
 	{
 	public:
-		ReadableObject(CacheTx& tx);
+		Readable(CacheTx& tx);
 
 		bool Select();
 

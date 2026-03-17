@@ -10,16 +10,16 @@ namespace GenericBoson
 
 	namespace asio = boost::asio;
 
-	template<typename T>
-	concept CacheObjectType = requires(T t)
-	{
-		{ t.GetObjectName() } -> std::convertible_to<std::string>;
-		{ t.GetFieldNames() } -> std::convertible_to<const std::vector<std::string>&>;
-		{ t.GetFieldName(0) } -> std::convertible_to<std::string>;
-		{ t.GetField("") }    -> std::convertible_to<const CacheField*>;
-		{ t.GetField(0) }     -> std::convertible_to<const CacheField*>;
-		{ t.GetFields() }     -> std::convertible_to<const std::vector<const CacheField*>&>;
-	};
+	//template<typename T>
+	//concept CacheObjectType = requires(T t)
+	//{
+		//{ t.GetObjectName() } -> std::convertible_to<std::string>;
+		//{ t.GetFieldNames() } -> std::convertible_to<const std::vector<std::string>&>;
+		//{ t.GetFieldName(0) } -> std::convertible_to<std::string>;
+		//{ t.GetField("") }    -> std::convertible_to<const CacheField*>;
+		//{ t.GetField(0) }     -> std::convertible_to<const CacheField*>;
+		//{ t.GetFields() }     -> std::convertible_to<const std::vector<const CacheField*>&>;
+	//};
 
 	class CacheObject
 	{

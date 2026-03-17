@@ -45,10 +45,10 @@ namespace FlatCacheGenerator
 
             foreach (var typeOne in SC.tree.m_types)
             {
-                hContent.AppendLine($"    class {typeOne.m_name}Cache : ");
-                hContent.AppendLine($"        public CacheObject,");
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    class {typeOne.m_name}Cache : public T,");
                 hContent.AppendLine($"        private {typeOne.m_name}T,");
-                hContent.AppendLine($"        std::enable_shared_from_this<{typeOne.m_name}Cache>");
+                hContent.AppendLine($"        std::enable_shared_from_this<{typeOne.m_name}Cache<T>>");
                 hContent.AppendLine(@"    {");
                 foreach (var field in typeOne.m_fields)
                 {

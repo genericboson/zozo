@@ -21,10 +21,10 @@ namespace GenericBoson::Zozo
     class Name;
     class Level;
 
-    class CharacterCache : 
-        public CacheObject,
+    template<typename T>
+    class CharacterCache : public T,
         private CharacterT,
-        std::enable_shared_from_this<CharacterCache>
+        std::enable_shared_from_this<CharacterCache<T>>
     {
         friend class Id;
         friend class UserId;

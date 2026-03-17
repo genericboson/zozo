@@ -12,7 +12,7 @@ namespace GenericBoson
 
 	class CacheTx
 	{
-		template<CacheObjectType T>
+		template<typename T>
 		friend class ReadableObject;
 		friend class WritableObject;
 		friend class TxExecutor;
@@ -34,7 +34,7 @@ namespace GenericBoson
 		std::shared_ptr<OBJ> NewRead()
 		{
 			auto newObj = std::make_shared<OBJ>(*this);
-			m_objects.push_back(newObj);
+			m_objects.emplace_back(std::move(newObj));
 			return newObj;
 		}
 
