@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Types.h"
+#include "CacheObject.h"
 #include "CacheTxOption.h"
 
 namespace GenericBoson
@@ -11,6 +12,7 @@ namespace GenericBoson
 
 	class CacheTx
 	{
+		template<CacheObjectType T>
 		friend class ReadableObject;
 		friend class WritableObject;
 		friend class TxExecutor;

@@ -3,6 +3,7 @@
 #include <boost/lockfree/queue.hpp>
 #include <boost/mysql.hpp>
 
+#include "CacheObject.h"
 #include "CacheTx.h"
 #include "Engine/Types.h"
 
@@ -13,6 +14,7 @@ namespace GenericBoson
 
 	class TxExecutor
 	{
+		template<CacheObjectType T>
 		friend class ReadableObject;
 		friend class WritableObject;
 		friend class CacheTx;

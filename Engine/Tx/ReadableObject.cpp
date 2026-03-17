@@ -13,17 +13,19 @@
 
 namespace GenericBoson
 {
-	ReadableObject::ReadableObject(CacheTx& tx)
-		: CacheObject(tx)
+	template<CacheObjectType T>
+	ReadableObject<T>::ReadableObject(CacheTx& tx)
+		: T(tx)
 	{
 	}
 
-	std::string ReadableObject::GetQuery(const std::string& wherePhrase /*= ""*/)
+	template<CacheObjectType T>
+	std::string ReadableObject<T>::GetQuery(const std::string& wherePhrase /*= ""*/)
 	{
-		const auto fieldNames = GetFieldNames();
+		const auto fieldNames = T::GetFieldNames();
 		const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
 
-		const auto keys = GetFormattedFieldsString(
+		const auto keys = T::GetFormattedFieldsString(
 			&CacheField::IsKey,
 			[](const CacheField& pField)
 			{
@@ -31,7 +33,7 @@ namespace GenericBoson
 			});
 
 		auto query = std::format("SELECT {} FROM {}",
-			fieldNamesStr, GetObjectName());
+			fieldNamesStr, T::GetObjectName());
 
 		if (wherePhrase.empty())
 		{
@@ -40,19 +42,21 @@ namespace GenericBoson
 		return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 	}
 
-	bool ReadableObject::Select()
+	template<CacheObjectType T>
+	bool ReadableObject<T>::Select()
 	{
-		m_queries.push_back(GetQuery());
+		T::m_queries.push_back(GetQuery());
 		return true;
 	}
 
-	asio::awaitable<bool> ReadableObject::Execute(DBResult& dbResult)
+	template<CacheObjectType T>
+	asio::awaitable<bool> ReadableObject<T>::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
-		const auto joinedQuery = boost::algorithm::join(m_queries, "");
+		const auto joinedQuery = boost::algorithm::join(T::m_queries, "");
 
 		mysql::results result;
-		if (auto [dbErr] = co_await m_tx.m_executor.m_dbConn.async_execute(
+		if (auto [dbErr] = co_await T::m_tx.m_executor.m_dbConn.async_execute(
 			joinedQuery,
 			result,
 			asio::as_tuple(asio::use_awaitable));
