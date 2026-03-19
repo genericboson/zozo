@@ -14,8 +14,6 @@ namespace GenericBoson
 
 	class TxExecutor
 	{
-		template<typename T>
-		friend class ReadableObject;
 		friend class WritableObject;
 		friend class CacheTx;
 
@@ -24,6 +22,8 @@ namespace GenericBoson
 
 		void Consume(CacheTx* tx);
 		void ConsumeAll();
+
+		mysql::any_connection& GetDbConnection() { return m_dbConn; }
 
 	private:
 		mysql::any_connection&    m_dbConn;

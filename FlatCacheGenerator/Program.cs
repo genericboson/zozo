@@ -49,7 +49,7 @@ class Program
         var schema = parser.schema();
         SC.tree = schema.output;
 
-        CppFile.Make();
+        //CppFile.Make();
         HFile.Make();
         SQLFile.Make();
     }

@@ -103,6 +103,152 @@ namespace FlatCacheGenerator
                 hContent.AppendLine(@"        std::vector<const CacheField*>                               m_fieldVector;");
 
                 hContent.AppendLine(@"    };");
+
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    {typeOne.m_name}Cache<T>::{typeOne.m_name}Cache(CacheTx& tx)");
+                hContent.AppendLine(@"        : T(tx)");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine($"        m_fieldVector.reserve({typeOne.m_fields.Count()});");
+                foreach (var field in typeOne.m_fields)
+                {
+                    hContent.AppendLine($"        m_fieldMap[\"{field.m_name}\"] = std::make_shared<{SC.SnakeToPascalOrCamel(field.m_name)}>(*this);");
+                    hContent.AppendLine($"        m_p{SC.SnakeToPascalOrCamel(field.m_name)} = m_fieldMap[\"{field.m_name}\"].get();");
+                    hContent.AppendLine($"        m_fieldVector.push_back(m_p{SC.SnakeToPascalOrCamel(field.m_name)});");
+                }
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                foreach (var field in typeOne.m_fields)
+                {
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::{SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner)");
+                    hContent.AppendLine(@"        : m_owner(owner)");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
+                    hContent.AppendLine($"        m_state = FieldState::Bound;");
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::SetKey(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
+                    hContent.AppendLine($"        m_state = FieldState::Key;");
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Get() const");
+                    hContent.AppendLine($"        -> const {SC.ChangeToCppType(field.m_type)}&");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        return m_owner.{typeOne.m_name}T::{field.m_name};");
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    std::string {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::GetName() const");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        return \"{field.m_name}\";");
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    std::string {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::GetValueString() const");
+                    hContent.AppendLine(@"    {");
+                    if (SC.IsString(field.m_type))
+                    {
+                        hContent.AppendLine($"        return m_owner.{typeOne.m_name}T::{field.m_name};");
+                    }
+                    else
+                    {
+                        hContent.AppendLine($"        return std::to_string(m_owner.{typeOne.m_name}T::{field.m_name});");
+                    }
+                    hContent.AppendLine(@"    }");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Bind()");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        m_state = FieldState::Bound;");
+                    hContent.AppendLine(@"    };");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    bool {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::IsBound() const");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        return m_state == FieldState::Bound || m_state == FieldState::Key;");
+                    hContent.AppendLine(@"    };");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    bool {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::IsKey() const");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        return m_state == FieldState::Key;");
+                    hContent.AppendLine(@"    };");
+                    hContent.AppendLine();
+
+                    hContent.AppendLine($"    template<typename T>");
+                    hContent.AppendLine($"    {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}& {typeOne.m_name}Cache<T>::Get{SC.SnakeToPascalOrCamel(field.m_name)}()");
+                    hContent.AppendLine(@"    {");
+                    hContent.AppendLine($"        return *static_cast<{typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}*>(m_p{SC.SnakeToPascalOrCamel(field.m_name)});");
+                    hContent.AppendLine(@"    };");
+                    hContent.AppendLine();
+                }
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetObjectName() const -> std::string");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine($"        return \"{typeOne.m_name}\";");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetFieldNames() const -> const std::vector<std::string>&");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine(@"        return m_names;");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetFieldName(const int32_t fieldEnumValue) const -> std::string");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine($"        NULL_RETURN(0 <= fieldEnumValue && fieldEnumValue < {typeOne.m_name.ToUpper()}::MAX, std::string{{}});");
+                hContent.AppendLine(@"        return m_names[fieldEnumValue];");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetField(const std::string& fieldName) const -> const CacheField*");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine(@"        if (const auto found = m_fieldMap.find(fieldName);");
+                hContent.AppendLine(@"            found == m_fieldMap.end())");
+                hContent.AppendLine(@"            return nullptr;");
+                hContent.AppendLine(@"         else");
+                hContent.AppendLine(@"            return found->second.get();");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetField(const int32_t fieldEnumValue) const -> const CacheField*");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine(@"        return GetField(GetFieldName(fieldEnumValue));");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    auto {typeOne.m_name}Cache<T>::GetFields() const -> const std::vector<const CacheField*>&");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine($"        return m_fieldVector;");
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
             }
 
             hContent.AppendLine(@"}");
