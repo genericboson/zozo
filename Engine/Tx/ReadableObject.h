@@ -20,10 +20,10 @@ namespace GenericBoson
 	namespace mysql = boost::mysql;
 
 	template<typename T>
-	class Readable : public T
+	class ReadableObject : public T
 	{
 	public:
-		Readable(CacheTx& tx);
+		ReadableObject(CacheTx& tx);
 
 		bool Select();
 
@@ -33,13 +33,13 @@ namespace GenericBoson
 	};
 
 	template<typename T>
-	Readable<T>::Readable(CacheTx& tx)
+	ReadableObject<T>::ReadableObject(CacheTx& tx)
 		: T(tx)
 	{
 	}
 
 	template<typename T>
-	std::string Readable<T>::GetQuery(const std::string& wherePhrase /*= ""*/)
+	std::string ReadableObject<T>::GetQuery(const std::string& wherePhrase /*= ""*/)
 	{
 		const auto fieldNames = T::GetFieldNames();
 		const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
@@ -62,14 +62,14 @@ namespace GenericBoson
 	}
 
 	template<typename T>
-	bool Readable<T>::Select()
+	bool ReadableObject<T>::Select()
 	{
 		T::m_queries.push_back(GetQuery());
 		return true;
 	}
 
 	template<typename T>
-	asio::awaitable<bool> Readable<T>::Execute(DBResult& dbResult)
+	asio::awaitable<bool> ReadableObject<T>::Execute(DBResult& dbResult)
 	{
 		// #todo - compress queries
 		const auto joinedQuery = boost::algorithm::join(T::m_queries, "");

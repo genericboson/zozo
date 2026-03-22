@@ -48,7 +48,7 @@ namespace GenericBoson
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // [1] pre-processing
 
-        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<Readable<CacheObject>>>();
+        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<ReadableObject<CacheObject>>>();
 
         characterCache->GetUserId().SetKey(userId);
         characterCache->GetId().Bind();
