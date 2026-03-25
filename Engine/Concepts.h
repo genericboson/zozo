@@ -14,8 +14,8 @@ namespace GenericBoson
 	};
 
 	template <typename T, typename U>
-	concept IsDerivedFromReadable = std::derived_from<T, Readable<U>>;
+	concept ReadableLike = std::derived_from<T, Readable<U>>;
 
 	template <typename T, typename U>
-	concept IsDerivedFromWritable = std::derived_from<T, Writable<U>>;
+	concept WritableLike = std::derived_from<T, Writable<U>>;
 }
