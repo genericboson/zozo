@@ -12,13 +12,15 @@
 
 namespace GenericBoson
 {
-	CacheObject::CacheObject(CacheTx& tx)
+	template<typename T>
+	CacheObject<T>::CacheObject(CacheTx& tx)
 		: m_tx(tx)
 	{
 	}
 
+	template<typename T>
 	template<typename CALLABLE>
-	std::string CacheObject::GetFormattedFieldsString(
+	std::string CacheObject<T>::GetFormattedFieldsString(
 		bool  (CacheField::*FieldFunc)() const, 
 		const CALLABLE& callable)
 	{

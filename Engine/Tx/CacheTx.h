@@ -6,6 +6,7 @@
 
 namespace GenericBoson
 {
+	template<typename T>
 	class CacheObject;
 	enum class CacheTxState;
 	class TxExecutor;
@@ -52,7 +53,8 @@ namespace GenericBoson
 	private:
 		int32_t                                 m_id;
 		CacheTxOption                           m_option;
-		std::list<std::shared_ptr<CacheObject>> m_objects;
+
+		std::list<GenericBosonPtr>              m_objects;
 		CacheTxState                            m_state;
 
 		std::list< CacheTxPostCallback >        m_postCallbacks;
