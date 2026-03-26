@@ -8,7 +8,7 @@ namespace GenericBoson
 	template<typename T>
 	class Writable : public T {};
 
-	class GenericBoson {};
+	class EmptyBoson {};
 
-	using GenericBosonPtr = std::shared_ptr<GenericBoson>;
+	using EmptyBosonPtr = std::shared_ptr<EmptyBoson>;
 }

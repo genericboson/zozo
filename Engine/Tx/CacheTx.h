@@ -54,7 +54,7 @@ namespace GenericBoson
 		int32_t                                 m_id;
 		CacheTxOption                           m_option;
 
-		std::list<GenericBosonPtr>              m_objects;
+		std::list<EmptyBosonPtr>                m_objects;
 		CacheTxState                            m_state;
 
 		std::list< CacheTxPostCallback >        m_postCallbacks;
