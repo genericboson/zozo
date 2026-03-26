@@ -2,7 +2,9 @@
 
 #include <boost/asio.hpp>
 #include <boost/mysql.hpp>
+#include <boost/algorithm/string/join.hpp>
 
+#include "CacheField.h"
 #include "Engine/Concepts.h"
 
 namespace GenericBoson
@@ -38,7 +40,10 @@ namespace GenericBoson
 	public:
 		CacheObject(CacheTx& tx);
 
+#pragma region Readable
+		//=================================================================
 		// Readable
+		//=================================================================
 
 		bool Select() requires ReadableLike<T>
 		{
@@ -88,8 +93,13 @@ namespace GenericBoson
 			}
 			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
+#pragma endregion Readable
 
+
+#pragma region Writable
+		//=================================================================
 		// Writable
+		//=================================================================
 
 		std::string GetQuery(const WriteQueryType queryType, const std::string& wherePhrase /*= ""*/)
 			requires WritableLike<T>
@@ -203,6 +213,8 @@ namespace GenericBoson
 
 			co_return true;
 		}
+
+#pragma endregion Writable
 
 	public:
 		virtual auto GetFields() const -> const std::vector<const CacheField*> & = 0;

@@ -8,7 +8,7 @@
 
 #include <Engine/Tx/CacheTx.h>
 #include <Engine/Tx/Continuation.h>
-#include <Engine/Tx/ReadableObject.h>
+#include <Engine/Tx/CustomAttributes.h>
 #include <MessageSchema/External/GameServerCache/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
@@ -48,7 +48,7 @@ namespace GenericBoson
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // [1] pre-processing
 
-        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<ReadableObject<CacheObject>>>();
+        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<CacheObject<Readable>>>();
 
         characterCache->GetUserId().SetKey(userId);
         characterCache->GetId().Bind();
