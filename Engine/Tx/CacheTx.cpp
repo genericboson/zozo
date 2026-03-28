@@ -27,8 +27,8 @@ namespace GenericBoson
 		{
 			if (!co_await obj->Execute(dbResult))
 				co_return false;
-		}
 
+		}
 		for (const auto& callback : m_postCallbacks)
 		{
 			if (!co_await callback(dbResult))
@@ -37,12 +37,12 @@ namespace GenericBoson
 
 		ResetAll();
 
-		co_return true;
 	}
+		co_return true;
 
 	CacheTx& CacheTx::RunAsync()
 	{
 		m_executor.m_txQueue.push(this);
-		return *this;
 	}
+		return *this;
 }

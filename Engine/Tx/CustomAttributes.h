@@ -8,7 +8,9 @@ namespace GenericBoson
 	template<typename T>
 	class Writable : public T {};
 
-	class EmptyBoson {};
+	class EmptyBoson {
+		virtual Execute(DBResult& dbResult)->asio::awaitable<bool> = 0;
+	};
 
 	using EmptyBosonPtr = std::shared_ptr<EmptyBoson>;
 }
