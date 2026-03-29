@@ -54,10 +54,10 @@ namespace GenericBoson
 		int32_t                                 m_id;
 		CacheTxOption                           m_option;
 
-		std::list<EmptyBosonPtr>                m_objects;
+		std::list<std::shared_ptr<CacheObject>> m_objects;
 		CacheTxState                            m_state;
 
-		std::list< CacheTxPostCallback >        m_postCallbacks;
+		std::list<CacheTxPostCallback>          m_postCallbacks;
 		TxExecutor&                             m_executor;
 	};
 }
