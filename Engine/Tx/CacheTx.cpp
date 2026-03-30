@@ -37,12 +37,13 @@ namespace GenericBoson
 
 		ResetAll();
 
-	}
 		co_return true;
+	}
 
 	CacheTx& CacheTx::RunAsync()
 	{
 		m_executor.m_txQueue.push(this);
-	}
+
 		return *this;
+	}
 }

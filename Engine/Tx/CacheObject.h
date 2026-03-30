@@ -27,8 +27,22 @@ namespace GenericBoson
 		//{ t.GetFields() }     -> std::convertible_to<const std::vector<const CacheField*>&>;
 	//};
 
+	class ICacheObject
+	{
+		public:
+		virtual ~ICacheObject()                                                        = default;
+		virtual asio::awaitable<bool> Execute(DBResult& dbResult)                      = 0;
+																				       
+		virtual auto GetObjectName() const -> std::string                              = 0;
+		virtual auto GetFieldNames() const -> const std::vector<std::string> &         = 0;
+		virtual auto GetFieldName(const int32_t fieldEnumValue) const -> std::string   = 0;
+		virtual auto GetField(const std::string& fieldName) const -> const CacheField* = 0;
+		virtual auto GetField(const int32_t fieldEnumValue) const -> const CacheField* = 0;
+		virtual auto GetFields() const -> const std::vector<const CacheField*> &       = 0;
+	};
+
 	template<typename T>
-	class CacheObject : public T
+	class CacheObject : public T, public ICacheObject
 	{
 		enum class WriteQueryType
 		{
@@ -38,7 +52,27 @@ namespace GenericBoson
 		};
 
 	public:
-		CacheObject(CacheTx& tx);
+		CacheObject(CacheTx& tx)
+			: m_tx(tx)
+		{}
+
+		virtual asio::awaitable<bool> Execute(DBResult& dbResult) override
+		{
+			if constexpr (ReadableLike<T>)
+			{
+				co_return co_await ExecuteReadQuery(dbResult);
+			}
+			else if constexpr (WritableLike<T>)
+			{
+				co_return co_await ExecuteWriteQuery(dbResult);
+			}
+			else
+			{
+				static_assert(ReadableLike<T> || WritableLike<T>, 
+					"T must be either Readable or Writable.");
+				co_return false;
+			}
+		}
 
 #pragma region Readable
 		//=================================================================
@@ -47,18 +81,18 @@ namespace GenericBoson
 
 		bool Select() requires ReadableLike<T>
 		{
-			T::m_queries.push_back(GetQuery());
+			m_queries.push_back(GetQuery());
 			return true;
 		}
 
-		asio::awaitable<bool> Execute(DBResult& dbResult)
+		asio::awaitable<bool> ExecuteReadQuery(DBResult& dbResult)
 			requires ReadableLike<T>
 		{
 			// #todo - compress queries
-			const auto joinedQuery = boost::algorithm::join(T::m_queries, "");
+			const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
 			mysql::results result;
-			if (auto [dbErr] = co_await T::m_tx.GetExecutor().GetDbConnection().async_execute(
+			if (auto [dbErr] = co_await m_tx.GetExecutor().GetDbConnection().async_execute(
 				joinedQuery,
 				result,
 				asio::as_tuple(asio::use_awaitable));
@@ -194,7 +228,7 @@ namespace GenericBoson
 			return true;
 		}
 
-		asio::awaitable<bool> Execute(DBResult& dbResult)
+		asio::awaitable<bool> ExecuteWriteQuery(DBResult& dbResult)
 			requires WritableLike<T>
 		{
 			// #todo - compress queries
@@ -222,7 +256,25 @@ namespace GenericBoson
 
 	protected:
 		template<typename CALLABLE>
-		std::string GetFormattedFieldsString(bool(CacheField::* FieldFunc)() const, const CALLABLE& callable);
+		std::string GetFormattedFieldsString(
+			bool  (CacheField::* FieldFunc)() const,
+			const CALLABLE& callable)
+		{
+			const auto& fields = GetFields();
+
+			std::vector<std::string> formattedFields;
+			formattedFields.reserve(fields.size());
+			for (const auto pField : fields)
+			{
+				NULL_CONTINUE(pField);
+				if (!std::invoke(FieldFunc, *pField))
+					continue;
+
+				callable(*pField);
+			}
+
+			return boost::algorithm::join(formattedFields, ",");
+		}
 
 	protected:
 		CacheTx& m_tx;

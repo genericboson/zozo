@@ -6,6 +6,7 @@
 
 #include <format>
 
+#include <Engine/Tx/CacheObject.h>
 #include <Engine/Tx/CacheTx.h>
 #include <Engine/Tx/Continuation.h>
 #include <Engine/Tx/CustomAttributes.h>
@@ -48,7 +49,7 @@ namespace GenericBoson
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // [1] pre-processing
 
-        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<CacheObject<Readable<EmptyBoson>>>>();
+        auto characterCache = tx->NewRead<GenericBoson::Zozo::CharacterCache<CacheObject<Readable>>>();
 
         characterCache->GetUserId().SetKey(userId);
         characterCache->GetId().Bind();
