@@ -4,13 +4,13 @@
 #include <boost/mysql.hpp>
 #include <boost/algorithm/string/join.hpp>
 
-#include "CacheField.h"
+#include "Engine/Tx/CacheTx.h"
+#include "Engine/Tx/CacheField.h"
 #include "Engine/Concepts.h"
 
 namespace GenericBoson
 {
 	class CacheField;
-	class CacheTx;
 	class DBResult;
 
 	namespace asio = boost::asio;
@@ -108,10 +108,10 @@ namespace GenericBoson
 		std::string GetQuery(const std::string& wherePhrase = "")
 			requires ReadableLike<T>
 		{
-			const auto fieldNames = T::GetFieldNames();
+			const auto fieldNames = GetFieldNames();
 			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
 
-			const auto keys = T::GetFormattedFieldsString(
+			const auto keys = GetFormattedFieldsString(
 				&CacheField::IsKey,
 				[](const CacheField& pField)
 				{
@@ -119,7 +119,7 @@ namespace GenericBoson
 				});
 
 			auto query = std::format("SELECT {} FROM {}",
-				fieldNamesStr, T::GetObjectName());
+				fieldNamesStr, GetObjectName());
 
 			if (wherePhrase.empty())
 			{

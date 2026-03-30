@@ -1,13 +1,11 @@
 #pragma once
 
 #include "../Types.h"
-#include "CacheObject.h"
 #include "CacheTxOption.h"
 
 namespace GenericBoson
 {
-	template<typename T>
-	class CacheObject;
+	class ICacheObject;
 	enum class CacheTxState;
 	class TxExecutor;
 
@@ -32,15 +30,7 @@ namespace GenericBoson
 
 	public:
 		template<typename OBJ>
-		std::shared_ptr<OBJ> NewRead()
-		{
-			auto newObj = std::make_shared<OBJ>(*this);
-			m_objects.push_back(newObj);
-			return newObj;
-		}
-
-		template<typename OBJ>
-		std::shared_ptr<OBJ> NewWrite()
+		std::shared_ptr<OBJ> New()
 		{
 			auto newObj = std::make_shared<OBJ>(*this);
 			m_objects.push_back(newObj);
