@@ -118,33 +118,33 @@ namespace GenericBoson
         
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // [2] db
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //// [2] db
 
-        auto queryStr = mysql::with_params(
-            "SELECT id, name FROM zozo_game.character WHERE user_id = {};",
-            userId);
+        //auto queryStr = mysql::with_params(
+        //    "SELECT id, name FROM zozo_game.character WHERE user_id = {};",
+        //    userId);
 
-        mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-        if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-            queryStr,
-            result,
-            asio::as_tuple(asio::use_awaitable));
-            dbErr)
-        {
-            ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-            co_return;
-        }
+        //mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
+        //if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+        //    queryStr,
+        //    result,
+        //    asio::as_tuple(asio::use_awaitable));
+        //    dbErr)
+        //{
+        //    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
+        //    co_return;
+        //}
 
-        auto selectResults = result.rows<0>();
-        if (selectResults.size() <= 0)
-        {
-            WARN_LOG("[CharacterListReq] NoData. token : {}, user id : {}", tokenStr, userId);
-            const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_NoData);
-            const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-            fbb.Finish(msg);
-            co_return;
-        }
+        //auto selectResults = result.rows<0>();
+        //if (selectResults.size() <= 0)
+        //{
+        //    WARN_LOG("[CharacterListReq] NoData. token : {}, user id : {}", tokenStr, userId);
+        //    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_NoData);
+        //    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
+        //    fbb.Finish(msg);
+        //    co_return;
+        //}
 
         co_return;
 	}

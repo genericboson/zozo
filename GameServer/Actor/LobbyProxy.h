@@ -20,7 +20,7 @@ namespace GenericBoson
 		void OnAccepted() override;
 		bool Initialize() override;
 
-		asio::awaitable<void> Update() override { co_await CO_SLEEP_MS(1); };
+		asio::awaitable<void> Update() override { CO_SLEEP_MS(1); };
 		int64_t GetUpdatePeriodMs() const override { return Environment::GetDefaultUpdatePeriodMs(); };
 
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;

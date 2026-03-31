@@ -49,7 +49,6 @@ namespace GenericBoson
 	ServerBase::ServerBase(int32_t port)
 		: 
 		m_networkThreadPoolSize{ std::thread::hardware_concurrency() * 2 },
-		m_threads{ m_networkThreadPoolSize },
 		m_listeningPort{ port },
 		m_workGuard{ m_ioContext.get_executor() }
 	{
@@ -146,11 +145,12 @@ namespace GenericBoson
 		if (!ReadIni())
 			return false;
 
+		m_threads.reserve(m_networkThreadPoolSize);
 		for (int32_t i = 0; i < m_networkThreadPoolSize; ++i)
 		{
-			boost::asio::post(m_threads, [this]() {
-					m_ioContext.run();
-				});
+			m_threads.emplace_back( [this]() {
+				m_ioContext.run();
+			});
 		}
 
 		return AfterReadIni();
@@ -161,7 +161,6 @@ namespace GenericBoson
 		m_isRunning = false;
 		m_ioContext.stop();
 		m_workGuard.reset();
-		m_threads.join();
 	}
 
 	bool ServerBase::IsRunning() const
@@ -203,7 +202,7 @@ namespace GenericBoson
 
 					const auto startTime = steady_clock::now();
 					{
-						asio::co_spawn(m_threads,
+						asio::co_spawn(m_ioContext,
 							[&pActor]() -> asio::awaitable<void> { co_await pActor->Update(); },
 							asio::detached);
 					}
@@ -213,9 +212,12 @@ namespace GenericBoson
 					const auto leftTimeMs = updatePeriodMs - elapsedTimeMs;
 					if (leftTimeMs > 0)
 					{
-						co_await asio::steady_timer(
-							co_await asio::this_coro::executor,
-							std::chrono::milliseconds(leftTimeMs)).async_wait(asio::use_awaitable);
+						std::cout << "steady start" << std::endl;
+						auto ex = co_await asio::this_coro::executor;
+						asio::steady_timer timer(ex);
+						timer.expires_after(std::chrono::seconds(1));
+						co_await timer.async_wait(asio::use_awaitable);
+						std::cout << "steady end" << std::endl;
 					}
 				}
 
@@ -240,10 +242,10 @@ namespace GenericBoson
 			pActor->OnAccepted();
 
 			// Boost Asio TCP socket provides full duplex communication, so we can read and write at the same time.
-			asio::co_spawn(m_threads, ReadLoop(pSocket),  asio::detached);
-			asio::co_spawn(m_threads, WriteLoop(pSocket), asio::detached);
+			asio::co_spawn(m_ioContext, ReadLoop(pSocket),  asio::detached);
+			asio::co_spawn(m_ioContext, WriteLoop(pSocket), asio::detached);
 
-			//asio::co_spawn(m_threads, LogicLoop(pActor),  asio::detached);
+			asio::co_spawn(m_ioContext, LogicLoop(pActor),  asio::detached);
 		}
 	}
 

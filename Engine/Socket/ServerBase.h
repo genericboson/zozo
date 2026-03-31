@@ -80,7 +80,11 @@ namespace GenericBoson
 		std::unique_ptr<asio::ip::tcp::acceptor>                   m_pAcceptor;
 
 		asio::io_context                                           m_ioContext;
-		asio::thread_pool                                          m_threads;
+
+		// asio::thread_pool을 사용하면 안된다.
+		// thread_pool은 내부적으로 io_context를 가지고 있기 때문에, 
+		// thread_pool을 사용하면 io_context가 별도로 여러개 생기게 된다.
+		std::vector<std::jthread>                                  m_threads;
 		asio::executor_work_guard<asio::io_context::executor_type> m_workGuard;
 	};
 }

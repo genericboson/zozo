@@ -53,7 +53,7 @@ namespace GenericBoson
 
     asio::awaitable<void> Character::Update()
     {
-        co_await CO_SLEEP_MS(1);
+        co_return co_await ConsumeAll();
     }
 
     void Character::Write(const uint8_t* pData, const std::size_t size)

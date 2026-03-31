@@ -10,6 +10,7 @@
 namespace GenericBoson
 {
 	namespace lockfree = boost::lockfree;
+	namespace asio = boost::asio;
 	namespace mysql = boost::mysql;
 
 	class TxExecutor
@@ -20,8 +21,8 @@ namespace GenericBoson
 	public:
 		TxExecutor(mysql::any_connection& dbConn);
 
-		void Consume(CacheTx* tx);
-		void ConsumeAll();
+		asio::awaitable<void> Consume(CacheTx* tx);
+		asio::awaitable<void> ConsumeAll();
 
 		mysql::any_connection& GetDbConnection() { return m_dbConn; }
 

@@ -10,18 +10,18 @@ namespace GenericBoson
     {
     }
 
-    void TxExecutor::Consume(CacheTx* tx)
+    asio::awaitable<void> TxExecutor::Consume(CacheTx* tx)
     {
-        NULL_RETURN(tx);
-        tx->RunOnUpdate();
+        NULL_CO_RETURN(tx);
+        co_await tx->RunOnUpdate();
     }
 
-    void TxExecutor::ConsumeAll()
+    asio::awaitable<void> TxExecutor::ConsumeAll()
     {
-        CacheTx* tx;
+        CacheTx* tx = nullptr;
         while (m_txQueue.pop(tx))
         {
-            Consume(tx);
+            co_await Consume(tx);
         }
     }
 }

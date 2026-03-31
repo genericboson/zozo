@@ -61,5 +61,7 @@ namespace GenericBoson
 #endif
 
 #define CO_SLEEP_MS(time_value) \
-	asio::steady_timer(co_await asio::this_coro::executor, std::chrono::milliseconds(time_value)).async_wait(asio::use_awaitable)
+	asio::steady_timer timer(co_await asio::this_coro::executor);\
+	timer.expires_after(std::chrono::milliseconds(time_value));\
+	co_await timer.async_wait(asio::use_awaitable)
 }
