@@ -13,15 +13,17 @@ namespace GenericBoson
 
     CacheTxPtr TxExecutor::NewTx()
     {
-		auto newTx = std::make_shared<CacheTx>(*this);
-        m_txHolder.emplace(IdGenerator::CreateId(0), newTx);
+        return std::make_shared<CacheTx>(*this);
+    }
 
-        if (!m_txQueue.push(newTx.get()))
+    void TxExecutor::RunAsync(const CacheTxPtr& tx)
+    {
+        m_txHolder.emplace(IdGenerator::CreateId(0), tx);
+
+        if (!m_txQueue.push(tx.get()))
         {
             WARN_LOG("Failed to push CacheTx to TxExecutor's queue. CacheTx will not be executed.");
         }
-
-        return newTx;
     }
 
     asio::awaitable<void> TxExecutor::DestroyConsumed(CacheTx* tx)

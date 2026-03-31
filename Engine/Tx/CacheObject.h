@@ -16,17 +16,6 @@ namespace GenericBoson
 	namespace asio = boost::asio;
 	namespace mysql = boost::mysql;
 
-	//template<typename T>
-	//concept CacheObjectType = requires(T t)
-	//{
-		//{ t.GetObjectName() } -> std::convertible_to<std::string>;
-		//{ t.GetFieldNames() } -> std::convertible_to<const std::vector<std::string>&>;
-		//{ t.GetFieldName(0) } -> std::convertible_to<std::string>;
-		//{ t.GetField("") }    -> std::convertible_to<const CacheField*>;
-		//{ t.GetField(0) }     -> std::convertible_to<const CacheField*>;
-		//{ t.GetFields() }     -> std::convertible_to<const std::vector<const CacheField*>&>;
-	//};
-
 	class ICacheObject
 	{
 		public:
@@ -111,21 +100,10 @@ namespace GenericBoson
 			const auto fieldNames = GetFieldNames();
 			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
 
-			const auto keys = GetFormattedFieldsString(
-				&CacheField::IsKey,
-				[](const CacheField& pField)
-				{
-					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-				});
-
 			auto query = std::format("SELECT {} FROM {}",
 				fieldNamesStr, GetObjectName());
 
-			if (wherePhrase.empty())
-			{
-				return std::format("{} WHERE {};", query, keys);
-			}
-			return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
+			AttachWherePhrase(query, wherePhrase);
 		}
 #pragma endregion Readable
 
@@ -176,22 +154,10 @@ namespace GenericBoson
 						return std::format("{} = {}", pField.GetName(), pField.GetValueString());
 					});
 
-				const auto keys = GetFormattedFieldsString(
-					&CacheField::IsKey,
-					[](const CacheField& pField)
-					{
-						return std::format("{} = {}", pField.GetName(), pField.GetValueString());
-					});
-
 				auto query = std::format("UPDATE {} SET {}",
 					GetObjectName(), pairs);
 
-				if (wherePhrase.empty())
-				{
-					return std::format("{} WHERE {};", query, keys);
-				}
-
-				return std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
+				AttachWherePhrase(query, wherePhrase);
 			}
 			break;
 			case WriteQueryType::Delete:
@@ -274,6 +240,35 @@ namespace GenericBoson
 			}
 
 			return boost::algorithm::join(formattedFields, ",");
+		}
+
+	private:
+		void AttachWherePhrase(std::string& query, const std::string& wherePhrase)
+		{
+			const auto keys = GetFormattedFieldsString(
+				&CacheField::IsKey,
+				[](const CacheField& pField)
+				{
+					return std::format("{} = {}", pField.GetName(), pField.GetValueString());
+				});
+
+			if (keys.empty())
+			{
+				if (wherePhrase.empty())
+				{
+					return;
+				}
+
+				query = std::format("{} WHERE {};", query, wherePhrase);
+				return;
+			}
+			else if (wherePhrase.empty())
+			{
+				query = std::format("{} WHERE {};", query, keys);
+				return;
+			}
+
+			query = std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
 
 	protected:

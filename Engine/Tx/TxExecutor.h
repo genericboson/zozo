@@ -22,6 +22,7 @@ namespace GenericBoson
 		TxExecutor(mysql::any_connection& dbConn);
 
 		CacheTxPtr NewTx();
+		void RunAsync(const CacheTxPtr& tx);
 		asio::awaitable<void> DestroyConsumed(CacheTx* tx);
 
 		asio::awaitable<void> Consume(CacheTx* tx);

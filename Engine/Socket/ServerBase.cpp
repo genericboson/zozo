@@ -212,12 +212,10 @@ namespace GenericBoson
 					const auto leftTimeMs = updatePeriodMs - elapsedTimeMs;
 					if (leftTimeMs > 0)
 					{
-						std::cout << "steady start" << std::endl;
 						auto ex = co_await asio::this_coro::executor;
 						asio::steady_timer timer(ex);
 						timer.expires_after(std::chrono::seconds(1));
 						co_await timer.async_wait(asio::use_awaitable);
-						std::cout << "steady end" << std::endl;
 					}
 				}
 
