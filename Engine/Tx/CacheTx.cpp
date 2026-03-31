@@ -12,10 +12,6 @@ namespace GenericBoson
 	CacheTx::CacheTx(TxExecutor& txExecutor)
 		: m_executor(txExecutor)
 	{
-		if (!m_executor.m_txQueue.push(this))
-		{
-			WARN_LOG("Failed to push CacheTx to TxExecutor's queue. CacheTx will not be executed.");
-		}
 	}
 
 	void CacheTx::ResetAll()

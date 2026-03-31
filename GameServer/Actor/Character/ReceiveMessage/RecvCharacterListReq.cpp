@@ -44,7 +44,7 @@ namespace GenericBoson
             co_return;
         }
 
-        auto tx = std::make_shared<CacheTx>(*this);
+        auto tx = NewTx();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // [1] pre-processing

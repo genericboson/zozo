@@ -21,6 +21,9 @@ namespace GenericBoson
 	public:
 		TxExecutor(mysql::any_connection& dbConn);
 
+		CacheTxPtr NewTx();
+		asio::awaitable<void> DestroyConsumed(CacheTx* tx);
+
 		asio::awaitable<void> Consume(CacheTx* tx);
 		asio::awaitable<void> ConsumeAll();
 
@@ -30,5 +33,6 @@ namespace GenericBoson
 		mysql::any_connection&    m_dbConn;
 
 		lockfree::queue<CacheTx*, lockfree::capacity<128>, lockfree::fixed_sized<false>> m_txQueue;
+		std::unordered_map<int32_t, std::shared_ptr<CacheTx>> m_txHolder;
 	};
 }

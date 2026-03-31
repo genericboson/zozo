@@ -41,7 +41,7 @@ namespace GenericBoson
 		asio::awaitable<bool> RunOnUpdate();
 
 	private:
-		int32_t                                  m_id;
+		int64_t                                  m_id;
 		CacheTxOption                            m_option;
 
 		std::list<std::shared_ptr<ICacheObject>> m_objects;
@@ -50,4 +50,6 @@ namespace GenericBoson
 		std::list<CacheTxPostCallback>           m_postCallbacks;
 		TxExecutor&                              m_executor;
 	};
+
+	using CacheTxPtr = std::shared_ptr<CacheTx>;
 }
