@@ -31,7 +31,10 @@ namespace GenericBoson
 	};
 
 	template<typename T>
-	class CacheObject : public T, public ICacheObject
+	class CacheObject : 
+		public T, 
+		public ICacheObject, 
+		public std::enable_shared_from_this<CacheObject<T>>
 	{
 		enum class WriteQueryType
 		{
@@ -91,6 +94,32 @@ namespace GenericBoson
 				co_return false;
 			}
 
+			if (result.rows().empty())
+			{
+				dbResult.resultCode = Zozo::ResultCode::ResultCode_NoData;
+				co_return true;
+			}
+
+			for (const auto& row : result.rows())
+			{
+				const auto pObj = std::make_shared<CacheObject<T>>(*this);
+				pObj->PopulateFieldsFromRow(row);
+				dbResult.pChacheObjects.emplace_back(std::move(pObj));
+			}
+
+			co_return true;
+		}
+
+		asio::awaitable<bool> PopulateFieldsFromRow(const mysql::row_view& row)
+			requires ReadableLike<T>
+		{
+			const auto fieldNames = GetFieldNames();
+			for (size_t i = 0; i < fieldNames.size(); ++i)
+			{
+				const auto pField = GetField(fieldNames[i]);
+				NULL_CONTINUE(pField);
+				pField->SetValueFromString(row.at(i).as_string());
+			}
 			co_return true;
 		}
 
