@@ -4,6 +4,9 @@ namespace GenericBoson
 {
 	class CacheField
 	{
+		template<typename T>
+		friend class CacheObject;
+
 	public:
 		virtual std::string GetName()                             const = 0;
 		virtual std::string GetValueString()                      const = 0;
@@ -11,7 +14,8 @@ namespace GenericBoson
 		virtual void Bind()                                             = 0;
 		virtual bool IsBound()                                    const = 0;
 
-		virtual bool SetValueFromString(const std::string& value)       = 0;
+	protected:
+		virtual bool SetValue(const std::string& value)       = 0;
 
 	public:
 		enum class FieldState

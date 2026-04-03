@@ -56,6 +56,13 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine();
 
                     cppContent.AppendLine($"    template<typename T>");
+                    cppContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const std::string& param)");
+                    cppContent.AppendLine(@"    {");
+                    cppContent.AppendLine($"        Set(ChangeStringToFieldType(param));");
+                    cppContent.AppendLine(@"    }");
+                    cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    template<typename T>");
                     cppContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::SetKey(const {SC.ChangeToCppType(field.m_type)}& param)");
                     cppContent.AppendLine(@"    {");
                     cppContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
@@ -119,6 +126,15 @@ namespace FlatCacheGenerator
                     cppContent.AppendLine($"        return *static_cast<{typeOne.m_name}Cache::{SC.SnakeToPascalOrCamel(field.m_name)}*>(m_p{SC.SnakeToPascalOrCamel(field.m_name)});");
                     cppContent.AppendLine(@"    };");
                     cppContent.AppendLine();
+
+                    cppContent.AppendLine($"    template<typename T>");
+                    cppContent.AppendLine($"    {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}& {typeOne.m_name}Cache<T>::ChangeStringToFieldType(const std::string& param)");
+                    cppContent.AppendLine(@"    {");
+                    cppContent.AppendLine($"        return {SC.ChangeStringToFieldType(field.m_type)}(param);");
+                    cppContent.AppendLine(@"    };");
+                    cppContent.AppendLine();
+
+                    // ChangeStringToFieldType
                 }
 
                 cppContent.AppendLine($"    template<typename T>");

@@ -103,14 +103,14 @@ namespace GenericBoson
 			for (const auto& row : result.rows())
 			{
 				const auto pObj = std::make_shared<CacheObject<T>>(*this);
-				pObj->PopulateFieldsFromRow(row);
+				pObj->SetFields(row);
 				dbResult.pChacheObjects.emplace_back(std::move(pObj));
 			}
 
 			co_return true;
 		}
 
-		asio::awaitable<bool> PopulateFieldsFromRow(const mysql::row_view& row)
+		asio::awaitable<bool> SetFields(const mysql::row_view& row)
 			requires ReadableLike<T>
 		{
 			const auto fieldNames = GetFieldNames();
@@ -118,7 +118,7 @@ namespace GenericBoson
 			{
 				const auto pField = GetField(fieldNames[i]);
 				NULL_CONTINUE(pField);
-				pField->SetValueFromString(row.at(i).as_string());
+				pField->SetValue(row.at(i).as_string());
 			}
 			co_return true;
 		}

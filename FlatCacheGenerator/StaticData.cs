@@ -67,5 +67,10 @@ namespace FlatCacheGenerator
         {
             return name == "string";
         }
+
+        public static string ChangeStringToFieldType(string typeName)
+        {
+            return "";
+        }
     }
 }
