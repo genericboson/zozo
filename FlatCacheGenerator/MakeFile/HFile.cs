@@ -62,7 +62,8 @@ namespace FlatCacheGenerator
                     hContent.AppendLine(@"        {");
                     hContent.AppendLine(@"        public:");
                     hContent.AppendLine($"            {SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner);");
-                    hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
+                    if (field.m_type != "string")
+                        hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            bool Set(const std::string& value) override;");
                     hContent.AppendLine($"            void SetKey(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
@@ -130,10 +131,21 @@ namespace FlatCacheGenerator
                     hContent.AppendLine(@"    }");
                     hContent.AppendLine();
 
+                    if(field.m_type != "string")
+                    {
+                        hContent.AppendLine($"    template<typename T>");
+                        hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
+                        hContent.AppendLine(@"    {");
+                        hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
+                        hContent.AppendLine($"        m_state = FieldState::Bound;");
+                        hContent.AppendLine(@"    }");
+                        hContent.AppendLine();
+                    }
+
                     hContent.AppendLine($"    template<typename T>");
-                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const {SC.ChangeToCppType(field.m_type)}& param)");
+                    hContent.AppendLine($"    bool {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const std::string& param)");
                     hContent.AppendLine(@"    {");
-                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = param;");
+                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = {SC.ChangeStringToFieldType(field.m_type)}(param);");
                     hContent.AppendLine($"        m_state = FieldState::Bound;");
                     hContent.AppendLine(@"    }");
                     hContent.AppendLine();

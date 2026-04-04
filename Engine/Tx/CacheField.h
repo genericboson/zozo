@@ -13,9 +13,7 @@ namespace GenericBoson
 		virtual bool IsKey()                                      const = 0;
 		virtual void Bind()                                             = 0;
 		virtual bool IsBound()                                    const = 0;
-
-	protected:
-		virtual bool SetValue(const std::string& value)       = 0;
+		virtual bool Set(const std::string& value)                      = 0;
 
 	public:
 		enum class FieldState

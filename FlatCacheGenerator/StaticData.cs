@@ -70,7 +70,16 @@ namespace FlatCacheGenerator
 
         public static string ChangeStringToFieldType(string typeName)
         {
-            return "";
+            return typeName switch
+            {
+                "int" => "std::stoi",
+                "float" => "std::stof",
+                "double" => "std::stod",
+                "bool" => "boost::lexical_cast<bool>",
+                "long" => "std::stol",
+                "ulong" => "std::stoul",
+                _ => "",
+            };
         }
     }
 }
