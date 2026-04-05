@@ -118,7 +118,7 @@ namespace GenericBoson
 			{
 				const auto pField = GetField(fieldNames[i]);
 				NULL_CONTINUE(pField);
-				pField->SetValue(row.at(i).as_string());
+				pField->Set(row.at(i).as_string());
 			}
 			co_return true;
 		}
@@ -244,11 +244,6 @@ namespace GenericBoson
 		}
 
 #pragma endregion Writable
-
-	public:
-		virtual auto GetFields() const -> const std::vector<const CacheField*> & = 0;
-		virtual auto GetObjectName() const -> std::string = 0;
-
 	protected:
 		template<typename CALLABLE>
 		std::string GetFormattedFieldsString(
