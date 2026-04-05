@@ -51,14 +51,14 @@ namespace GenericBoson
 
         auto characterCache = tx->New<Zozo::CharacterCache<CacheObject<Readable>>>();
 
-        characterCache->GetUserId().SetKey(userId);
-        characterCache->GetId().Bind();
-        characterCache->GetName().Bind();
-
-        if (!characterCache->Select())
-        {
-            co_return;
-        }
+        //characterCache->GetUserId().SetKey(userId);
+        //characterCache->GetId().Bind();
+        //characterCache->GetName().Bind();
+        //
+        //if (!characterCache->Select())
+        //{
+        //    co_return;
+        //}
 
         tx->RunAsync() | 
         [](DBResult dbResult) -> asio::awaitable<bool>

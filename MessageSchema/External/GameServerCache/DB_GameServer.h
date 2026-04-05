@@ -37,7 +37,7 @@ namespace GenericBoson::Zozo
         public:
             Id(CharacterCache& owner);
             void Set(const int64_t& param);
-            bool Set(const std::string& value) override;
+            void Set(const std::string& value) override;
             void SetKey(const int64_t& param);
             auto Get() const -> const int64_t&;
             std::string GetName() const override;
@@ -56,7 +56,7 @@ namespace GenericBoson::Zozo
         public:
             UserId(CharacterCache& owner);
             void Set(const int64_t& param);
-            bool Set(const std::string& value) override;
+            void Set(const std::string& value) override;
             void SetKey(const int64_t& param);
             auto Get() const -> const int64_t&;
             std::string GetName() const override;
@@ -74,7 +74,7 @@ namespace GenericBoson::Zozo
         {
         public:
             Name(CharacterCache& owner);
-            bool Set(const std::string& value) override;
+            void Set(const std::string& value) override;
             void SetKey(const std::string& param);
             auto Get() const -> const std::string&;
             std::string GetName() const override;
@@ -93,7 +93,7 @@ namespace GenericBoson::Zozo
         public:
             Level(CharacterCache& owner);
             void Set(const int32_t& param);
-            bool Set(const std::string& value) override;
+            void Set(const std::string& value) override;
             void SetKey(const int32_t& param);
             auto Get() const -> const int32_t&;
             std::string GetName() const override;
@@ -165,7 +165,7 @@ namespace GenericBoson::Zozo
     }
 
     template<typename T>
-    bool CharacterCache<T>::Id::Set(const std::string& param)
+    void CharacterCache<T>::Id::Set(const std::string& param)
     {
         m_owner.CharacterT::id = std::stol(param);
         m_state = FieldState::Bound;
@@ -235,7 +235,7 @@ namespace GenericBoson::Zozo
     }
 
     template<typename T>
-    bool CharacterCache<T>::UserId::Set(const std::string& param)
+    void CharacterCache<T>::UserId::Set(const std::string& param)
     {
         m_owner.CharacterT::user_id = std::stol(param);
         m_state = FieldState::Bound;
@@ -298,7 +298,7 @@ namespace GenericBoson::Zozo
     }
 
     template<typename T>
-    bool CharacterCache<T>::Name::Set(const std::string& param)
+    void CharacterCache<T>::Name::Set(const std::string& param)
     {
         m_owner.CharacterT::name = (param);
         m_state = FieldState::Bound;
@@ -368,7 +368,7 @@ namespace GenericBoson::Zozo
     }
 
     template<typename T>
-    bool CharacterCache<T>::Level::Set(const std::string& param)
+    void CharacterCache<T>::Level::Set(const std::string& param)
     {
         m_owner.CharacterT::level = std::stoi(param);
         m_state = FieldState::Bound;

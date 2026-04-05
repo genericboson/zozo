@@ -116,7 +116,7 @@ namespace GenericBoson
 			const auto fieldNames = GetFieldNames();
 			for (size_t i = 0; i < fieldNames.size(); ++i)
 			{
-				const auto pField = GetField(fieldNames[i]);
+				auto pField = const_cast<CacheField*>(GetField(fieldNames[i]));
 				NULL_CONTINUE(pField);
 				pField->Set(row.at(i).as_string());
 			}
@@ -294,6 +294,13 @@ namespace GenericBoson
 
 			query = std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
+
+		auto GetObjectName() const -> std::string override { return ""; }
+		auto GetFieldNames() const -> const std::vector<std::string> & override { return {}; }
+		auto GetFieldName(const int32_t fieldEnumValue) const -> std::string override { return ""; }
+		auto GetField(const std::string& fieldName) const -> const CacheField* override { return nullptr; }
+		auto GetField(const int32_t fieldEnumValue) const -> const CacheField* override { return nullptr; }
+		auto GetFields() const -> const std::vector<const CacheField*> & override { return {}; }
 
 	protected:
 		CacheTx& m_tx;
