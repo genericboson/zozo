@@ -9,7 +9,7 @@ namespace GenericBoson
 	enum class CacheTxState;
 	class TxExecutor;
 
-	class CacheTx
+	class CacheTx : public std::enable_shared_from_this<CacheTx>
 	{
 		friend class WritableObject;
 		friend class TxExecutor;

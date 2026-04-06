@@ -129,10 +129,11 @@ namespace GenericBoson
 			const auto fieldNames = GetFieldNames();
 			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
 
-			auto query = std::format("SELECT {} FROM {}",
+			auto query = std::format("SELECT {} FROM zozo_game.{}",
 				fieldNamesStr, GetObjectName());
 
 			AttachWherePhrase(query, wherePhrase);
+			return query;
 		}
 #pragma endregion Readable
 
@@ -187,6 +188,8 @@ namespace GenericBoson
 					GetObjectName(), pairs);
 
 				AttachWherePhrase(query, wherePhrase);
+
+				return query;
 			}
 			break;
 			case WriteQueryType::Delete:

@@ -1,7 +1,6 @@
 #include "PCH.h"
 
 #include "Engine/Tx/CacheTx.h"
-#include "Numeric/IdGenerator.h"
 #include "TxExecutor.h"
 
 namespace GenericBoson
@@ -14,16 +13,6 @@ namespace GenericBoson
     CacheTxPtr TxExecutor::NewTx()
     {
         return std::make_shared<CacheTx>(*this);
-    }
-
-    void TxExecutor::RunAsync(const CacheTxPtr& tx)
-    {
-        m_txHolder.emplace(IdGenerator::CreateId(0), tx);
-
-        if (!m_txQueue.push(tx.get()))
-        {
-            WARN_LOG("Failed to push CacheTx to TxExecutor's queue. CacheTx will not be executed.");
-        }
     }
 
     asio::awaitable<void> TxExecutor::DestroyConsumed(CacheTx* tx)

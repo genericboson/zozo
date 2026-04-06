@@ -3,8 +3,7 @@
 #include "CacheTx.h"
 
 #include "CacheObject.h"
-#include "CacheTxOption.h"
-#include "CacheTxState.h"
+#include "Numeric/IdGenerator.h"
 #include "TxExecutor.h"
 
 namespace GenericBoson
@@ -42,6 +41,7 @@ namespace GenericBoson
 
 	CacheTx& CacheTx::RunAsync()
 	{
+		m_executor.m_txHolder.emplace(IdGenerator::CreateId(0), shared_from_this());
 		m_executor.m_txQueue.push(this);
 		return *this;
 	}
