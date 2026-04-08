@@ -63,6 +63,18 @@ namespace GenericBoson
         tx->RunAsync() | 
         [](DBResult dbResult) -> asio::awaitable<bool>
         {
+			for (const auto pObj : dbResult.pChacheObjects)
+            {
+                auto pCharacterCache = std::static_pointer_cast<Zozo::CharacterCache<CacheObject<Readable>>>(pObj);
+                if (pCharacterCache)
+                {
+                    INFO_LOG("character cache - user id : {}, character id : {}, name : {}",
+                        pCharacterCache->GetUserId(),
+                        pCharacterCache->GetId(),
+                        pCharacterCache->GetName());
+                }
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             // [2] apply to cache
 
