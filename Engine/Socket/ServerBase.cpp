@@ -214,7 +214,7 @@ namespace GenericBoson
 					{
 						auto ex = co_await asio::this_coro::executor;
 						asio::steady_timer timer(ex);
-						timer.expires_after(std::chrono::seconds(1));
+						timer.expires_after(std::chrono::microseconds(leftTimeMs));
 						co_await timer.async_wait(asio::use_awaitable);
 					}
 				}

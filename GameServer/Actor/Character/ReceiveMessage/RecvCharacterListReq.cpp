@@ -65,14 +65,14 @@ namespace GenericBoson
         {
 			for (const auto pObj : dbResult.pChacheObjects)
             {
-                auto pCharacterCache = std::static_pointer_cast<Zozo::CharacterCache<CacheObject<Readable>>>(pObj);
+                /*auto pCharacterCache = std::static_pointer_cast<Zozo::CharacterCache<CacheObject<Readable>>>(pObj);
                 if (pCharacterCache)
                 {
                     INFO_LOG("character cache - user id : {}, character id : {}, name : {}",
                         pCharacterCache->GetUserId(),
                         pCharacterCache->GetId(),
                         pCharacterCache->GetName());
-                }
+                }*/
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////

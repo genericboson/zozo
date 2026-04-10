@@ -18,11 +18,11 @@ namespace GenericBoson
 		uint64_t timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
 			std::chrono::system_clock::now().time_since_epoch()).count();
 
-		timestamp << 16;
+		timestamp <<= 16;
 
 		timestamp |= serverId;
 
-		timestamp << 3;
+		timestamp <<= 3;
 
 		static std::atomic_uint64_t count{ 0 };
 		decltype(count) copiedCount = ++count;

@@ -33,7 +33,7 @@ namespace GenericBoson
         while (m_txQueue.pop(tx))
         {
             co_await Consume(tx);
-            DestroyConsumed(tx);
+            co_await DestroyConsumed(tx);
         }
     }
 }

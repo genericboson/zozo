@@ -20,6 +20,12 @@ namespace GenericBoson
 
 	void InternalClient::EnqueueMessage(const uint8_t* buffer, size_t size)
 	{
+		if (!m_pSocket || !m_pSocket->IsValid())
+		{
+			ERROR_LOG("Failed to enqueue message. Socket is not valid.");
+			return;
+		}
+
 		m_pSocket->EnqueueMessage(buffer, size);
 	}
 
@@ -35,7 +41,7 @@ namespace GenericBoson
 
 		m_pSocket->Initialize(pActor);
 
-		co_await m_pSocket->ConnectAsync(m_ip, m_port,
+		co_return co_await m_pSocket->ConnectAsync(m_ip, m_port,
 			[this]() -> asio::awaitable<void>
 			{
 				m_onConnected();

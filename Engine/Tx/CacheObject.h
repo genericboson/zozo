@@ -263,7 +263,7 @@ namespace GenericBoson
 				if (!std::invoke(FieldFunc, *pField))
 					continue;
 
-				callable(*pField);
+				formattedFields.push_back(callable(*pField));
 			}
 
 			return boost::algorithm::join(formattedFields, ",");
