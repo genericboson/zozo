@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmake --build . --target GAME_SERVER)",
+      "Bash(cmd.exe //c \"\\\\\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\\\" && cmake --build . --target GAME_SERVER\")",
+      "Bash(cmd.exe //c \"\\\\\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\\\" && cmake --build . --target GAME_SERVER 2>&1\")",
+      "Bash(cmd.exe //c \"cd /d D:\\\\projects\\\\zozo\\\\out\\\\build\\\\x64-debug && \\\\\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\\\" >nul && cmake --build . --target GAME_SERVER 2>&1\")",
+      "Bash(cmd.exe //c 'cd /d D:\\\\projects\\\\zozo\\\\out\\\\build\\\\x64-debug ^&^& call \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\" ^>nul ^&^& cmake --build . --target GAME_SERVER 2^>^&1')",
+      "Bash(cmd.exe //c \"D:\\\\projects\\\\zozo\\\\build_check.bat\")"
+    ]
+  }
+}
