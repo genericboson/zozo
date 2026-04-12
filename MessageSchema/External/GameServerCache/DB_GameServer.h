@@ -31,7 +31,9 @@ namespace GenericBoson::Zozo
         friend class Name;
         friend class Level;
     public:
-       CharacterCache(CacheTx& tx);
+        CharacterCache(CacheTx& tx);
+        std::shared_ptr<ICacheObject> CreateObject() override;
+
         class Id : public CacheField
         {
         public:
@@ -149,6 +151,12 @@ namespace GenericBoson::Zozo
         m_fieldMap["level"] = std::make_shared<Level>(*this);
         m_pLevel = m_fieldMap["level"].get();
         m_fieldVector.push_back(m_pLevel);
+    };
+
+    template<typename T>
+    std::shared_ptr<ICacheObject> CharacterCache<T>::CreateObject()
+    {
+        return std::make_shared<CharacterCache<T>>(this->m_tx);
     };
 
     template<typename T>

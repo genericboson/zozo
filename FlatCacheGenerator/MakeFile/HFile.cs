@@ -55,7 +55,9 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"        friend class {SC.SnakeToPascalOrCamel(field.m_name)};");
                 }
                 hContent.AppendLine(@"    public:");
-                hContent.AppendLine($"       {typeOne.m_name}Cache(CacheTx& tx);");
+                hContent.AppendLine($"        {typeOne.m_name}Cache(CacheTx& tx);");
+                hContent.AppendLine($"        std::shared_ptr<ICacheObject> CreateObject() override;");
+                hContent.AppendLine();
                 foreach (var field in typeOne.m_fields)
                 {
                     hContent.AppendLine($"        class {SC.SnakeToPascalOrCamel(field.m_name)} : public CacheField");
@@ -119,6 +121,13 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"        m_p{SC.SnakeToPascalOrCamel(field.m_name)} = m_fieldMap[\"{field.m_name}\"].get();");
                     hContent.AppendLine($"        m_fieldVector.push_back(m_p{SC.SnakeToPascalOrCamel(field.m_name)});");
                 }
+                hContent.AppendLine(@"    };");
+                hContent.AppendLine();
+
+                hContent.AppendLine($"    template<typename T>");
+                hContent.AppendLine($"    std::shared_ptr<ICacheObject> {typeOne.m_name}Cache<T>::CreateObject()");
+                hContent.AppendLine(@"    {");
+                hContent.AppendLine($"        return std::make_shared<{typeOne.m_name}Cache<T>>(this->m_tx);");
                 hContent.AppendLine(@"    };");
                 hContent.AppendLine();
 

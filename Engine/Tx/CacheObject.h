@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <boost/asio.hpp>
 #include <boost/mysql.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -66,6 +67,8 @@ namespace GenericBoson
 			}
 		}
 
+		virtual std::shared_ptr<ICacheObject> CreateObject() { return nullptr; }
+
 #pragma region Readable
 		//=================================================================
 		// Readable
@@ -102,7 +105,8 @@ namespace GenericBoson
 
 			for (const auto& row : result.rows())
 			{
-				const auto pObj = std::make_shared<CacheObject<T>>(*this);
+				auto pObj = std::make_shared<CacheObject<T>>(*this);
+				NULL_CONTINUE(pObj);
 				pObj->SetFields(row);
 				dbResult.pChacheObjects.emplace_back(std::move(pObj));
 			}
@@ -110,7 +114,7 @@ namespace GenericBoson
 			co_return true;
 		}
 
-		asio::awaitable<bool> SetFields(const mysql::row_view& row)
+		bool SetFields(const mysql::row_view& row)
 			requires ReadableLike<T>
 		{
 			const auto fieldNames = GetFieldNames();
@@ -120,14 +124,14 @@ namespace GenericBoson
 				NULL_CONTINUE(pField);
 				pField->Set(row.at(i).as_string());
 			}
-			co_return true;
+			return true;
 		}
 
 		std::string GetQuery(const std::string& wherePhrase = "")
 			requires ReadableLike<T>
 		{
 			const auto fieldNames = GetFieldNames();
-			const auto fieldNamesStr = boost::algorithm::join(fieldNames, ",");
+			const auto fieldNamesStr = boost::algorithm::join(fieldNames,",");
 
 			auto query = std::format("SELECT {} FROM zozo_game.{}",
 				fieldNamesStr, GetObjectName());
@@ -297,13 +301,6 @@ namespace GenericBoson
 
 			query = std::format("{} WHERE {} AND {};", query, wherePhrase, keys);
 		}
-
-		auto GetObjectName() const -> std::string override { return ""; }
-		auto GetFieldNames() const -> const std::vector<std::string> & override { return {}; }
-		auto GetFieldName(const int32_t fieldEnumValue) const -> std::string override { return ""; }
-		auto GetField(const std::string& fieldName) const -> const CacheField* override { return nullptr; }
-		auto GetField(const int32_t fieldEnumValue) const -> const CacheField* override { return nullptr; }
-		auto GetFields() const -> const std::vector<const CacheField*> & override { return {}; }
 
 	protected:
 		CacheTx& m_tx;
