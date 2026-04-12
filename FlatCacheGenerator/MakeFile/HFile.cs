@@ -66,7 +66,7 @@ namespace FlatCacheGenerator
                     hContent.AppendLine($"            {SC.SnakeToPascalOrCamel(field.m_name)}({typeOne.m_name}Cache& owner);");
                     if (field.m_type != "string")
                         hContent.AppendLine($"            void Set(const {SC.ChangeToCppType(field.m_type)}& param);");
-                    hContent.AppendLine($"            void Set(const std::string& value) override;");
+                    hContent.AppendLine($"            void Set(const boost::mysql::field_view value) override;");
                     hContent.AppendLine($"            void SetKey(const {SC.ChangeToCppType(field.m_type)}& param);");
                     hContent.AppendLine($"            auto Get() const -> const {SC.ChangeToCppType(field.m_type)}&;");
                     hContent.AppendLine(@"            std::string GetName() const override;");
@@ -152,10 +152,10 @@ namespace FlatCacheGenerator
                     }
 
                     hContent.AppendLine($"    template<typename T>");
-                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const std::string& param)");
+                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const boost::mysql::field_view value param)");
                     hContent.AppendLine(@"    {");
-                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = {SC.ChangeStringToFieldType(field.m_type)}(param);");
-                    hContent.AppendLine($"        m_state = FieldState::Bound;");
+                    hContent.AppendLine($"        //m_owner.{typeOne.m_name}T::{field.m_name} = {SC.ChangeStringToFieldType(field.m_type)}(param);");
+                    hContent.AppendLine($"        //m_state = FieldState::Bound;");
                     hContent.AppendLine(@"    }");
                     hContent.AppendLine();
 

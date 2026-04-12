@@ -10,7 +10,7 @@ namespace GenericBoson
 		virtual bool IsKey()                                      const = 0;
 		virtual void Bind()                                             = 0;
 		virtual bool IsBound()                                    const = 0;
-		virtual void Set(const std::string& value)                      = 0;
+		virtual void Set(const boost::mysql::field_view value)          = 0;
 
 	public:
 		enum class FieldState

@@ -105,7 +105,7 @@ namespace GenericBoson
 
 			for (const auto& row : result.rows())
 			{
-				auto pObj = std::make_shared<CacheObject<T>>(*this);
+				auto pObj = std::static_pointer_cast<CacheObject<T>>(CreateObject());
 				NULL_CONTINUE(pObj);
 				pObj->SetFields(row);
 				dbResult.pChacheObjects.emplace_back(std::move(pObj));
@@ -118,11 +118,12 @@ namespace GenericBoson
 			requires ReadableLike<T>
 		{
 			const auto fieldNames = GetFieldNames();
+			NULL_RETURN(!fieldNames.empty(), false);
 			for (size_t i = 0; i < fieldNames.size(); ++i)
 			{
 				auto pField = const_cast<CacheField*>(GetField(fieldNames[i]));
 				NULL_CONTINUE(pField);
-				pField->Set(row.at(i).as_string());
+				pField->Set(row.at(i).;
 			}
 			return true;
 		}

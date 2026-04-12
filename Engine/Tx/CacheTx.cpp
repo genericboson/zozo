@@ -25,13 +25,21 @@ namespace GenericBoson
 		for (const auto& obj : m_objects)
 		{
 			if (!co_await obj->Execute(dbResult))
+			{
+				WARN_LOG("Failed to execute cache object. object name - {}", 
+					obj->GetObjectName());
 				co_return false;
+			}
 
 		}
+
 		for (const auto& callback : m_postCallbacks)
 		{
 			if (!co_await callback(dbResult))
+			{
+				WARN_LOG("Failed to call post callback. object name - {}");
 				co_return false;
+			}
 		}
 
 		ResetAll();
