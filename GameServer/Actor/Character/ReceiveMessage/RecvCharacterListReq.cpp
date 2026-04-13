@@ -61,58 +61,32 @@ namespace GenericBoson
         }
 
         tx->RunAsync() | 
-        [](DBResult dbResult) -> asio::awaitable<bool>
+        [ this, userId ](DBResult dbResult) -> asio::awaitable<bool>
         {
+            std::vector<CharacterId> characterIds;
+            characterIds.reserve(dbResult.pChacheObjects.size());
+
+            flatbuffers::FlatBufferBuilder fbb;
+            std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
+
 			for (const auto pObj : dbResult.pChacheObjects)
             {
                 auto pCharacterCache = std::static_pointer_cast<Zozo::CharacterCache<CacheObject<Readable>>>(pObj);
-                if (pCharacterCache)
-                {
-                    INFO_LOG("character cache - user id : {}, character id : {}, name : {}",
-                        pCharacterCache->GetUserId().Get(),
-                        pCharacterCache->GetId().Get(),
-                        pCharacterCache->GetName().Get());
-                }
+                NULL_CONTINUE( pCharacterCache);
+
+                const auto characterId = pCharacterCache->GetId().Get();
+
+                characterIds.push_back(CharacterId{characterId});
+
+                auto name = fbb.CreateString(std::format("{} [Lv.{}]", pCharacterCache->GetName().Get(), "11"));
+
+                auto characterDataPair = Zozo::CreateCharacterPairData(fbb, characterId, name);
+                pairDatas.emplace_back(std::move(characterDataPair));
             }
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // [2] apply to cache
-
-            /*const auto& [succeeded, queryResults] = dbResult;
-
-            for (const auto& result : queryResults)
-            {
-
-            }*/
-
-            co_return true;
-        } |
-        [this, userId](DBResult result) -> asio::awaitable<bool>
-        {
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // [3] post-processing
-
-            flatbuffers::FlatBufferBuilder fbb;
-
-            std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
-
-            //std::vector<CharacterId> characterIds;
-            //characterIds.reserve(selectResults.size());
-            //for (auto& selectResult : selectResults)
-            //{
-            //    characterIds.push_back(CharacterId{ selectResult.id });
-
-            //    auto name = fbb.CreateString(std::format("{} [Lv.{}]",
-            //        selectResult.name.value_or(""),
-            //        "11"));//selectResult.level.value_or(0)));
-
-            //    auto characterDataPair = Zozo::CreateCharacterPairData(fbb, selectResult.id, name);
-            //    pairDatas.emplace_back(std::move(characterDataPair));
-            //}
-
-            //CharacterManager::GetInstance()->SetUserCharacterIds(
-            //    UserId{ userId },
-            //    std::move(characterIds));
+            CharacterManager::GetInstance()->SetUserCharacterIds(
+                UserId{ userId },
+                std::move(characterIds));
 
             const auto pairDatasOffset = fbb.CreateVector(pairDatas);
 
@@ -129,34 +103,6 @@ namespace GenericBoson
         };
         
         INFO_LOG("[CharacterListReq] token : {}", tokenStr);
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //// [2] db
-
-        //auto queryStr = mysql::with_params(
-        //    "SELECT id, name FROM zozo_game.character WHERE user_id = {};",
-        //    userId);
-
-        //mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-        //if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-        //    queryStr,
-        //    result,
-        //    asio::as_tuple(asio::use_awaitable));
-        //    dbErr)
-        //{
-        //    ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
-        //    co_return;
-        //}
-
-        //auto selectResults = result.rows<0>();
-        //if (selectResults.size() <= 0)
-        //{
-        //    WARN_LOG("[CharacterListReq] NoData. token : {}, user id : {}", tokenStr, userId);
-        //    const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_NoData);
-        //    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
-        //    fbb.Finish(msg);
-        //    co_return;
-        //}
 
         co_return;
 	}
