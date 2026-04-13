@@ -27,6 +27,33 @@ namespace FlatCacheGenerator
             };
         }
 
+        public static string ChangeToMySqlRowAsFunctionName(string flatBufferType)
+        {
+            return flatBufferType switch
+            {
+                "int" => "as_int64())",
+                "string" => "as_string()",
+                "byte" => "as_int64())",
+                "ubyte" => "as_int64())",
+                "long" => "as_int64()",
+                "ulong" => "as_uint64()",
+                "float" => "as_float()",
+                "double" => "as_double()",
+                _ => "ERROR",
+            };
+        }
+
+        public static string ChangeToMySqlRowPrefix(string flatBufferType)
+        {
+            return flatBufferType switch
+            {
+                "int" => "static_cast<int32_t>(",
+                "byte" => "static_cast<int8_t>(",
+                "ubyte" => "static_cast<uint8_t>(",
+                _ => "",
+            };
+        }
+
         public static string ChangeToSqlType(string flatBufferType)
         {
             return flatBufferType switch

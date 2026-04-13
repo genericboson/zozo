@@ -2,8 +2,9 @@
 
 #include <memory>
 #include <boost/asio.hpp>
-#include <boost/mysql.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/exception/diagnostic_information.hpp>
+#include <boost/mysql.hpp>
 
 #include "Engine/Tx/CacheTx.h"
 #include "Engine/Tx/CacheField.h"
@@ -123,7 +124,16 @@ namespace GenericBoson
 			{
 				auto pField = const_cast<CacheField*>(GetField(fieldNames[i]));
 				NULL_CONTINUE(pField);
-				pField->Set(row.at(i).;
+
+				try
+				{
+					pField->Set(row.at(i));
+				}
+				catch (boost::exception& except)
+				{
+					ERROR_LOG("Exception caught while setting field:{}, exception msg:{}", 
+						fieldNames[i], boost::diagnostic_information(except));
+				}
 			}
 			return true;
 		}

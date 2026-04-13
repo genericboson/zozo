@@ -152,10 +152,10 @@ namespace FlatCacheGenerator
                     }
 
                     hContent.AppendLine($"    template<typename T>");
-                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const boost::mysql::field_view value param)");
+                    hContent.AppendLine($"    void {typeOne.m_name}Cache<T>::{SC.SnakeToPascalOrCamel(field.m_name)}::Set(const boost::mysql::field_view param)");
                     hContent.AppendLine(@"    {");
-                    hContent.AppendLine($"        //m_owner.{typeOne.m_name}T::{field.m_name} = {SC.ChangeStringToFieldType(field.m_type)}(param);");
-                    hContent.AppendLine($"        //m_state = FieldState::Bound;");
+                    hContent.AppendLine($"        m_owner.{typeOne.m_name}T::{field.m_name} = {SC.ChangeToMySqlRowPrefix(field.m_type)}param.{SC.ChangeToMySqlRowAsFunctionName(field.m_type)};");
+                    hContent.AppendLine($"        m_state = FieldState::Bound;");
                     hContent.AppendLine(@"    }");
                     hContent.AppendLine();
 
