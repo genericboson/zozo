@@ -1,0 +1,85 @@
+============================================================
+대화 기록 - 2026-04-14
+============================================================
+
+[주제 1] RecvCharacterListReq.cpp의 Continuation 람다 - 코루틴화 vs 콜백 유지
+============================================================
+
+질문:
+  RunAsync 뒤에 이어있는 Continuation 람다 로직을 코루틴화시키는 게 좋을까
+  아니면 현재처럼 콜백 형태로 하는게 좋을까?
+  개인적인 생각으로는 현행 유지하는게 false를 return했을 때
+  cache roll back을 구현하는데 용이해서 좋을거 같다.
+
+답변 요약:
+  현행 콜백 방식 유지가 맞다. 이유는 다음과 같다:
+
+  1. false 리턴 기반 rollback과 자연스럽게 맞물림
+     - RunOnUpdate()에서 m_postCallbacks를 순회하면서
+       co_await callback(dbResult)의 반환값이 false면 즉시 중단하고 co_return false.
+     - 여기에 rollback 로직을 끼워넣기가 깔끔하다.
+     - 코루틴화하면 이 제어 흐름을 별도로 재구성해야 한다.
+
+  2. 다중 continuation 체이닝
+     - operator|로 여러 콜백을 m_postCallbacks 리스트에 순서대로 쌓을 수 있고,
+       각각이 독립적으로 성공/실패를 반환한다.
+     - 코루틴으로 바꾸면 이 체이닝 구조를 다시 만들어야 하는데 실질적 이득이 없다.
+
+  3. 실행 시점의 분리가 의도적
+     - RunAsync()는 tx를 큐에 넣기만 하고, 실제 실행은
+       TxExecutor::ConsumeAll()에서 일괄 처리된다.
+     - 콜백은 이 "등록 후 나중에 실행" 패턴에 잘 맞는다.
+     - 코루틴화하면 co_await 시점에서 바로 실행하려는 경향이 생겨서
+       이 지연 실행 설계와 충돌한다.
+
+  4. 코루틴화가 의미 있는 경우는 continuation 내부에서 추가 비동기 I/O를 해야 할 때인데,
+     현재 람다 시그니처가 이미 asio::awaitable<bool>를 반환하므로
+     콜백 안에서도 co_await 사용이 가능하다.
+     즉, 코루틴의 이점을 이미 콜백 내부에서 누리고 있는 셈이다.
+
+
+[주제 2] boost::mysql thread safety - TxExecutor의 m_dbConn 멀티스레딩 문제
+============================================================
+
+질문:
+  boost mysql은 thread safe한가?
+  TxExecutor의 m_dbConn을 현재처럼 사용해도 멀티스레딩 문제가 없을까?
+
+답변 요약:
+  boost::mysql::any_connection은 thread-safe하지 않다.
+  공식 문서: "Distinct objects: safe. Shared objects: unsafe."
+
+  현재 코드의 문제점:
+  - ServerBase에서 m_pDbConn (any_connection)이 서버당 1개.
+  - 모든 Character, LobbyUser, LobbyStub가 동일한 m_pDbConn 레퍼런스를 공유.
+  - m_networkThreadPoolSize = hardware_concurrency() * 2 (멀티스레드)
+  - 여러 스레드가 동일 io_context를 run()하고 있음.
+  - 여러 Character의 코루틴이 서로 다른 스레드에서 동시에 resume되면
+    하나의 any_connection에 동시 async_execute 호출이 발생.
+  - MySQL wire protocol 패킷이 섞이고 응답을 잘못된 요청에 매칭 -> undefined behavior.
+
+  해결 방안 (우선순위 순):
+
+  1. connection_pool 사용 (권장)
+     - mysql::connection_pool m_dbPool;
+     - 각 tx 실행 시 풀에서 커넥션 획득, 사용 후 자동 반환.
+     - thread_safe = true 설정 시 내부적으로 strand를 사용해 안전.
+     - 이미 GetDbParams에 pool_params 버전 코드가 주석으로 존재.
+
+  2. DB 전용 strand 사용
+     - 모든 DB 작업을 strand로 dispatch하여 직렬화.
+     - 단점: 동시성이 없으므로 병목.
+
+  3. Character별 커넥션
+     - 커넥션 수가 Character 수만큼 늘어나서 비효율적. 비추천.
+
+  결론: connection_pool로 전환 강력 권장.
+
+============================================================
+관련 파일:
+  - GameServer/Actor/Character/ReceiveMessage/RecvCharacterListReq.cpp
+  - Engine/Tx/Continuation.h
+  - Engine/Tx/CacheTx.h / CacheTx.cpp
+  - Engine/Tx/TxExecutor.h / TxExecutor.cpp
+  - Engine/Socket/ServerBase.h / ServerBase.cpp
+============================================================

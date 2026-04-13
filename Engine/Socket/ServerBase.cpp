@@ -8,44 +8,11 @@
 #include "ServerBase.h"
 
 #include "BoostTcpSocket.h"
+#include "DB/DBManager.h"
 #include "EnvironmentVariable.h"
 
 namespace GenericBoson
 {
-	mysql::pool_params ServerBase::GetDbPoolParams(
-		std::string_view hostname,
-		uint16_t         port,
-		std::string_view username, 
-		std::string_view password,
-		std::string_view dbname)
-	{
-		mysql::pool_params params;
-		params.server_address.emplace_host_and_port(hostname.data());
-		params.username = username;
-		params.password = password;
-		params.database = dbname;
-		//params.thread_safe = true;
-
-		return params;
-	}
-
-	mysql::connect_params ServerBase::GetDbParams(
-		std::string_view hostname,
-		uint16_t         port,
-		std::string_view username,
-		std::string_view password,
-		std::string_view dbname)
-	{
-		mysql::connect_params params;
-		params.server_address.emplace_host_and_port(hostname.data());
-		params.username = username;
-		params.password = password;
-		params.database = dbname;
-		params.multi_queries = true;
-
-		return params;
-	}
-
 	ServerBase::ServerBase(int32_t port)
 		: 
 		m_networkThreadPoolSize{ std::thread::hardware_concurrency() * 2 },
@@ -87,25 +54,13 @@ namespace GenericBoson
 
 		Accept();
 
-		INFO_LOG("Trying to connect DB ({}:{}) by ({}/{}). scheme : {}",
-			m_dbIp, m_dbPort, m_dbAccount, m_dbPassword, m_dbMainSchema);
-
-		m_pDbConn = std::make_unique<mysql::any_connection>(co_await asio::this_coro::executor);
-		auto [err] = co_await m_pDbConn->async_connect(GetDbParams(
-			m_dbIp,
-			m_dbPort,
-			m_dbAccount,
-			m_dbPassword,
-			m_dbMainSchema), asio::as_tuple);
-
-		if (err != boost::system::errc::success)
+		if (!DBManager::GetInstance()->Initialize(m_ioContext))
 		{
-			ERROR_LOG("DB connection failed. err - {}({})", err.value(), err.message());
+			ERROR_LOG("DBManager initialization failed.");
 			co_return false;
 		}
 
-		INFO_LOG("DB connected");
-
+		INFO_LOG("DBManager initialized successfully.");
 		co_return true;
 	}
 
@@ -118,25 +73,13 @@ namespace GenericBoson
 
 		Accept();
 
-		INFO_LOG("Trying to connect DB ({}:{}) by ({}/{}). scheme : {}", 
-			m_dbIp, m_dbPort, m_dbAccount, m_dbPassword, m_dbMainSchema);
-
-		m_pDbConn = std::make_unique<mysql::any_connection>(m_ioContext);
-		auto [err] = m_pDbConn->async_connect(GetDbParams(
-			m_dbIp,
-			m_dbPort,
-			m_dbAccount,
-			m_dbPassword,
-			m_dbMainSchema), asio::as_tuple(asio::use_future)).get();
-
-		if (err != boost::system::errc::success)
+		if (!DBManager::GetInstance()->Initialize(m_ioContext))
 		{
-			ERROR_LOG("DB connection failed. err - {}({})", err.value(), err.message());
+			ERROR_LOG("DBManager initialization failed.");
 			return false;
 		}
 
-		INFO_LOG("DB connected");
-
+		INFO_LOG("DBManager initialized successfully.");
 		return true;
 	}
 

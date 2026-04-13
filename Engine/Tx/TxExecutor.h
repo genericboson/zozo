@@ -27,12 +27,7 @@ namespace GenericBoson
 
 		asio::awaitable<void> Consume(CacheTx* tx);
 		asio::awaitable<void> ConsumeAll();
-
-		mysql::any_connection& GetDbConnection() { return m_dbConn; }
-
 	private:
-		mysql::any_connection&    m_dbConn;
-
 		lockfree::queue<CacheTx*, lockfree::capacity<128>, lockfree::fixed_sized<false>> m_txQueue;
 		std::unordered_map<int32_t, std::shared_ptr<CacheTx>> m_txHolder;
 	};

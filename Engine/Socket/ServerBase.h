@@ -45,35 +45,11 @@ namespace GenericBoson
 
 		asio::awaitable<bool> InitializeConnection();
 
-	private:
-		static mysql::pool_params GetDbPoolParams(
-			std::string_view hostname,
-			uint16_t         port,
-			std::string_view username,
-			std::string_view password,
-			std::string_view dbname);
-
-		static mysql::connect_params GetDbParams(
-			std::string_view hostname,
-			uint16_t         port,
-			std::string_view username,
-			std::string_view password,
-			std::string_view dbname);
-
-	public:
-		std::unique_ptr<mysql::any_connection>                     m_pDbConn;
-
 	protected:
 		std::atomic_bool                                           m_isRunning{ true };
 
 		int32_t                                                    m_listeningPort = 0;
 		std::size_t                                                m_networkThreadPoolSize = 0;
-
-		std::string                                                m_dbIp, 
-		                                                           m_dbAccount, 
-		                                                           m_dbPassword, 
-		                                                           m_dbMainSchema;
-		uint16_t                                                   m_dbPort;
 
 		std::string                                                m_name;
 
