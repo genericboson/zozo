@@ -2,10 +2,10 @@
 
 #include <flatbuffers/flatbuffers.h>
 
+#include <MessageSchema/Internal/LobbyGame_generated.h>
+
 #include "LobbyProxy.h"
 #include "Character/CharacterManager.h"
-
-#include <MessageSchema/Internal/LobbyGame_generated.h>
 
 namespace GenericBoson
 {
@@ -65,11 +65,11 @@ namespace GenericBoson
 
 				NULL_CO_VOID_RETURN(registerAck->server_id() == m_server.m_id);
 
-				m_server.m_dbIp          = registerAck->db_ip()->str();
-				m_server.m_dbAccount     = registerAck->db_acount()->str();
-				m_server.m_dbPassword    = registerAck->db_password()->str();
-				m_server.m_dbMainSchema  = registerAck->db_main_schema()->str();
-				m_server.m_dbPort        = registerAck->db_port();
+				Environment::SetDBHost     (registerAck->db_ip()->str());
+				Environment::SetDBUser     (registerAck->db_acount()->str());
+				Environment::SetDBPassword (registerAck->db_password()->str());
+				Environment::SetDBName     (registerAck->db_main_schema()->str());
+				Environment::SetDBPort     (registerAck->db_port());
 
 				m_server.m_name          = registerAck->server_name()->str();
 				m_server.m_listeningPort = registerAck->listen_port();

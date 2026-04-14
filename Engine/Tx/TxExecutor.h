@@ -19,8 +19,6 @@ namespace GenericBoson
 		friend class CacheTx;
 
 	public:
-		TxExecutor(mysql::any_connection& dbConn);
-
 		CacheTxPtr NewTx();
 		void RunAsync(const CacheTxPtr& tx);
 		asio::awaitable<void> DestroyConsumed(CacheTx* tx);

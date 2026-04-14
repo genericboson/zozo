@@ -5,7 +5,10 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/mysql.hpp>
+#include <boost/mysql/connection_pool.hpp>
+#include <boost/mysql/diagnostics.hpp>
 
+#include "Engine/DB/DBManager.h"
 #include "Engine/Tx/CacheTx.h"
 #include "Engine/Tx/CacheField.h"
 #include "Engine/Concepts.h"
@@ -84,11 +87,13 @@ namespace GenericBoson
 		asio::awaitable<bool> ExecuteReadQuery(DBResult& dbResult)
 			requires ReadableLike<T>
 		{
-			// #todo - compress queries
+			auto opConn = co_await DBManager::GetInstance()->GetConnection();
+			NULL_CO_RETURN(opConn, false);
+
 			const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
 			mysql::results result;
-			if (auto [dbErr] = co_await m_tx.GetExecutor().GetDbConnection().async_execute(
+			if(const auto [dbErr] = co_await (*opConn)->async_execute(
 				joinedQuery,
 				result,
 				asio::as_tuple(asio::use_awaitable));
@@ -244,11 +249,13 @@ namespace GenericBoson
 		asio::awaitable<bool> ExecuteWriteQuery(DBResult& dbResult)
 			requires WritableLike<T>
 		{
-			// #todo - compress queries
+			auto opConn = co_await DBManager::GetInstance()->GetConnection();
+			NULL_CO_RETURN(opConn, false);
+
 			const auto joinedQuery = boost::algorithm::join(m_queries, "");
 
 			mysql::results result;
-			if (auto [dbErr] = co_await m_tx.m_executor.m_dbConn.async_execute(
+			if(const auto [dbErr] = co_await (*opConn)->async_execute(
 				joinedQuery,
 				result,
 				asio::as_tuple(asio::use_awaitable));

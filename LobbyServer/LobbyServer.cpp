@@ -1,5 +1,6 @@
 #include "PCH.h"
 
+#include <Engine/EnvironmentVariable.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 
 #include "LobbyServer.h"
@@ -50,11 +51,11 @@ namespace GenericBoson
 
 		const auto& iniPt = *opIniPt;
 
-		m_dbIp = iniPt.get<decltype(m_dbIp)>("DB_IP", "127.0.0.1");
-		m_dbPort = iniPt.get<decltype(m_dbPort)>("DB_PORT", 3306);
-		m_dbAccount = iniPt.get<decltype(m_dbAccount)>("DB_ACCOUNT", "root");
-		m_dbPassword = iniPt.get<decltype(m_dbPassword)>("DB_PASSWORD", "1234");
-		m_dbMainSchema = iniPt.get<decltype(m_dbMainSchema)>("DB_MAIN_SCHEMA");
+		Environment::SetDBHost(iniPt.get<std::string>("DB_IP", "127.0.0.1"));
+		Environment::SetDBPort(iniPt.get<uint16_t>("DB_PORT", 3306));
+		Environment::SetDBUser(iniPt.get<std::string>("DB_ACCOUNT", "root"));
+		Environment::SetDBPassword(iniPt.get<std::string>("DB_PASSWORD", "1234"));
+		Environment::SetDBName(iniPt.get<std::string>("DB_MAIN_SCHEMA"));
 
 		if ( !m_listeningPort )
 		{

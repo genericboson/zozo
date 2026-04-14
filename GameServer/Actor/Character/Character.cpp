@@ -32,7 +32,7 @@ namespace GenericBoson
     Character::Character(
         const std::shared_ptr<GameServer>& pServer,
         const std::shared_ptr<ISocket>&    pSocket)
-		: TxExecutor(*pServer->m_pDbConn), m_id(0), m_server(*pServer), m_pSocket(pSocket)
+		: m_id(0), m_server(*pServer), m_pSocket(pSocket)
     {
     }
 
@@ -127,7 +127,7 @@ namespace GenericBoson
                     "SELECT id, name, level FROM zozo_game.character WHERE id = {};", characterId);
 
 				// #todo change to CharacterSelect_Select_UserCharacter
-                mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
+                /*mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
                 if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
                     queryStr,
                     result,
@@ -175,7 +175,7 @@ namespace GenericBoson
 				auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
 
                 fbb.Finish(msg);
-				m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+				m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());*/
             }
             break;
         case GamePayload::GamePayload_CharacterSelectAck:

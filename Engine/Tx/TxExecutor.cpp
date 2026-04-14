@@ -5,11 +5,6 @@
 
 namespace GenericBoson
 {
-    TxExecutor::TxExecutor(mysql::any_connection& dbConn)
-		: m_dbConn(dbConn)
-    {
-    }
-
     CacheTxPtr TxExecutor::NewTx()
     {
         return std::make_shared<CacheTx>(*this);

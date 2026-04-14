@@ -6,7 +6,17 @@
       "Bash(cmd.exe //c \"\\\\\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\\\" && cmake --build . --target GAME_SERVER 2>&1\")",
       "Bash(cmd.exe //c \"cd /d D:\\\\projects\\\\zozo\\\\out\\\\build\\\\x64-debug && \\\\\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\\\" >nul && cmake --build . --target GAME_SERVER 2>&1\")",
       "Bash(cmd.exe //c 'cd /d D:\\\\projects\\\\zozo\\\\out\\\\build\\\\x64-debug ^&^& call \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\" ^>nul ^&^& cmake --build . --target GAME_SERVER 2^>^&1')",
-      "Bash(cmd.exe //c \"D:\\\\projects\\\\zozo\\\\build_check.bat\")"
+      "Bash(cmd.exe //c \"D:\\\\projects\\\\zozo\\\\build_check.bat\")",
+      "Bash(cat Cargo.toml)",
+      "Bash(cat CMakeLists.txt)",
+      "Bash(cat package.json)",
+      "Bash(cmake --preset x64-debug)",
+      "Read(//c/Program Files/Microsoft Visual Studio/2022/**)",
+      "Read(//c/Program Files \\(x86\\)/Microsoft Visual Studio/**)",
+      "Read(//c/Program Files/Microsoft Visual Studio/**)",
+      "Bash(vswhere -property installationPath)",
+      "Bash(cmd:*)",
+      "Bash(cmd.exe:*)"
     ]
   }
 }

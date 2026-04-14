@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/mysql.hpp>
+#include <boost/mysql/connection_pool.hpp>
 
 #include "Engine/Singleton.h"
 
@@ -16,6 +17,8 @@ namespace GenericBoson
 		virtual ~DBManager() = default;
 
 		bool Initialize(asio::io_context& ctx);
+		auto GetConnection()
+			-> asio::awaitable<std::optional<mysql::pooled_connection>>;
 
 	private:
 		static mysql::pool_params GetDbPoolParams(

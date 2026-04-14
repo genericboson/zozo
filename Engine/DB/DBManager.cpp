@@ -1,5 +1,6 @@
 #include "PCH.h"
 
+#include <boost/asio.hpp>
 #include <boost/exception/diagnostic_information.hpp>
 
 #include "DBManager.h"
@@ -42,8 +43,30 @@ namespace GenericBoson
 		params.username = username;
 		params.password = password;
 		params.database = dbname;
-		//params.thread_safe = true;
+		params.thread_safe = true;
 
 		return params;
+	}
+
+	auto DBManager::GetConnection()
+		-> asio::awaitable<std::optional<mysql::pooled_connection>>
+	{
+		auto trialCount = Environment::GetGetConnTrialCount();
+		while(trialCount--)
+		{
+			auto [err, conn] = co_await m_pDbPool->async_get_connection(
+				asio::as_tuple(asio::cancel_after(std::chrono::microseconds(Environment::GetGetConnTimeoutMs()))));
+
+			if (err == boost::system::errc::success)
+				co_return std::move(conn);
+
+			WARN_LOG("Failed to get DB connection. error code - {}({})",
+				err.value(), err.message());
+		}
+
+		WARN_LOG("Try getting DB connection timed out. trial coiunt - {}",
+			Environment::GetGetConnTrialCount());
+
+		co_return std::nullopt;
 	}
 }

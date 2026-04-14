@@ -12,6 +12,7 @@
 
 #include <flatbuffers/flatbuffers.h>
 
+#include <Engine/DB/DBManager.h>
 #include <Engine/Socket/ISocket.h>
 #include <Engine/Socket/BoostTcpSocket.h>
 #include <Engine/Tx/Continuation.h>
@@ -29,7 +30,7 @@ namespace GenericBoson
     LobbyStub::LobbyStub(
         LobbyServer& lobbyServer,
         const std::shared_ptr<ISocket>& pSocket)
-        : TxExecutor(*lobbyServer.m_pDbConn), m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
+        : m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
     {
     }
 
@@ -86,8 +87,15 @@ namespace GenericBoson
                     "SELECT * FROM zozo_lobby.game_server WHERE id = {};"
                     , serverId );
 
+                auto opConn = co_await DBManager::GetInstance()->GetConnection();
+                if (!opConn)
+                {
+                    ERROR_LOG("Failed to get DB connection from pool.");
+                    co_return;
+                }
+
                 mysql::static_results<mysql::pfr_by_name<RegisterReq_Select_GameServer>> result;
-                if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
+                if (auto [dbErr] = co_await (*opConn)->async_execute(
                     queryStr,
                     result,
                     asio::as_tuple(asio::use_awaitable));
