@@ -28,6 +28,9 @@ namespace GenericBoson
 				boost::diagnostic_information(ex));
 			return false;
 		}
+
+		m_pDbPool->async_run(asio::detached);
+
 		return true;
 	}
 
@@ -40,10 +43,11 @@ namespace GenericBoson
 	{
 		mysql::pool_params params;
 		params.server_address.emplace_host_and_port(hostname.data());
-		params.username = username;
-		params.password = password;
-		params.database = dbname;
-		params.thread_safe = true;
+		params.username      = username;
+		params.password      = password;
+		params.database      = dbname;
+		params.thread_safe   = true;
+		params.multi_queries = true;
 
 		return params;
 	}

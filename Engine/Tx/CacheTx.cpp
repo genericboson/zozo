@@ -49,7 +49,7 @@ namespace GenericBoson
 
 	CacheTx& CacheTx::RunAsync()
 	{
-		m_executor.m_txHolder.emplace(IdGenerator::CreateId(0), shared_from_this());
+		m_executor.m_txHolder.emplace(m_id, shared_from_this());
 		m_executor.m_txQueue.push(this);
 		return *this;
 	}

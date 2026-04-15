@@ -118,7 +118,7 @@ namespace GenericBoson
 
                 auto queryStr = mysql::with_params(
                     "START TRANSACTION;"
-                    "SELECT password, id FROM zozo_lobby.user WHERE user.account = {};"
+                    "SELECT id,password FROM zozo_lobby.user WHERE user.account = {};"
                     "UPDATE zozo_lobby.user SET token = {} WHERE user.account = {} AND user.password = {};"
                     "COMMIT",
                     accountStr,
