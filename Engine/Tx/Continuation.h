@@ -7,23 +7,23 @@
 
 #include <boost/thread/future.hpp>
 
-#include "CacheTx.h"
+#include "MemTx.h"
 #include "Engine/Concepts.h"
 
 namespace GenericBoson
 {
 	template<typename CALLABLE>
-	CacheTx& operator|(CacheTx& tx, CALLABLE&& rhs)
+	MemTx& operator|(MemTx& tx, CALLABLE&& rhs)
 	{
-		//static_assert(CacheTxPostCallbackLike<CALLABLE>);
+		//static_assert(MemTxPostCallbackLike<CALLABLE>);
 		tx.m_postCallbacks.emplace_back(std::forward<CALLABLE>(rhs));
 		return tx;
 	}
 
 	template<typename CALLABLE>
-	std::shared_ptr<CacheTx>& operator|(std::shared_ptr<CacheTx>& pTx, CALLABLE&& rhs)
+	std::shared_ptr<MemTx>& operator|(std::shared_ptr<MemTx>& pTx, CALLABLE&& rhs)
 	{
-		//static_assert(CacheTxPostCallbackLike<CALLABLE>);
+		//static_assert(MemTxPostCallbackLike<CALLABLE>);
 		pTx->m_postCallbacks.emplace_back(std::forward<CALLABLE>(rhs));
 		return pTx;
 	}

@@ -3,8 +3,8 @@
 #include <boost/lockfree/queue.hpp>
 #include <boost/mysql.hpp>
 
-#include "CacheObject.h"
-#include "CacheTx.h"
+#include "MemObject.h"
+#include "MemTx.h"
 #include "Engine/Types.h"
 
 namespace GenericBoson
@@ -16,17 +16,17 @@ namespace GenericBoson
 	class TxExecutor
 	{
 		friend class WritableObject;
-		friend class CacheTx;
+		friend class MemTx;
 
 	public:
-		CacheTxPtr NewTx();
-		void RunAsync(const CacheTxPtr& tx);
-		asio::awaitable<void> DestroyConsumed(CacheTx* tx);
+		MemTxPtr NewTx();
+		void RunAsync(const MemTxPtr& tx);
+		asio::awaitable<void> DestroyConsumed(MemTx* tx);
 
-		asio::awaitable<void> Consume(CacheTx* tx);
+		asio::awaitable<void> Consume(MemTx* tx);
 		asio::awaitable<void> ConsumeAll();
 	private:
-		lockfree::queue<CacheTx*, lockfree::capacity<128>, lockfree::fixed_sized<false>> m_txQueue;
-		std::unordered_map<int32_t, std::shared_ptr<CacheTx>> m_txHolder;
+		lockfree::queue<MemTx*, lockfree::capacity<128>, lockfree::fixed_sized<false>> m_txQueue;
+		std::unordered_map<int32_t, std::shared_ptr<MemTx>> m_txHolder;
 	};
 }

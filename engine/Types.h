@@ -8,15 +8,15 @@ namespace GenericBoson
 {
 	namespace asio = boost::asio;
 
-	class ICacheObject;
+	class IMemObject;
 
 	struct DBResult
 	{
 		Zozo::ResultCode resultCode;
 
-		std::vector<std::shared_ptr<ICacheObject>> pChacheObjects;
+		std::vector<std::shared_ptr<IMemObject>> pChacheObjects;
 	};
 
-	using CacheTxPreCallback = std::function<asio::awaitable<bool>(void)>;
-	using CacheTxPostCallback = std::function<asio::awaitable<bool>(DBResult)>;
+	using MemTxPreCallback = std::function<asio::awaitable<bool>(void)>;
+	using MemTxPostCallback = std::function<asio::awaitable<bool>(DBResult)>;
 }

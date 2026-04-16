@@ -46,7 +46,8 @@ namespace GenericBoson
 		void OnAccepted() override;
 
 	private:
-		asio::awaitable<void> RecvCharacterListReq(const Zozo::GameMessage* message);
+		asio::awaitable<void> RecvCharacterListReq  (const Zozo::GameMessage* message);
+		asio::awaitable<void> RecvCharacterSelectReq(const Zozo::GameMessage* message);
 
 	private:
 		uint64_t                  m_temporaryId{};

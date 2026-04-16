@@ -6,11 +6,11 @@
 
 #include <format>
 
-#include <Engine/Tx/CacheObject.h>
-#include <Engine/Tx/CacheTx.h>
+#include <Engine/Tx/MemObject.h>
+#include <Engine/Tx/MemTx.h>
 #include <Engine/Tx/Continuation.h>
 #include <Engine/Tx/CustomAttributes.h>
-#include <MessageSchema/External/GameServerCache/DB_GameServer.h>
+#include <MessageSchema/External/GameServerMem/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
 #include "Actor/Character/Character.h"
@@ -24,9 +24,6 @@ namespace GenericBoson
 
     asio::awaitable<void> Character::RecvCharacterListReq(const Zozo::GameMessage* message)
 	{
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // [1] validation
-
         auto req = message->payload_as_CharacterListReq();
         NULL_CO_VOID_RETURN(req);
 
@@ -46,16 +43,13 @@ namespace GenericBoson
 
         auto tx = NewTx();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // [1] pre-processing
+        auto characterMem = tx->New<Zozo::CharacterMem<MemObject<Readable>>>();
 
-        auto characterCache = tx->New<Zozo::CharacterCache<CacheObject<Readable>>>();
-
-        characterCache->GetUserId().SetKey(userId);
-        characterCache->GetId().Bind();
-        characterCache->GetName().Bind();
+        characterMem->GetUserId().SetKey(userId);
+        characterMem->GetId().Bind();
+        characterMem->GetName().Bind();
         
-        if (!characterCache->Select())
+        if (!characterMem->Select())
         {
             co_return;
         }
@@ -71,14 +65,14 @@ namespace GenericBoson
 
 			for (const auto pObj : dbResult.pChacheObjects)
             {
-                auto pCharacterCache = std::static_pointer_cast<Zozo::CharacterCache<CacheObject<Readable>>>(pObj);
-                NULL_CONTINUE( pCharacterCache);
+                auto pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(pObj);
+                NULL_CONTINUE( pCharacterMem);
 
-                const auto characterId = pCharacterCache->GetId().Get();
+                const auto characterId = pCharacterMem->GetId().Get();
 
                 characterIds.push_back(CharacterId{characterId});
 
-                auto name = fbb.CreateString(std::format("{} [Lv.{}]", pCharacterCache->GetName().Get(), "11"));
+                auto name = fbb.CreateString(std::format("{} [Lv.{}]", pCharacterMem->GetName().Get(), "11"));
 
                 auto characterDataPair = Zozo::CreateCharacterPairData(fbb, characterId, name);
                 pairDatas.emplace_back(std::move(characterDataPair));

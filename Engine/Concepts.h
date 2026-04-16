@@ -9,7 +9,7 @@ namespace GenericBoson
 	concept IsString = std::convertible_to<T, std::string_view>;
 
 	template <typename CALLABLE>
-	concept CacheTxPostCallbackLike = requires(CALLABLE f, CacheTxPostCallback param) {
+	concept MemTxPostCallbackLike = requires(CALLABLE f, MemTxPostCallback param) {
 		f(param);
 	};
 

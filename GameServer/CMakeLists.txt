@@ -1,7 +1,7 @@
 file(GLOB_RECURSE GAME_SOURCE *.cpp)
 file(GLOB_RECURSE GAME_HEADER *.h)
-file(GLOB_RECURSE GAME_CACHE_SOURCE ../MessageSchema/External/GameServerCache/*.cpp)
-file(GLOB_RECURSE GAME_CACHE_HEADER ../MessageSchema/External/GameServerCache/*.h)
+file(GLOB_RECURSE GAME_MEM_SOURCE ../MessageSchema/External/GameServerMem/*.cpp)
+file(GLOB_RECURSE GAME_MEM_HEADER ../MessageSchema/External/GameServerMem/*.h)
 
 find_package(Boost REQUIRED COMPONENTS charconv)
 find_package(Threads REQUIRED)

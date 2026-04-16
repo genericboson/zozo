@@ -1,22 +1,22 @@
 #include "PCH.h"
 
-#include "Engine/Tx/CacheTx.h"
+#include "Engine/Tx/MemTx.h"
 #include "TxExecutor.h"
 
 namespace GenericBoson
 {
-    CacheTxPtr TxExecutor::NewTx()
+    MemTxPtr TxExecutor::NewTx()
     {
-        return std::make_shared<CacheTx>(*this);
+        return std::make_shared<MemTx>(*this);
     }
 
-    asio::awaitable<void> TxExecutor::DestroyConsumed(CacheTx* tx)
+    asio::awaitable<void> TxExecutor::DestroyConsumed(MemTx* tx)
     {
         NULL_CO_RETURN(m_txHolder.erase(tx->m_id));
 		co_return;
     }
 
-    asio::awaitable<void> TxExecutor::Consume(CacheTx* tx)
+    asio::awaitable<void> TxExecutor::Consume(MemTx* tx)
     {
         NULL_CO_RETURN(tx);
         co_await tx->RunOnUpdate();
@@ -24,7 +24,7 @@ namespace GenericBoson
 
     asio::awaitable<void> TxExecutor::ConsumeAll()
     {
-        CacheTx* tx = nullptr;
+        MemTx* tx = nullptr;
         while (m_txQueue.pop(tx))
         {
             co_await Consume(tx);
