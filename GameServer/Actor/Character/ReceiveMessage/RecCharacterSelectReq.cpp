@@ -10,11 +10,13 @@
 #include <Engine/Tx/MemTx.h>
 #include <Engine/Tx/Continuation.h>
 #include <Engine/Tx/CustomAttributes.h>
+#include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/External/GameServerMem/DB_GameServer.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
+#include "Actor/ZoneManager.h"
 #include "GameServer.h"
 #include "StaticResults.h"
 
@@ -53,58 +55,66 @@ namespace GenericBoson
 
         INFO_LOG("[CharacterSelectReq] token : {}", tokenStr);
 
-        auto queryStr = mysql::with_params(
-            "SELECT id, name, level FROM zozo_game.character WHERE id = {};", characterId);
+        auto tx = NewTx();
+		auto characterMem = tx->New<Zozo::CharacterMem<MemObject<Readable>>>();
 
-        // #todo change to CharacterSelect_Select_UserCharacter
-        /*mysql::static_results<mysql::pfr_by_name<CharacterList_Select_UserCharacter>> result;
-        if (auto [dbErr] = co_await m_server.m_pDbConn->async_execute(
-            queryStr,
-            result,
-            asio::as_tuple(asio::use_awaitable));
-            dbErr)
+		characterMem->GetUserId().SetKey(userId);
+        characterMem->GetId().Bind();
+        characterMem->GetName().Bind();
+		characterMem->GetLevel().Bind();
+
+        if (!characterMem->Select())
         {
-            ERROR_LOG("Query execute error. error code - {}({})", dbErr.value(), dbErr.message());
             co_return;
-        }
+		}
 
-        auto selectResults = result.rows<0>();
-        if (selectResults.size() <= 0)
-        {
-            WARN_LOG("[CharacterSelectReq] NoData. token : {}, user id : {}", tokenStr, userId);
-            const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_NoData);
-            const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
-            fbb.Finish(msg);
-            co_return;
-        }
-        else if (selectResults.size() > 1)
-        {
-            WARN_LOG("[CharacterSelectReq] Wrong db schema. token : {}, user id : {}", tokenStr, userId);
-            const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_WrongDBSchema);
-            const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
-            fbb.Finish(msg);
-            co_return;
-        }
+        tx->RunAsync() |
+            [this, userId, tokenStr](DBResult dbResult) -> asio::awaitable<bool>
+            {
+                flatbuffers::FlatBufferBuilder fbb;
 
-        const auto resultCode = co_await CharacterManager::GetInstance()
-            ->AddCharacter(shared_from_this(), characterId);
+                if(dbResult.pChacheObjects.size() != 1)
+                {
+                    WARN_LOG("[CharacterSelectReq] Invalid DB scheme. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_WrongDBSchema);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
 
-        if (resultCode == Zozo::ResultCode_Success)
-        {
-            const auto& selectResult = selectResults[0];
-            m_info.level = selectResult.level.value_or(0);
-            m_info.name = selectResult.name.value_or("");
-            m_info.position = std::make_unique<Vector2F>(m_position);
+                    co_return false;
+                }
 
-            // #todo - temporary test code. (0, 0) zone.
-            ZoneManager::GetInstance()->EnterZone(shared_from_this(), 0, 0);
-        }
+				const auto& pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(dbResult.pChacheObjects[0]);
 
-        auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
-        auto ack = Zozo::CreateCharacterSelectAck(fbb, resultCode, infoOffset);
-        auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                if (!pCharacterMem)
+                {
+                    WARN_LOG("[CharacterSelectReq] pCharacterMem is nullptr. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidCharacterId);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
 
-        fbb.Finish(msg);
-        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());*/
+                    co_return false;
+                }
+
+                if (const auto resultCode = co_await CharacterManager::GetInstance()
+                    ->AddCharacter(shared_from_this(), pCharacterMem->GetId().Get());
+                    resultCode != Zozo::ResultCode_Success)
+                {
+                    m_info.level = pCharacterMem->GetLevel().Get();
+                    m_info.name  = pCharacterMem->GetName().Get();
+                    m_info.position = std::make_unique<Zozo::Vector2F>(m_position);
+
+                    // #todo - temporary test code. (0, 0) zone.
+                    ZoneManager::GetInstance()->EnterZone(shared_from_this(), 0, 0);
+                }
+
+                auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &m_info);
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset);
+                auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+
+                fbb.Finish(msg);
+                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
+
+                co_return true;
+            };
     }
 }

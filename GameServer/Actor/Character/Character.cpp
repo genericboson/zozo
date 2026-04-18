@@ -73,7 +73,7 @@ namespace GenericBoson
 
     int64_t Character::GetUpdatePeriodMs() const
     {
-        return Environment::GetCharacterUpdatePeriodMs();;
+        return Environment::GetCharacterUpdatePeriodMs();
     }
 
     asio::awaitable<void> Character::Read(const uint8_t* pData, std::size_t dataSize)
@@ -93,9 +93,7 @@ namespace GenericBoson
 			co_await RecvCharacterListReq(message);
             break;
         case GamePayload::GamePayload_CharacterSelectReq:
-            {
-                
-            }
+            co_await RecvCharacterSelectReq(message);
             break;
         case GamePayload::GamePayload_CharacterSelectAck:
             {
