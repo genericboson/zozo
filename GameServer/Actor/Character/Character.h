@@ -49,6 +49,8 @@ namespace GenericBoson
 		asio::awaitable<void> RecvCharacterListReq  (const Zozo::GameMessage* message);
 		asio::awaitable<void> RecvCharacterSelectReq(const Zozo::GameMessage* message);
 
+		void RecvCharacterPositionUpdateReq(const Zozo::GameMessage* message);
+
 	private:
 		uint64_t                  m_temporaryId{};
 		int64_t                   m_id{};

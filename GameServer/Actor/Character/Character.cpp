@@ -19,7 +19,6 @@
 #include <MessageSchema/Common/Type_generated.h>
 #include <MessageSchema/External/GameServer_generated.h>
 
-#include "Actor/ZoneManager.h"
 #include "GameServer.h"
 #include "Character.h"
 #include "CharacterManager.h"
@@ -101,28 +100,7 @@ namespace GenericBoson
             }
             break;
         case GamePayload::GamePayload_CharacterPositionUpdateReq:
-            {
-			    auto moveReq = message->payload_as_CharacterPositionUpdateReq();
-
-                //INFO_LOG("CharacterPos:{},{},{},{}",
-                //    moveReq->position()->x(), moveReq->position()->y(), 
-                //    Zozo::EnumNameDirection(moveReq->direction()), moveReq->is_moved());
-
-                if (const auto pZone = m_wpZone.lock())
-                {
-                    PositionCast castData;
-					castData.senderCharacterId = m_id;
-					castData.position = Vector2F( moveReq->position()->x(), moveReq->position()->y() );
-					castData.direction = moveReq->direction();
-					castData.isMoved = moveReq->is_moved();
-
-					std::vector<std::unique_ptr<BroadCast>> broadcasts;
-
-					broadcasts.emplace_back(std::make_unique<PositionCast>(castData));
-
-                    pZone->Broadcast(broadcasts);
-                }
-            }
+			RecvCharacterPositionUpdateReq(message);
             break;
         case GamePayload::GamePayload_CharacterPositionUpdateAck:
             {

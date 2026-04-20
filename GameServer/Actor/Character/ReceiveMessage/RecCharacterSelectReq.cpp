@@ -69,56 +69,56 @@ namespace GenericBoson
             co_return;
 		}
 
-    // keep a shared_ptr to this to ensure lifetime while coroutine resumes
-    auto self = shared_from_this();
+        // keep a shared_ptr to this to ensure lifetime while coroutine resumes
+        auto self = shared_from_this();
 
-    tx->RunAsync() |
-        [self, userId, tokenStr](DBResult dbResult) -> asio::awaitable<bool>
-        {
-            flatbuffers::FlatBufferBuilder fbb;
-
-            if(dbResult.pChacheObjects.size() != 1)
+        tx->RunAsync() |
+            [self, userId, tokenStr](DBResult dbResult) -> asio::awaitable<bool>
             {
-                WARN_LOG("[CharacterSelectReq] Invalid DB scheme. token : {}, user id : {}", tokenStr, userId);
-                const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_WrongDBSchema);
-                const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                flatbuffers::FlatBufferBuilder fbb;
+
+                if(dbResult.pChacheObjects.size() != 1)
+                {
+                    WARN_LOG("[CharacterSelectReq] Invalid DB scheme. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_WrongDBSchema);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+
+                    co_return false;
+                }
+
+			    const auto& pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(dbResult.pChacheObjects[0]);
+
+                if (!pCharacterMem)
+                {
+                    WARN_LOG("[CharacterSelectReq] pCharacterMem is nullptr. token : {}, user id : {}", tokenStr, userId);
+                    const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidCharacterId);
+                    const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+                    fbb.Finish(msg);
+
+                    co_return false;
+                }
+
+                if (const auto resultCode = CharacterManager::GetInstance()
+                    ->AddCharacter(self, pCharacterMem->GetId().Get());
+                    resultCode == Zozo::ResultCode_Success)
+                {
+                    self->m_info.level = pCharacterMem->GetLevel().Get();
+                    self->m_info.name  = pCharacterMem->GetName().Get();
+                    self->m_info.position = std::make_unique<Zozo::Vector2F>(self->m_position);
+
+                    // #todo - temporary test code. (0, 0) zone.
+                    ZoneManager::GetInstance()->EnterZone(self, 0, 0);
+                }
+
+                auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &self->m_info);
+                auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset);
+                auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
+
                 fbb.Finish(msg);
+                self->m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 
-                co_return false;
-            }
-
-			const auto& pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(dbResult.pChacheObjects[0]);
-
-            if (!pCharacterMem)
-            {
-                WARN_LOG("[CharacterSelectReq] pCharacterMem is nullptr. token : {}, user id : {}", tokenStr, userId);
-                const auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_InvalidCharacterId);
-                const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
-                fbb.Finish(msg);
-
-                co_return false;
-            }
-
-            if (const auto resultCode = CharacterManager::GetInstance()
-                ->AddCharacter(self, pCharacterMem->GetId().Get());
-                resultCode == Zozo::ResultCode_Success)
-            {
-                self->m_info.level = pCharacterMem->GetLevel().Get();
-                self->m_info.name  = pCharacterMem->GetName().Get();
-                self->m_info.position = std::make_unique<Zozo::Vector2F>(self->m_position);
-
-                // #todo - temporary test code. (0, 0) zone.
-                ZoneManager::GetInstance()->EnterZone(self, 0, 0);
-            }
-
-            auto infoOffset = Zozo::CharacterInfo::Pack(fbb, &self->m_info);
-            auto ack = Zozo::CreateCharacterSelectAck(fbb, Zozo::ResultCode_Success, infoOffset);
-            auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterSelectAck, ack.Union());
-
-            fbb.Finish(msg);
-            self->m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-
-            co_return true;
-        };
+                co_return true;
+            };
     }
 }
