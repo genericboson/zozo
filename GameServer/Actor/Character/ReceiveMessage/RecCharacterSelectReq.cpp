@@ -99,9 +99,9 @@ namespace GenericBoson
                 co_return false;
             }
 
-            if (const auto resultCode = co_await CharacterManager::GetInstance()
+            if (const auto resultCode = CharacterManager::GetInstance()
                 ->AddCharacter(self, pCharacterMem->GetId().Get());
-                resultCode != Zozo::ResultCode_Success)
+                resultCode == Zozo::ResultCode_Success)
             {
                 self->m_info.level = pCharacterMem->GetLevel().Get();
                 self->m_info.name  = pCharacterMem->GetName().Get();

@@ -13,9 +13,9 @@ namespace GenericBoson
 	{
 	public:
 		void AddUnselected(std::shared_ptr<Character>&& pCharacter);
-		asio::awaitable<Zozo::ResultCode> AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId);
+		Zozo::ResultCode AddCharacter(const std::shared_ptr<Character>& pCharacter, int64_t characterId);
 
-		void RemoveCharacter(std::shared_ptr<Character>&& pCharacter);
+		void RemoveCharacter(const std::shared_ptr<Character>& pCharacter);
 
 		void SetUserCharacterIds( UserId userId, std::vector<CharacterId> characterIds);
 

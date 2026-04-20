@@ -47,7 +47,7 @@ namespace GenericBoson
 		m_unselectedCount++;
 	}
 
-	asio::awaitable<Zozo::ResultCode> CharacterManager::AddCharacter(std::shared_ptr<Character>&& pCharacter, int64_t characterId)
+	Zozo::ResultCode CharacterManager::AddCharacter(const std::shared_ptr<Character>& pCharacter, int64_t characterId)
 	{
 		std::unique_lock<std::shared_mutex> lock{ m_lock };
 
@@ -56,14 +56,14 @@ namespace GenericBoson
 		pCharacter->m_id = characterId;
 
 		if (m_characters.contains(newId))
-			co_return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
+			return Zozo::ResultCode::ResultCode_AlreadyLoggedIn;
 
 		m_characters[newId] = pCharacter;
 		m_unselecteds.erase(pCharacter->m_temporaryId);
-		co_return Zozo::ResultCode::ResultCode_Success;
+		return Zozo::ResultCode::ResultCode_Success;
 	}
 
-	void CharacterManager::RemoveCharacter(std::shared_ptr<Character>&& pCharacter)
+	void CharacterManager::RemoveCharacter(const std::shared_ptr<Character>& pCharacter)
 	{
 		std::unique_lock<std::shared_mutex> lock(m_lock);
 
