@@ -35,15 +35,19 @@ namespace GenericBoson
 
 		void Write(const uint8_t* data, size_t size);
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
+
+		asio::strand<asio::io_context::executor_type> GetStrand() const override;
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
 	private:
-		int64_t                  m_id = 0;
-		std::string              m_name, m_ip, m_port;
-		std::atomic_int32_t      m_currentCCU = 0, m_maxCCU = 0;
-
-		std::shared_ptr<ISocket> m_pSocket;
+		int64_t                                       m_id = 0;
+		std::string                                   m_name, m_ip, m_port;
+		std::atomic_int32_t                           m_currentCCU = 0, m_maxCCU = 0;
+								                      
+		std::shared_ptr<ISocket>                      m_pSocket;
 		LobbyServer& m_server;
+
+		asio::strand<asio::io_context::executor_type> m_strand;
 	};
 }

@@ -28,9 +28,15 @@ namespace GenericBoson
 	}
 
 	LobbyProxy::LobbyProxy(GameServer& server) :
-		m_server(server)
+		m_server(server),
+		m_strand(asio::make_strand(server.GetIoContextRef()))
 	{
 
+	}
+
+	asio::strand<asio::io_context::executor_type> LobbyProxy::GetStrand() const
+	{
+		return m_strand;
 	}
 
 	asio::awaitable<void> LobbyProxy::Read(const uint8_t* pData, std::size_t dataSize)

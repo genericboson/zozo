@@ -183,10 +183,10 @@ namespace GenericBoson
 			pActor->OnAccepted();
 
 			// Boost Asio TCP socket provides full duplex communication, so we can read and write at the same time.
-			asio::co_spawn(m_ioContext, ReadLoop(pSocket),  asio::detached);
-			asio::co_spawn(m_ioContext, WriteLoop(pSocket), asio::detached);
+			asio::co_spawn(pActor->GetStrand(), ReadLoop(pSocket),  asio::detached);
+			asio::co_spawn(pActor->GetStrand(), WriteLoop(pSocket), asio::detached);
 
-			asio::co_spawn(m_ioContext, LogicLoop(pActor),  asio::detached);
+			asio::co_spawn(pActor->GetStrand(), LogicLoop(pActor),  asio::detached);
 		}
 	}
 

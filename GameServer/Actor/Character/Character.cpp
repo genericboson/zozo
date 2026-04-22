@@ -31,7 +31,8 @@ namespace GenericBoson
     Character::Character(
         const std::shared_ptr<GameServer>& pServer,
         const std::shared_ptr<ISocket>&    pSocket)
-		: m_id(0), m_server(*pServer), m_pSocket(pSocket)
+		: m_id(0), m_server(*pServer), m_pSocket(pSocket),
+		m_strand(asio::make_strand(pServer->GetIoContextRef()))
     {
     }
 
@@ -122,5 +123,10 @@ namespace GenericBoson
                 EnumNameGamePayload(message->payload_type()));
 			break;
         }
+    }
+
+    asio::strand<asio::io_context::executor_type> Character::GetStrand() const
+    {
+        return m_strand;
     }
 }

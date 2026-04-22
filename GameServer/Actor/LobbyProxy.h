@@ -25,8 +25,12 @@ namespace GenericBoson
 
 		asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) override;
 
+		asio::strand<asio::io_context::executor_type> GetStrand() const override;
+
 	private:
 
 		GameServer& m_server;
+
+		asio::strand<asio::io_context::executor_type> m_strand;
 	};
 }

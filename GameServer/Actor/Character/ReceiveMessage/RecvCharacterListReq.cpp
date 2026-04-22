@@ -54,49 +54,46 @@ namespace GenericBoson
             co_return;
         }
 
-        tx->RunAsync() | 
-            [ this, userId ](DBResult dbResult) -> asio::awaitable<bool>
-            {
-                std::vector<CharacterId> characterIds;
-                characterIds.reserve(dbResult.pChacheObjects.size());
+        DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
+        if (!co_await characterMem->Execute(dbResult))
+        {
+            WARN_LOG("Failed to execute mem object.");//object name - {}",
+                //characterMem->GetObjectName());
+            co_return;
+        }
 
-                flatbuffers::FlatBufferBuilder fbb;
-                std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
+        std::vector<CharacterId> characterIds;
+        characterIds.reserve(dbResult.pChacheObjects.size());
 
-			    for (const auto pObj : dbResult.pChacheObjects)
-                {
-                    auto pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(pObj);
-                    NULL_CONTINUE( pCharacterMem);
+        std::vector<flatbuffers::Offset<Zozo::CharacterPairData>> pairDatas;
 
-                    const auto characterId = pCharacterMem->GetId().Get();
+		for (const auto pObj : dbResult.pChacheObjects)
+        {
+            auto pCharacterMem = std::static_pointer_cast<Zozo::CharacterMem<MemObject<Readable>>>(pObj);
+            NULL_CONTINUE( pCharacterMem);
 
-                    characterIds.push_back(CharacterId{characterId});
+            const auto characterId = pCharacterMem->GetId().Get();
 
-                    auto name = fbb.CreateString(std::format("{} [Lv.{}]", pCharacterMem->GetName().Get(), "11"));
+            characterIds.push_back(CharacterId{characterId});
 
-                    auto characterDataPair = Zozo::CreateCharacterPairData(fbb, characterId, name);
-                    pairDatas.emplace_back(std::move(characterDataPair));
-                }
+            auto name = fbb.CreateString(std::format("{} [Lv.{}]", pCharacterMem->GetName().Get(), "11"));
 
-                CharacterManager::GetInstance()->SetUserCharacterIds(
-                    UserId{ userId },
-                    std::move(characterIds));
+            auto characterDataPair = Zozo::CreateCharacterPairData(fbb, characterId, name);
+            pairDatas.emplace_back(std::move(characterDataPair));
+        }
 
-                const auto pairDatasOffset = fbb.CreateVector(pairDatas);
+        CharacterManager::GetInstance()->SetUserCharacterIds(
+            UserId{ userId },
+            std::move(characterIds));
 
-                const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
-                const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
+        const auto pairDatasOffset = fbb.CreateVector(pairDatas);
 
-                fbb.Finish(msg);
+        const auto ack = Zozo::CreateCharacterListAck(fbb, Zozo::ResultCode_Success, pairDatasOffset);
+        const auto msg = Zozo::CreateGameMessage(fbb, Zozo::GamePayload_CharacterListAck, ack.Union());
 
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        fbb.Finish(msg);
 
-                m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
-
-                co_return true;
-            };
-        
-        INFO_LOG("[CharacterListReq] token : {}", tokenStr);
+        m_pSocket->EnqueueMessage(fbb.GetBufferPointer(), fbb.GetSize());
 
         co_return;
 	}

@@ -33,8 +33,14 @@ namespace GenericBoson
     LobbyUser::LobbyUser(
         LobbyServer& lobbyServer, 
         const std::shared_ptr<ISocket>& pSocket)
-        : m_id(0), m_server(lobbyServer), m_pSocket(pSocket)
+        : m_id(0), m_server(lobbyServer), m_pSocket(pSocket),
+        m_strand(asio::make_strand(lobbyServer.GetIoContextRef()))
     {
+    }
+
+    asio::strand<asio::io_context::executor_type> LobbyUser::GetStrand() const
+    {
+        return m_strand;
     }
 
     int64_t LobbyUser::Id() const

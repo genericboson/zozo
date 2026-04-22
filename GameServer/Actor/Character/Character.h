@@ -41,6 +41,8 @@ namespace GenericBoson
 
 		int64_t GetUpdatePeriodMs() const override;
 
+		asio::strand<asio::io_context::executor_type> GetStrand() const override;
+
 	private:
 		void OnDisconnected() override;
 		void OnAccepted() override;
@@ -52,16 +54,18 @@ namespace GenericBoson
 		void RecvCharacterPositionUpdateReq(const Zozo::GameMessage* message);
 
 	private:
-		uint64_t                  m_temporaryId{};
-		int64_t                   m_id{};
-		std::string               m_token;
+		uint64_t                                      m_temporaryId{};
+		int64_t                                       m_id{};
+		std::string                                   m_token;
+								                      
+		Zozo::CharacterInfoT 	                      m_info;
+		Zozo::Vector2F                                m_position;
+								                      
+		std::shared_ptr<ISocket>                      m_pSocket;
+		std::weak_ptr<Zone>                           m_wpZone;
+								                      
+		GameServer&                                   m_server;
 
-		Zozo::CharacterInfoT 	  m_info;
-		Zozo::Vector2F            m_position;
-
-		std::shared_ptr<ISocket>  m_pSocket;
-		std::weak_ptr<Zone>       m_wpZone;
-
-		GameServer&               m_server;
+		asio::strand<asio::io_context::executor_type> m_strand;
 	};
 }

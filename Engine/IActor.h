@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/asio/awaitable.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/strand.hpp>
 
 namespace GenericBoson
 {
@@ -21,5 +23,7 @@ namespace GenericBoson
 		virtual int64_t GetUpdatePeriodMs() const = 0;
 
 		virtual asio::awaitable<void> Read(const uint8_t* pData, std::size_t dataSize) = 0;
+
+		virtual asio::strand<asio::io_context::executor_type> GetStrand() const = 0;
 	};
 }
