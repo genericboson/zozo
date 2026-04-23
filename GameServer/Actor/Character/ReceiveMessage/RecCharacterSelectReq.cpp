@@ -64,13 +64,9 @@ namespace GenericBoson
         characterMem->GetName().Bind();
         characterMem->GetLevel().Bind();
 
-        if (!characterMem->Select())
-        {
-            co_return;
-        }
+        const auto dbResult = co_await characterMem->Select();
 
-        DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
-        if (!co_await characterMem->Execute(dbResult))
+        if (dbResult.resultCode != Zozo::ResultCode::ResultCode_Success)
         {
             WARN_LOG("Failed to execute mem object.");//object name - {}",
             //characterMem->GetObjectName());

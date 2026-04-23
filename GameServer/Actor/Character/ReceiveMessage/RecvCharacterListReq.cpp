@@ -48,17 +48,13 @@ namespace GenericBoson
         characterMem->GetUserId().SetKey(userId);
         characterMem->GetId().Bind();
         characterMem->GetName().Bind();
-        
-        if (!characterMem->Select())
-        {
-            co_return;
-        }
 
-        DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
-        if (!co_await characterMem->Execute(dbResult))
+        const auto dbResult = co_await characterMem->Select();
+        
+        if (dbResult.resultCode != Zozo::ResultCode::ResultCode_Success)
         {
             WARN_LOG("Failed to execute mem object.");//object name - {}",
-                //characterMem->GetObjectName());
+            //characterMem->GetObjectName());
             co_return;
         }
 

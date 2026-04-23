@@ -78,10 +78,12 @@ namespace GenericBoson
 		// Readable
 		//=================================================================
 
-		bool Select() requires ReadableLike<T>
+		asio::awaitable<DBResult> Select() requires ReadableLike<T>
 		{
+			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery());
-			return true;
+			co_await ExecuteReadQuery(dbResult);
+			co_return dbResult;
 		}
 
 		asio::awaitable<bool> ExecuteReadQuery(DBResult& dbResult)
