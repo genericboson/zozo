@@ -53,8 +53,8 @@ namespace GenericBoson
         
         if (dbResult.resultCode != Zozo::ResultCode::ResultCode_Success)
         {
-            WARN_LOG("Failed to execute mem object.");//object name - {}",
-            //characterMem->GetObjectName());
+            WARN_LOG("Failed to execute mem object. object name - {}",
+            characterMem->GetObjectName());
             co_return;
         }
 

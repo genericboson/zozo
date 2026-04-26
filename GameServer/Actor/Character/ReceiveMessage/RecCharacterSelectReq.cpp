@@ -32,7 +32,6 @@ namespace GenericBoson
         flatbuffers::FlatBufferBuilder fbb;
 
         const auto characterId = selectReq->id();
-        // copy token into a std::string so it remains valid after this function returns
         const std::string tokenStr = selectReq->token() ? selectReq->token()->c_str() : std::string();
 
         const int64_t userId = CharacterManager::GetInstance()->GetUserId(CharacterId{ characterId });
@@ -68,8 +67,7 @@ namespace GenericBoson
 
         if (dbResult.resultCode != Zozo::ResultCode::ResultCode_Success)
         {
-            WARN_LOG("Failed to execute mem object.");//object name - {}",
-            //characterMem->GetObjectName());
+            WARN_LOG("Failed to execute mem object. object name - {}", characterMem->GetObjectName());
             co_return;
         }
 

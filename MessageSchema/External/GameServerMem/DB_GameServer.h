@@ -109,10 +109,11 @@ namespace GenericBoson::Zozo
         };
         Level& GetLevel();
 
-    protected:
+    public:
         auto GetObjectName() const                            -> std::string                           override;
         auto GetFieldNames() const                            -> const std::vector<std::string>&       override;
         auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                           override;
+    protected:
         auto GetField(const std::string& fieldName) const     -> const MemField*                     override;
         auto GetField(const int32_t fieldEnumValue) const     -> const MemField*                     override;
         auto GetFields() const                                -> const std::vector<const MemField*>& override;

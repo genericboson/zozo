@@ -81,10 +81,11 @@ namespace FlatMemGenerator
                     hContent.AppendLine($"        {SC.SnakeToPascalOrCamel(field.m_name)}& Get{SC.SnakeToPascalOrCamel(field.m_name)}();");
                     hContent.AppendLine();
                 }
-                hContent.AppendLine(@"    protected:");
+                hContent.AppendLine(@"    public:");
                 hContent.AppendLine(@"        auto GetObjectName() const                            -> std::string                           override;");
                 hContent.AppendLine(@"        auto GetFieldNames() const                            -> const std::vector<std::string>&       override;");
                 hContent.AppendLine(@"        auto GetFieldName(const int32_t fieldEnumValue) const -> std::string                           override;");
+                hContent.AppendLine(@"    protected:");
                 hContent.AppendLine(@"        auto GetField(const std::string& fieldName) const     -> const MemField*                     override;");
                 hContent.AppendLine(@"        auto GetField(const int32_t fieldEnumValue) const     -> const MemField*                     override;");
                 hContent.AppendLine($"        auto GetFields() const                                -> const std::vector<const MemField*>& override;");
