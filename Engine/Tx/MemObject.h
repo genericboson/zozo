@@ -78,11 +78,14 @@ namespace GenericBoson
 		// Readable
 		//=================================================================
 
-		asio::awaitable<DBResult> Select() requires ReadableLike<T>
+		asio::awaitable<DBResult> Select(bool isAuto = true) requires ReadableLike<T>
 		{
 			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery());
-			co_await ExecuteReadQuery(dbResult);
+			if (isAuto)
+			{
+				co_await ExecuteReadQuery(dbResult);
+			}
 			co_return dbResult;
 		}
 
@@ -230,27 +233,36 @@ namespace GenericBoson
 			}
 		}
 
-		asio::awaitable<DBResult> Insert() requires WritableLike<T>
+		asio::awaitable<DBResult> Insert(bool isAuto = true) requires WritableLike<T>
 		{
 			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Insert));
-			co_await ExecuteWriteQuery(dbResult);
+			if (isAuto)
+			{
+				co_await ExecuteWriteQuery(dbResult);
+			}
 			co_return dbResult;
 		}
 
-		asio::awaitable<DBResult> Update() requires WritableLike<T>
+		asio::awaitable<DBResult> Update(bool isAuto = true) requires WritableLike<T>
 		{
 			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Update));
-			co_await ExecuteWriteQuery(dbResult);
+			if (isAuto)
+			{
+				co_await ExecuteWriteQuery(dbResult);
+			}
 			co_return dbResult;
 		}
 
-		asio::awaitable<DBResult> Delete() requires WritableLike<T>
+		asio::awaitable<DBResult> Delete(bool isAuto = true) requires WritableLike<T>
 		{
 			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Delete));
-			co_await ExecuteWriteQuery(dbResult);
+			if (isAuto)
+			{
+				co_await ExecuteWriteQuery(dbResult);
+			}
 			co_return dbResult;
 		}
 
