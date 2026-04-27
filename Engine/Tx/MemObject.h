@@ -230,22 +230,28 @@ namespace GenericBoson
 			}
 		}
 
-		bool Insert() requires WritableLike<T>
+		asio::awaitable<DBResult> Insert() requires WritableLike<T>
 		{
+			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Insert));
-			return true;
+			co_await ExecuteWriteQuery(dbResult);
+			co_return dbResult;
 		}
 
-		bool Update() requires WritableLike<T>
+		asio::awaitable<DBResult> Update() requires WritableLike<T>
 		{
+			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Update));
-			return true;
+			co_await ExecuteWriteQuery(dbResult);
+			co_return dbResult;
 		}
 
-		bool Delete() requires WritableLike<T>
+		asio::awaitable<DBResult> Delete() requires WritableLike<T>
 		{
+			DBResult dbResult{ .resultCode = Zozo::ResultCode::ResultCode_Success };
 			m_queries.push_back(GetQuery(WriteQueryType::Delete));
-			return true;
+			co_await ExecuteWriteQuery(dbResult);
+			co_return dbResult;
 		}
 
 		asio::awaitable<bool> ExecuteWriteQuery(DBResult& dbResult)
