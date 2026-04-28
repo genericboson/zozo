@@ -23,6 +23,7 @@ public partial class Main : Node2D
 
             var controllable = new Controllable();
             m_controllablePlayer.AddChild(controllable);
+            m_controllablePlayer.AddChild(new Godot.Camera2D());
             ysort.AddChild(m_controllablePlayer);
         }
 

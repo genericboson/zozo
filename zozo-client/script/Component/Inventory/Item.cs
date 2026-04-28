@@ -1,12 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Godot;
 
-namespace ZozoClient.script.Component.Inventory
+namespace Zozo
 {
-    internal class Item
+    [GlobalClass]
+    public partial class Item : Resource
     {
+        [Export] public string name = "";
+        [Export] public Texture2D texture;
     }
 }

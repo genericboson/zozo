@@ -1,12 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZozoClient.script.Component.Inventory
+using Godot;
+
+namespace Zozo
 {
-    internal class Inventory
+    [GlobalClass]
+    public partial class Inventory : Resource
     {
+        [Export] public Godot.Collections.Array<Item> items = new Godot.Collections.Array<Item>();
     }
 }
