@@ -10,8 +10,6 @@ public partial class Controllable : Node
     private AnimatedSprite2D m_stateAnimation;
     private double m_accumulatedDelta = 0.0;
 
-    [Export] public Inventory inventory;
-
     public override void _Ready()
     {
         base._Ready();
