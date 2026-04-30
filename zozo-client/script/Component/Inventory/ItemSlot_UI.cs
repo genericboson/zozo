@@ -10,7 +10,7 @@ namespace Zozo
         public override void _Ready()
         {
             base._Ready();
-            m_itemDisplay = GetNode<Sprite2D>("ItemDisplay");
+            m_itemDisplay = GetNode<CenterContainer>("CenterContainer").GetNode<Panel>("Panel").GetNode<Sprite2D>("ItemDisplay");
         }
 
         public void Update(Item item)

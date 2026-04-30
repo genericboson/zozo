@@ -23,8 +23,8 @@ inventory = ExtResource("2_ccywu")
 layout_mode = 0
 offset_left = 52.0
 offset_top = 7.0
-offset_right = 192.0
-offset_bottom = 61.0
+offset_right = 196.0
+offset_bottom = 66.0
 texture = ExtResource("2_erhyg")
 patch_margin_left = 12
 patch_margin_top = 12
@@ -33,10 +33,10 @@ patch_margin_bottom = 12
 
 [node name="SlotContainer" type="GridContainer" parent="InventoryWindow"]
 layout_mode = 0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 139.0
-offset_bottom = 65.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 141.0
+offset_bottom = 67.0
 columns = 5
 
 [node name="ItemSlotUI1" parent="InventoryWindow/SlotContainer" instance=ExtResource("3_yaih4")]
