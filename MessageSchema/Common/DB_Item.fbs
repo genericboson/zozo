@@ -1,0 +1,28 @@
+include "Constant.fbs";
+
+namespace GenericBoson.Zozo;
+
+enum ItemType : int
+{
+    None = 0,
+    Currency,
+    Consumable,
+    Weapon,
+    Armor,
+    Accessory,
+}
+
+enum ItemAttribute : int
+{
+    NonStackable = 1,
+    Expairation,
+}
+
+table ItemInfo
+{
+    id        : long;
+    name      : string;
+    effect_id : long;
+    attribute : [ItemAttribute];
+    type      : ItemType;
+}
