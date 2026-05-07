@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=4 uid="uid://doli6v5epvvht"]
+[gd_scene load_steps=8 format=4 uid="uid://doli6v5epvvht"]
 
 [ext_resource type="Script" uid="uid://dsispg0y48ubn" path="res://script/Scene/Main.cs" id="1_o6q0f"]
 [ext_resource type="TileSet" uid="uid://xpt2r37kjiqn" path="res://art/ground_tile.tres" id="3_brvut"]
+[ext_resource type="PackedScene" uid="uid://ctn4nhc8yiyu0" path="res://scene/AppleTree.tscn" id="3_s5yxy"]
 [ext_resource type="TileSet" uid="uid://b87bbrgxr0tu4" path="res://art/cliff_tile.tres" id="4_0ha60"]
 [ext_resource type="TileSet" uid="uid://dj7qpu6ltwu8l" path="res://art/object_tile.tres" id="5_0ha60"]
 [ext_resource type="PackedScene" uid="uid://bgysjc3ue57wo" path="res://scene/UI.tscn" id="7_p1hux"]
@@ -21,6 +22,10 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="AppleTree" parent="Ysort" instance=ExtResource("3_s5yxy")]
+position = Vector2(40, 436)
+scale = Vector2(4, 4)
 
 [node name="Cliff" type="TileMapLayer" parent="Ysort"]
 scale = Vector2(4, 4)

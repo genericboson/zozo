@@ -23,7 +23,8 @@ public partial class Main : Node2D
             }
 
             var controllable = new Controllable();
-            m_controllablePlayer.AddChild(controllable);
+            controllable.Name = "Controllable";
+            m_controllablePlayer.AddChild(controllable, true);
             ysort.AddChild(m_controllablePlayer);
         }
 
