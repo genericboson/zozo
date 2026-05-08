@@ -58,6 +58,18 @@ table CharacterPositionUpdateAck
     result_code: ResultCode;
 }
 
+table TryGetItemReq
+{
+    root_name : string;
+    item_name : string;
+    count     : int;
+}
+
+table TryGetItemAck
+{
+    result_code: ResultCode;
+}
+
 union GamePayload
 {
     CharacterListReq,
@@ -68,6 +80,8 @@ union GamePayload
     CharacterPositionUpdateAck,
     CharacterCreateReq,
     CharacterCreateAck,
+    TryGetItemReq,
+    TryGetItemAck,
 }
 
 table GameMessage

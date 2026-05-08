@@ -1,5 +1,5 @@
 include "Constant.fbs";
-include "ItemInfo.fbs";
+include "Item.fbs";
 include "Type.fbs";
 
 namespace GenericBoson.Zozo;
@@ -58,6 +58,6 @@ table CharacterInfo
     appearance_id    : long;
     current_quest_id : long;
 
-    inventory        : [ItemInfo];
+    inventory        : [Item];
     inventory_size   : int;
 }

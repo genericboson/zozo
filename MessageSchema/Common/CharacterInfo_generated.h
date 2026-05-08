@@ -14,7 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "Constant_generated.h"
-#include "ItemInfo_generated.h"
+#include "Item_generated.h"
 #include "Type_generated.h"
 
 namespace GenericBoson {
@@ -186,7 +186,7 @@ struct CharacterInfoT : public ::flatbuffers::NativeTable {
   std::vector<GenericBoson::Zozo::TicketPair> tickets{};
   int64_t appearance_id = 0;
   int64_t current_quest_id = 0;
-  std::vector<std::unique_ptr<GenericBoson::Zozo::ItemInfoT>> inventory{};
+  std::vector<std::unique_ptr<GenericBoson::Zozo::ItemT>> inventory{};
   int32_t inventory_size = 0;
   CharacterInfoT() = default;
   CharacterInfoT(const CharacterInfoT &o);
@@ -253,8 +253,8 @@ struct CharacterInfo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t current_quest_id() const {
     return GetField<int64_t>(VT_CURRENT_QUEST_ID, 0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> *inventory() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> *>(VT_INVENTORY);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::Item>> *inventory() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::Item>> *>(VT_INVENTORY);
   }
   int32_t inventory_size() const {
     return GetField<int32_t>(VT_INVENTORY_SIZE, 0);
@@ -331,7 +331,7 @@ struct CharacterInfoBuilder {
   void add_current_quest_id(int64_t current_quest_id) {
     fbb_.AddElement<int64_t>(CharacterInfo::VT_CURRENT_QUEST_ID, current_quest_id, 0);
   }
-  void add_inventory(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>> inventory) {
+  void add_inventory(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::Item>>> inventory) {
     fbb_.AddOffset(CharacterInfo::VT_INVENTORY, inventory);
   }
   void add_inventory_size(int32_t inventory_size) {
@@ -363,7 +363,7 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(
     ::flatbuffers::Offset<::flatbuffers::Vector<const GenericBoson::Zozo::TicketPair *>> tickets = 0,
     int64_t appearance_id = 0,
     int64_t current_quest_id = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>> inventory = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GenericBoson::Zozo::Item>>> inventory = 0,
     int32_t inventory_size = 0) {
   CharacterInfoBuilder builder_(_fbb);
   builder_.add_current_quest_id(current_quest_id);
@@ -399,12 +399,12 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfoDirect(
     const std::vector<GenericBoson::Zozo::TicketPair> *tickets = nullptr,
     int64_t appearance_id = 0,
     int64_t current_quest_id = 0,
-    const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> *inventory = nullptr,
+    const std::vector<::flatbuffers::Offset<GenericBoson::Zozo::Item>> *inventory = nullptr,
     int32_t inventory_size = 0) {
   auto name__ = name ? _fbb.CreateString(name) : 0;
   auto stats__ = stats ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::StatPair>(*stats) : 0;
   auto tickets__ = tickets ? _fbb.CreateVectorOfStructs<GenericBoson::Zozo::TicketPair>(*tickets) : 0;
-  auto inventory__ = inventory ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>>(*inventory) : 0;
+  auto inventory__ = inventory ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::Item>>(*inventory) : 0;
   return GenericBoson::Zozo::CreateCharacterInfo(
       _fbb,
       id,
@@ -442,7 +442,7 @@ inline CharacterInfoT::CharacterInfoT(const CharacterInfoT &o)
         current_quest_id(o.current_quest_id),
         inventory_size(o.inventory_size) {
   inventory.reserve(o.inventory.size());
-  for (const auto &inventory_ : o.inventory) { inventory.emplace_back((inventory_) ? new GenericBoson::Zozo::ItemInfoT(*inventory_) : nullptr); }
+  for (const auto &inventory_ : o.inventory) { inventory.emplace_back((inventory_) ? new GenericBoson::Zozo::ItemT(*inventory_) : nullptr); }
 }
 
 inline CharacterInfoT &CharacterInfoT::operator=(CharacterInfoT o) FLATBUFFERS_NOEXCEPT {
@@ -486,7 +486,7 @@ inline void CharacterInfo::UnPackTo(CharacterInfoT *_o, const ::flatbuffers::res
   { auto _e = tickets(); if (_e) { _o->tickets.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->tickets[_i] = *_e->Get(_i); } } else { _o->tickets.resize(0); } }
   { auto _e = appearance_id(); _o->appearance_id = _e; }
   { auto _e = current_quest_id(); _o->current_quest_id = _e; }
-  { auto _e = inventory(); if (_e) { _o->inventory.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->inventory[_i]) { _e->Get(_i)->UnPackTo(_o->inventory[_i].get(), _resolver); } else { _o->inventory[_i] = std::unique_ptr<GenericBoson::Zozo::ItemInfoT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->inventory.resize(0); } }
+  { auto _e = inventory(); if (_e) { _o->inventory.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->inventory[_i]) { _e->Get(_i)->UnPackTo(_o->inventory[_i].get(), _resolver); } else { _o->inventory[_i] = std::unique_ptr<GenericBoson::Zozo::ItemT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->inventory.resize(0); } }
   { auto _e = inventory_size(); _o->inventory_size = _e; }
 }
 
@@ -511,7 +511,7 @@ inline ::flatbuffers::Offset<CharacterInfo> CreateCharacterInfo(::flatbuffers::F
   auto _tickets = _o->tickets.size() ? _fbb.CreateVectorOfStructs(_o->tickets) : 0;
   auto _appearance_id = _o->appearance_id;
   auto _current_quest_id = _o->current_quest_id;
-  auto _inventory = _o->inventory.size() ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::ItemInfo>> (_o->inventory.size(), [](size_t i, _VectorArgs *__va) { return CreateItemInfo(*__va->__fbb, __va->__o->inventory[i].get(), __va->__rehasher); }, &_va ) : 0;
+  auto _inventory = _o->inventory.size() ? _fbb.CreateVector<::flatbuffers::Offset<GenericBoson::Zozo::Item>> (_o->inventory.size(), [](size_t i, _VectorArgs *__va) { return CreateItem(*__va->__fbb, __va->__o->inventory[i].get(), __va->__rehasher); }, &_va ) : 0;
   auto _inventory_size = _o->inventory_size;
   return GenericBoson::Zozo::CreateCharacterInfo(
       _fbb,

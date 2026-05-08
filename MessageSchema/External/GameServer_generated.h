@@ -55,6 +55,14 @@ struct CharacterPositionUpdateAck;
 struct CharacterPositionUpdateAckBuilder;
 struct CharacterPositionUpdateAckT;
 
+struct TryGetItemReq;
+struct TryGetItemReqBuilder;
+struct TryGetItemReqT;
+
+struct TryGetItemAck;
+struct TryGetItemAckBuilder;
+struct TryGetItemAckT;
+
 struct GameMessage;
 struct GameMessageBuilder;
 struct GameMessageT;
@@ -69,11 +77,13 @@ enum GamePayload : uint8_t {
   GamePayload_CharacterPositionUpdateAck = 6,
   GamePayload_CharacterCreateReq = 7,
   GamePayload_CharacterCreateAck = 8,
+  GamePayload_TryGetItemReq = 9,
+  GamePayload_TryGetItemAck = 10,
   GamePayload_MIN = GamePayload_NONE,
-  GamePayload_MAX = GamePayload_CharacterCreateAck
+  GamePayload_MAX = GamePayload_TryGetItemAck
 };
 
-inline const GamePayload (&EnumValuesGamePayload())[9] {
+inline const GamePayload (&EnumValuesGamePayload())[11] {
   static const GamePayload values[] = {
     GamePayload_NONE,
     GamePayload_CharacterListReq,
@@ -83,13 +93,15 @@ inline const GamePayload (&EnumValuesGamePayload())[9] {
     GamePayload_CharacterPositionUpdateReq,
     GamePayload_CharacterPositionUpdateAck,
     GamePayload_CharacterCreateReq,
-    GamePayload_CharacterCreateAck
+    GamePayload_CharacterCreateAck,
+    GamePayload_TryGetItemReq,
+    GamePayload_TryGetItemAck
   };
   return values;
 }
 
 inline const char * const *EnumNamesGamePayload() {
-  static const char * const names[10] = {
+  static const char * const names[12] = {
     "NONE",
     "CharacterListReq",
     "CharacterListAck",
@@ -99,13 +111,15 @@ inline const char * const *EnumNamesGamePayload() {
     "CharacterPositionUpdateAck",
     "CharacterCreateReq",
     "CharacterCreateAck",
+    "TryGetItemReq",
+    "TryGetItemAck",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameGamePayload(GamePayload e) {
-  if (::flatbuffers::IsOutRange(e, GamePayload_NONE, GamePayload_CharacterCreateAck)) return "";
+  if (::flatbuffers::IsOutRange(e, GamePayload_NONE, GamePayload_TryGetItemAck)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesGamePayload()[index];
 }
@@ -146,6 +160,14 @@ template<> struct GamePayloadTraits<GenericBoson::Zozo::CharacterCreateAck> {
   static const GamePayload enum_value = GamePayload_CharacterCreateAck;
 };
 
+template<> struct GamePayloadTraits<GenericBoson::Zozo::TryGetItemReq> {
+  static const GamePayload enum_value = GamePayload_TryGetItemReq;
+};
+
+template<> struct GamePayloadTraits<GenericBoson::Zozo::TryGetItemAck> {
+  static const GamePayload enum_value = GamePayload_TryGetItemAck;
+};
+
 template<typename T> struct GamePayloadUnionTraits {
   static const GamePayload enum_value = GamePayload_NONE;
 };
@@ -180,6 +202,14 @@ template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterCreateReqT
 
 template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::CharacterCreateAckT> {
   static const GamePayload enum_value = GamePayload_CharacterCreateAck;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::TryGetItemReqT> {
+  static const GamePayload enum_value = GamePayload_TryGetItemReq;
+};
+
+template<> struct GamePayloadUnionTraits<GenericBoson::Zozo::TryGetItemAckT> {
+  static const GamePayload enum_value = GamePayload_TryGetItemAck;
 };
 
 struct GamePayloadUnion {
@@ -275,6 +305,22 @@ struct GamePayloadUnion {
   const GenericBoson::Zozo::CharacterCreateAckT *AsCharacterCreateAck() const {
     return type == GamePayload_CharacterCreateAck ?
       reinterpret_cast<const GenericBoson::Zozo::CharacterCreateAckT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::TryGetItemReqT *AsTryGetItemReq() {
+    return type == GamePayload_TryGetItemReq ?
+      reinterpret_cast<GenericBoson::Zozo::TryGetItemReqT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::TryGetItemReqT *AsTryGetItemReq() const {
+    return type == GamePayload_TryGetItemReq ?
+      reinterpret_cast<const GenericBoson::Zozo::TryGetItemReqT *>(value) : nullptr;
+  }
+  GenericBoson::Zozo::TryGetItemAckT *AsTryGetItemAck() {
+    return type == GamePayload_TryGetItemAck ?
+      reinterpret_cast<GenericBoson::Zozo::TryGetItemAckT *>(value) : nullptr;
+  }
+  const GenericBoson::Zozo::TryGetItemAckT *AsTryGetItemAck() const {
+    return type == GamePayload_TryGetItemAck ?
+      reinterpret_cast<const GenericBoson::Zozo::TryGetItemAckT *>(value) : nullptr;
   }
 };
 
@@ -909,6 +955,148 @@ inline ::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPosition
 
 ::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPositionUpdateAck(::flatbuffers::FlatBufferBuilder &_fbb, const CharacterPositionUpdateAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
 
+struct TryGetItemReqT : public ::flatbuffers::NativeTable {
+  typedef TryGetItemReq TableType;
+  std::string root_name{};
+  std::string item_name{};
+  int32_t count = 0;
+};
+
+struct TryGetItemReq FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TryGetItemReqT NativeTableType;
+  typedef TryGetItemReqBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ROOT_NAME = 4,
+    VT_ITEM_NAME = 6,
+    VT_COUNT = 8
+  };
+  const ::flatbuffers::String *root_name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ROOT_NAME);
+  }
+  const ::flatbuffers::String *item_name() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ITEM_NAME);
+  }
+  int32_t count() const {
+    return GetField<int32_t>(VT_COUNT, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ROOT_NAME) &&
+           verifier.VerifyString(root_name()) &&
+           VerifyOffset(verifier, VT_ITEM_NAME) &&
+           verifier.VerifyString(item_name()) &&
+           VerifyField<int32_t>(verifier, VT_COUNT, 4) &&
+           verifier.EndTable();
+  }
+  TryGetItemReqT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(TryGetItemReqT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<TryGetItemReq> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct TryGetItemReqBuilder {
+  typedef TryGetItemReq Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_root_name(::flatbuffers::Offset<::flatbuffers::String> root_name) {
+    fbb_.AddOffset(TryGetItemReq::VT_ROOT_NAME, root_name);
+  }
+  void add_item_name(::flatbuffers::Offset<::flatbuffers::String> item_name) {
+    fbb_.AddOffset(TryGetItemReq::VT_ITEM_NAME, item_name);
+  }
+  void add_count(int32_t count) {
+    fbb_.AddElement<int32_t>(TryGetItemReq::VT_COUNT, count, 0);
+  }
+  explicit TryGetItemReqBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TryGetItemReq> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TryGetItemReq>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TryGetItemReq> CreateTryGetItemReq(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> root_name = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> item_name = 0,
+    int32_t count = 0) {
+  TryGetItemReqBuilder builder_(_fbb);
+  builder_.add_count(count);
+  builder_.add_item_name(item_name);
+  builder_.add_root_name(root_name);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<TryGetItemReq> CreateTryGetItemReqDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *root_name = nullptr,
+    const char *item_name = nullptr,
+    int32_t count = 0) {
+  auto root_name__ = root_name ? _fbb.CreateString(root_name) : 0;
+  auto item_name__ = item_name ? _fbb.CreateString(item_name) : 0;
+  return GenericBoson::Zozo::CreateTryGetItemReq(
+      _fbb,
+      root_name__,
+      item_name__,
+      count);
+}
+
+::flatbuffers::Offset<TryGetItemReq> CreateTryGetItemReq(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct TryGetItemAckT : public ::flatbuffers::NativeTable {
+  typedef TryGetItemAck TableType;
+  GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success;
+};
+
+struct TryGetItemAck FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef TryGetItemAckT NativeTableType;
+  typedef TryGetItemAckBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT_CODE = 4
+  };
+  GenericBoson::Zozo::ResultCode result_code() const {
+    return static_cast<GenericBoson::Zozo::ResultCode>(GetField<uint32_t>(VT_RESULT_CODE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT_CODE, 4) &&
+           verifier.EndTable();
+  }
+  TryGetItemAckT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(TryGetItemAckT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<TryGetItemAck> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct TryGetItemAckBuilder {
+  typedef TryGetItemAck Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_result_code(GenericBoson::Zozo::ResultCode result_code) {
+    fbb_.AddElement<uint32_t>(TryGetItemAck::VT_RESULT_CODE, static_cast<uint32_t>(result_code), 0);
+  }
+  explicit TryGetItemAckBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<TryGetItemAck> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<TryGetItemAck>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<TryGetItemAck> CreateTryGetItemAck(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    GenericBoson::Zozo::ResultCode result_code = GenericBoson::Zozo::ResultCode_Success) {
+  TryGetItemAckBuilder builder_(_fbb);
+  builder_.add_result_code(result_code);
+  return builder_.Finish();
+}
+
+::flatbuffers::Offset<TryGetItemAck> CreateTryGetItemAck(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
 struct GameMessageT : public ::flatbuffers::NativeTable {
   typedef GameMessage TableType;
   GenericBoson::Zozo::GamePayloadUnion payload{};
@@ -952,6 +1140,12 @@ struct GameMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GenericBoson::Zozo::CharacterCreateAck *payload_as_CharacterCreateAck() const {
     return payload_type() == GenericBoson::Zozo::GamePayload_CharacterCreateAck ? static_cast<const GenericBoson::Zozo::CharacterCreateAck *>(payload()) : nullptr;
   }
+  const GenericBoson::Zozo::TryGetItemReq *payload_as_TryGetItemReq() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_TryGetItemReq ? static_cast<const GenericBoson::Zozo::TryGetItemReq *>(payload()) : nullptr;
+  }
+  const GenericBoson::Zozo::TryGetItemAck *payload_as_TryGetItemAck() const {
+    return payload_type() == GenericBoson::Zozo::GamePayload_TryGetItemAck ? static_cast<const GenericBoson::Zozo::TryGetItemAck *>(payload()) : nullptr;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_PAYLOAD_TYPE, 1) &&
@@ -994,6 +1188,14 @@ template<> inline const GenericBoson::Zozo::CharacterCreateReq *GameMessage::pay
 
 template<> inline const GenericBoson::Zozo::CharacterCreateAck *GameMessage::payload_as<GenericBoson::Zozo::CharacterCreateAck>() const {
   return payload_as_CharacterCreateAck();
+}
+
+template<> inline const GenericBoson::Zozo::TryGetItemReq *GameMessage::payload_as<GenericBoson::Zozo::TryGetItemReq>() const {
+  return payload_as_TryGetItemReq();
+}
+
+template<> inline const GenericBoson::Zozo::TryGetItemAck *GameMessage::payload_as<GenericBoson::Zozo::TryGetItemAck>() const {
+  return payload_as_TryGetItemAck();
 }
 
 struct GameMessageBuilder {
@@ -1325,6 +1527,64 @@ inline ::flatbuffers::Offset<CharacterPositionUpdateAck> CreateCharacterPosition
       _result_code);
 }
 
+inline TryGetItemReqT *TryGetItemReq::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<TryGetItemReqT>(new TryGetItemReqT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void TryGetItemReq::UnPackTo(TryGetItemReqT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = root_name(); if (_e) _o->root_name = _e->str(); }
+  { auto _e = item_name(); if (_e) _o->item_name = _e->str(); }
+  { auto _e = count(); _o->count = _e; }
+}
+
+inline ::flatbuffers::Offset<TryGetItemReq> TryGetItemReq::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemReqT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateTryGetItemReq(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<TryGetItemReq> CreateTryGetItemReq(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemReqT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const TryGetItemReqT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _root_name = _o->root_name.empty() ? 0 : _fbb.CreateString(_o->root_name);
+  auto _item_name = _o->item_name.empty() ? 0 : _fbb.CreateString(_o->item_name);
+  auto _count = _o->count;
+  return GenericBoson::Zozo::CreateTryGetItemReq(
+      _fbb,
+      _root_name,
+      _item_name,
+      _count);
+}
+
+inline TryGetItemAckT *TryGetItemAck::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<TryGetItemAckT>(new TryGetItemAckT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
+}
+
+inline void TryGetItemAck::UnPackTo(TryGetItemAckT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = result_code(); _o->result_code = _e; }
+}
+
+inline ::flatbuffers::Offset<TryGetItemAck> TryGetItemAck::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemAckT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateTryGetItemAck(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<TryGetItemAck> CreateTryGetItemAck(::flatbuffers::FlatBufferBuilder &_fbb, const TryGetItemAckT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const TryGetItemAckT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _result_code = _o->result_code;
+  return GenericBoson::Zozo::CreateTryGetItemAck(
+      _fbb,
+      _result_code);
+}
+
 inline GameMessageT *GameMessage::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
   auto _o = std::unique_ptr<GameMessageT>(new GameMessageT());
   UnPackTo(_o.get(), _resolver);
@@ -1391,6 +1651,14 @@ inline bool VerifyGamePayload(::flatbuffers::Verifier &verifier, const void *obj
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterCreateAck *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case GamePayload_TryGetItemReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemReq *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case GamePayload_TryGetItemAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemAck *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     default: return true;
   }
 }
@@ -1442,6 +1710,14 @@ inline void *GamePayloadUnion::UnPack(const void *obj, GamePayload type, const :
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterCreateAck *>(obj);
       return ptr->UnPack(resolver);
     }
+    case GamePayload_TryGetItemReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemReq *>(obj);
+      return ptr->UnPack(resolver);
+    }
+    case GamePayload_TryGetItemAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemAck *>(obj);
+      return ptr->UnPack(resolver);
+    }
     default: return nullptr;
   }
 }
@@ -1481,6 +1757,14 @@ inline ::flatbuffers::Offset<void> GamePayloadUnion::Pack(::flatbuffers::FlatBuf
       auto ptr = reinterpret_cast<const GenericBoson::Zozo::CharacterCreateAckT *>(value);
       return CreateCharacterCreateAck(_fbb, ptr, _rehasher).Union();
     }
+    case GamePayload_TryGetItemReq: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemReqT *>(value);
+      return CreateTryGetItemReq(_fbb, ptr, _rehasher).Union();
+    }
+    case GamePayload_TryGetItemAck: {
+      auto ptr = reinterpret_cast<const GenericBoson::Zozo::TryGetItemAckT *>(value);
+      return CreateTryGetItemAck(_fbb, ptr, _rehasher).Union();
+    }
     default: return 0;
   }
 }
@@ -1517,6 +1801,14 @@ inline GamePayloadUnion::GamePayloadUnion(const GamePayloadUnion &u) : type(u.ty
     }
     case GamePayload_CharacterCreateAck: {
       value = new GenericBoson::Zozo::CharacterCreateAckT(*reinterpret_cast<GenericBoson::Zozo::CharacterCreateAckT *>(u.value));
+      break;
+    }
+    case GamePayload_TryGetItemReq: {
+      value = new GenericBoson::Zozo::TryGetItemReqT(*reinterpret_cast<GenericBoson::Zozo::TryGetItemReqT *>(u.value));
+      break;
+    }
+    case GamePayload_TryGetItemAck: {
+      value = new GenericBoson::Zozo::TryGetItemAckT(*reinterpret_cast<GenericBoson::Zozo::TryGetItemAckT *>(u.value));
       break;
     }
     default:
@@ -1563,6 +1855,16 @@ inline void GamePayloadUnion::Reset() {
     }
     case GamePayload_CharacterCreateAck: {
       auto ptr = reinterpret_cast<GenericBoson::Zozo::CharacterCreateAckT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_TryGetItemReq: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::TryGetItemReqT *>(value);
+      delete ptr;
+      break;
+    }
+    case GamePayload_TryGetItemAck: {
+      auto ptr = reinterpret_cast<GenericBoson::Zozo::TryGetItemAckT *>(value);
       delete ptr;
       break;
     }

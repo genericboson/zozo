@@ -25,6 +25,7 @@ namespace Zozo
                 if (playerInArea && Input.IsActionJustPressed("e"))
                 {
                     hasApple = false;
+                    CSGlobal.Instance.gameSocketManager.SendTryGetItem(this,EItem::Apple,1);
                 }
             }
             else

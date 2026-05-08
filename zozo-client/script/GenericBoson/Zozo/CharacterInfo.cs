@@ -40,7 +40,7 @@ public struct CharacterInfo : IFlatbufferObject
   public int TicketsLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   public long AppearanceId { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public long CurrentQuestId { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  public GenericBoson.Zozo.ItemInfo? Inventory(int j) { int o = __p.__offset(30); return o != 0 ? (GenericBoson.Zozo.ItemInfo?)(new GenericBoson.Zozo.ItemInfo()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public GenericBoson.Zozo.Item? Inventory(int j) { int o = __p.__offset(30); return o != 0 ? (GenericBoson.Zozo.Item?)(new GenericBoson.Zozo.Item()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int InventoryLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   public int InventorySize { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
@@ -61,10 +61,10 @@ public struct CharacterInfo : IFlatbufferObject
   public static void AddAppearanceId(FlatBufferBuilder builder, long appearanceId) { builder.AddLong(11, appearanceId, 0); }
   public static void AddCurrentQuestId(FlatBufferBuilder builder, long currentQuestId) { builder.AddLong(12, currentQuestId, 0); }
   public static void AddInventory(FlatBufferBuilder builder, VectorOffset inventoryOffset) { builder.AddOffset(13, inventoryOffset.Value, 0); }
-  public static VectorOffset CreateInventoryVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.ItemInfo>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.ItemInfo>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.ItemInfo>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.ItemInfo>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static VectorOffset CreateInventoryVector(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Item>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, Offset<GenericBoson.Zozo.Item>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GenericBoson.Zozo.Item>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateInventoryVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GenericBoson.Zozo.Item>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartInventoryVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddInventorySize(FlatBufferBuilder builder, int inventorySize) { builder.AddInt(14, inventorySize, 0); }
   public static Offset<GenericBoson.Zozo.CharacterInfo> EndCharacterInfo(FlatBufferBuilder builder) {
@@ -92,7 +92,7 @@ static public class CharacterInfoVerify
       && verifier.VerifyVectorOfData(tablePos, 24 /*Tickets*/, 16 /*GenericBoson.Zozo.TicketPair*/, false)
       && verifier.VerifyField(tablePos, 26 /*AppearanceId*/, 8 /*long*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*CurrentQuestId*/, 8 /*long*/, 8, false)
-      && verifier.VerifyVectorOfTables(tablePos, 30 /*Inventory*/, GenericBoson.Zozo.ItemInfoVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*Inventory*/, GenericBoson.Zozo.ItemVerify.Verify, false)
       && verifier.VerifyField(tablePos, 32 /*InventorySize*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
