@@ -6,6 +6,8 @@ enable_testing()
 
 project (ZozoTown)
 
+add_subdirectory (ThirdParty/OpenXLSX)
+
 #add_subdirectory ("Bot")
 add_subdirectory ("Engine")
 add_subdirectory ("GameServer")
