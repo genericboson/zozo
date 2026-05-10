@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.17.0)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
+
 # !!! Very Very important !!!
 # enable_testing must be in main CMakeLists.txt for being searched by Test Explorer
 enable_testing()
