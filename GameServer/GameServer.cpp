@@ -2,6 +2,7 @@
 
 #include <flatbuffers/flatbuffers.h>
 #include <Engine/Socket/BoostTcpSocket.h>
+#include <ThirdParty/OpenXLSX/OpenXLSX/OpenXLSX.hpp>
 
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
@@ -17,8 +18,45 @@ namespace GenericBoson
 	{
 	}
 
+	bool GameServer::ReadAllStaticData()
+	{
+		OpenXLSX::XLDocument doc;
+		doc.open("StaticData/items.xlsx");
+
+		auto sheet = doc.workbook().worksheet("Sheet1");
+
+		for (auto& row : sheet.rows())
+		{
+			for (auto& cell : row.cells())
+			{
+				switch (cell.value().type())
+				{
+				case OpenXLSX::XLValueType::Integer:
+					INFO_LOG("XLValueType::Integer - {}", cell.value().get<int>());
+					break;
+				case OpenXLSX::XLValueType::Float:
+					INFO_LOG("XLValueType::Float - {}", cell.value().get<double>());
+					break;
+				case OpenXLSX::XLValueType::String:
+					INFO_LOG("XLValueType::String - {}", cell.value().get<std::string>());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		doc.close();
+		return true;
+	}
+
 	bool GameServer::AfterReadIni()
 	{
+		if (ReadAllStaticData())
+		{
+			return false;
+		}
+
 		m_pClient = std::make_unique<InternalClient>(shared_from_this(), m_lobbyIp, m_lobbyPort);
 		m_pClient->SetOnConnected([this]() {
 			flatbuffers::FlatBufferBuilder fbb;

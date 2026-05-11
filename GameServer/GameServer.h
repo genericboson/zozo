@@ -27,6 +27,8 @@ namespace GenericBoson
 		auto CreateActor(const std::shared_ptr<ISocket>& pSocket) 
 			-> std::shared_ptr<IActor> override;
 
+		bool ReadAllStaticData();
+
 	public:
 		static auto CreateGameServer(int32_t port = 8001) -> std::shared_ptr<GameServer>;
 

@@ -50,6 +50,7 @@ namespace GenericBoson
 	private:
 		asio::awaitable<void> RecvCharacterListReq  (const Zozo::GameMessage* message);
 		asio::awaitable<void> RecvCharacterSelectReq(const Zozo::GameMessage* message);
+		asio::awaitable<void> RecvTryGetItemReq(const Zozo::GameMessage* message);
 
 		void RecvCharacterPositionUpdateReq(const Zozo::GameMessage* message);
 

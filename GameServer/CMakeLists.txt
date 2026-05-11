@@ -17,7 +17,8 @@ target_link_libraries(GAME_SERVER PRIVATE
 	Boost::charconv 
 	Threads::Threads 
 	OpenSSL::Crypto 
-	OpenSSL::SSL)
+	OpenSSL::SSL 
+	OpenXLSX::OpenXLSX)
 
 set_property(TARGET GAME_SERVER PROPERTY CXX_STANDARD 20)
 set_property(TARGET GAME_SERVER PROPERTY RUNTIME_OUTPUT_DIRECTORY ../bin)
@@ -29,6 +30,7 @@ target_include_directories(GAME_SERVER PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR} 
 	${CMAKE_CURRENT_SOURCE_DIR}/.. 
 	${CMAKE_CURRENT_SOURCE_DIR}/../MessageSchema/Common 
+	${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/OpenXLSX/OpenXLSX 
 	${OPENSSL_INCLUDE_DIR} 
 	$ENV{FLAT_BUFFER_INCLUDE} 
 	$ENV{BOOST_ROOT})

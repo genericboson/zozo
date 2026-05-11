@@ -24,5 +24,6 @@ namespace GenericBoson
 
     asio::awaitable<void> Character::RecvTryGetItemReq(const Zozo::GameMessage* message)
     {
+        co_return;
     }
 }
