@@ -52,7 +52,7 @@ namespace GenericBoson
 
 	bool GameServer::AfterReadIni()
 	{
-		if (ReadAllStaticData())
+		if (!ReadAllStaticData())
 		{
 			return false;
 		}
