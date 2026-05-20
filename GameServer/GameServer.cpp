@@ -20,52 +20,6 @@ namespace GenericBoson
 	{
 	}
 
-	bool GameServer::ReadAllStaticData()
-	{
-		namespace fs = std::filesystem;
-
-		OpenXLSX::XLDocument doc;
-
-		fs::path staticDataPath = fs::current_path() / "StaticData";
-		fs::path xlsxPath = staticDataPath / "XLSX";
-		fs::path classPath = staticDataPath / "Class";
-
-		for (const auto& entry : fs::recursive_directory_iterator(xlsxPath))
-		{
-			if (!entry.is_regular_file() || entry.path().extension() != ".xlsx")
-				continue;
-
-			doc.open("StaticData/items.xlsx");
-
-			auto sheet = doc.workbook().worksheet("Sheet1");
-
-			for (auto& row : sheet.rows())
-			{
-				for (auto& cell : row.cells())
-				{
-					switch (cell.value().type())
-					{
-					case OpenXLSX::XLValueType::Integer:
-						INFO_LOG("XLValueType::Integer - {}", cell.value().get<int>());
-						break;
-					case OpenXLSX::XLValueType::Float:
-						INFO_LOG("XLValueType::Float - {}", cell.value().get<double>());
-						break;
-					case OpenXLSX::XLValueType::String:
-						INFO_LOG("XLValueType::String - {}", cell.value().get<std::string>());
-						break;
-					default:
-						break;
-					}
-				}
-			}
-
-			doc.close();
-		}
-		
-		return true;
-	}
-
 	bool GameServer::AfterReadIni()
 	{
 		if (!ReadAllStaticData())
