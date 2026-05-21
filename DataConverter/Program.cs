@@ -1,40 +1,79 @@
-// DataConverter.cs — 빌드 파이프라인용 독립 도구
-
 using MiniExcelLibs;
 using System.Text;
 using System.Text.Json;
-using System.Linq;
+using System.Text.RegularExpressions;
 
-// JSON 키 이름을 camelCase로 통일 (C++, C# 양쪽 같은 키 사용)
-var JsonOptions = new JsonSerializerOptions
+public static class ExcelSchemaConverter
 {
-    WriteIndented = true,
-    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-};
+    // 지원 타입: int, long, float, double, bool, string
+    // 헤더 미매칭 시 string 기본값으로 처리
 
-ConvertSheet<ItemData>("items.xlsx", "Items", "output/items.json");
+    private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
+    private static readonly Regex HeaderRx = new(@"^(.+?)\((\w+)\)$", RegexOptions.Compiled);
 
-static void ConvertSheet<T>(string xlsxPath, string sheetName, string outPath) where T : class, new()
-{
-    var rows = MiniExcel.Query<T>(xlsxPath, sheetName: sheetName).ToList();
+    public static void Convert(string xlsxPath, string sheetName, string outputPath)
+    {
+        var rows = ReadSheet(xlsxPath, sheetName);
 
-    Directory.CreateDirectory(Path.GetDirectoryName(outPath)!);
-    File.WriteAllText(outPath,
-        JsonSerializer.Serialize(rows, JsonSerializerOptions.Default ),
-        Encoding.UTF8);
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+        File.WriteAllText(outputPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
 
-    Console.WriteLine($"[변환] {sheetName} → {outPath} ({rows.Count}행)");
-}
+        Console.WriteLine($"[완료] {sheetName} → {outputPath} ({rows.Count}행)");
+    }
 
-// Excel 헤더와 1:1 대응하는 모델
-// MiniExcel은 헤더 이름으로 자동 매핑 (대소문자 무관)
-public class ItemData
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Type { get; set; }
-    public int MaxStack { get; set; }
-    public int Price { get; set; }
+    private static List<Dictionary<string, object?>> ReadSheet(string xlsxPath, string sheet)
+    {
+        // dynamic 모드: 첫 번째 행을 키로 사용, 클래스 정의 불필요
+        var rawRows = MiniExcel.Query(xlsxPath, useHeaderRow: true, sheetName: sheet)
+                               .Cast<IDictionary<string, object>>()
+                               .ToList();
 
-    public string Description { get; set; }
+        if (rawRows.Count == 0) return [];
+
+        // 첫 번째 데이터 행의 키로 헤더 파싱 (한 번만 수행)
+        var headers = rawRows[0].Keys
+            .Select(key =>
+            {
+                var m = HeaderRx.Match(key.Trim());
+                return m.Success
+                    ? (rawKey: key, fieldName: m.Groups[1].Value.Trim(), typeName: m.Groups[2].Value.ToLower())
+                    : (rawKey: key, fieldName: key, typeName: "string");
+            })
+            .ToList();
+
+        return rawRows.Select(row =>
+        {
+            var record = new Dictionary<string, object?>(headers.Count);
+            foreach (var (rawKey, fieldName, typeName) in headers)
+            {
+                row.TryGetValue(rawKey, out var rawVal);
+                record[fieldName] = CastCell(rawVal, typeName);
+            }
+            return record;
+        }).ToList();
+    }
+
+    private static object? CastCell(object? raw, string type)
+    {
+        // 빈 셀 처리 — 타입별 기본값 반환
+        if (raw is null || (raw is string s && string.IsNullOrWhiteSpace(s)))
+            return type switch
+            {
+                "int" or "long" => (object)0,
+                "float" or "double" => 0.0,
+                "bool" => false,
+                _ => string.Empty,
+            };
+
+        // Excel은 숫자를 double로 반환하므로 int/long 변환 시 주의
+        return type switch
+        {
+            "int" => Convert.ToInt32(raw),
+            "long" => Convert.ToInt64(raw),
+            "float" => (float)Convert.ToDouble(raw),
+            "double" => Convert.ToDouble(raw),
+            "bool" => raw is bool b ? b : bool.Parse(raw.ToString()!),
+            _ => raw.ToString() ?? string.Empty,
+        };
+    }
 }
