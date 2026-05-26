@@ -1,0 +1,14 @@
+﻿[
+  {
+    "ID": 1,
+    "Name": "RedPotion",
+    "Effect": "HealHP",
+    "Cost": 10
+  },
+  {
+    "ID": 2,
+    "Name": "BluePotion",
+    "Effect": "HealMP",
+    "Cost": 15
+  }
+]

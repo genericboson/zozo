@@ -11,7 +11,7 @@ public static class ExcelSchemaConverter
     private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
     private static readonly Regex HeaderRx = new(@"^(.+?)\((\w+)\)$", RegexOptions.Compiled);
 
-    public static void Convert(string xlsxPath, string sheetName, string outputPath)
+    public static void ConvertXlsxToJson(string xlsxPath, string sheetName, string outputPath)
     {
         var rows = ReadSheet(xlsxPath, sheetName);
 
@@ -68,11 +68,12 @@ public static class ExcelSchemaConverter
         // Excel은 숫자를 double로 반환하므로 int/long 변환 시 주의
         return type switch
         {
-            "int" => Int32.Parse( raw.ToString() ),
-            "long" => Int64.Parse( raw.ToString() ),
-            "float" => float.Parse( raw.ToString() ),
-            "double" => double.Parse( raw.ToString() ),
-            "bool" => raw is bool b ? b : bool.Parse(raw.ToString()!),
+            "int"    => (object?)Convert.ToInt32(raw),  // 여기 한 곳만 명시하면 전체 switch가 object?로 확정
+            "long"   => Convert.ToInt64(raw),
+            "float"  => (float)Convert.ToDouble(raw),
+            "double" => Convert.ToDouble(raw),
+            "bool"   => raw is bool b ? b : bool.Parse(raw.ToString()!),
+            "string" => Convert.ToString(raw) ?? string.Empty,
             _ => raw.ToString() ?? string.Empty,
         };
     }
@@ -90,7 +91,7 @@ public class Program
         var (xlsxPath, sheetName, outputPath) = (args[0], args[1], args[2]);
         try
         {
-            ExcelSchemaConverter.Convert(xlsxPath, sheetName, outputPath);
+            ExcelSchemaConverter.ConvertXlsxToJson(xlsxPath, sheetName, outputPath);
         }
         catch (Exception ex)
         {

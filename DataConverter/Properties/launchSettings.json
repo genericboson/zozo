@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DataConverter": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\projects\\zozo\\StaticData\\XLSX\\Item\\item.xlsx Item D:\\projects\\zozo\\StaticData\\json\\item.json"
+    }
+  }
+}
