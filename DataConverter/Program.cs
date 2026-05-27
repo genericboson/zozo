@@ -13,12 +13,21 @@ public static class ExcelSchemaConverter
 
     public static void ConvertXlsxToJson(string xlsxPath, string sheetName, string outputPath)
     {
-        var rows = ReadSheet(xlsxPath, sheetName);
+        //
+        var outputRootPath = Path.GetDirectoryName(outputPath);
+        var xlsxRootPath = Path.GetFullPath(xlsxPath);
 
-        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
-        File.WriteAllText(outputPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
+        foreach (var itFile in Directory.GetFiles(xlsxRootPath, "*.xlsx", SearchOption.AllDirectories))
+        {
+            var relativePath = Path.GetRelativePath(itFile, xlsxRootPath);
+            var targetPath = Path.Combine(outputPath, relativePath);
 
-        Console.WriteLine($"[완료] {sheetName} → {outputPath} ({rows.Count}행)");
+            Directory.CreateDirectory(targetPath);
+
+            var rows = ReadSheet(xlsxPath, sheetName);
+            File.WriteAllText(targetPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
+            Console.WriteLine($"[완료] {sheetName} → {outputPath} ({rows.Count}행)");
+        }
     }
 
     private static List<Dictionary<string, object?>> ReadSheet(string xlsxPath, string sheet)
