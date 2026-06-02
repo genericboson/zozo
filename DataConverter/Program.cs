@@ -24,20 +24,18 @@ public static class ExcelSchemaConverter
 
             Directory.CreateDirectory(targetPath);
 
-            var rows = ReadSheet(xlsxPath, sheetName);
-            File.WriteAllText(targetPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
-            Console.WriteLine($"[완료] {sheetName} → {outputPath} ({rows.Count}행)");
+            SheetToFiles(xlsxPath, targetPath, sheetName);
         }
     }
 
-    private static List<Dictionary<string, object?>> ReadSheet(string xlsxPath, string sheet)
+    private static void SheetToFiles(string xlsxPath, string targetPath, string sheet)
     {
         // dynamic 모드: 첫 번째 행을 키로 사용, 클래스 정의 불필요
         var rawRows = MiniExcel.Query(xlsxPath, useHeaderRow: true, sheetName: sheet)
                                .Cast<IDictionary<string, object>>()
                                .ToList();
 
-        if (rawRows.Count == 0) return [];
+        if (rawRows.Count == 0) return;
 
         // 첫 번째 데이터 행의 키로 헤더 파싱 (한 번만 수행)
         var headers = rawRows[0].Keys
@@ -50,7 +48,7 @@ public static class ExcelSchemaConverter
             })
             .ToList();
 
-        return rawRows.Select(row =>
+        var rows = rawRows.Select(row =>
         {
             var record = new Dictionary<string, object?>(headers.Count);
             foreach (var (rawKey, fieldName, typeName) in headers)
@@ -58,8 +56,33 @@ public static class ExcelSchemaConverter
                 row.TryGetValue(rawKey, out var rawVal);
                 record[fieldName] = CastCell(rawVal, typeName);
             }
+
             return record;
         }).ToList();
+
+        WriteJsonFile(targetPath, rows);
+
+        WriteHeaderFile();
+
+        WriteSourceFile();
+
+        
+    }
+
+    private static void WriteSourceFile()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void WriteHeaderFile()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void WriteJsonFile(string targetPath, List<Dictionary<string, object?>> rows)
+    {
+        File.WriteAllText(targetPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
+        Console.WriteLine($"[완료] {targetPath} ({rows.Count}행)");
     }
 
     private static object? CastCell(object? raw, string type)
