@@ -65,8 +65,6 @@ public static class ExcelSchemaConverter
         WriteHeaderFile();
 
         WriteSourceFile();
-
-        
     }
 
     private static void WriteSourceFile()

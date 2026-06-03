@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../DataConverter/DataConverter.csproj" />
+  <Project Path="../FlatMemGenerator/FlatMemGenerator.csproj" />
+  <Project Path="../zozo-client/ZozoClient.csproj">
+    <BuildType Solution="Release|*" Project="ExportDebug" />
+  </Project>
+</Solution>
