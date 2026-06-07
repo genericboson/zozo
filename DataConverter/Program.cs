@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-public static class ExcelSchemaConverter
+public static partial class ExcelSchemaConverter
 {
     // 지원 타입: int, long, float, double, bool, string
     // 헤더 미매칭 시 string 기본값으로 처리
@@ -62,17 +62,12 @@ public static class ExcelSchemaConverter
 
         WriteJsonFile(targetPath, rows);
 
-        WriteHeaderFile();
+        WriteHeaderFile(targetPath, rows);
 
         WriteSourceFile();
     }
 
     private static void WriteSourceFile()
-    {
-        throw new NotImplementedException();
-    }
-
-    private static void WriteHeaderFile()
     {
         throw new NotImplementedException();
     }

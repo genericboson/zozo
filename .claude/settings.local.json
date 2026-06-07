@@ -16,7 +16,8 @@
       "Read(//c/Program Files/Microsoft Visual Studio/**)",
       "Bash(vswhere -property installationPath)",
       "Bash(cmd:*)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "Read(//c/Windows/Fonts/**)"
     ]
   }
 }
