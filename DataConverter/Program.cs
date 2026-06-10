@@ -13,7 +13,6 @@ public static partial class ExcelSchemaConverter
 
     public static void ConvertXlsxToJson(string xlsxPath, string sheetName, string outputPath)
     {
-        //
         var outputRootPath = Path.GetDirectoryName(outputPath);
         var xlsxRootPath = Path.GetFullPath(xlsxPath);
 

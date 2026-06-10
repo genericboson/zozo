@@ -11,6 +11,7 @@
 #include "Actor/ZoneManager.h"
 #include "GameServer.h"
 
+#include <boost/json.hpp>
 #include <MessageSchema/Internal/LobbyGame_generated.h>
 
 namespace GenericBoson
@@ -18,6 +19,29 @@ namespace GenericBoson
 	GameServer::GameServer(int32_t port /*= 8001*/)
 		: ServerBase(port), m_pLobbyProxy{ std::make_shared<LobbyProxy>( *this ) }
 	{
+	}
+
+	bool GameServer::ReadAllStaticData()
+	{
+		std::ifstream ifs("Data/ZoneData.json");
+		if (!ifs.is_open())
+		{
+			ERROR_LOG("Failed to open Data/ZoneData.json");
+			return false;
+		}
+
+		boost::json::stream_parser parser;
+		std::string line;
+		while (std::getline(ifs, line))
+		{
+			parser.write(line);
+		}
+		parser.finish();
+
+		boost::json::value jsonValue = parser.release();
+		// Process jsonValue as needed
+
+		return true;
 	}
 
 	bool GameServer::AfterReadIni()
