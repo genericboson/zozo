@@ -4,7 +4,6 @@
 
 #include <flatbuffers/flatbuffers.h>
 #include <Engine/Socket/BoostTcpSocket.h>
-#include <ThirdParty/OpenXLSX/OpenXLSX/OpenXLSX.hpp>
 
 #include "Actor/Character/Character.h"
 #include "Actor/Character/CharacterManager.h"
@@ -23,6 +22,18 @@ namespace GenericBoson
 
 	bool GameServer::ReadAllStaticData()
 	{
+		namespace fs = std::filesystem;
+
+		fs::directory_iterator dirIter("StaticData");
+
+		for (const auto& entry : dirIter )
+		{
+			if (entry.is_regular_file() && entry.path().extension() == ".json")
+			{
+				INFO_LOG("Found static data file: {}", entry.path().string());
+			}
+		}
+
 		std::ifstream ifs("Data/ZoneData.json");
 		if (!ifs.is_open())
 		{
@@ -40,6 +51,14 @@ namespace GenericBoson
 
 		boost::json::value jsonValue = parser.release();
 		// Process jsonValue as needed
+
+		for (const auto element : jsonValue.as_array())
+		{
+			const auto& obj = element.as_object();
+			int64_t zoneId = obj.at("zoneId").as_int64();
+			std::string name = obj.at("name").as_string().c_str();
+			//m_zones.emplace(zoneId, Zone{ zoneId, name });
+		}
 
 		return true;
 	}
