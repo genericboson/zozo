@@ -20,21 +20,9 @@ namespace GenericBoson
 	{
 	}
 
-	bool GameServer::ReadAllStaticData()
+	bool GameServer::ReadStaticData(const std::filesystem::path& path)
 	{
-		namespace fs = std::filesystem;
-
-		fs::directory_iterator dirIter("StaticData");
-
-		for (const auto& entry : dirIter )
-		{
-			if (entry.is_regular_file() && entry.path().extension() == ".json")
-			{
-				INFO_LOG("Found static data file: {}", entry.path().string());
-			}
-		}
-
-		std::ifstream ifs("Data/ZoneData.json");
+		std::ifstream ifs(path.string());
 		if (!ifs.is_open())
 		{
 			ERROR_LOG("Failed to open Data/ZoneData.json");
@@ -58,6 +46,21 @@ namespace GenericBoson
 			int64_t zoneId = obj.at("zoneId").as_int64();
 			std::string name = obj.at("name").as_string().c_str();
 			//m_zones.emplace(zoneId, Zone{ zoneId, name });
+		}
+	}
+
+	bool GameServer::ReadAllStaticData()
+	{
+		namespace fs = std::filesystem;
+
+		fs::directory_iterator dirIter("StaticData");
+
+		for (const auto& entry : dirIter )
+		{
+			if (entry.is_regular_file() && entry.path().extension() == ".json")
+			{
+				ReadStaticData(entry.path());
+			}
 		}
 
 		return true;
