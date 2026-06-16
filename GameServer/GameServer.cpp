@@ -25,7 +25,7 @@ namespace GenericBoson
 		std::ifstream ifs(path.string());
 		if (!ifs.is_open())
 		{
-			ERROR_LOG("Failed to open Data/ZoneData.json");
+			ERROR_LOG("Failed to open {}", path.string());
 			return false;
 		}
 
@@ -38,13 +38,32 @@ namespace GenericBoson
 		parser.finish();
 
 		boost::json::value jsonValue = parser.release();
-		// Process jsonValue as needed
 
+		bool isFirst = true;
+		int64_t classId = 0;
 		for (const auto element : jsonValue.as_array())
 		{
 			const auto& obj = element.as_object();
-			int64_t zoneId = obj.at("zoneId").as_int64();
-			std::string name = obj.at("name").as_string().c_str();
+
+			if (isFirst)
+			{
+				isFirst = false;
+
+				if (const auto found = obj.find("CLASS_ID");found == obj.end())
+				{
+					classId = found->value().as_int64();
+				}
+				else
+				{
+					WARN_LOG("No CLASS_ID in static data file {}", path.string());
+				}
+
+				continue;
+			}
+
+			auto& staticData = StaticDataManager::GetInstance()->CreateStaticData(classId);
+			CHECK_NULL();
+			staticData->Insert( obj );
 			//m_zones.emplace(zoneId, Zone{ zoneId, name });
 		}
 	}
