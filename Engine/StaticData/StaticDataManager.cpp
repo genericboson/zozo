@@ -1,36 +1,23 @@
 #include "PCH.h"
 
+#include "IProtoType.h"
 #include "StaticDataManager.h"
 
 namespace GenericBoson
 {
-	std::shared_ptr<StaticDataBase> StaticDataManager::CreateStaticData(int64_t classId)
+	std::shared_ptr<IStaticData> StaticDataManager::CreateStaticData(int64_t classId)
 	{
-		auto iter = m_staticDataMap.find(classId);
-		if (iter != m_staticDataMap.end())
+		auto iter = m_protoTypes.find(classId);
+		if (iter != m_protoTypes.end())
 		{
-			return iter->second;
+			NULL_RETURN(iter->second, nullptr);
+			return iter->second->Clone();
 		}
-		std::shared_ptr<StaticDataBase> staticData;
-		switch (classId)
-		{
-		case 1: // Zone
-			staticData = std::make_shared<ZoneStaticData>();
-			break;
-		case 2: // Item
-			staticData = std::make_shared<ItemStaticData>();
-			break;
-		default:
-			WARN_LOG("Unknown CLASS_ID {} in static data file", classId);
-			return nullptr;
-		}
-		m_staticDataMap[classId] = staticData;
-		return staticData;
+		return nullptr;
 	}
 
-	StaticDataManager* StaticDataManager::GetInstance()
+	bool StaticDataManager::InsertStaticData(const std::shared_ptr<IStaticData>& pNewStaticData)
 	{
-		static StaticDataManager instance;
-		return &instance;
+		return false;
 	}
 }

@@ -1,8 +1,12 @@
 #pragma once
 
+#include <boost/json.hpp>
+
+#include <Engine/Singleton.h>
+
 namespace GenericBoson
 {
-	class StaticDataBase
+	class StaticDataBase : public Singleton<StaticDataBase>
 	{
 	public:
 		virtual ~StaticDataBase() = default;
@@ -11,9 +15,9 @@ namespace GenericBoson
 	class StaticDataManager
 	{
 	public:
-		static StaticDataManager* GetInstance();
-		std::shared_ptr<StaticDataBase> CreateStaticData(int64_t classId);
+		std::shared_ptr<IStaticData> CreateStaticData(int64_t classId);
+		bool InsertStaticData(const std::shared_ptr<IStaticData>& pNewStaticData);
 	private:
-		std::unordered_map<int64_t, std::shared_ptr<StaticDataBase>> m_staticDataMap;
+		std::unordered_map<int64_t, std::shared_ptr<IStaticData>> m_protoTypes;
 	};
 }
