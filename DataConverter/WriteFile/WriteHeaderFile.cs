@@ -40,7 +40,7 @@ public static partial class ExcelSchemaConverter
         sb.AppendLine("\t{");
         sb.AppendLine("\t}");
         sb.AppendLine("");
-        sb.AppendLine($"\tclass {className}");
+        sb.AppendLine($"\tclass {className} : IStaticData");
         sb.AppendLine("\t{");
         sb.AppendLine("\tpublic:");
         foreach (var (name, cppType) in fields)
