@@ -18,12 +18,16 @@ public static partial class ExcelSchemaConverter
 
         foreach (var itFile in Directory.GetFiles(xlsxRootPath, "*.xlsx", SearchOption.AllDirectories))
         {
-            var relativePath = Path.GetRelativePath(itFile, xlsxRootPath);
+            var filePath = Path.GetDirectoryName(itFile);
+            if ( string.IsNullOrEmpty( filePath ) )
+                continue;
+
+            var relativePath = Path.GetRelativePath(filePath, xlsxRootPath);
             var targetPath = Path.Combine(outputPath, relativePath);
 
             Directory.CreateDirectory(targetPath);
 
-            SheetToFiles(xlsxPath, targetPath, sheetName);
+            SheetToFiles(itFile, targetPath, sheetName);
         }
     }
 
@@ -59,9 +63,11 @@ public static partial class ExcelSchemaConverter
             return record;
         }).ToList();
 
-        WriteJsonFile(targetPath, rows);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(xlsxPath);
 
-        WriteHeaderFile(targetPath, rows);
+        WriteJsonFile(Path.Combine(targetPath, string.Format($"{fileNameWithoutExtension}.json")), rows);
+
+        WriteHeaderFile(Path.Combine(targetPath, string.Format($"{fileNameWithoutExtension}.h")), rows);
 
         WriteSourceFile();
     }

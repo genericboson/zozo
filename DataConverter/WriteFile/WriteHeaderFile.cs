@@ -46,7 +46,7 @@ public static partial class ExcelSchemaConverter
         foreach (var (name, cppType) in fields)
         {
             var safeName = SanitizeIdentifier(name);
-            sb.AppendLine($"\t\t{cppType} {safeName}{{}};");
+            sb.AppendLine($"\t\t{cppType} {safeName}();");
         }
         sb.AppendLine("\t};");
         sb.AppendLine("}");
