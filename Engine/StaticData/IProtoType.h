@@ -5,6 +5,6 @@ namespace GenericBoson
 	class IStaticData
 	{
 	public:
-		virtual std::shared_ptr<IStaticData> Clone() const = 0;
+		virtual void Insert(const boost::json::object& obj) = 0;
 	};
 }

@@ -28,21 +28,21 @@ public static partial class ExcelSchemaConverter
         var headerPath = Path.ChangeExtension(targetPath, ".h");
 
         var sb = new StringBuilder();
-        sb.AppendLine("#pragma once");
+        sb.AppendLine(@"#pragma once");
         sb.AppendLine();
-        sb.AppendLine("#include <cstdint>");
-        sb.AppendLine("#include <string>");
+        sb.AppendLine(@"#include <cstdint>");
+        sb.AppendLine(@"#include <string>");
         sb.AppendLine();
-        sb.AppendLine("namespace GenericBoson");
-        sb.AppendLine("{");
-        sb.AppendLine("");
+        sb.AppendLine(@"namespace GenericBoson");
+        sb.AppendLine(@"{");
+        sb.AppendLine();
         sb.AppendLine($"\tclass {className}DataManager");
-        sb.AppendLine("\t{");
-        sb.AppendLine("\t}");
-        sb.AppendLine("");
+        sb.AppendLine(@"\t{");
+        sb.AppendLine(@"\t}");
+        sb.AppendLine();
         sb.AppendLine($"\tclass {className} : IStaticData");
-        sb.AppendLine("\t{");
-        sb.AppendLine("\tpublic:");
+        sb.AppendLine(@"\t{");
+        sb.AppendLine(@"\tpublic:");
         foreach (var (name, cppType) in fields)
         {
             var safeName = SanitizeIdentifier(name);
