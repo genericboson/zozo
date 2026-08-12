@@ -5,19 +5,14 @@
 
 namespace GenericBoson
 {
-	std::shared_ptr<IStaticData> StaticDataManager::CreateStaticData(int64_t classId)
+	bool StaticDataManager::InsertStaticData(int64_t classId, std::shared_ptr<IStaticData>&& pNewStaticData)
 	{
-		auto iter = m_protoTypes.find(classId);
-		if (iter != m_protoTypes.end())
+		auto iter = m_data.find(classId);
+		if (iter != m_data.end())
 		{
-			NULL_RETURN(iter->second, nullptr);
-			return iter->second->Clone();
+			return false;
 		}
-		return nullptr;
-	}
-
-	bool StaticDataManager::InsertStaticData(const std::shared_ptr<IStaticData>& pNewStaticData)
-	{
-		return false;
+		m_data[classId] = std::move(pNewStaticData);
+		return true;
 	}
 }
