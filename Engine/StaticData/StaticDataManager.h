@@ -6,7 +6,7 @@
 
 namespace GenericBoson
 {
-	class StaticDataManager
+	class StaticDataManager : public Singleton<StaticDataManager>
 	{
 	public:
 		bool InsertStaticData(int64_t classId, std::shared_ptr<IStaticData>&& pNewStaticData);

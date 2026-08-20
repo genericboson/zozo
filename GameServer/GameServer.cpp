@@ -61,9 +61,9 @@ namespace GenericBoson
 				continue;
 			}
 
-			auto& staticData = StaticDataManager::GetInstance()->CreateStaticData(classId);
-			CHECK_NULL();
-			staticData->Insert( obj );
+			//auto& staticData = StaticDataManager::GetInstance()->CreateStaticData(classId);
+			//CHECK_NULL();
+			//staticData->Insert( obj );
 			//m_zones.emplace(zoneId, Zone{ zoneId, name });
 		}
 	}

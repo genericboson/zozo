@@ -1,6 +1,6 @@
 #include "PCH.h"
 
-#include "IProtoType.h"
+#include "IStaticData.h"
 #include "StaticDataManager.h"
 
 namespace GenericBoson
