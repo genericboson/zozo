@@ -11,34 +11,71 @@ public static partial class ExcelSchemaConverter
     private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
     private static readonly Regex HeaderRx = new(@"^(.+?)\((\w+)\)$", RegexOptions.Compiled);
 
-    public static void ConvertXlsxToJson(string xlsxPath, string sheetName, string outputPath)
+    // json은 boost::json이 읽으므로 BOM이 있으면 파싱에 실패한다.
+    private static readonly UTF8Encoding JsonEncoding = new(encoderShouldEmitUTF8Identifier: false);
+
+    // C++ 소스는 주석에 한글이 들어가므로 MSVC가 UTF-8로 해석하도록 BOM을 붙인다.
+    private static readonly UTF8Encoding CppEncoding = new(encoderShouldEmitUTF8Identifier: true);
+
+    public static void ConvertAll(string xlsxRoot, string sheetName, string outputRoot)
     {
-        var outputRootPath = Path.GetDirectoryName(outputPath);
-        var xlsxRootPath = Path.GetFullPath(xlsxPath);
-
-        foreach (var itFile in Directory.GetFiles(xlsxRootPath, "*.xlsx", SearchOption.AllDirectories))
+        var xlsxRootPath = Path.GetFullPath(xlsxRoot);
+        if (!Directory.Exists(xlsxRootPath))
         {
-            var filePath = Path.GetDirectoryName(itFile);
-            if ( string.IsNullOrEmpty( filePath ) )
-                continue;
-
-            var relativePath = Path.GetRelativePath(filePath, xlsxRootPath);
-            var targetPath = Path.Combine(outputPath, relativePath);
-
-            Directory.CreateDirectory(targetPath);
-
-            SheetToFiles(itFile, targetPath, sheetName);
+            Console.WriteLine($"[오류] 입력 폴더가 없습니다: {xlsxRootPath}");
+            return;
         }
+
+        var xlsxFiles = Directory.GetFiles(xlsxRootPath, "*.xlsx", SearchOption.AllDirectories)
+            // 엑셀이 열려 있을 때 생기는 임시 파일(~$foo.xlsx)은 건너뛴다.
+            .Where(path => !Path.GetFileName(path).StartsWith("~$", StringComparison.Ordinal))
+            .ToList();
+
+        if (xlsxFiles.Count == 0)
+        {
+            Console.WriteLine($"[경고] xlsx 파일을 찾지 못했습니다: {xlsxRootPath}");
+            return;
+        }
+
+        var converted = 0;
+        foreach (var xlsxPath in xlsxFiles)
+        {
+            // 입력 폴더 구조를 출력 폴더에 그대로 재현한다.
+            var relativeDir = Path.GetRelativePath(xlsxRootPath, Path.GetDirectoryName(xlsxPath)!);
+            var targetDir = relativeDir == "."
+                ? outputRoot
+                : Path.Combine(outputRoot, relativeDir);
+
+            Directory.CreateDirectory(targetDir);
+
+            try
+            {
+                if (SheetToFiles(xlsxPath, targetDir, sheetName))
+                    converted++;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[오류] {Path.GetFileName(xlsxPath)}: {ex.Message}");
+            }
+        }
+
+        Console.WriteLine($"\n{xlsxFiles.Count}개 중 {converted}개 변환 완료.");
     }
 
-    private static void SheetToFiles(string xlsxPath, string targetPath, string sheet)
+    private static bool SheetToFiles(string xlsxPath, string targetDir, string sheetName)
     {
+        var sheet = ResolveSheetName(xlsxPath, sheetName);
+
         // dynamic 모드: 첫 번째 행을 키로 사용, 클래스 정의 불필요
         var rawRows = MiniExcel.Query(xlsxPath, useHeaderRow: true, sheetName: sheet)
                                .Cast<IDictionary<string, object>>()
                                .ToList();
 
-        if (rawRows.Count == 0) return;
+        if (rawRows.Count == 0)
+        {
+            Console.WriteLine($"[건너뜀] {Path.GetFileName(xlsxPath)}: 데이터 행이 없습니다.");
+            return false;
+        }
 
         // 첫 번째 데이터 행의 키로 헤더 파싱 (한 번만 수행)
         var headers = rawRows[0].Keys
@@ -57,31 +94,64 @@ public static partial class ExcelSchemaConverter
             foreach (var (rawKey, fieldName, typeName) in headers)
             {
                 row.TryGetValue(rawKey, out var rawVal);
-                record[fieldName] = CastCell(rawVal, typeName);
+                record[SanitizeIdentifier(fieldName)] = CastCell(rawVal, typeName);
             }
 
             return record;
         }).ToList();
 
-        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(xlsxPath);
+        var schema = BuildSchema(xlsxPath, rows);
+        if (schema is null)
+        {
+            Console.WriteLine($"[건너뜀] {Path.GetFileName(xlsxPath)}: 컬럼을 찾지 못했습니다.");
+            return false;
+        }
 
-        WriteJsonFile(Path.Combine(targetPath, string.Format($"{fileNameWithoutExtension}.json")), rows);
+        var stem = Path.GetFileNameWithoutExtension(xlsxPath);
+        var jsonPath = Path.Combine(targetDir, $"{stem}.json");
+        var headerPath = Path.Combine(targetDir, $"{stem}.h");
+        var sourcePath = Path.Combine(targetDir, $"{stem}.cpp");
 
-        WriteHeaderFile(Path.Combine(targetPath, string.Format($"{fileNameWithoutExtension}.h")), rows);
+        WriteJsonFile(jsonPath, schema, rows);
+        WriteHeaderFile(headerPath, xlsxPath, schema);
+        WriteSourceFile(sourcePath, headerPath, xlsxPath, schema);
 
-        WriteSourceFile();
+        return true;
     }
 
-    private static void WriteSourceFile()
+    // 지정한 시트가 없으면 첫 번째 시트로 대체한다.
+    // (여러 엑셀을 일괄 변환할 때 시트명이 제각각일 수 있다.)
+    private static string ResolveSheetName(string xlsxPath, string requested)
     {
-        throw new NotImplementedException();
+        var sheets = MiniExcel.GetSheetNames(xlsxPath);
+        if (sheets.Count == 0)
+            throw new InvalidOperationException("시트가 없습니다.");
+
+        if (!string.IsNullOrWhiteSpace(requested) &&
+            sheets.Contains(requested, StringComparer.OrdinalIgnoreCase))
+        {
+            return sheets.First(s => string.Equals(s, requested, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return sheets[0];
     }
 
-    private static void WriteJsonFile(string targetPath, List<Dictionary<string, object?>> rows)
+    // 배열의 첫 원소에 CLASS_ID 메타를 넣고, 그 뒤에 실제 행들을 넣는다.
+    // GameServer::ReadStaticData가 이 형식을 기대한다.
+    private static void WriteJsonFile(string jsonPath, StaticDataSchema schema, List<Dictionary<string, object?>> rows)
     {
-        File.WriteAllText(targetPath, JsonSerializer.Serialize(rows, JsonOpts), Encoding.UTF8);
-        Console.WriteLine($"[완료] {targetPath} ({rows.Count}행)");
+        var document = new List<Dictionary<string, object?>>(rows.Count + 1)
+        {
+            new() { ["CLASS_ID"] = schema.ClassId },
+        };
+        document.AddRange(rows);
+
+        File.WriteAllText(jsonPath, JsonSerializer.Serialize(document, JsonOpts), JsonEncoding);
+        Console.WriteLine($"[완료] {jsonPath} ({rows.Count}행, CLASS_ID {schema.ClassId})");
     }
+
+    private static void WriteTextFile(string path, string content)
+        => File.WriteAllText(path, content, CppEncoding);
 
     private static object? CastCell(object? raw, string type)
     {
@@ -89,8 +159,10 @@ public static partial class ExcelSchemaConverter
         if (raw is null || (raw is string s && string.IsNullOrWhiteSpace(s)))
             return type switch
             {
-                "int" or "long" => (object)0,
-                "float" or "double" => 0.0,
+                "int" => 0,
+                "long" => 0L,
+                "float" => 0.0f,
+                "double" => 0.0,
                 "bool" => false,
                 _ => string.Empty,
             };
@@ -113,15 +185,20 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        if (args.Length != 3)
+        if (args.Length is < 2 or > 3)
         {
-            Console.WriteLine("Usage: ExcelSchemaConverter <xlsxPath> <sheetName> <outputPath>");
+            Console.WriteLine("Usage: DataConverter <xlsxRoot> <outputRoot> [sheetName]");
+            Console.WriteLine("  sheetName을 생략하거나 못 찾으면 각 파일의 첫 번째 시트를 사용합니다.");
             return;
         }
-        var (xlsxPath, sheetName, outputPath) = (args[0], args[1], args[2]);
+
+        var xlsxRoot = args[0];
+        var outputRoot = args[1];
+        var sheetName = args.Length == 3 ? args[2] : string.Empty;
+
         try
         {
-            ExcelSchemaConverter.ConvertXlsxToJson(xlsxPath, sheetName, outputPath);
+            ExcelSchemaConverter.ConvertAll(xlsxRoot, sheetName, outputRoot);
         }
         catch (Exception ex)
         {

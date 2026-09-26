@@ -1,99 +1,94 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 public static partial class ExcelSchemaConverter
 {
-    public static void WriteHeaderFile(string targetPath, List<Dictionary<string, object?>> rows)
+    // 엑셀 한 장 → C++ 헤더 한 개.
+    // 행 클래스(IStaticData 구현)와 그 행들을 담는 DataManager 싱글턴을 선언한다.
+    private static void WriteHeaderFile(string headerPath, string xlsxPath, StaticDataSchema schema)
     {
-        if (rows.Count == 0)
-            return;
-
-        // rows[0]의 키 = 필드명, 값의 런타임 타입 = C++ 타입 추정 근거
-        var fields = rows[0]
-            .Select(kvp => (Name: kvp.Key, CppType: ToCppType(kvp.Value)))
-            .ToList();
-
-        if (fields.Count == 0)
-            return;
-
-        // 출력 파일/클래스 이름은 targetPath의 파일명에서 유도
-        var baseName = Path.GetFileNameWithoutExtension(targetPath);
-        if (string.IsNullOrWhiteSpace(baseName))
-            baseName = "StaticData";
-
-        var className  = ToPascalCase(baseName);
-        var headerPath = Path.ChangeExtension(targetPath, ".h");
-
         var sb = new StringBuilder();
-        sb.AppendLine(@"#pragma once");
+
+        sb.AppendLine("#pragma once");
         sb.AppendLine();
-        sb.AppendLine(@"#include <cstdint>");
-        sb.AppendLine(@"#include <string>");
+        AppendGeneratedBanner(sb, xlsxPath);
         sb.AppendLine();
-        sb.AppendLine(@"namespace GenericBoson");
-        sb.AppendLine(@"{");
+        sb.AppendLine("#include <cstdint>");
+        sb.AppendLine("#include <memory>");
+        sb.AppendLine("#include <string>");
+        sb.AppendLine("#include <unordered_map>");
         sb.AppendLine();
-        sb.AppendLine($"\tclass {className}DataManager");
-        sb.AppendLine(@"\t{");
-        sb.AppendLine(@"\t}");
+        sb.AppendLine("#include <boost/json.hpp>");
         sb.AppendLine();
-        sb.AppendLine($"\tclass {className} : IStaticData");
-        sb.AppendLine(@"\t{");
-        sb.AppendLine(@"\tpublic:");
-        foreach (var (name, cppType) in fields)
-        {
-            var safeName = SanitizeIdentifier(name);
-            sb.AppendLine($"\t\t{cppType} {safeName}();");
-        }
-        sb.AppendLine("\t};");
+        sb.AppendLine("#include <Engine/Singleton.h>");
+        sb.AppendLine("#include <Engine/StaticData/IStaticData.h>");
+        sb.AppendLine();
+        sb.AppendLine("namespace GenericBoson");
+        sb.AppendLine("{");
+
+        AppendRowClass(sb, schema);
+        sb.AppendLine();
+        AppendManagerClass(sb, schema);
+
         sb.AppendLine("}");
 
-        var dir = Path.GetDirectoryName(headerPath);
-        if (!string.IsNullOrEmpty(dir))
-            Directory.CreateDirectory(dir);
-
-        File.WriteAllText(headerPath, sb.ToString(), Encoding.UTF8);
-        Console.WriteLine($"[완료] {headerPath} ({fields.Count} fields)");
+        WriteTextFile(headerPath, sb.ToString());
+        Console.WriteLine($"[완료] {headerPath} (필드 {schema.Fields.Count}개)");
     }
 
-    private static string ToCppType(object? value) => value switch
+    private static void AppendRowClass(StringBuilder sb, StaticDataSchema schema)
     {
-        int    => "int32_t",
-        long   => "int64_t",
-        float  => "float",
-        double => "double",
-        bool   => "bool",
-        string => "std::string",
-        _      => "std::string",
-    };
+        // 게터 선언을 보기 좋게 정렬하기 위한 폭 계산
+        var returnWidth = schema.Fields.Max(f => f.ReturnType.Length);
+        var memberWidth = schema.Fields.Max(f => f.CppType.Length);
 
-    private static string ToPascalCase(string name)
-    {
-        if (string.IsNullOrEmpty(name)) return "StaticData";
+        sb.AppendLine($"\tclass {schema.ClassName} : public IStaticData");
+        sb.AppendLine("\t{");
+        sb.AppendLine("\tpublic:");
+        sb.AppendLine($"\t\t// FnvHash64(\"{schema.ClassName.ToLowerInvariant()}\")");
+        sb.AppendLine($"\t\tstatic constexpr int64_t CLASS_ID = {schema.ClassId}LL;");
+        sb.AppendLine();
+        sb.AppendLine("\t\tvoid Insert(const boost::json::object& obj) override;");
+        sb.AppendLine("\t\tstd::shared_ptr<IStaticData> Create() override;");
+        sb.AppendLine();
 
-        var parts = name.Split(new[] { '_', '-', ' ', '.' },
-                               StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length == 0) return "StaticData";
+        foreach (var field in schema.Fields)
+        {
+            var returnType = field.ReturnType.PadRight(returnWidth);
+            sb.AppendLine($"\t\t{returnType} {field.Name}() const {{ return m_{field.Name}; }}");
+        }
 
-        return string.Concat(parts.Select(p =>
-            char.ToUpperInvariant(p[0]) + (p.Length > 1 ? p.Substring(1) : string.Empty)));
+        sb.AppendLine();
+        sb.AppendLine("\tprivate:");
+
+        foreach (var field in schema.Fields)
+        {
+            var cppType = field.CppType.PadRight(memberWidth);
+            sb.AppendLine($"\t\t{cppType} m_{field.Name}{{}};");
+        }
+
+        sb.AppendLine("\t};");
     }
 
-    // C++ 식별자에 쓸 수 없는 문자는 '_'로 치환, 숫자로 시작하면 '_' 접두.
-    private static string SanitizeIdentifier(string name)
+    private static void AppendManagerClass(StringBuilder sb, StaticDataSchema schema)
     {
-        if (string.IsNullOrEmpty(name)) return "_";
+        var mapType = $"std::unordered_map<{schema.KeyType}, std::shared_ptr<{schema.ClassName}>>";
+        var keyParam = schema.KeyField.IsString ? "const std::string& key" : $"{schema.KeyType} key";
 
-        var sb = new StringBuilder(name.Length);
-        foreach (var c in name)
-            sb.Append(char.IsLetterOrDigit(c) || c == '_' ? c : '_');
-
-        if (char.IsDigit(sb[0]))
-            sb.Insert(0, '_');
-
-        return sb.ToString();
+        sb.AppendLine($"\t// {schema.ClassName} 행들을 {schema.KeyField.Name} 기준으로 보관한다.");
+        sb.AppendLine($"\tclass {schema.ManagerName} : public Singleton<{schema.ManagerName}>");
+        sb.AppendLine("\t{");
+        sb.AppendLine("\tpublic:");
+        sb.AppendLine($"\t\t// 키가 이미 있으면 false. {schema.ClassName}::Insert()가 호출한다.");
+        sb.AppendLine($"\t\tbool Add(std::shared_ptr<{schema.ClassName}>&& pData);");
+        sb.AppendLine();
+        sb.AppendLine($"\t\t// 없으면 nullptr.");
+        sb.AppendLine($"\t\tstd::shared_ptr<const {schema.ClassName}> Get({keyParam}) const;");
+        sb.AppendLine();
+        sb.AppendLine($"\t\tconst {mapType}& GetAll() const {{ return m_data; }}");
+        sb.AppendLine("\t\tstd::size_t Size() const { return m_data.size(); }");
+        sb.AppendLine();
+        sb.AppendLine("\tprivate:");
+        sb.AppendLine($"\t\t{mapType} m_data;");
+        sb.AppendLine("\t};");
     }
 }

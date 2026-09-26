@@ -3,12 +3,19 @@ file(GLOB_RECURSE GAME_HEADER *.h)
 file(GLOB_RECURSE GAME_MEM_SOURCE ../MessageSchema/External/GameServerMem/*.cpp)
 file(GLOB_RECURSE GAME_MEM_HEADER ../MessageSchema/External/GameServerMem/*.h)
 
+# DataConverter가 엑셀에서 생성한 정적 데이터 클래스.
+# 전역 초기화로 자신을 등록하므로 반드시 실행 파일에 직접 링크되어야 한다
+# (정적 라이브러리에 넣으면 참조가 없어 링커가 통째로 버린다).
+file(GLOB_RECURSE STATIC_DATA_SOURCE ../StaticData/json/*.cpp)
+file(GLOB_RECURSE STATIC_DATA_HEADER ../StaticData/json/*.h)
+
 find_package(Boost REQUIRED COMPONENTS charconv)
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-add_executable(GAME_SERVER 
+add_executable(GAME_SERVER
 	${GAME_SOURCE} ${GAME_HEADER} ${GAME_CACHE_SOURCE} ${GAME_CACHE_HEADER}
+	${STATIC_DATA_SOURCE} ${STATIC_DATA_HEADER}
 )
 
 target_link_directories(GAME_SERVER PRIVATE $ENV{BOOST_ROOT}/stage/lib)
