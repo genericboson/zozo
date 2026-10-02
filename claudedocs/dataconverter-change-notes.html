@@ -1,0 +1,965 @@
+<title>DataConverter 변경 해설</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    color-scheme: light;
+
+    --bg:        #f6f7f9;
+    --surface:   #ffffff;
+    --surface-2: #eef1f4;
+    --ink:       #1b2027;
+    --ink-soft:  #39424e;
+    --muted:     #5d6773;
+    --faint:     #8e99a6;
+    --line:      #dde2e8;
+
+    --accent:      #0f6e73;
+    --accent-soft: #e2f0f0;
+
+    --add-ink: #1c6b38;
+    --add-bg:  #e9f5ed;
+    --del-ink: #9c2f28;
+    --del-bg:  #fbecea;
+
+    --tag-bug-ink: #9c2f28;
+    --tag-bug-bg:  #fbecea;
+    --tag-new-ink: #1c6b38;
+    --tag-new-bg:  #e9f5ed;
+    --tag-ref-ink: #0f6e73;
+    --tag-ref-bg:  #e2f0f0;
+    --tag-hard-ink:#7a5410;
+    --tag-hard-bg: #f8f0dd;
+
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --sans: "IBM Plex Sans", system-ui, "Malgun Gothic", sans-serif;
+    --serif:"IBM Plex Serif", Georgia, "Batang", serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+
+      --bg:        #14181d;
+      --surface:   #1b2027;
+      --surface-2: #222933;
+      --ink:       #e6eaef;
+      --ink-soft:  #c6cdd6;
+      --muted:     #97a3b0;
+      --faint:     #6f7b88;
+      --line:      #2c343e;
+
+      --accent:      #56b5ba;
+      --accent-soft: #123034;
+
+      --add-ink: #79d39b;
+      --add-bg:  #142b1e;
+      --del-ink: #f0928a;
+      --del-bg:  #2e1917;
+
+      --tag-bug-ink: #f0928a;
+      --tag-bug-bg:  #2e1917;
+      --tag-new-ink: #79d39b;
+      --tag-new-bg:  #142b1e;
+      --tag-ref-ink: #56b5ba;
+      --tag-ref-bg:  #123034;
+      --tag-hard-ink:#dfb865;
+      --tag-hard-bg: #2c2415;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg:        #14181d;
+    --surface:   #1b2027;
+    --surface-2: #222933;
+    --ink:       #e6eaef;
+    --ink-soft:  #c6cdd6;
+    --muted:     #97a3b0;
+    --faint:     #6f7b88;
+    --line:      #2c343e;
+
+    --accent:      #56b5ba;
+    --accent-soft: #123034;
+
+    --add-ink: #79d39b;
+    --add-bg:  #142b1e;
+    --del-ink: #f0928a;
+    --del-bg:  #2e1917;
+
+    --tag-bug-ink: #f0928a;
+    --tag-bug-bg:  #2e1917;
+    --tag-new-ink: #79d39b;
+    --tag-new-bg:  #142b1e;
+    --tag-ref-ink: #56b5ba;
+    --tag-ref-bg:  #123034;
+    --tag-hard-ink:#dfb865;
+    --tag-hard-bg: #2c2415;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 0 72px;
+  }
+
+  /* ---- masthead ---- */
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding-block: 40px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .masthead h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.18;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .standfirst {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    padding-top: 4px;
+  }
+  .meta b { color: var(--ink-soft); font-weight: 500; }
+
+  /* ---- legend ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 24px 0;
+  }
+
+  /* ---- layout ---- */
+  .cols {
+    display: grid;
+    grid-template-columns: 216px minmax(0, 1fr);
+    gap: 52px;
+    align-items: start;
+    padding-top: 30px;
+  }
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .toc { position: static; }
+  }
+
+  .toc {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 20px);
+    font-size: 13.5px;
+    border-left: 2px solid var(--line);
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 8px;
+  }
+  .toc a {
+    color: var(--muted);
+    text-decoration: none;
+    padding-block: 2px;
+    border-radius: 3px;
+  }
+  .toc a:hover { color: var(--accent); }
+  .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .toc .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  main { min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+
+  /* ---- file section ---- */
+  .file { display: flex; flex-direction: column; gap: 20px; scroll-margin-top: 24px; }
+  .file-head { display: flex; flex-direction: column; gap: 8px; }
+  .file-path {
+    font-family: var(--mono);
+    font-size: clamp(14px, 2.4vw, 17px);
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .file-path .dir { color: var(--faint); font-weight: 400; }
+  .file-note {
+    margin: 0;
+    color: var(--muted);
+    max-width: 66ch;
+    font-size: 14.5px;
+  }
+
+  /* ---- change block ---- */
+  .change {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    scroll-margin-top: 24px;
+  }
+  .change-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .num {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--faint);
+    flex: none;
+  }
+  .change-head h3 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.45;
+    flex: 1 1 14ch;
+    min-width: 0;
+  }
+  .tag {
+    flex: none;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .07em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .tag-bug  { color: var(--tag-bug-ink);  background: var(--tag-bug-bg); }
+  .tag-new  { color: var(--tag-new-ink);  background: var(--tag-new-bg); }
+  .tag-ref  { color: var(--tag-ref-ink);  background: var(--tag-ref-bg); }
+  .tag-hard { color: var(--tag-hard-ink); background: var(--tag-hard-bg); }
+
+  .code { overflow-x: auto; border-bottom: 1px solid var(--line); }
+  .code pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.62;
+    padding-block: 11px;
+    min-width: max-content;
+  }
+  .code .l { display: block; padding-inline: 16px; white-space: pre; }
+  .code .l.add { background: var(--add-bg); color: var(--add-ink); }
+  .code .l.del { background: var(--del-bg); color: var(--del-ink); }
+  .code .l.ctx { color: var(--muted); }
+  .code .l.gap { color: var(--faint); }
+
+  .why { padding: 15px 16px; display: flex; flex-direction: column; gap: 11px; }
+  .why p { margin: 0; max-width: 68ch; color: var(--ink-soft); font-size: 14.5px; }
+  .why p + p { color: var(--muted); }
+  .why code {
+    font-family: var(--mono);
+    font-size: .89em;
+    background: var(--surface-2);
+    padding: 1px 4px;
+    border-radius: 3px;
+    overflow-wrap: anywhere;
+  }
+  .why strong { font-weight: 600; color: var(--ink); }
+
+  .callout {
+    border-left: 2px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 11px 14px;
+    border-radius: 0 3px 3px 0;
+  }
+  .callout p { color: var(--ink-soft); }
+
+  /* ---- flow diagram ---- */
+  .flow {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 20px 16px;
+    margin-top: 30px;
+  }
+  .flow h2 {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .flow > p {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 66ch;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+    gap: 12px;
+    counter-reset: step;
+  }
+  .step {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 12px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: var(--bg);
+  }
+  .step .when {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .step h4 { margin: 0; font-size: 13.5px; font-weight: 600; }
+  .step p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .step code { font-family: var(--mono); font-size: .9em; overflow-wrap: anywhere; }
+
+  footer {
+    margin-top: 58px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  footer code { font-family: var(--mono); font-size: .92em; overflow-wrap: anywhere; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Commit 4b43331 · 18 files · +738 / −196</div>
+    <h1>DataConverter 정적 데이터 파이프라인, 한 줄씩</h1>
+    <p class="standfirst">
+      엑셀 한 장에서 <code>json</code> + <code>h</code> + <code>cpp</code>를 만들고, 서버가 켜질 때
+      그 데이터를 메모리에 올리는 경로를 완성한 변경입니다. 각 줄을 왜 그렇게 고쳤는지 정리했습니다.
+    </p>
+    <div class="meta">
+      <span><b>브랜치</b> main</span>
+      <span><b>버그 수정</b> 12건</span>
+      <span><b>신규 파일</b> 4개</span>
+      <span><b>검증</b> GAME_SERVER 빌드 + 하네스 13항목</span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span class="tag tag-bug">버그</span>
+    <span class="tag tag-new">신규</span>
+    <span class="tag tag-ref">리팩터링</span>
+    <span class="tag tag-hard">견고성</span>
+  </div>
+
+  <section class="flow">
+    <h2>먼저, 전체 흐름</h2>
+    <p>개별 변경을 읽기 전에 이 파이프라인이 어떤 순서로 도는지 알아야 각 수정의 이유가 붙습니다.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="when">빌드 전</span>
+        <h4>DataConverter 실행</h4>
+        <p><code>item.xlsx</code> → <code>item.json</code>, <code>item.h</code>, <code>item.cpp</code></p>
+      </div>
+      <div class="step">
+        <span class="when">컴파일</span>
+        <h4>생성 .cpp 링크</h4>
+        <p>CMake가 <code>StaticData/json/**/*.cpp</code>를 실행 파일에 직접 넣는다</p>
+      </div>
+      <div class="step">
+        <span class="when">main() 진입 전</span>
+        <h4>프로토타입 등록</h4>
+        <p><code>GlobalInitializer&lt;Item&gt;</code>이 <code>StaticDataManager</code>에 <code>Item</code> 하나를 넣는다</p>
+      </div>
+      <div class="step">
+        <span class="when">서버 기동</span>
+        <h4>json 로드</h4>
+        <p><code>CLASS_ID</code>로 프로토타입을 찾아 <code>Create()</code> → <code>Insert()</code></p>
+      </div>
+      <div class="step">
+        <span class="when">게임 중</span>
+        <h4>타입 있는 조회</h4>
+        <p><code>ItemDataManager::Get(1)</code> → <code>shared_ptr&lt;const Item&gt;</code></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cols">
+
+    <nav class="toc" aria-label="목차">
+      <div class="toc-title">목차</div>
+      <a href="#program">Program.cs <span class="count">14</span></a>
+      <a href="#staticdataid-cs">StaticDataId.cs <span class="count">신규</span></a>
+      <a href="#schema">StaticDataSchema.cs <span class="count">신규</span></a>
+      <a href="#header">WriteHeaderFile.cs <span class="count">5</span></a>
+      <a href="#source">WriteSourceFile.cs <span class="count">1</span></a>
+      <a href="#istaticdata">IStaticData.h <span class="count">2</span></a>
+      <a href="#manager">StaticDataManager <span class="count">3</span></a>
+      <a href="#globalinit">GlobalInitializer.h <span class="count">2</span></a>
+      <a href="#parse">StaticDataParse.h <span class="count">신규</span></a>
+      <a href="#staticdataid-h">StaticDataId.h <span class="count">신규</span></a>
+      <a href="#gameserver">GameServer.cpp <span class="count">10</span></a>
+      <a href="#cmake">CMakeLists.txt <span class="count">1</span></a>
+      <a href="#launch">launchSettings.json <span class="count">1</span></a>
+    </nav>
+
+    <main>
+
+      <!-- ============ Program.cs ============ -->
+      <section class="file" id="program">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/</span>Program.cs</h2>
+          <p class="file-note">변환기의 진입점. 폴더를 훑고, 엑셀을 읽고, 세 종류의 산출물을 쓴다. 팀 세션이 보고한 <code>UnauthorizedAccessException</code>의 원인 대부분이 이 파일에 있었다.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>인코딩을 json용과 C++용으로 분리</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l add">+ private static readonly UTF8Encoding JsonEncoding = new(encoderShouldEmitUTF8Identifier: false);</span><span class="l add">+ private static readonly UTF8Encoding CppEncoding  = new(encoderShouldEmitUTF8Identifier: true);</span></pre></div>
+          <div class="why">
+            <p>기존에는 세 파일 모두 <code>Encoding.UTF8</code>로 썼습니다. .NET의 <code>Encoding.UTF8</code>은 <strong>BOM을 붙입니다</strong>. 그런데 json을 읽는 쪽은 <code>boost::json::stream_parser</code>이고, 파서는 파일 맨 앞의 BOM(<code>EF BB BF</code>)을 공백이 아닌 쓰레기 문자로 보고 파싱에 실패합니다.</p>
+            <p>반대로 C++ 소스는 BOM이 <em>있어야</em> 안전합니다. 생성되는 <code>.h</code>/<code>.cpp</code>에 한글 주석이 들어가는데, MSVC는 BOM도 없고 <code>/utf-8</code> 플래그도 없으면 파일을 시스템 ANSI 코드페이지(949)로 해석합니다. 그래서 두 상수로 나눠 json은 BOM 없이, C++은 BOM 붙여 씁니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3><code>GetRelativePath</code> 인자 순서 정정</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- var filePath = Path.GetDirectoryName(itFile);</span><span class="l del">- var relativePath = Path.GetRelativePath(filePath, xlsxRootPath);</span><span class="l del">- var targetPath = Path.Combine(outputPath, relativePath);</span><span class="l add">+ var relativeDir = Path.GetRelativePath(xlsxRootPath, Path.GetDirectoryName(xlsxPath)!);</span><span class="l add">+ var targetDir = relativeDir == "."</span><span class="l add">+     ? outputRoot</span><span class="l add">+     : Path.Combine(outputRoot, relativeDir);</span></pre></div>
+          <div class="why">
+            <p><code>GetRelativePath(relativeTo, path)</code> 순서입니다. 기존 코드는 <strong>파일의 폴더에서 루트로 가는 경로</strong>를 구하고 있었습니다. 입력이 <code>XLSX/Item/</code>이고 루트가 <code>XLSX/</code>면 결과가 <code>..</code>가 되고, 그걸 <code>Path.Combine(outputPath, "..")</code>에 넣어서 산출물이 의도한 출력 폴더 <em>밖으로</em> 새어 나갔습니다.</p>
+            <p><code>relativeDir == "."</code> 분기는 루트를 리프 폴더로 직접 지정한 경우(<code>XLSX/Item</code>)를 위한 것입니다. 그때 <code>Path.Combine(outputRoot, ".")</code>는 경로에 <code>\.\</code>를 남기므로 <code>outputRoot</code>를 그대로 씁니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">03</span><h3>디렉터리 경로와 파일 경로를 분리</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l ctx">  Directory.CreateDirectory(targetDir);</span><span class="l gap">  …</span><span class="l add">+ var stem       = Path.GetFileNameWithoutExtension(xlsxPath);</span><span class="l add">+ var jsonPath   = Path.Combine(targetDir, $"{stem}.json");</span><span class="l add">+ var headerPath = Path.Combine(targetDir, $"{stem}.h");</span><span class="l add">+ var sourcePath = Path.Combine(targetDir, $"{stem}.cpp");</span></pre></div>
+          <div class="why">
+            <p>가장 직접적인 예외 원인이었습니다. 같은 <code>targetPath</code> 문자열을 <code>Directory.CreateDirectory</code>로 <strong>디렉터리로 만들어 놓고</strong>, 나중에 <code>File.WriteAllText(targetPath, …)</code>로 <strong>같은 경로에 파일을 쓰려</strong> 했습니다. 디렉터리를 파일로 열면 Windows는 <code>UnauthorizedAccessException</code>을 던집니다. 관리자 권한으로도 동일한데, 권한 문제가 아니라 대상 종류가 틀린 문제이기 때문입니다.</p>
+            <p>이제 <code>targetDir</code>(디렉터리, 생성 대상)과 <code>jsonPath</code>/<code>headerPath</code>/<code>sourcePath</code>(파일, 쓰기 대상)가 분리됩니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">04</span><h3>빈 셀 기본값의 박싱 타입 정확화</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- "int" or "long"     =&gt; (object)0,</span><span class="l del">- "float" or "double" =&gt; 0.0,</span><span class="l add">+ "int"    =&gt; 0,</span><span class="l add">+ "long"   =&gt; 0L,</span><span class="l add">+ "float"  =&gt; 0.0f,</span><span class="l add">+ "double" =&gt; 0.0,</span></pre></div>
+          <div class="why">
+            <p>이 값들이 단순한 기본값이 아니라 <strong>C++ 타입 추정의 근거</strong>라서 중요합니다. 헤더 생성기는 <code>rows[0]</code> 값의 런타임 타입을 보고 <code>int32_t</code>/<code>int64_t</code>/<code>float</code>/<code>double</code>을 정합니다.</p>
+            <p>기존 코드는 <code>int</code>와 <code>long</code>을 모두 <code>(object)0</code>(= <code>int</code>)으로, <code>float</code>과 <code>double</code>을 모두 <code>0.0</code>(= <code>double</code>)으로 박싱했습니다. 그래서 첫 행이 빈 셀인 <code>long</code> 컬럼은 <code>int32_t</code>로, <code>float</code> 컬럼은 <code>double</code>로 잘못 생성됐습니다. 타입별로 정확히 박싱하도록 네 갈래로 쪼갰습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">05</span><h3>json 키에도 <code>SanitizeIdentifier</code> 적용</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- record[fieldName] = CastCell(rawVal, typeName);</span><span class="l add">+ record[SanitizeIdentifier(fieldName)] = CastCell(rawVal, typeName);</span></pre></div>
+          <div class="why">
+            <p>생성된 C++은 <code>StaticDataParse::Read(obj, "ID", m_ID)</code>처럼 <strong>필드명 문자열로 json을 조회</strong>합니다. 그 문자열은 C++ 식별자로 쓸 수 있게 정제된 이름입니다.</p>
+            <p>json 키를 정제하지 않으면 두 이름이 갈라집니다. 엑셀 헤더가 <code>아이템 이름(string)</code>이면 json 키는 <code>아이템 이름</code>, C++ 멤버는 <code>m______</code>이 되고, 조회가 영원히 실패해 모든 값이 기본값으로 남습니다. 같은 함수를 양쪽에 통과시켜 키를 일치시킵니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">06</span><h3>json 첫 원소에 <code>CLASS_ID</code> 메타 추가</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ var document = new List&lt;Dictionary&lt;string, object?&gt;&gt;(rows.Count + 1)</span><span class="l add">+ {</span><span class="l add">+     new() { ["CLASS_ID"] = schema.ClassId },</span><span class="l add">+ };</span><span class="l add">+ document.AddRange(rows);</span></pre></div>
+          <div class="why">
+            <p>런타임에 json 파일만 보고는 <em>어느 C++ 클래스로 파싱해야 하는지</em> 알 수 없습니다. <code>GameServer::ReadStaticData</code>는 배열의 첫 원소에서 <code>CLASS_ID</code>를 읽어 <code>StaticDataManager</code>에서 프로토타입을 찾는 구조로 이미 작성돼 있었는데, 생성기가 그 값을 넣어주지 않고 있었습니다.</p>
+            <p>메타를 별도 파일이 아니라 같은 배열의 첫 원소로 넣은 것은 서버 쪽 리더가 기대하는 형식을 그대로 맞춘 것입니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">07</span><h3>엑셀 임시 파일 제외</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ .Where(path =&gt; !Path.GetFileName(path).StartsWith("~$", StringComparison.Ordinal))</span></pre></div>
+          <div class="why">
+            <p>엑셀에서 <code>item.xlsx</code>를 열어 둔 채 변환기를 돌리면 같은 폴더에 <code>~$item.xlsx</code> 잠금 파일이 있습니다. 이건 정상적인 워크북이 아니라서 <code>MiniExcel.Query</code>가 예외를 던집니다. 작업 중 변환을 돌리는 건 흔한 상황이라 걸러냅니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">08</span><h3>시트명을 못 찾으면 첫 시트로 대체</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ private static string ResolveSheetName(string xlsxPath, string requested)</span><span class="l add">+ {</span><span class="l add">+     var sheets = MiniExcel.GetSheetNames(xlsxPath);</span><span class="l gap">      …</span><span class="l add">+     if (!string.IsNullOrWhiteSpace(requested) &amp;&amp;</span><span class="l add">+         sheets.Contains(requested, StringComparer.OrdinalIgnoreCase))</span><span class="l gap">          …</span><span class="l add">+     return sheets[0];</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>기존에는 시트명 하나를 커맨드라인으로 받아 <strong>모든 파일에 같은 이름</strong>을 적용했습니다. 폴더 전체를 일괄 변환한다는 목적과 맞지 않습니다. <code>item.xlsx</code>의 시트가 <code>Item</code>이라고 <code>monster.xlsx</code>의 시트도 <code>Item</code>일 이유가 없고, 이름이 틀리면 조용히 0행을 돌려받습니다.</p>
+            <p>그래서 시트명을 <strong>선택 인자</strong>로 내리고, 지정이 없거나 못 찾으면 각 파일의 첫 시트를 씁니다. 대소문자는 무시합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">09</span><h3>파일 단위 <code>try/catch</code>로 격리</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ try</span><span class="l add">+ {</span><span class="l add">+     if (SheetToFiles(xlsxPath, targetDir, sheetName))</span><span class="l add">+         converted++;</span><span class="l add">+ }</span><span class="l add">+ catch (Exception ex)</span><span class="l add">+ {</span><span class="l add">+     Console.WriteLine($"[오류] {Path.GetFileName(xlsxPath)}: {ex.Message}");</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>기존에는 <code>Main</code>에 <code>try/catch</code>가 하나뿐이라 엑셀 하나가 깨지면 <strong>남은 파일 전체가 변환되지 않고</strong> 끝났습니다. 파일 수가 늘어날수록 손해가 커집니다. 파일별로 감싸서 문제 있는 파일만 건너뛰고, 어느 파일이 왜 실패했는지 이름과 함께 출력합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">10</span><h3><code>SheetToFiles</code>가 <code>bool</code>을 반환</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l del">- private static void SheetToFiles(string xlsxPath, string targetPath, string sheet)</span><span class="l add">+ private static bool SheetToFiles(string xlsxPath, string targetDir, string sheetName)</span><span class="l gap">  …</span><span class="l del">- if (rawRows.Count == 0) return;</span><span class="l add">+ if (rawRows.Count == 0)</span><span class="l add">+ {</span><span class="l add">+     Console.WriteLine($"[건너뜀] {Path.GetFileName(xlsxPath)}: 데이터 행이 없습니다.");</span><span class="l add">+     return false;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>기존의 조용한 <code>return</code>은 성공과 구별되지 않았습니다. 빈 시트를 지정했을 때 아무 일도 없이 "완료"처럼 보이는 게 이 도구에서 가장 헷갈리는 실패 모드입니다. 성공 여부를 돌려주고 호출자가 <code>N개 중 M개 변환</code>으로 집계하게 했습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">11</span><h3>입력 폴더 존재 확인</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ if (!Directory.Exists(xlsxRootPath))</span><span class="l add">+ {</span><span class="l add">+     Console.WriteLine($"[오류] 입력 폴더가 없습니다: {xlsxRootPath}");</span><span class="l add">+     return;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p><code>Directory.GetFiles</code>는 폴더가 없으면 <code>DirectoryNotFoundException</code>을 던지는데, 그 메시지만으로는 경로 오타인지 다른 문제인지 구분이 안 됩니다. <strong>해석된 절대 경로</strong>를 찍어주면 상대 경로가 어디로 풀렸는지 바로 보입니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">12</span><h3>대상 파일이 0개일 때 경고</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ if (xlsxFiles.Count == 0)</span><span class="l add">+ {</span><span class="l add">+     Console.WriteLine($"[경고] xlsx 파일을 찾지 못했습니다: {xlsxRootPath}");</span><span class="l add">+     return;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>폴더는 있지만 xlsx가 없는 경우입니다. 이전에는 루프가 0회 돌고 아무 출력 없이 정상 종료해서, 성공했는지 폴더를 잘못 짚었는지 알 수 없었습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">13</span><h3><code>ConvertXlsxToJson</code> → <code>ConvertAll</code></h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l del">- public static void ConvertXlsxToJson(string xlsxPath, string sheetName, string outputPath)</span><span class="l add">+ public static void ConvertAll(string xlsxRoot, string sheetName, string outputRoot)</span></pre></div>
+          <div class="why">
+            <p>이름이 실제 동작과 달라졌습니다. 이제 json만 만드는 게 아니라 <code>.h</code>와 <code>.cpp</code>도 만듭니다. 파라미터명도 <code>xlsxPath</code>/<code>outputPath</code>에서 <code>xlsxRoot</code>/<code>outputRoot</code>로 바꿨습니다 — 둘 다 <strong>파일이 아니라 폴더</strong>인데, 이름이 "Path"라서 파일 경로로 오해하기 쉬웠던 것이 앞의 03번 버그와 무관하지 않습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">14</span><h3>커맨드라인 인자 재배치</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l del">- if (args.Length != 3)</span><span class="l del">- Usage: ExcelSchemaConverter &lt;xlsxPath&gt; &lt;sheetName&gt; &lt;outputPath&gt;</span><span class="l add">+ if (args.Length is &lt; 2 or &gt; 3)</span><span class="l add">+ Usage: DataConverter &lt;xlsxRoot&gt; &lt;outputRoot&gt; [sheetName]</span></pre></div>
+          <div class="why">
+            <p>시트명이 선택 인자가 됐으므로 <strong>맨 뒤로</strong> 옮겼습니다. 선택 인자를 가운데 두면 생략할 수 없습니다. 입력과 출력이 이제 나란히 붙어 있어 읽기도 낫습니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ StaticDataId.cs ============ -->
+      <section class="file" id="staticdataid-cs">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/WriteFile/</span>StaticDataId.cs <span class="tag tag-new">신규</span></h2>
+          <p class="file-note">파일명에서 <code>CLASS_ID</code>를 만드는 곳. C++ 쪽 <code>StaticDataId.h</code>와 쌍을 이룬다.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>FNV-1a 64bit 해시로 <code>CLASS_ID</code> 발급</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ private static long MakeClassId(string name)</span><span class="l add">+ {</span><span class="l add">+     ulong hash = 0xcbf29ce484222325UL;</span><span class="l add">+     foreach (var b in Encoding.UTF8.GetBytes(NormalizeDataName(name)))</span><span class="l add">+     {</span><span class="l add">+         hash ^= b;</span><span class="l add">+         hash *= 0x100000001b3UL;</span><span class="l add">+     }</span><span class="l add">+     return unchecked((long)hash);</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>파일명과 <code>int64_t</code> 키를 잇는 방법이 필요했습니다. FNV-1a를 고른 이유는 <strong>알고리즘이 짧아 C#과 C++에 각각 똑같이 구현할 수 있고</strong>, C++에서는 <code>constexpr</code>로 컴파일 타임 상수가 되고, 상수값(<code>0xcbf29ce484222325</code>, <code>0x100000001b3</code>)이 표준이라 나중에 누가 봐도 검증 가능하기 때문입니다. xxHash나 CityHash는 분포가 더 좋지만 라이브러리 의존성이 생깁니다.</p>
+            <p><code>unchecked((long)hash)</code>는 <code>ulong</code>의 상위 비트가 켜졌을 때 <code>OverflowException</code> 없이 <code>long</code>으로 재해석하기 위한 것입니다. C++의 <code>static_cast&lt;int64_t&gt;</code>와 같은 비트 패턴을 얻습니다. 실제로 <code>item</code>의 해시는 <code>2900776405502981158</code>로 양수지만, 파일명에 따라 음수가 나올 수 있어 필요합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3>정규화 규칙을 한 곳에만 정의</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ private static string NormalizeDataName(string name)</span><span class="l add">+     =&gt; Path.GetFileNameWithoutExtension(name).ToLowerInvariant();</span></pre></div>
+          <div class="why">
+            <p>해시 자체보다 <strong>무엇을 해싱하느냐</strong>가 더 깨지기 쉽습니다. 한쪽이 <code>item.xlsx</code>를, 다른 쪽이 <code>item</code>을, 또는 <code>Item</code>을 해싱하면 키가 영원히 어긋나고 증상은 "프로토타입을 못 찾음"으로만 나타납니다. 확장자 제거 + 소문자 두 규칙을 각 언어에서 단일 함수로 못 박아, 규칙이 코드에 흩어지지 않게 했습니다.</p>
+            <p><code>ToLowerInvariant</code>를 쓴 것은 <code>ToLower</code>가 현재 문화권을 따르기 때문입니다. 터키어 로케일에서 <code>I</code>가 <code>ı</code>로 내려가는 유명한 문제가 있어, 빌드 머신의 로케일에 결과가 흔들리면 안 됩니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ StaticDataSchema.cs ============ -->
+      <section class="file" id="schema">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/WriteFile/</span>StaticDataSchema.cs <span class="tag tag-new">신규</span></h2>
+          <p class="file-note">헤더 생성기와 소스 생성기가 <em>같은</em> 필드 정보를 보도록 중간에 놓은 타입.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>스키마 타입 도입</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l add">+ public sealed record StaticDataField(string Name, string CppType)</span><span class="l add">+ {</span><span class="l add">+     public string ReturnType =&gt; CppType == "std::string" ? "const std::string&amp;" : CppType;</span><span class="l add">+     public bool IsString =&gt; CppType == "std::string";</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p><code>.h</code>와 <code>.cpp</code>는 반드시 일치해야 합니다. 멤버 선언과 그걸 채우는 파싱 코드, 게터 시그니처와 그 정의가 한 글자라도 다르면 링크 에러거나 조용한 오동작입니다. 두 생성기가 각자 <code>rows[0]</code>에서 필드를 다시 추출하면 언젠가 갈라집니다.</p>
+            <p><code>ReturnType</code>이 문자열만 <code>const std::string&amp;</code>로 바꾸는 것은 게터가 매 호출마다 문자열을 복사하지 않게 하려는 것입니다. <code>int32_t</code> 같은 값 타입은 참조로 돌릴 이유가 없습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3>맵 키 타입을 <code>int64_t</code>로 통일</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l add">+ public string KeyType =&gt; KeyField.CppType switch</span><span class="l add">+ {</span><span class="l add">+     "int32_t" or "int64_t" =&gt; "int64_t",</span><span class="l add">+     _ =&gt; KeyField.CppType,</span><span class="l add">+ };</span></pre></div>
+          <div class="why">
+            <p>첫 번째 컬럼을 행의 기본키로 씁니다. 그 컬럼이 <code>int32_t</code>여도 맵 키는 <code>int64_t</code>로 넓힙니다. 엑셀에서 <code>ID(int)</code>를 <code>ID(long)</code>으로 바꿨을 때 <strong>맵 키 타입이 따라 바뀌면 그 맵을 쓰는 모든 호출부가 깨지기</strong> 때문에, 정수 계열은 애초에 가장 넓은 타입으로 고정합니다.</p>
+            <p>문자열 키는 <code>std::string</code>을 그대로 둡니다. 정수로 바꿀 방법이 없고, 억지로 해싱하면 충돌 처리라는 새 문제가 생깁니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">03</span><h3>공용 헬퍼를 이 파일로 이동</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l ctx">  ToCppType / ToPascalCase / SanitizeIdentifier / AppendGeneratedBanner</span><span class="l del">-     WriteHeaderFile.cs 안에 있었음</span><span class="l add">+     StaticDataSchema.cs 로 이동</span></pre></div>
+          <div class="why">
+            <p><code>WriteSourceFile</code>도 같은 함수들이 필요해졌습니다. 헤더 생성기 파일 안에 남겨 두면 소스 생성기가 헤더 생성기의 내부에 의존하는 모양이 됩니다. 스키마를 만드는 쪽으로 옮겨서 두 생성기가 대등하게 쓰도록 했습니다.</p>
+            <p><code>AppendGeneratedBanner</code>도 여기 있습니다. "자동 생성물이니 직접 고치지 말라"는 경고를 두 파일에 똑같이 붙여야 하는데, 문구가 갈라지면 한쪽만 읽은 사람이 파일을 손으로 고칩니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ WriteHeaderFile.cs ============ -->
+      <section class="file" id="header">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/WriteFile/</span>WriteHeaderFile.cs</h2>
+          <p class="file-note">기존에는 골격만 있었고, 생성된 헤더는 컴파일되지 않는 상태였다.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>verbatim 문자열이 탭을 리터럴로 출력</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- sb.AppendLine(@"\t{");</span><span class="l del">- sb.AppendLine(@"\tpublic:");</span><span class="l add">+ sb.AppendLine("\t{");</span><span class="l add">+ sb.AppendLine("\tpublic:");</span></pre></div>
+          <div class="why">
+            <p>C#에서 <code>@</code> 접두 문자열은 <strong>이스케이프를 해석하지 않습니다</strong>. <code>@"\t{"</code>는 탭 + <code>{</code>가 아니라 문자 네 개 <code>\</code>, <code>t</code>, <code>{</code>입니다. 생성된 헤더에 탭 대신 리터럴 <code>\t</code>가 박혀 나왔습니다.</p>
+            <p>같은 파일 안에서 보간 문자열(<code>$"\t…"</code>)은 이스케이프가 살아 있어 제대로 탭이 나오고 있었습니다. 그래서 일부 줄만 어긋나 눈에 잘 띄지 않았습니다. 탭이 들어가는 줄에서는 <code>@</code>를 전부 뺐습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3>상속을 <code>public</code>으로</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- class {className} : IStaticData</span><span class="l add">+ class {className} : public IStaticData</span></pre></div>
+          <div class="why">
+            <p>C++에서 <code>class</code>의 기본 상속 접근 지정자는 <code>private</code>입니다. <code>class Item : IStaticData</code>는 private 상속이라 <strong><code>Item*</code>을 <code>IStaticData*</code>로 변환할 수 없습니다</strong>. 이 파이프라인은 <code>std::shared_ptr&lt;IStaticData&gt;</code>로 행 객체를 다루므로 <code>Create()</code>부터 컴파일되지 않습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">03</span><h3>게터에 대응하는 멤버 변수 생성</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- {cppType} {safeName}();</span><span class="l add">+ {returnType} {field.Name}() const {{ return m_{field.Name}; }}</span><span class="l gap">  …</span><span class="l add">+ private:</span><span class="l add">+ {cppType} m_{field.Name}{{}};</span></pre></div>
+          <div class="why">
+            <p>기존에는 게터 <strong>선언만</strong> 있고 정의도 멤버 변수도 없었습니다. 데이터를 담을 곳이 없으니 클래스가 아무것도 저장할 수 없고, 게터를 호출하면 링크 에러가 납니다.</p>
+            <p>게터를 헤더 안에 인라인 정의로 둔 것은 한 줄짜리 접근자라 <code>.cpp</code>에 정의를 분산시킬 이유가 없기 때문입니다. <code>{{}}</code>는 C#의 보간 문자열에서 중괄호 하나를 내보내는 이스케이프이고, 결과 C++에서는 <code>m_ID{}</code> 즉 <strong>0 초기화</strong>가 됩니다. json에 키가 없을 때 쓰레기값이 남지 않게 하려는 것입니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">04</span><h3><code>Insert</code>/<code>Create</code> 오버라이드 선언 추가</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l add">+ void Insert(const boost::json::object&amp; obj) override;</span><span class="l add">+ std::shared_ptr&lt;IStaticData&gt; Create() override;</span></pre></div>
+          <div class="why">
+            <p><code>IStaticData</code>의 두 순수 가상 함수를 선언하지 않으면 <code>Item</code>은 여전히 추상 클래스입니다. <code>std::make_shared&lt;Item&gt;()</code>이 컴파일되지 않으므로 프로토타입 등록 자체가 불가능합니다. <code>override</code>를 붙인 것은 시그니처가 틀렸을 때 조용히 새 함수를 만들지 말고 컴파일 에러를 내게 하기 위한 것입니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">05</span><h3>DataManager 클래스 본문 채움</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- class {className}DataManager</span><span class="l del">- {</span><span class="l del">- }</span><span class="l add">+ class {ManagerName} : public Singleton&lt;{ManagerName}&gt;</span><span class="l add">+ {</span><span class="l add">+ public:</span><span class="l add">+     bool Add(std::shared_ptr&lt;{ClassName}&gt;&amp;&amp; pData);</span><span class="l add">+     std::shared_ptr&lt;const {ClassName}&gt; Get({keyParam}) const;</span><span class="l add">+     const {mapType}&amp; GetAll() const { return m_data; }</span><span class="l add">+     std::size_t Size() const { return m_data.size(); }</span><span class="l add">+ private:</span><span class="l add">+     {mapType} m_data;</span><span class="l add">+ };</span></pre></div>
+          <div class="why">
+            <p>기존 출력은 빈 클래스였고 <strong>닫는 중괄호 뒤 세미콜론도 없었습니다</strong> — 그 자체로 문법 오류입니다.</p>
+            <p><code>Get</code>이 <code>shared_ptr&lt;const T&gt;</code>를 돌려주는 것은 정적 데이터가 로드 후 읽기 전용이어야 하기 때문입니다. <code>const</code>를 붙여 호출자가 실수로 마스터 데이터를 고치는 걸 컴파일 단계에서 막습니다. <code>Singleton&lt;&gt;</code>을 상속한 것은 프로젝트에 이미 있는 패턴(<code>CharacterManager</code>, <code>ZoneManager</code>)을 따른 것입니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ WriteSourceFile.cs ============ -->
+      <section class="file" id="source">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/WriteFile/</span>WriteSourceFile.cs</h2>
+          <p class="file-note">비어 있던 파일. 여기가 막혀 있어서 파이프라인이 끝까지 돌지 못했다.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3><code>NotImplementedException</code> → 구현</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l del">- private static void WriteSourceFile()</span><span class="l del">- {</span><span class="l del">-     throw new NotImplementedException();</span><span class="l del">- }</span><span class="l add">+ private static void WriteSourceFile(string sourcePath, string headerPath,</span><span class="l add">+                                     string xlsxPath, StaticDataSchema schema)</span></pre></div>
+          <div class="why">
+            <p>이 함수가 <code>SheetToFiles</code> 끝에서 호출되고 있었기 때문에, 앞의 경로 버그를 모두 고쳐도 <strong>여기서 반드시 예외로 끝났습니다</strong>.</p>
+            <p>생성하는 내용은 세 덩어리입니다. ① 네임스페이스 스코프의 <code>GlobalInitializer&lt;Item&gt;</code> 전역 객체 — <code>main()</code> 전에 프로토타입을 등록합니다. ② <code>Create()</code>와 <code>Insert()</code> 정의. ③ DataManager의 <code>Add</code>/<code>Get</code> 정의.</p>
+            <p><code>Insert</code>가 마지막에 <code>Add(std::make_shared&lt;Item&gt;(*this))</code>로 <strong>자기 복사본</strong>을 넘기는 것이 이 설계의 핵심입니다. <code>GameServer</code>는 <code>shared_ptr&lt;IStaticData&gt;</code>만 들고 있어 구체 타입을 모르므로, 행을 타입 있는 컨테이너에 넣을 수 있는 건 자기 타입을 아는 <code>Insert</code> 뿐입니다. 복사가 한 번 더 들지만 로드 시점에만 일어나므로 무시할 수 있고, <code>enable_shared_from_this</code>를 끌어들이는 것보다 단순합니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ IStaticData.h ============ -->
+      <section class="file" id="istaticdata">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">Engine/StaticData/</span>IStaticData.h</h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>가상 소멸자 추가</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l add">+ virtual ~IStaticData() = default;</span></pre></div>
+          <div class="why">
+            <p>이 인터페이스는 <code>std::shared_ptr&lt;IStaticData&gt;</code>로 다형적으로 보관·삭제됩니다. 가상 소멸자가 없으면 <strong>파생 클래스의 소멸자가 호출되지 않습니다</strong>. <code>Item</code>의 <code>std::string</code> 멤버가 해제되지 않아 누수로 이어집니다.</p>
+            <p>엄밀히는 <code>make_shared&lt;Item&gt;</code>으로 만든 <code>shared_ptr</code>은 생성 시점의 구체 타입 deleter를 기억하므로 이 경로만 보면 우연히 동작합니다. 하지만 <code>Create()</code>가 <code>shared_ptr&lt;IStaticData&gt;</code>를 돌려주는 인터페이스에서 그 우연에 기대는 건 위험하고, <code>unique_ptr</code>이나 raw 포인터로 다루는 코드가 하나 생기는 순간 실제 누수가 됩니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3><code>&lt;memory&gt;</code> 명시적 include</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ #include &lt;memory&gt;</span></pre></div>
+          <div class="why">
+            <p><code>std::shared_ptr</code>을 쓰는데 <code>&lt;memory&gt;</code>가 없었습니다. <code>boost/json.hpp</code>를 통해 딸려 들어와서 컴파일되던 것인데, 남의 헤더가 무엇을 include하는지에 의존하는 상태입니다. boost 버전이 올라가면 조용히 깨집니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ StaticDataManager ============ -->
+      <section class="file" id="manager">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">Engine/StaticData/</span>StaticDataManager.h / .cpp</h2>
+          <p class="file-note"><code>CLASS_ID</code> → 프로토타입 레지스트리.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3><code>CreateStaticData</code> 추가</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ std::shared_ptr&lt;IStaticData&gt; StaticDataManager::CreateStaticData(int64_t classId) const</span><span class="l add">+ {</span><span class="l add">+     const auto found = m_data.find(classId);</span><span class="l add">+     if (found == m_data.end())</span><span class="l add">+     {</span><span class="l add">+         return nullptr;</span><span class="l add">+     }</span><span class="l add">+     return found-&gt;second-&gt;Create();</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p><code>GameServer.cpp</code>에 <code>StaticDataManager::GetInstance()-&gt;CreateStaticData(classId)</code> 호출이 <strong>주석으로 남아 있었습니다</strong>. 설계 의도는 있었지만 함수가 없었습니다. 등록된 프로토타입을 찾아 <code>Create()</code>를 대신 불러주는 얇은 래퍼입니다.</p>
+            <p>못 찾으면 예외가 아니라 <code>nullptr</code>을 돌려줍니다. 등록되지 않은 <code>CLASS_ID</code>는 "생성된 <code>.cpp</code>가 빌드에 안 들어갔다"는 설정 실수이고, 호출부에서 파일 이름과 함께 진단 메시지를 내는 편이 낫습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3>쓰는 헤더를 직접 include</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ #include &lt;cstdint&gt;</span><span class="l add">+ #include &lt;memory&gt;</span><span class="l add">+ #include &lt;unordered_map&gt;</span><span class="l add">+ #include &lt;Engine/StaticData/IStaticData.h&gt;</span></pre></div>
+          <div class="why">
+            <p>헤더가 <code>IStaticData</code>, <code>int64_t</code>, <code>unordered_map</code>, <code>shared_ptr</code>을 모두 쓰면서 어느 것도 include하지 않고 있었습니다. <code>PCH.h</code>를 먼저 넣는 <code>.cpp</code>에서만 우연히 컴파일되던 상태라, 다른 곳에서 이 헤더를 먼저 include하면 깨집니다. 헤더는 스스로 완결되어야 합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">03</span><h3>설계 의도를 주석으로 고정</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l add">+ // 정적 데이터의 "프로토타입 레지스트리".</span><span class="l add">+ // 생성된 .cpp 파일의 GlobalInitializer가 프로그램 시작 시(static 초기화)</span><span class="l add">+ // 클래스마다 프로토타입 하나씩을 여기에 등록한다.</span></pre></div>
+          <div class="why">
+            <p><code>m_data</code>에 든 것이 <em>실제 행 데이터</em>가 아니라 <em>클래스당 프로토타입 하나</em>라는 사실이 이름만으로는 드러나지 않습니다. 실제 행은 생성된 <code>ItemDataManager</code>에 들어갑니다. 이걸 모르면 "왜 아이템 2개를 넣었는데 맵 크기가 1이지"로 헤매게 됩니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ GlobalInitializer.h ============ -->
+      <section class="file" id="globalinit">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">Engine/StaticData/</span>GlobalInitializer.h</h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>하드코딩된 <code>1</code> → <code>T::CLASS_ID</code></h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- StaticDataManager::GetInstance()-&gt;InsertStaticData(1, std::move(t));</span><span class="l add">+ StaticDataManager::GetInstance()-&gt;InsertStaticData(</span><span class="l add">+     T::CLASS_ID, std::move(pStaticData));</span></pre></div>
+          <div class="why">
+            <p>모든 타입이 <code>classId = 1</code>로 등록되고 있었습니다. <code>InsertStaticData</code>는 키가 중복되면 <code>false</code>를 돌려주고 덮어쓰지 않으므로, <strong>정적 데이터 클래스가 두 개 이상이면 첫 번째만 등록되고 나머지는 조용히 버려집니다.</strong> 엑셀이 하나일 때는 드러나지 않는 종류의 버그입니다.</p>
+            <p><code>T::CLASS_ID</code>는 생성된 헤더의 <code>static constexpr int64_t</code>입니다. 등록 키와 json의 <code>CLASS_ID</code>가 같은 생성기에서 같은 파일명으로 나오므로 구조적으로 일치합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3>생성자에 <code>explicit</code></h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l del">- GlobalInitializer(std::shared_ptr&lt;T&gt;&amp;&amp; t)</span><span class="l add">+ explicit GlobalInitializer(std::shared_ptr&lt;T&gt;&amp;&amp; pStaticData)</span></pre></div>
+          <div class="why">
+            <p>단일 인자 생성자는 암시적 변환 경로가 됩니다. <code>shared_ptr&lt;Item&gt;</code>이 실수로 <code>GlobalInitializer&lt;Item&gt;</code>으로 변환되면 <strong>의도치 않은 시점에 등록이 일어납니다</strong>. 이 클래스는 생성 자체가 부수효과(등록)이므로 우연히 만들어지면 안 됩니다. 파라미터명도 프로젝트의 <code>p</code> 접두 규칙에 맞췄습니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ StaticDataParse.h ============ -->
+      <section class="file" id="parse">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">Engine/StaticData/</span>StaticDataParse.h <span class="tag tag-new">신규</span></h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>타입별 오버로드로 파싱을 한 줄로</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ inline bool Read(const boost::json::object&amp; obj, const char* pKey, int32_t&amp; out)</span><span class="l add">+ {</span><span class="l add">+     const auto found = obj.find(pKey);</span><span class="l add">+     if (found == obj.end() || !found-&gt;value().is_number())</span><span class="l add">+         return false;</span><span class="l add">+     out = static_cast&lt;int32_t&gt;(found-&gt;value().to_number&lt;int64_t&gt;());</span><span class="l add">+     return true;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>이 헬퍼가 없으면 생성된 <code>Insert()</code>가 필드마다 find + 타입 검사 + 캐스팅을 6~8줄씩 쏟아냅니다. 컬럼 20개면 읽을 수 없는 파일이 됩니다. 오버로드로 묶으면 생성 코드가 <code>StaticDataParse::Read(obj, "ID", m_ID);</code> 한 줄이 되고, <strong>멤버 타입이 오버로드를 자동으로 고릅니다</strong>.</p>
+            <p>실패 시 <code>out</code>을 건드리지 않는 것이 의도적입니다. 멤버는 헤더에서 <code>{}</code>로 0 초기화되어 있으므로, 키가 없거나 타입이 틀리면 기본값이 그대로 남습니다. 예외를 던지면 엑셀 셀 하나 때문에 서버 기동이 실패합니다.</p>
+            <p><code>to_number&lt;int64_t&gt;()</code>를 쓴 것은 <code>as_int64()</code>가 json 값이 <code>uint64</code>나 <code>double</code>로 저장돼 있으면 던지기 때문입니다. json 직렬화기가 <code>10</code>을 어느 내부 표현으로 넣을지에 의존하지 않으려는 것입니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ StaticDataId.h ============ -->
+      <section class="file" id="staticdataid-h">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">Engine/StaticData/</span>StaticDataId.h <span class="tag tag-new">신규</span></h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3><code>constexpr</code> 해시와 사용자 정의 리터럴</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ constexpr uint64_t FnvHash64(std::string_view name) noexcept</span><span class="l gap">      …</span><span class="l add">+ constexpr int64_t operator""_static_data_id(const char* pName, std::size_t length) noexcept</span><span class="l add">+ {</span><span class="l add">+     return MakeStaticDataId(std::string_view{ pName, length });</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p>C# 쪽 해시의 대응물입니다. <code>constexpr</code>이라 <strong>컴파일 타임에 값이 확정</strong>되어 런타임 비용이 0입니다.</p>
+            <p>사용자 정의 리터럴을 둔 이유는 조회 코드가 <code>"item"_static_data_id</code>처럼 읽히게 하려는 것입니다. 생성된 헤더의 <code>Item::CLASS_ID</code>를 쓰는 게 기본이지만, 헤더를 include하지 않는 곳에서 파일명만으로 키가 필요할 때 쓸 수 있습니다.</p>
+            <p><code>unsigned char</code>로 순회하는 것이 중요합니다. <code>char</code>는 MSVC에서 부호 있는 타입이라, UTF-8 다바이트 문자가 들어가면 <code>hash ^= c</code>에서 부호 확장으로 상위 비트가 오염되고 <strong>C# 결과와 달라집니다.</strong></p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ GameServer.cpp ============ -->
+      <section class="file" id="gameserver">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">GameServer/</span>GameServer.cpp</h2>
+          <p class="file-note">json을 읽어 메모리에 올리는 쪽. 로직이 미완성이었고 역참조 버그가 있었다.</p>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3><code>CLASS_ID</code> 조건 반전 — <code>end()</code> 역참조</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- if (const auto found = obj.find("CLASS_ID"); found == obj.end())</span><span class="l del">- {</span><span class="l del">-     classId = found-&gt;value().as_int64();   // ← end() 역참조</span><span class="l del">- }</span><span class="l del">- else</span><span class="l del">- {</span><span class="l del">-     WARN_LOG("No CLASS_ID in static data file {}", path.string());</span><span class="l del">- }</span><span class="l add">+ const auto found = obj.find("CLASS_ID");</span><span class="l add">+ if (found == obj.end())</span><span class="l add">+ {</span><span class="l add">+     ERROR_LOG("No CLASS_ID in static data file {}", path.string());</span><span class="l add">+     return false;</span><span class="l add">+ }</span><span class="l add">+ classId = found-&gt;value().to_number&lt;int64_t&gt;();</span></pre></div>
+          <div class="why">
+            <p>두 분기가 뒤바뀌어 있었습니다. <code>found == obj.end()</code>는 <strong>못 찾았다</strong>는 뜻인데, 그 안에서 <code>found-&gt;value()</code>로 <code>end()</code> 반복자를 역참조합니다. 정의되지 않은 동작입니다. 반대로 정상적으로 찾았을 때는 <code>else</code>로 가서 "CLASS_ID 없음" 경고를 내고 <code>classId</code>가 <code>0</code>으로 남았습니다.</p>
+            <p><code>WARN</code>에서 <code>ERROR</code> + <code>return false</code>로 올린 것은, <code>CLASS_ID</code>가 없으면 그 파일로 할 수 있는 일이 전혀 없기 때문입니다. 경고만 내고 계속 진행하면 이어지는 모든 행이 <code>classId = 0</code>으로 프로토타입 조회에 실패합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">02</span><h3><code>bool</code> 함수에 <code>return</code>이 없었음</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l add">+ INFO_LOG("[StaticData] {} ({}행, CLASS_ID {})",</span><span class="l add">+     path.filename().string(), insertedCount, classId);</span><span class="l add">+</span><span class="l add">+ return true;</span></pre></div>
+          <div class="why">
+            <p><code>ReadStaticData</code>는 <code>bool</code>을 반환하는데 <code>return</code> 문이 하나도 없이 끝났습니다(실패 경로 제외). 값을 반환하지 않고 함수 끝에 도달하는 것은 정의되지 않은 동작이고, 호출부는 쓰레기값을 성공 여부로 읽습니다.</p>
+            <p><code>insertedCount</code>를 세어 로그에 남긴 것은, 로드가 조용히 0행으로 끝나는 상황을 기동 로그만 보고 알 수 있게 하려는 것입니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">03</span><h3>하위 폴더까지 훑도록 변경</h3><span class="tag tag-bug">버그</span></div>
+          <div class="code"><pre><span class="l del">- fs::directory_iterator dirIter("StaticData");</span><span class="l add">+ for (const auto&amp; entry : fs::recursive_directory_iterator(staticDataRoot))</span></pre></div>
+          <div class="why">
+            <p>생성기가 입력 폴더 구조를 출력에 재현하므로 json은 <code>StaticData/json/Item/item.json</code>에 놓입니다. <code>directory_iterator</code>는 <strong>바로 아래 항목만</strong> 보기 때문에 <code>StaticData/</code>의 직속 자식인 <code>json/</code>과 <code>XLSX/</code> 폴더만 보고 json을 하나도 찾지 못합니다. 서버는 에러 없이 정적 데이터 0개로 기동합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">04</span><h3>로드 로직 구현</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l del">- //auto&amp; staticData = StaticDataManager::GetInstance()-&gt;CreateStaticData(classId);</span><span class="l del">- //CHECK_NULL();</span><span class="l del">- //staticData-&gt;Insert( obj );</span><span class="l add">+ auto pStaticData = StaticDataManager::GetInstance()-&gt;CreateStaticData(classId);</span><span class="l add">+ if (!pStaticData)</span><span class="l add">+ {</span><span class="l add">+     ERROR_LOG("No static data class registered for CLASS_ID {}. file : {}",</span><span class="l add">+         classId, path.string());</span><span class="l add">+     return false;</span><span class="l add">+ }</span><span class="l add">+ pStaticData-&gt;Insert(obj);</span></pre></div>
+          <div class="why">
+            <p>핵심 로직이 주석으로만 있었습니다. 원본이 <code>auto&amp;</code>(참조)였는데 <code>auto</code>(값)로 바꿨습니다. <code>CreateStaticData</code>는 <code>shared_ptr</code>을 <strong>값으로</strong> 돌려주므로, 참조로 받으면 임시 객체에 대한 참조가 됩니다.</p>
+            <p>에러 메시지에 <code>CLASS_ID</code>와 파일 경로를 함께 넣은 것은, 이 실패가 거의 항상 "생성된 <code>.cpp</code>가 빌드에 포함되지 않음"이라는 특정 원인을 가리키기 때문입니다. 두 값이 있으면 어느 엑셀의 생성물이 빠졌는지 바로 추적됩니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">05</span><h3>json 구조를 신뢰하지 않음</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ if (!jsonValue.is_array())</span><span class="l add">+ {</span><span class="l add">+     ERROR_LOG("Static data file is not a json array. {}", path.string());</span><span class="l add">+     return false;</span><span class="l add">+ }</span><span class="l gap">  …</span><span class="l add">+ if (!element.is_object())</span><span class="l add">+ {</span><span class="l add">+     continue;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p><code>as_array()</code>와 <code>as_object()</code>는 타입이 다르면 예외를 던집니다. 손으로 편집한 json이나 다른 도구가 만든 파일이 섞이면 서버가 예외로 죽습니다. 미리 검사해서 <strong>어느 파일이 문제인지 이름과 함께</strong> 알려주고 끝냅니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">06</span><h3>루프에서 불필요한 복사 제거</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l del">- for (const auto element : jsonValue.as_array())</span><span class="l add">+ for (const auto&amp; element : jsonValue.as_array())</span></pre></div>
+          <div class="why">
+            <p><code>const auto</code>는 <code>boost::json::value</code>를 <strong>행마다 값으로 복사</strong>합니다. <code>value</code>는 문자열과 중첩 오브젝트를 소유하는 타입이라 복사가 힙 할당을 유발합니다. 참조로 바꿔 없앴습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">07</span><h3>실패를 누적해서 반환</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ bool isSucceeded = true;</span><span class="l gap">  …</span><span class="l add">+ if (!ReadStaticData(entry.path()))</span><span class="l add">+ {</span><span class="l add">+     isSucceeded = false;</span><span class="l add">+ }</span><span class="l gap">  …</span><span class="l add">+ return isSucceeded;</span></pre></div>
+          <div class="why">
+            <p>기존에는 <code>ReadStaticData</code>의 반환값을 버리고 무조건 <code>true</code>를 돌려줬습니다. <code>AfterReadIni</code>가 이 값으로 기동을 중단할지 판단하는데, 정적 데이터 로드가 전부 실패해도 서버가 그냥 떠버립니다.</p>
+            <p>첫 실패에서 바로 <code>return false</code>하지 않은 것은 의도적입니다. 한 번의 기동 시도로 <strong>문제 있는 파일 전체 목록</strong>을 로그에서 보는 편이, 하나 고치고 다시 띄우기를 반복하는 것보다 낫습니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">08</span><h3>폴더 부재를 절대 경로로 진단</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ std::error_code errorCode;</span><span class="l add">+ if (!fs::exists(staticDataRoot, errorCode))</span><span class="l add">+ {</span><span class="l add">+     ERROR_LOG("Static data directory not found : {}",</span><span class="l add">+         fs::absolute(staticDataRoot).string());</span><span class="l add">+     return false;</span><span class="l add">+ }</span></pre></div>
+          <div class="why">
+            <p><code>"StaticData"</code>는 상대 경로이므로 <strong>프로세스의 작업 디렉터리</strong>에 따라 달라집니다. 디버거에서 띄울 때와 <code>bin/</code>에서 직접 실행할 때 다른 곳을 봅니다. 절대 경로로 찍으면 "어디를 찾고 있었는지"가 즉시 드러납니다.</p>
+            <p><code>error_code</code>를 받는 오버로드를 쓴 것은 예외를 던지지 않는 버전이기 때문입니다. 경로 접근 자체가 실패해도 진단 메시지를 내고 정상적으로 <code>false</code>를 돌려줍니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">09</span><h3>빠진 include 추가</h3><span class="tag tag-hard">견고성</span></div>
+          <div class="code"><pre><span class="l add">+ #include &lt;fstream&gt;</span><span class="l add">+ #include &lt;Engine/StaticData/StaticDataManager.h&gt;</span></pre></div>
+          <div class="why">
+            <p><code>std::ifstream</code>을 쓰는데 <code>&lt;fstream&gt;</code>이 어디에도 없었습니다(<code>PCH.h</code>에도 없음). 다른 헤더를 통해 전이적으로 들어오고 있었습니다. <code>StaticDataManager.h</code>는 새로 호출하게 된 <code>CreateStaticData</code> 때문에 필요합니다.</p>
+          </div>
+        </article>
+
+        <article class="change">
+          <div class="change-head"><span class="num">10</span><h3>메타 원소의 의미를 주석으로</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l add">+ // 배열의 첫 원소는 CLASS_ID만 담은 메타 오브젝트다.</span></pre></div>
+          <div class="why">
+            <p><code>isFirst</code> 플래그만 보면 첫 행을 왜 건너뛰는지 알 수 없습니다. json을 직접 열어 보지 않으면 "헤더 행을 스킵하나?"로 오해하기 쉽습니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ CMakeLists ============ -->
+      <section class="file" id="cmake">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">GameServer/</span>CMakeLists.txt</h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>생성 <code>.cpp</code>를 실행 파일에 직접 링크</h3><span class="tag tag-new">신규</span></div>
+          <div class="code"><pre><span class="l add">+ file(GLOB_RECURSE STATIC_DATA_SOURCE ../StaticData/json/*.cpp)</span><span class="l add">+ file(GLOB_RECURSE STATIC_DATA_HEADER ../StaticData/json/*.h)</span><span class="l gap">  …</span><span class="l ctx">  add_executable(GAME_SERVER</span><span class="l ctx">      ${GAME_SOURCE} ${GAME_HEADER} …</span><span class="l add">+     ${STATIC_DATA_SOURCE} ${STATIC_DATA_HEADER}</span><span class="l add">+ )</span></pre></div>
+          <div class="why">
+            <p>생성된 <code>.cpp</code>는 <code>StaticData/json/</code>에 있어서 <code>GameServer/</code>나 <code>Engine/</code>의 glob에 잡히지 않았습니다. 빌드에 들어가지 않으면 <code>GlobalInitializer</code>가 존재하지 않고, 프로토타입이 등록되지 않아 모든 <code>CLASS_ID</code> 조회가 실패합니다.</p>
+            <p><strong><code>ENGINE</code> 정적 라이브러리가 아니라 실행 파일에 직접 넣은 것이 중요합니다.</strong> 정적 라이브러리에서는 링커가 심볼 참조가 있는 오브젝트만 가져갑니다. <code>item.obj</code>는 아무도 이름으로 참조하지 않으므로(전역 객체의 부수효과로만 동작) 통째로 버려지고, 전역 초기화가 사라집니다. 링커 관점에서 완전히 합법적인 최적화라 경고도 없습니다. 실행 파일에 직접 컴파일되면 항상 남습니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ launchSettings ============ -->
+      <section class="file" id="launch">
+        <div class="file-head">
+          <h2 class="file-path"><span class="dir">DataConverter/Properties/</span>launchSettings.json</h2>
+        </div>
+
+        <article class="change">
+          <div class="change-head"><span class="num">01</span><h3>디버그 실행 인자 갱신</h3><span class="tag tag-ref">리팩터링</span></div>
+          <div class="code"><pre><span class="l del">- "…\StaticData\XLSX\Item Item …\StaticData\json"</span><span class="l add">+ "…\StaticData\XLSX …\StaticData\json"</span></pre></div>
+          <div class="why">
+            <p>세 가지가 바뀌었습니다. 첫째, 입력을 리프 폴더 <code>XLSX\Item</code>에서 <strong>루트 <code>XLSX</code></strong>로 올려 모든 엑셀을 대상으로 삼습니다. 둘째, 시트명 <code>Item</code>을 뺐습니다 — 이제 첫 시트를 자동으로 씁니다. 셋째, 인자 순서가 <code>입력 → 출력</code>으로 바뀐 것에 맞췄습니다.</p>
+            <p>팀 세션이 보고한 예외의 표면적 방아쇠가 이 첫 인자였습니다. 다만 근본 원인은 인자가 아니라 디렉터리를 파일로 여는 코드(03번)였고, 이제는 어느 쪽 경로를 줘도 동작합니다.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="file">
+        <div class="callout">
+          <p><strong>남은 한 가지.</strong> <code>float</code> 컬럼의 첫 행이 비어 있으면 아직 <code>double</code>로 추정될 수 있습니다. 04번 수정으로 <code>CastCell</code>의 박싱은 정확해졌지만, 근본적으로는 엑셀 헤더의 타입 문자열(<code>cost(float)</code>의 <code>float</code>)을 스키마까지 전달하는 편이 맞습니다. 현재는 값의 런타임 타입으로 역추정하는 구조라 이 경로만 취약합니다.</p>
+        </div>
+      </section>
+
+      <footer>
+        <div>검증: <code>GAME_SERVER</code> 빌드 통과(<code>item.obj</code> 생성 확인) · 임시 하네스 13항목 통과(전역 등록 → 해시 일치 → json 로드 → 행 조회) · 재생성 멱등성 확인</div>
+        <div>전체 diff: <code>git show 4b43331</code></div>
+      </footer>
+
+    </main>
+  </div>
+</div>
